@@ -1,0 +1,15 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/@LIBRARY_DIR@
+includedir=${prefix}/@INCLUDE_DIR@
+
+Name: pksav
+Description: Minimal Pokémon save editing library
+URL: https://github.com/ncorgan/pksav
+Version: 0.0.1
+Requires:
+Requires.private:
+Conflicts:
+Cflags: -I${includedir}
+Libs: -L${libdir} -lpksav
+Libs.private:

@@ -54,7 +54,7 @@ SET(DOCS_DIR share/doc/pksav)
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(include)
-#ADD_SUBDIRECTORY(lib)
+ADD_SUBDIRECTORY(lib)
 
 ####################################################################
 # Final display
