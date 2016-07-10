@@ -7,6 +7,7 @@
 
 SET(pksav_headers
     config.h
+    datetime.h
     prng.h
     text.h
 )
