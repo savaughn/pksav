@@ -8,5 +8,8 @@
 #define PKSAV_H
 
 #include <pksav/config.h>
+#include <pksav/datetime.h>
+#include <pksav/prng.h>
+#include <pksav/text.h>
 
 #endif /* PKSAV_H */
