@@ -7,6 +7,8 @@
 
 SET(pksav_headers
     config.h
+    prng.h
+    text.h
 )
 
 INSTALL(
