@@ -4,9 +4,9 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef INCLUDED_PKSAV_H
-#define INCLUDED_PKSAV_H
+#ifndef PKSAV_H
+#define PKSAV_H
 
 #include <pksav/config.h>
 
-#endif /* INCLUDED_PKSAV_H */
+#endif /* PKSAV_H */

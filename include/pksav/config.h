@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef INCLUDED_PKSAV_CONFIG_H
-#define INCLUDED_PKSAV_CONFIG_H
+#ifndef PKSAV_CONFIG_H
+#define PKSAV_CONFIG_H
 
 /***************************************************************************
  * Define cross-platform macros
@@ -44,4 +44,4 @@
 #    define PKSAV_PLATFORM_MACOS
 #endif
 
-#endif /* INCLUDED_PKSAV_CONFIG_H */
+#endif /* PKSAV_CONFIG_H */

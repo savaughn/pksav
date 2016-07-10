@@ -5,6 +5,10 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+INCLUDE_DIRECTORIES(
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 SET(pksav_c_sources
     text.c
 )
