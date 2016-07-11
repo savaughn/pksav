@@ -7,6 +7,7 @@
 #ifndef PKSAV_H
 #define PKSAV_H
 
+#include <pksav/checksum.h>
 #include <pksav/config.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
