@@ -11,10 +11,15 @@ CONFIGURE_FILE(
 @ONLY)
 
 SET(pksav_math_headers
-    base256.h
-    bcd.h
     ${CMAKE_CURRENT_BINARY_DIR}/endian.h
 )
+
+IF(ENABLE_GEN1 OR ENABLE_GEN2)
+    LIST(APPEND pksav_math_headers
+        base256.h
+        bcd.h
+    )
+ENDIF(ENABLE_GEN1 OR ENABLE_GEN2)
 
 INSTALL(
     FILES ${pksav_math_headers}

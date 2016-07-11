@@ -10,13 +10,13 @@
 /*
  * Set at build-time. Do not change!
  */
-#cmakedefine ENABLE_GEN1
-#cmakedefine ENABLE_GEN2
-#cmakedefine ENABLE_GBA
-#cmakedefine ENABLE_GCN
-#cmakedefine ENABLE_GEN4
-#cmakedefine ENABLE_GEN5
-#cmakedefine ENABLE_GEN6
+#cmakedefine ENABLE_GEN1 1
+#cmakedefine ENABLE_GEN2 1
+#cmakedefine ENABLE_GBA  1
+#cmakedefine ENABLE_GCN  1
+#cmakedefine ENABLE_GEN4 1
+#cmakedefine ENABLE_GEN5 1
+#cmakedefine ENABLE_GEN6 1
 
 #include <pksav/config.h>
 
@@ -31,15 +31,40 @@
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
-#ifdef ENABLE_GEN1
+#if ENABLE_GEN1
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
 #endif /* ENABLE_GEN1 */
 
+#if ENABLE_GEN2
+#include <pksav/gen2/text.h>
+#endif /* ENABLE_GEN2 */
+
+#if ENABLE_GBA
+#include <pksav/gba/text.h>
+#endif /* ENABLE_GBA */
+
+#if ENABLE_GCN
+#endif /* ENABLE_GCN */
+
+#if ENABLE_GEN4
+#include <pksav/gen4/text.h>
+#endif /* ENABLE_GEN4 */
+
+#if ENABLE_GEN5
+#include <pksav/gen5/text.h>
+#endif /* ENABLE_GEN5 */
+
+#if ENABLE_GEN6
+#endif /* ENABLE_GEN6 */
+
+#if ENABLE_GEN1 || ENABLE_GEN2
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
+#endif /* ENABLE_GEN1 || ENABLE_GEN2 */
+
 #include <pksav/math/endian.h>
 
 #endif /* PKSAV_H */

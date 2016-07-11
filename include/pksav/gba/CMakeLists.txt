@@ -5,5 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_common_sources ""
-PARENT_SCOPE)
+SET(pksav_gba_headers
+    text.h
+)
+
+INSTALL(
+    FILES ${pksav_gba_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/gba
+    COMPONENT Headers
+)

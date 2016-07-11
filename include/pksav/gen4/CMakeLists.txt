@@ -5,5 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_common_sources ""
-PARENT_SCOPE)
+SET(pksav_gen4_headers
+    text.h
+)
+
+INSTALL(
+    FILES ${pksav_gen4_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/gen4
+    COMPONENT Headers
+)

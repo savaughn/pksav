@@ -5,109 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/common/text.h>
+#include <pksav/gen4/text.h>
 
-#include <stdbool.h>
 #include <string.h>
 
-#define PKSAV_GB_TERMINATOR 0x50
-#define PKSAV_GB_SPACE      0x7F
-
-/*
- * Character map for Generation I
- *
- * Source: http://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_I#Text_data
- *
- * There are no Unicode values for the "PK" and "MN" in-game characters, so we will use the
- * "<" and ">" characters, as they are not used in-game. Any application displaying this text
- * will need to graphically substitute in these characters.
- */
-static const wchar_t pksav_gen1_char_map[] = {
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',0x20,
-    0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,0x50,
-    0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0x28,0x29,0x3A,0x3B,0x5B,0x5D,
-    0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,0x70,
-    0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,'\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0',0x3C,0x3E,0x2D,'\0','\0',0x3F,0x21,0x2E,'\0','\0','\0','\0','\0','\0',0x2642,
-    '\0',0xD7,'\0',0x2F,0x2C,0x2640,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
-};
-
-/*
- * Character map for Generation II
- *
- * Source: http://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_II#Text_data
- *
- * There are no Unicode values for the "PK" and "MN" in-game characters, so we will use the
- * "<" and ">" characters, as they are not used in-game. Any application displaying this text
- * will need to graphically substitute in these characters.
- */
-static const wchar_t pksav_gen2_char_map[] = {
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',0x20,
-    0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,0x50,
-    0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0x28,0x29,0x3A,0x3B,0x5B,0x5D,
-    0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,0x70,
-    0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,'\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',
-    '\0',0x3C,0x3E,0x2D,'\0','\0',0x3F,0x21,0x2E,'\0','\0','\0','\0','\0','\0','\0',
-    '\0',0xD7,'\0',0x2F,0x2C,'\0',0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
-};
-
-#define PKSAV_GEN3_LAST_CHAR  0xF9 // Just control characters past here
-#define PKSAV_GEN3_TERMINATOR 0xFF
-
-/*
- * Character map for Generation III (English)
- *
- * Source: http://bulbapedia.bulbagarden.net/wiki/Character_encoding_in_Generation_III
- *
- * There are no Unicode values for certain characters, so we will use substitutes, as listed below:
- *
- *  * "$" -> Pokemon dollar
- *  * "<" -> "PK"
- *  * ">" -> "MN"
- *  * "*" -> "PO"
- *  * "~" -> "KE"
- *
- *  Any application displaying this text will need to graphically substitute in these characters.
- */
-
-static const wchar_t pksav_gen3_char_map[] = {
-    0x0020,0x00C0,0x00C1,0x00C2,0x00C7,0x00C8,0x00C9,0x00CA,0x00CB,0x00CC,0x3053,0x00CD,0x00CE,0x00D2,0x00D3,0x00D4,
-    0x0152,0x00D9,0x00DA,0x00DB,0x00D1,0x1E9E,0x00E0,0x00E1,0x306D,0x00E7,0x00E8,0x00E9,0x00EA,0x00EB,0x00EC,0x307E,
-    0x00EE,0x00EF,0x00F2,0x00F3,0x00F4,0x0152,0x00F9,0x00FA,0x00FB,0x00F1,0x00BA,0x00AA,0x003F,0x0026,0x002B,0x3042,
-    0x3043,0x3045,0x3047,0x3049,0x002F,0x003D,0x3087,0x304C,0x304E,0x3050,0x3052,0x3054,0x3056,0x3058,0x305A,0x305C,
-    0x305E,0x3060,0x3062,0x3065,0x3067,0x3069,0x3070,0x3073,0x3076,0x3079,0x307C,0x3071,0x3074,0x3077,0x307A,0x307D,
-    0x3063,0x00BF,0x00A1,0x003C,0x003E,0x002A,0x007E,0x003F,0x003F,0x003F,0x00CD,0x0025,0x0028,0x0029,0x30BB,0x30BD,
-    0x30BF,0x30C1,0x30C4,0x30C6,0x30C8,0x30CA,0x30CB,0x30CC,0x00C2,0x30CE,0x30CF,0x30D2,0x30D5,0x30D8,0x30DB,0x00CD,
-    0x30DF,0x30E0,0x30E1,0x30E2,0x30E4,0x30E6,0x30E8,0x30E9,0x30EA,0x2B06,0x2B07,0x2B05,0x27A1,0x30F2,0x30F3,0x30A1,
-    0x30A3,0x30A5,0x30A7,0x30A9,0x30E3,0x30E5,0x30E7,0x30AC,0x30AE,0x30B0,0x30B2,0x30B4,0x30B6,0x30B8,0x30BA,0x30BC,
-    0x30BE,0x30C0,0x30C2,0x30C5,0x30C7,0x30C9,0x30D0,0x30D3,0x30D6,0x30D9,0x30DC,0x30D1,0x30D4,0x30D7,0x30DA,0x30DD,
-    0x30C3,0x0030,0x0031,0x0032,0x0033,0x0034,0x0035,0x0036,0x0037,0x0038,0x0039,0x0021,0x003F,0x003E,0x003D,0x30FB,
-    0x2026,0x201C,0x201D,0x2018,0x2019,0x2642,0x2640,0x0024,0x002C,0x00D7,0x002F,0x0041,0x0042,0x0043,0x0044,0x0045,
-    0x0046,0x0047,0x0048,0x0049,0x004A,0x004B,0x004C,0x004D,0x004E,0x004F,0x0050,0x0051,0x0052,0x0053,0x0054,0x0055,
-    0x0056,0x0057,0x0058,0x0059,0x005A,0x0061,0x0062,0x0063,0x0064,0x0065,0x0066,0x0067,0x0068,0x0069,0x006A,0x006B,
-    0x006C,0x006D,0x006E,0x006F,0x0070,0x0071,0x0072,0x0073,0x0074,0x0075,0x0076,0x0077,0x0078,0x0078,0x007A,0x25B6,
-    0x003A,0x00C4,0x00D6,0x00DC,0x00E4,0x00F6,0x00F6,0x2B06,0x2B07,0x2B05,'\0','\0','\0','\0','\n','\0'
-};
-
-#define PKSAV_MODERN_TERMINATOR 0xFFFF
+#define PKSAV_GEN4_TERMINATOR 0xFFFF
 
 /*
  * Character map for Generation IV
@@ -317,85 +219,23 @@ static ssize_t wchar_map_index(
     return -1;
 }
 
-static void _pksav_widetext_from_gb(
-    bool gen1,
-    const uint8_t* input_buffer,
-    wchar_t* output_text,
+void pksav_text_from_gen4(
+    const uint16_t* input_buffer,
+    char* output_text,
     size_t num_chars
 ) {
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
+    memset(output_text, 0, num_chars);
 
-    const wchar_t* char_map = gen1 ? pksav_gen1_char_map
-                                   : pksav_gen2_char_map;
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_widetext_from_gen4(
+        input_buffer, widetext, num_chars
+    );
 
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] == PKSAV_GB_TERMINATOR) {
-            break;
-        } else {
-            output_text[i] = char_map[input_buffer[i]];
-        }
-    }
+    wcstombs(output_text, widetext, num_chars);
+    free(widetext);
 }
 
-static void _pksav_widetext_to_gb(
-    bool gen1,
-    const wchar_t* input_text,
-    uint8_t* output_buffer,
-    size_t num_chars
-) {
-    memset(output_buffer, PKSAV_GB_TERMINATOR, num_chars);
-
-    const wchar_t* char_map = gen1 ? pksav_gen1_char_map
-                                   : pksav_gen2_char_map;
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_text[i] == 0x20) {
-            output_buffer[i] = PKSAV_GB_SPACE;
-        } else {
-            ssize_t index = wchar_map_index(char_map, 255, input_text[i]);
-            if(index == -1) {
-                break;
-            } else {
-                output_buffer[i] = (uint8_t)index;
-            }
-        }
-    }
-}
-
-static void _pksav_widetext_from_gen3(
-    const uint8_t* input_buffer,
-    wchar_t* output_text,
-    size_t num_chars
-) {
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] > PKSAV_GEN3_LAST_CHAR) {
-            break;
-        } else {
-            output_text[i] = pksav_gen3_char_map[input_buffer[i]];
-        }
-    }
-}
-
-static void _pksav_widetext_to_gen3(
-    const wchar_t* input_text,
-    uint8_t* output_buffer,
-    size_t num_chars
-) {
-    memset(output_buffer, PKSAV_GEN3_TERMINATOR, num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gen3_char_map, 255, input_text[i]);
-        if(index == -1) {
-            break;
-        } else {
-            output_buffer[i] = (uint8_t)index;
-        }
-    }
-}
-
-static void _pksav_widetext_from_gen4(
+void pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -403,9 +243,7 @@ static void _pksav_widetext_from_gen4(
     memset(output_text, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] > PKSAV_GEN3_LAST_CHAR) {
-            break;
-        } else if(input_buffer[i] < 0x400) {
+        if(input_buffer[i] < 0x400) {
             output_text[i] = pksav_gen4_char_map1[input_buffer[i]];
         } else {
             output_text[i] = pksav_gen4_char_map2[input_buffer[i]];
@@ -413,187 +251,34 @@ static void _pksav_widetext_from_gen4(
     }
 }
 
-static void _pksav_widetext_to_gen4(
+void pksav_text_to_gen4(
+    const char* input_text,
+    uint16_t* output_buffer,
+    size_t num_chars
+) {
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    mbstowcs(widetext, input_text, num_chars);
+
+    pksav_widetext_to_gen4(
+        widetext, output_buffer, num_chars
+    );
+
+    free(widetext);
+}
+
+void pksav_widetext_to_gen4(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 ) {
-    memset(output_buffer, PKSAV_MODERN_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, PKSAV_GEN4_TERMINATOR, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
         if(index == -1) {
             break;
         } else {
-            output_buffer[i] = (uint8_t)index;
+            output_buffer[i] = (uint16_t)index;
         }
     }
-}
-
-static void _pksav_widetext_from_modern(
-    const uint16_t* input_buffer,
-    wchar_t* output_text,
-    size_t num_chars
-) {
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] == PKSAV_MODERN_TERMINATOR) {
-            break;
-        } else {
-            output_text[i] = input_buffer[i];
-        }
-    }
-}
-
-static void _pksav_widetext_to_modern(
-    const wchar_t* input_text,
-    uint16_t* output_buffer,
-    size_t num_chars
-) {
-    memset(output_buffer, PKSAV_MODERN_TERMINATOR, sizeof(wchar_t)*num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_text[i] == 0) {
-            break;
-        } else {
-            output_buffer[i] = (uint16_t)input_text[i];
-        }
-    }
-}
-
-pksav_error_t pksav_text_from_game(
-    size_t generation,
-    const void* input_buffer,
-    char* output_text,
-    size_t num_chars
-) {
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_error_t error_code = pksav_widetext_from_game(
-                                   generation, input_buffer,
-                                   widetext, num_chars
-                               );
-
-    if(!error_code) {
-        wcstombs(output_text, widetext, num_chars);
-    }
-
-    free(widetext);
-    return error_code;
-}
-
-pksav_error_t pksav_widetext_from_game(
-    size_t generation,
-    const void* input_buffer,
-    wchar_t* output_text,
-    size_t num_chars
-) {
-    switch(generation) {
-        case 1:
-        case 2:
-            _pksav_widetext_from_gb(
-                (generation == 1),
-                input_buffer,
-                output_text,
-                num_chars
-            );
-            break;
-
-        case 3:
-            _pksav_widetext_from_gen3(
-                input_buffer,
-                output_text,
-                num_chars
-            );
-            break;
-
-        case 4:
-            _pksav_widetext_from_gen4(
-                input_buffer,
-                output_text,
-                num_chars
-            );
-            break;
-
-        case 5:
-        case 6:
-            _pksav_widetext_from_modern(
-                input_buffer,
-                output_text,
-                num_chars
-            );
-            break;
-
-        default:
-            return PKSAV_ERROR_INVALID_GENERATION;
-    }
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_text_to_game(
-    size_t generation,
-    const char* input_text,
-    void* output_buffer,
-    size_t num_chars
-) {
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
-
-    pksav_error_t error_code = pksav_widetext_to_game(
-                                   generation, widetext,
-                                   output_buffer, num_chars
-                               );
-
-    free(widetext);
-    return error_code;
-}
-
-pksav_error_t pksav_widetext_to_game(
-    size_t generation,
-    const wchar_t* input_text,
-    void* output_buffer,
-    size_t num_chars
-) {
-    switch(generation) {
-        case 1:
-        case 2:
-            _pksav_widetext_to_gb(
-                (generation == 1),
-                input_text,
-                output_buffer,
-                num_chars
-            );
-            break;
-
-        case 3:
-            _pksav_widetext_to_gen3(
-                input_text,
-                output_buffer,
-                num_chars
-            );
-            break;
-
-        case 4:
-            _pksav_widetext_to_gen4(
-                input_text,
-                output_buffer,
-                num_chars
-            );
-            break;
-
-        case 5:
-        case 6:
-            _pksav_widetext_to_modern(
-                input_text,
-                output_buffer,
-                num_chars
-            );
-            break;
-
-        default:
-            return PKSAV_ERROR_INVALID_GENERATION;
-    }
-
-    return PKSAV_ERROR_NONE;
 }

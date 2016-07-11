@@ -5,5 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_common_sources ""
+SET(pksav_gen4_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/text.c
 PARENT_SCOPE)
