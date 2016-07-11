@@ -12,6 +12,7 @@ SET(pksav_headers
     datetime.h
     error.h
     items.h
+    pokemon.h
     pokerus.h
     prng.h
     stats.h
