@@ -23,7 +23,7 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKSAV_GCC OR PKSAV_CLANG)
-    SET(PKSAV_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -Wpedantic -fvisibility=hidden")
+    SET(PKSAV_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -fvisibility=hidden")
 ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling

@@ -18,3 +18,5 @@ typedef union {
     uint32_t id;
 } pksav_trainer_id_t;
 #pragma pack(pop)
+
+#endif /* PKSAV_TRAINER_ID_H */

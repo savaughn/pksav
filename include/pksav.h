@@ -10,6 +10,7 @@
 #include <pksav/config.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
+#include <pksav/pokerus.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 #include <pksav/text.h>

@@ -9,6 +9,7 @@ SET(pksav_headers
     config.h
     datetime.h
     error.h
+    pokerus.h
     prng.h
     stats.h
     text.h
