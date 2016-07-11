@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pksav/error.h>
 #include <pksav/stats.h>
 
 #include <math.h>
@@ -14,7 +15,7 @@
 #define PKSAV_GB_SPD_IV_MASK  ((uint16_t)0x00F0)
 #define PKSAV_GB_SPCL_IV_MASK ((uint16_t)0x000F)
 
-int pksav_get_gb_IV(
+pksav_error_t pksav_get_gb_IV(
     uint16_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
@@ -50,19 +51,19 @@ int pksav_get_gb_IV(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
-int pksav_set_gb_IV(
+pksav_error_t pksav_set_gb_IV(
     uint16_t* raw,
     pksav_battle_stat_t stat,
     uint8_t new_IV
 ) {
     if(new_IV > 15) {
-        return 1;
+        return PKSAV_ERROR_INVALID_IV;
     }
 
     switch(stat) {
@@ -92,10 +93,10 @@ int pksav_set_gb_IV(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
 #define PKSAV_HP_IV_MASK    ((uint32_t)0x1F)
@@ -105,7 +106,7 @@ int pksav_set_gb_IV(
 #define PKSAV_SPATK_IV_MASK ((uint32_t)0x1F00000)
 #define PKSAV_SPDEF_IV_MASK ((uint32_t)0x3E000000)
 
-int pksav_get_IV(
+pksav_error_t pksav_get_IV(
     uint32_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
@@ -136,19 +137,19 @@ int pksav_get_IV(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
-int pksav_set_IV(
+pksav_error_t pksav_set_IV(
     uint32_t* raw,
     pksav_battle_stat_t stat,
     uint8_t new_IV
 ) {
     if(new_IV > 31) {
-        return 1;
+        return PKSAV_ERROR_INVALID_IV;
     }
 
     switch(stat) {
@@ -177,14 +178,14 @@ int pksav_set_IV(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
 // TODO: as fast as possible, no floats?
-int pksav_get_gb_stat(
+pksav_error_t pksav_get_gb_stat(
     pksav_battle_stat_t stat,
     uint8_t level,
     uint8_t base_stat,
@@ -212,23 +213,23 @@ int pksav_get_gb_stat(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
-int pksav_get_gb_stat_range(
+pksav_error_t pksav_get_gb_stat_range(
     pksav_battle_stat_t stat,
     uint8_t level,
     uint8_t base_stat,
     pksav_stat_pair_t* stat_pair_out
 ) {
     pksav_stat_pair_t tmp;
-    int return_code = pksav_get_gb_stat(
-                          stat, level, base_stat,
-                          0, 0, &tmp.first
-                      );
+    pksav_error_t return_code = pksav_get_gb_stat(
+                                    stat, level, base_stat,
+                                    0, 0, &tmp.first
+                                );
     if(return_code) {
         return return_code;
     }
@@ -242,13 +243,13 @@ int pksav_get_gb_stat_range(
     }
 
     *stat_pair_out = tmp;
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
 #define PKSAV_FLOATS_CLOSE(a,b) (fabs(a-b) < 0.00001f)
 
 // TODO: as fast as possible
-int pksav_get_stat(
+pksav_error_t pksav_get_stat(
     pksav_battle_stat_t stat,
     uint8_t level,
     float nature_modifier,
@@ -258,13 +259,13 @@ int pksav_get_stat(
     uint16_t* stat_out
 ) {
     if(EV > 255) {
-        return 1;
+        return PKSAV_ERROR_INVALID_EV;
     }
     if(IV > 31) {
-        return 1;
+        return PKSAV_ERROR_INVALID_IV;
     }
     if(!PKSAV_FLOATS_CLOSE(nature_modifier,0.9f) && !PKSAV_FLOATS_CLOSE(nature_modifier,1.1f)) {
-        return 1;
+        return PKSAV_ERROR_INVALID_PARAM;
     }
 
     // Common to both calculations
@@ -286,23 +287,23 @@ int pksav_get_stat(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_STAT;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
-int pksav_get_stat_range(
+pksav_error_t pksav_get_stat_range(
     pksav_battle_stat_t stat,
     uint8_t level,
     uint8_t base_stat,
     pksav_stat_pair_t* stat_pair_out
 ) {
     pksav_stat_pair_t tmp;
-    int return_code = pksav_get_stat(
-                          stat, level, 0.9f, base_stat,
-                          0, 0, &tmp.first
-                      );
+    pksav_error_t return_code = pksav_get_stat(
+                                    stat, level, 0.9f, base_stat,
+                                    0, 0, &tmp.first
+                                );
     if(return_code) {
         return return_code;
     }
@@ -316,5 +317,5 @@ int pksav_get_stat_range(
     }
 
     *stat_pair_out = tmp;
-    return 0;
+    return PKSAV_ERROR_NONE;
 }

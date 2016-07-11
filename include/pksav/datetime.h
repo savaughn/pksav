@@ -8,6 +8,7 @@
 #define PKSAV_NATIVE_DATETIME_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdint.h>
 #include <time.h>
@@ -44,7 +45,7 @@ typedef struct {
 extern "C" {
 #endif
 
-PKSAV_API int pksav_time_t_to_date_t(
+PKSAV_API pksav_error_t pksav_time_t_to_date_t(
     const time_t* time_in,
     pksav_date_t* date_out
 );

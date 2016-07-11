@@ -462,27 +462,27 @@ static void _pksav_widetext_to_modern(
     }
 }
 
-int pksav_text_from_game(
+pksav_error_t pksav_text_from_game(
     size_t generation,
     const void* input_buffer,
     char* output_text,
     size_t num_chars
 ) {
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    int result = pksav_widetext_from_game(
-                     generation, input_buffer,
-                     widetext, num_chars
-                 );
+    pksav_error_t error_code = pksav_widetext_from_game(
+                                   generation, input_buffer,
+                                   widetext, num_chars
+                               );
 
-    if(!result) {
+    if(!error_code) {
         wcstombs(output_text, widetext, num_chars);
     }
 
     free(widetext);
-    return result;
+    return error_code;
 }
 
-int pksav_widetext_from_game(
+pksav_error_t pksav_widetext_from_game(
     size_t generation,
     const void* input_buffer,
     wchar_t* output_text,
@@ -525,13 +525,13 @@ int pksav_widetext_from_game(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_GENERATION;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }
 
-int pksav_widetext_to_game(
+pksav_error_t pksav_widetext_to_game(
     size_t generation,
     const wchar_t* input_text,
     void* output_buffer,
@@ -574,8 +574,8 @@ int pksav_widetext_to_game(
             break;
 
         default:
-            return 1;
+            return PKSAV_ERROR_INVALID_GENERATION;
     }
 
-    return 0;
+    return PKSAV_ERROR_NONE;
 }

@@ -8,6 +8,7 @@
 #define PKSAV_TEXT_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -16,21 +17,21 @@
 extern "C" {
 #endif
 
-PKSAV_API int pksav_text_from_game(
+PKSAV_API pksav_error_t pksav_text_from_game(
     size_t generation,
     const void* input_buffer,
     char* output_text,
     size_t num_chars
 );
 
-PKSAV_API int pksav_widetext_from_game(
+PKSAV_API pksav_error_t pksav_widetext_from_game(
     size_t generation,
     const void* input_buffer,
     wchar_t* output_widetext,
     size_t num_chars
 );
 
-PKSAV_API int pksav_widetext_to_game(
+PKSAV_API pksav_error_t pksav_widetext_to_game(
     size_t generation,
     const wchar_t* input_text,
     void* output_buffer,
