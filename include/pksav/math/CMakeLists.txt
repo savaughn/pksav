@@ -11,6 +11,7 @@ CONFIGURE_FILE(
 @ONLY)
 
 SET(pksav_math_headers
+    base256.h
     bcd.h
     ${CMAKE_CURRENT_BINARY_DIR}/endian.h
 )

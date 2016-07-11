@@ -20,6 +20,7 @@
 #include <pksav/text.h>
 #include <pksav/trainer_id.h>
 
+#include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 #include <pksav/math/endian.h>
 
