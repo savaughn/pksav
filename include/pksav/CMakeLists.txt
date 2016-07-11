@@ -8,6 +8,7 @@
 SET(pksav_headers
     checksum.h
     config.h
+    contest_stats.h
     datetime.h
     error.h
     pokerus.h

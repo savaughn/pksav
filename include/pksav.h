@@ -9,6 +9,7 @@
 
 #include <pksav/checksum.h>
 #include <pksav/config.h>
+#include <pksav/contest_stats.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/pokerus.h>
