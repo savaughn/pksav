@@ -5,19 +5,28 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/checksum.h>
-
 #include <pksav/gen1/save.h>
 
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
 
+static uint8_t _pksav_get_gen1_save_checksum(
+    const uint8_t* data
+) {
+    uint8_t checksum = 255;
+    for(uint16_t i = 0x2598; i < PKSAV_GEN1_CHECKSUM; ++i) {
+        checksum -= data[i];
+    }
+
+    return checksum;
+}
+
 static bool _pksav_file_is_gen1_save(
     const uint8_t* data
 ) {
     uint8_t checksum = data[PKSAV_GEN1_CHECKSUM];
-    uint8_t actual_checksum = pksav_get_gen1_save_checksum(data);
+    uint8_t actual_checksum = _pksav_get_gen1_save_checksum(data);
 
     return (checksum == actual_checksum);
 }
@@ -114,7 +123,7 @@ pksav_error_t pksav_gen1_save_save(
     }
 
     // Set checksum
-    pksav_set_gen1_save_checksum(gen1_save->raw);
+    gen1_save->raw[PKSAV_GEN1_CHECKSUM] = _pksav_get_gen1_save_checksum(gen1_save->raw);
 
     // Write to file
     fwrite((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);

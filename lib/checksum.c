@@ -7,30 +7,11 @@
 
 #include <pksav/checksum.h>
 
-#define PKSAV_GEN1_CHECKSUM 0x3523
-
 #define PKSAV_GS_CHECKSUM1 0x2D69
 #define PKSAV_GS_CHECKSUM2 0x7E6D
 
 #define PKSAV_CRYSTAL_CHECKSUM1 0x2D02
 #define PKSAV_CRYSTAL_CHECKSUM2 0x1F0D
-
-uint8_t pksav_get_gen1_save_checksum(
-    const uint8_t* data
-) {
-    uint8_t checksum = 255;
-    for(uint16_t i = 0x2598; i < PKSAV_GEN1_CHECKSUM; ++i) {
-        checksum -= data[i];
-    }
-
-    return checksum;
-}
-
-void pksav_set_gen1_save_checksum(
-    uint8_t* data
-) {
-    data[PKSAV_GEN1_CHECKSUM] = pksav_get_gen1_save_checksum(data);
-}
 
 void pksav_get_gen2_save_checksums(
     bool crystal,

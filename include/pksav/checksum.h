@@ -18,14 +18,6 @@ typedef struct {
     uint16_t second;
 } pksav_gen2_checksums_t;
 
-PKSAV_API uint8_t pksav_get_gen1_save_checksum(
-    const uint8_t* data
-);
-
-PKSAV_API void pksav_set_gen1_save_checksum(
-    uint8_t* data
-);
-
 PKSAV_API void pksav_get_gen2_save_checksums(
     bool crystal,
     const uint8_t* data,

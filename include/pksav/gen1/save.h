@@ -8,7 +8,6 @@
 #define PKSAV_GEN1_SAVE_H
 
 #include <pksav/config.h>
-#include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/text.h>
 
@@ -21,6 +20,23 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+/*
+ * Structures exclusive to Generation I games
+ */
+#pragma pack(push,1)
+
+typedef struct {
+    uint16_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
+} pksav_gen1_time_t;
+
+#pragma pack(pop)
+
+/*
+ * Savefile size and locations of fields within file
+ */
 
 #define PKSAV_GEN1_SAVE_SIZE 0x8000
 
@@ -46,6 +62,9 @@ typedef enum {
     PKSAV_GEN1_POKEMON_PC_SECOND_HALF  = 0x6000
 } pksav_gen1_save_offset_t;
 
+/*
+ * Savefile structure to be used by user
+ */
 typedef struct {
     pksav_gen1_pokemon_party_t* pokemon_party;
     pksav_gen1_pokemon_box_t** pokemon_boxes;
