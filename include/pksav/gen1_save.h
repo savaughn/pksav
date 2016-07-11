@@ -80,6 +80,13 @@ PKSAV_API pksav_error_t pksav_gen1_save_save(
     pksav_gen1_save_t* gen1_save
 );
 
+static PKSAV_INLINE void pksav_gen1_save_free(
+    pksav_gen1_save_t* gen1_save
+) {
+    free(gen1_save->pokemon_boxes);
+    free(gen1_save->raw);
+}
+
 static PKSAV_INLINE uint32_t pksav_gen1_save_get_money(
     pksav_gen1_save_t* gen1_save
 ) {
