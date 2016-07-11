@@ -7,6 +7,17 @@
 #ifndef PKSAV_H
 #define PKSAV_H
 
+/*
+ * Set at build-time. Do not change!
+ */
+#cmakedefine ENABLE_GEN1
+#cmakedefine ENABLE_GEN2
+#cmakedefine ENABLE_GBA
+#cmakedefine ENABLE_GCN
+#cmakedefine ENABLE_GEN4
+#cmakedefine ENABLE_GEN5
+#cmakedefine ENABLE_GEN6
+
 #include <pksav/config.h>
 
 #include <pksav/checksum.h>
@@ -20,10 +31,12 @@
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
+#ifdef ENABLE_GEN1
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
+#endif /* ENABLE_GEN1 */
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>

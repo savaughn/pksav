@@ -22,6 +22,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 # Project configuration
 ####################################################################
 INCLUDE(PKSavPlatform)
+INCLUDE(PKSavComponent)
 
 FIND_PACKAGE(Doxygen)
 
@@ -51,6 +52,17 @@ SET(PKG_DATA_DIR share/pksav)
 SET(DOCS_DIR share/doc/pksav)
 
 ####################################################################
+# Components
+####################################################################
+PKSAV_REGISTER_COMPONENT("Generation I"     ENABLE_GEN1)
+PKSAV_REGISTER_COMPONENT("Generation II"    ENABLE_GEN2)
+PKSAV_REGISTER_COMPONENT("Game Boy Advance" ENABLE_GBA)
+PKSAV_REGISTER_COMPONENT("Gamecube"         ENABLE_GCN)
+PKSAV_REGISTER_COMPONENT("Generation IV"    ENABLE_GEN4)
+PKSAV_REGISTER_COMPONENT("Generation V"     ENABLE_GEN5)
+PKSAV_REGISTER_COMPONENT("Generation VI"    ENABLE_GEN6)
+
+####################################################################
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(include)
@@ -59,6 +71,7 @@ ADD_SUBDIRECTORY(lib)
 ####################################################################
 # Final display
 ####################################################################
+PKSAV_PRINT_COMPONENT_SUMMARY()
 MESSAGE(STATUS "")
 MESSAGE(STATUS "Building PKSav.")
 MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")

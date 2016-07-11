@@ -17,11 +17,19 @@ SET(pksav_c_sources
     prng.c
     stats.c
     common/text.c
-    gen1/text.c
-    gen1/save.c
     math/base256.c
     math/bcd.c
 )
+
+#
+# Component-specific files
+#
+IF(ENABLE_GEN1)
+    LIST(APPEND pksav_c_sources
+        gen1/save.c
+        gen1/text.c
+    )
+ENDIF(ENABLE_GEN1)
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}
     PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
