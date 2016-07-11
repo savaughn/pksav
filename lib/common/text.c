@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/text.h>
+#include <pksav/common/text.h>
 
 #include <stdbool.h>
 #include <string.h>

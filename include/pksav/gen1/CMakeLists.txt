@@ -8,6 +8,8 @@
 SET(pksav_common_headers
     items.h
     pokemon.h
+    save.h
+    text.h
 )
 
 INSTALL(

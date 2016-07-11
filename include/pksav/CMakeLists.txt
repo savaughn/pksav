@@ -11,10 +11,8 @@ SET(pksav_headers
     datetime.h
     error.h
     items.h
-    pokerus.h
     prng.h
     stats.h
-    text.h
 )
 
 INSTALL(

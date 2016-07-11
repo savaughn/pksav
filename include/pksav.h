@@ -13,17 +13,17 @@
 #include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/items.h>
-#include <pksav/pokerus.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
-#include <pksav/text.h>
 
-#include <pksav/contest_stats.h>
+#include <pksav/common/pokerus.h>
+#include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
+#include <pksav/gen1/text.h>
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>

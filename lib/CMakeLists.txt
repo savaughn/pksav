@@ -16,7 +16,8 @@ SET(pksav_c_sources
     error.c
     prng.c
     stats.c
-    text.c
+    common/text.c
+    gen1/text.c
     gen1/save.c
     math/base256.c
     math/bcd.c

@@ -9,7 +9,8 @@
 
 #include <pksav/config.h>
 #include <pksav/error.h>
-#include <pksav/text.h>
+
+#include <pksav/common/text.h>
 
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>

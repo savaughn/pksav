@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_POKERUS_H
-#define PKSAV_POKERUS_H
+#ifndef PKSAV_COMMON_POKERUS_H
+#define PKSAV_COMMON_POKERUS_H
 
 #include <pksav/config.h>
 
@@ -48,4 +48,4 @@ static PKSAV_INLINE void pksav_pokerus_set_strain(
 }
 #endif
 
-#endif /* PKSAV_POKERUS_H */
+#endif /* PKSAV_COMMON_POKERUS_H */
