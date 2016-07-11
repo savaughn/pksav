@@ -13,5 +13,6 @@
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 #include <pksav/text.h>
+#include <pksav/trainer_id.h>
 
 #endif /* PKSAV_H */

@@ -12,6 +12,7 @@ SET(pksav_headers
     prng.h
     stats.h
     text.h
+    trainer_id.h
 )
 
 INSTALL(
