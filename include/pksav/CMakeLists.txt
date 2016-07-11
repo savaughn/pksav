@@ -10,9 +10,7 @@ SET(pksav_headers
     config.h
     datetime.h
     error.h
-    gen1_save.h
     items.h
-    pokemon.h
     pokerus.h
     prng.h
     stats.h
@@ -26,4 +24,5 @@ INSTALL(
 )
 
 ADD_SUBDIRECTORY(common)
+ADD_SUBDIRECTORY(gen1)
 ADD_SUBDIRECTORY(math)

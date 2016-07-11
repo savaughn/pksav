@@ -6,7 +6,8 @@
  */
 
 #include <pksav/checksum.h>
-#include <pksav/gen1_save.h>
+
+#include <pksav/gen1/save.h>
 
 #include <stdio.h>
 #include <string.h>

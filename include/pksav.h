@@ -10,17 +10,20 @@
 #include <pksav/config.h>
 
 #include <pksav/checksum.h>
-#include <pksav/contest_stats.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/items.h>
-#include <pksav/gen1_save.h>
-#include <pksav/pokemon.h>
 #include <pksav/pokerus.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 #include <pksav/text.h>
-#include <pksav/trainer_id.h>
+
+#include <pksav/contest_stats.h>
+#include <pksav/common/trainer_id.h>
+
+#include <pksav/gen1/items.h>
+#include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/save.h>
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>

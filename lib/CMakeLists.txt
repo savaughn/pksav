@@ -14,10 +14,10 @@ SET(pksav_c_sources
     checksum.c
     datetime.c
     error.c
-    gen1_save.c
     prng.c
     stats.c
     text.c
+    gen1/save.c
     math/base256.c
     math/bcd.c
 )

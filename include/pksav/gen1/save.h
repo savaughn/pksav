@@ -10,9 +10,10 @@
 #include <pksav/config.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
-#include <pksav/items.h>
-#include <pksav/pokemon.h>
 #include <pksav/text.h>
+
+#include <pksav/gen1/items.h>
+#include <pksav/gen1/pokemon.h>
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>

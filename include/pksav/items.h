@@ -12,23 +12,6 @@
 #pragma pack(push,1)
 
 typedef struct {
-    uint8_t index;
-    uint8_t count;
-} pksav_gen1_item_t;
-
-typedef struct {
-    uint8_t count;
-    pksav_gen1_item_t items[20];
-    uint8_t terminator;
-} pksav_gen1_item_bag_t;
-
-typedef struct {
-    uint8_t count;
-    pksav_gen1_item_t items[50];
-    uint8_t terminator;
-} pksav_gen1_item_pc_t;
-
-typedef struct {
     uint8_t count;
     uint8_t index;
 } pksav_gen2_item_t;

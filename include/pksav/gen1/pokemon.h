@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_POKEMON_H
-#define PKSAV_POKEMON_H
+#ifndef PKSAV_GEN1_POKEMON_H
+#define PKSAV_GEN1_POKEMON_H
 
 #include <stdint.h>
 
@@ -62,4 +62,4 @@ typedef struct {
 
 #pragma pack(pop)
 
-#endif /* PKSAV_POKEMON_H */
+#endif /* PKSAV_GEN1_POKEMON_H */
