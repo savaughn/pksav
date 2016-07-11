@@ -14,7 +14,8 @@ static const char* pksav_error_strs[] = {
     "Invalid generation",
     "Invalid stat enum",
     "Invalid EV value",
-    "Invalid IV value"
+    "Invalid IV value",
+    "Invalid save file"
 };
 
 const char* pksav_strerror(

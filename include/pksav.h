@@ -14,6 +14,7 @@
 #include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/items.h>
+#include <pksav/gen1_save.h>
 #include <pksav/pokemon.h>
 #include <pksav/pokerus.h>
 #include <pksav/prng.h>

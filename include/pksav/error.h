@@ -19,7 +19,9 @@ typedef enum {
 
     PKSAV_ERROR_INVALID_STAT,
     PKSAV_ERROR_INVALID_EV,
-    PKSAV_ERROR_INVALID_IV
+    PKSAV_ERROR_INVALID_IV,
+
+    PKSAV_ERROR_INVALID_SAVE
 } pksav_error_t;
 
 #ifdef __cplusplus

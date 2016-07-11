@@ -11,6 +11,7 @@ SET(pksav_headers
     contest_stats.h
     datetime.h
     error.h
+    gen1_save.h
     items.h
     pokemon.h
     pokerus.h
