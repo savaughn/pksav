@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_TRAINER_ID_H
-#define PKSAV_TRAINER_ID_H
+#ifndef PKSAV_COMMON_TRAINER_ID_H
+#define PKSAV_COMMON_TRAINER_ID_H
 
 #include <stdint.h>
 
@@ -19,4 +19,4 @@ typedef union {
 } pksav_trainer_id_t;
 #pragma pack(pop)
 
-#endif /* PKSAV_TRAINER_ID_H */
+#endif /* PKSAV_COMMON_TRAINER_ID_H */

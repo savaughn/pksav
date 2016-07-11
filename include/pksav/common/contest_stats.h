@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_CONTEST_STATS_H
-#define PKSAV_CONTEST_STATS_H
+#ifndef PKSAV_COMMON_CONTEST_STATS_H
+#define PKSAV_COMMON_CONTEST_STATS_H
 
 #include <stdint.h>
 
@@ -23,4 +23,4 @@ typedef struct {
 } pksav_contest_stats_t;
 #pragma pack(pop)
 
-#endif /* PKSAV_CONTEST_STATS_H */
+#endif /* PKSAV_COMMON_CONTEST_STATS_H */

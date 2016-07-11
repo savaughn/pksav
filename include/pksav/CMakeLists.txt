@@ -8,7 +8,6 @@
 SET(pksav_headers
     checksum.h
     config.h
-    contest_stats.h
     datetime.h
     error.h
     gen1_save.h
@@ -18,7 +17,6 @@ SET(pksav_headers
     prng.h
     stats.h
     text.h
-    trainer_id.h
 )
 
 INSTALL(
@@ -27,4 +25,5 @@ INSTALL(
     COMPONENT Headers
 )
 
+ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
