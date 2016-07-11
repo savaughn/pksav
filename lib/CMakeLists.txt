@@ -12,6 +12,7 @@ INCLUDE_DIRECTORIES(
 SET(pksav_c_sources
     datetime.c
     prng.c
+    stats.c
     text.c
 )
 
