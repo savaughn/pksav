@@ -12,6 +12,7 @@
 #include <pksav/error.h>
 #include <pksav/items.h>
 #include <pksav/pokemon.h>
+#include <pksav/text.h>
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
@@ -77,6 +78,78 @@ PKSAV_API pksav_error_t pksav_gen1_save_load(
 PKSAV_API pksav_error_t pksav_gen1_save_save(
     const char* filepath,
     pksav_gen1_save_t* gen1_save
+);
+
+static PKSAV_INLINE uint32_t pksav_gen1_save_get_money(
+    pksav_gen1_save_t* gen1_save
+) {
+    return (uint32_t)(pksav_from_bcd(&gen1_save->raw[PKSAV_GEN1_MONEY], 3));
+}
+
+static PKSAV_INLINE uint16_t pksav_gen1_save_get_trainer_id(
+    pksav_gen1_save_t* gen1_save
+) {
+    return pksav_bigendian16(*gen1_save->trainer_id);
+}
+
+static PKSAV_INLINE void pksav_gen1_save_get_trainer_name_as_text(
+    pksav_gen1_save_t* gen1_save,
+    char* output_text
+) {
+    (void)pksav_text_from_game(1, gen1_save->trainer_name, output_text, 7);
+}
+
+static PKSAV_INLINE void pksav_gen1_save_get_trainer_name_as_widetext(
+    pksav_gen1_save_t* gen1_save,
+    wchar_t* output_text
+) {
+    (void)pksav_widetext_from_game(1, gen1_save->trainer_name, output_text, 7);
+}
+
+static PKSAV_INLINE void pksav_gen1_save_get_rival_name_as_text(
+    pksav_gen1_save_t* gen1_save,
+    char* output_text
+) {
+    (void)pksav_text_from_game(1, gen1_save->rival_name, output_text, 7);
+}
+
+static PKSAV_INLINE void pksav_gen1_save_get_rival_name_as_widetext(
+    pksav_gen1_save_t* gen1_save,
+    wchar_t* output_text
+) {
+    (void)pksav_widetext_from_game(1, gen1_save->rival_name, output_text, 7);
+}
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_money(
+    pksav_gen1_save_t* gen1_save,
+    uint32_t money
+);
+
+static PKSAV_INLINE void pksav_gen1_save_set_trainer_id(
+    pksav_gen1_save_t* gen1_save,
+    uint16_t trainer_id
+) {
+    *gen1_save->trainer_id = pksav_bigendian16(trainer_id);
+}
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_trainer_name_from_text(
+    pksav_gen1_save_t* gen1_save,
+    const char* trainer_name
+);
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_trainer_name_from_widetext(
+    pksav_gen1_save_t* gen1_save,
+    const wchar_t* trainer_name
+);
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_rival_name_from_text(
+    pksav_gen1_save_t* gen1_save,
+    const char* rival_name
+);
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_rival_name_from_widetext(
+    pksav_gen1_save_t* gen1_save,
+    const wchar_t* rival_name
 );
 
 #ifdef __cplusplus

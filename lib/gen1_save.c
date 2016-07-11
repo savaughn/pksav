@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 
 static bool _pksav_file_is_gen1_save(
     const uint8_t* data
@@ -117,6 +118,87 @@ pksav_error_t pksav_gen1_save_save(
     // Write to file
     fwrite((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
     fclose(gen1_save_file);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_money(
+    pksav_gen1_save_t* gen1_save,
+    uint32_t money
+) {
+    if(money > 999999) {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    pksav_to_bcd(money, gen1_save->money);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_trainer_name_from_text(
+    pksav_gen1_save_t* gen1_save,
+    const char* trainer_name
+) {
+    size_t name_len = strlen(trainer_name);
+    if(name_len > 7) {
+        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
+    }
+
+    (void)pksav_text_to_game(
+              1, trainer_name,
+              gen1_save->trainer_name, 7
+          );
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_trainer_name_from_widetext(
+    pksav_gen1_save_t* gen1_save,
+    const wchar_t* trainer_name
+) {
+    size_t name_len = wcslen(trainer_name);
+    if(name_len > 7) {
+        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
+    }
+
+    (void)pksav_widetext_to_game(
+              1, trainer_name,
+              gen1_save->trainer_name, 7
+          );
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_rival_name_from_text(
+    pksav_gen1_save_t* gen1_save,
+    const char* rival_name
+) {
+    size_t name_len = strlen(rival_name);
+    if(name_len > 7) {
+        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
+    }
+
+    (void)pksav_text_to_game(
+              1, rival_name,
+              gen1_save->rival_name, 7
+          );
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_rival_name_from_widetext(
+    pksav_gen1_save_t* gen1_save,
+    const wchar_t* rival_name
+) {
+    size_t name_len = wcslen(rival_name);
+    if(name_len > 7) {
+        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
+    }
+
+    (void)pksav_widetext_to_game(
+              1, rival_name,
+              gen1_save->rival_name, 7
+          );
 
     return PKSAV_ERROR_NONE;
 }

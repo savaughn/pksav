@@ -12,6 +12,7 @@ static const char* pksav_error_strs[] = {
     "File I/O error",
     "Invalid parameter",
     "Parameter out of range",
+    "String parameter too long",
     "Invalid generation",
     "Invalid stat enum",
     "Invalid EV value",
