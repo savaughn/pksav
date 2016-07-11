@@ -13,6 +13,10 @@
 #include <pksav/items.h>
 #include <pksav/pokemon.h>
 
+#include <pksav/math/base256.h>
+#include <pksav/math/bcd.h>
+#include <pksav/math/endian.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -66,6 +70,11 @@ PKSAV_API bool pksav_file_is_gen1_save(
 );
 
 PKSAV_API pksav_error_t pksav_gen1_save_load(
+    const char* filepath,
+    pksav_gen1_save_t* gen1_save
+);
+
+PKSAV_API pksav_error_t pksav_gen1_save_save(
     const char* filepath,
     pksav_gen1_save_t* gen1_save
 );

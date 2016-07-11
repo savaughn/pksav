@@ -24,6 +24,10 @@ bool pksav_file_is_gen1_save(
     const char* filepath
 ) {
     FILE* gen1_save = fopen(filepath, "r");
+    if(!gen1_save) {
+        return false;
+    }
+
     fseek(gen1_save, SEEK_END, 0);
 
     if(ftell(gen1_save) < PKSAV_GEN1_SAVE_SIZE) {
@@ -45,6 +49,10 @@ pksav_error_t pksav_gen1_save_load(
 ) {
     // Read the file and make sure it's valid
     FILE* gen1_save_file = fopen(filepath, "r");
+    if(!gen1_save_file) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
     fseek(gen1_save_file, SEEK_END, 0);
 
     if(ftell(gen1_save_file) < PKSAV_GEN1_SAVE_SIZE) {
@@ -89,6 +97,26 @@ pksav_error_t pksav_gen1_save_load(
     gen1_save->trainer_id = (uint16_t*)&gen1_save->raw[PKSAV_GEN1_PLAYER_ID];
     gen1_save->trainer_name = &gen1_save->raw[PKSAV_GEN1_PLAYER_NAME];
     gen1_save->rival_name = &gen1_save->raw[PKSAV_GEN1_RIVAL_NAME];
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_save(
+    const char* filepath,
+    pksav_gen1_save_t* gen1_save
+) {
+    // Make sure we can write to this file
+    FILE* gen1_save_file = fopen(filepath, "w");
+    if(!gen1_save_file) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    // Set checksum
+    pksav_set_gen1_save_checksum(gen1_save->raw);
+
+    // Write to file
+    fwrite((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
+    fclose(gen1_save_file);
 
     return PKSAV_ERROR_NONE;
 }

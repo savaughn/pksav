@@ -9,6 +9,7 @@
 
 static const char* pksav_error_strs[] = {
     "No error",
+    "File I/O error",
     "Invalid parameter",
     "Parameter out of range",
     "Invalid generation",
