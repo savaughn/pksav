@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -29,6 +29,15 @@ ELSEIF(MSVC)
     ADD_DEFINITIONS(/EHsc)                     # Exception handling
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
 ENDIF(PKSAV_GCC OR PKSAV_CLANG)
+
+# TODO: Boost-less cross-compile endianness-check
+IF(PKSAV_BIG_ENDIAN)
+    SET(PKSAV_BIG_ENDIAN TRUE)
+    SET(PKSAV_LITTLE_ENDIAN FALSE)
+ELSE()
+    SET(PKSAV_BIG_ENDIAN FALSE)
+    SET(PKSAV_LITTLE_ENDIAN TRUE)
+ENDIF(PKSAV_BIG_ENDIAN)
 
 # Checks for required headers
 INCLUDE(CheckIncludeFile)

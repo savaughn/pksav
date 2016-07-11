@@ -7,8 +7,9 @@
 #ifndef PKSAV_H
 #define PKSAV_H
 
-#include <pksav/checksum.h>
 #include <pksav/config.h>
+
+#include <pksav/checksum.h>
 #include <pksav/contest_stats.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
@@ -18,5 +19,7 @@
 #include <pksav/stats.h>
 #include <pksav/text.h>
 #include <pksav/trainer_id.h>
+
+#include <pksav/utils/endian.h>
 
 #endif /* PKSAV_H */

@@ -24,3 +24,5 @@ INSTALL(
     DESTINATION ${INCLUDE_DIR}/pksav
     COMPONENT Headers
 )
+
+ADD_SUBDIRECTORY(utils)
