@@ -5,15 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_gen1_headers
-    items.h
-    pokemon.h
-    save.h
-    text.h
-)
-
-INSTALL(
-    FILES ${pksav_gen1_headers}
-    DESTINATION ${INCLUDE_DIR}/pksav/gen1
-    COMPONENT Headers
-)
+SET(pksav_common_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/text.c
+PARENT_SCOPE)

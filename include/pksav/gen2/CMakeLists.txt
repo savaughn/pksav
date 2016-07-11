@@ -5,15 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_gen1_headers
-    items.h
-    pokemon.h
-    save.h
+SET(pksav_gen2_headers
     text.h
 )
 
 INSTALL(
-    FILES ${pksav_gen1_headers}
-    DESTINATION ${INCLUDE_DIR}/pksav/gen1
+    FILES ${pksav_gen2_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/gen2
     COMPONENT Headers
 )

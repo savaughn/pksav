@@ -10,26 +10,26 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_BINARY_DIR}/include
 )
 
+IF(ENABLE_GEN1)
+    ADD_SUBDIRECTORY(gen1)
+ENDIF(ENABLE_GEN1)
+IF(ENABLE_GEN2)
+    #ADD_SUBDIRECTORY(gen2)
+ENDIF(ENABLE_GEN2)
+
+ADD_SUBDIRECTORY(common)
+ADD_SUBDIRECTORY(math)
+
 SET(pksav_c_sources
     checksum.c
     datetime.c
     error.c
     prng.c
     stats.c
-    common/text.c
-    math/base256.c
-    math/bcd.c
+    ${pksav_common_sources}
+    ${pksav_math_sources}
+    ${pksav_gen1_sources}
 )
-
-#
-# Component-specific files
-#
-IF(ENABLE_GEN1)
-    LIST(APPEND pksav_c_sources
-        gen1/save.c
-        gen1/text.c
-    )
-ENDIF(ENABLE_GEN1)
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}
     PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
