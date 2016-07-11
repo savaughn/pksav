@@ -162,10 +162,10 @@ pksav_error_t pksav_gen1_save_set_trainer_name_from_text(
         return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
     }
 
-    (void)pksav_text_to_game(
-              1, trainer_name,
-              gen1_save->trainer_name, 7
-          );
+    pksav_text_to_gen1(
+        trainer_name,
+        gen1_save->trainer_name, 7
+    );
 
     return PKSAV_ERROR_NONE;
 }
@@ -179,10 +179,10 @@ pksav_error_t pksav_gen1_save_set_trainer_name_from_widetext(
         return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
     }
 
-    (void)pksav_widetext_to_game(
-              1, trainer_name,
-              gen1_save->trainer_name, 7
-          );
+    pksav_widetext_to_gen1(
+        trainer_name,
+        gen1_save->trainer_name, 7
+    );
 
     return PKSAV_ERROR_NONE;
 }
@@ -196,10 +196,10 @@ pksav_error_t pksav_gen1_save_set_rival_name_from_text(
         return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
     }
 
-    (void)pksav_text_to_game(
-              1, rival_name,
-              gen1_save->rival_name, 7
-          );
+    pksav_text_to_gen1(
+        rival_name,
+        gen1_save->rival_name, 7
+    );
 
     return PKSAV_ERROR_NONE;
 }
@@ -213,10 +213,10 @@ pksav_error_t pksav_gen1_save_set_rival_name_from_widetext(
         return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
     }
 
-    (void)pksav_widetext_to_game(
-              1, rival_name,
-              gen1_save->rival_name, 7
-          );
+    pksav_widetext_to_gen1(
+        rival_name,
+        gen1_save->rival_name, 7
+    );
 
     return PKSAV_ERROR_NONE;
 }

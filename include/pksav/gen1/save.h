@@ -10,10 +10,9 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
-#include <pksav/common/text.h>
-
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/text.h>
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
@@ -124,28 +123,28 @@ static PKSAV_INLINE void pksav_gen1_save_get_trainer_name_as_text(
     pksav_gen1_save_t* gen1_save,
     char* output_text
 ) {
-    (void)pksav_text_from_game(1, gen1_save->trainer_name, output_text, 7);
+    pksav_text_from_gen1(gen1_save->trainer_name, output_text, 7);
 }
 
 static PKSAV_INLINE void pksav_gen1_save_get_trainer_name_as_widetext(
     pksav_gen1_save_t* gen1_save,
     wchar_t* output_text
 ) {
-    (void)pksav_widetext_from_game(1, gen1_save->trainer_name, output_text, 7);
+    pksav_widetext_from_gen1(gen1_save->trainer_name, output_text, 7);
 }
 
 static PKSAV_INLINE void pksav_gen1_save_get_rival_name_as_text(
     pksav_gen1_save_t* gen1_save,
     char* output_text
 ) {
-    (void)pksav_text_from_game(1, gen1_save->rival_name, output_text, 7);
+    pksav_text_from_gen1(gen1_save->rival_name, output_text, 7);
 }
 
 static PKSAV_INLINE void pksav_gen1_save_get_rival_name_as_widetext(
     pksav_gen1_save_t* gen1_save,
     wchar_t* output_text
 ) {
-    (void)pksav_widetext_from_game(1, gen1_save->rival_name, output_text, 7);
+    pksav_widetext_from_gen1(gen1_save->rival_name, output_text, 7);
 }
 
 PKSAV_API pksav_error_t pksav_gen1_save_set_money(

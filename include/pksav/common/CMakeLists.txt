@@ -8,7 +8,6 @@
 SET(pksav_common_headers
     contest_stats.h
     pokerus.h
-    text.h
     trainer_id.h
 )
 
