@@ -31,6 +31,13 @@ PKSAV_API pksav_error_t pksav_widetext_from_game(
     size_t num_chars
 );
 
+PKSAV_API pksav_error_t pksav_text_to_game(
+    size_t generation,
+    const char* input_text,
+    void* output_buffer,
+    size_t num_chars
+);
+
 PKSAV_API pksav_error_t pksav_widetext_to_game(
     size_t generation,
     const wchar_t* input_text,

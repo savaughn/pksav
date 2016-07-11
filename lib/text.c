@@ -531,6 +531,24 @@ pksav_error_t pksav_widetext_from_game(
     return PKSAV_ERROR_NONE;
 }
 
+pksav_error_t pksav_text_to_game(
+    size_t generation,
+    const char* input_text,
+    void* output_buffer,
+    size_t num_chars
+) {
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    mbstowcs(widetext, input_text, num_chars);
+
+    pksav_error_t error_code = pksav_widetext_to_game(
+                                   generation, widetext,
+                                   output_buffer, num_chars
+                               );
+
+    free(widetext);
+    return error_code;
+}
+
 pksav_error_t pksav_widetext_to_game(
     size_t generation,
     const wchar_t* input_text,
