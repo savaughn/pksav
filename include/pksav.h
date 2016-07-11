@@ -12,6 +12,7 @@
 #include <pksav/contest_stats.h>
 #include <pksav/datetime.h>
 #include <pksav/error.h>
+#include <pksav/items.h>
 #include <pksav/pokerus.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>

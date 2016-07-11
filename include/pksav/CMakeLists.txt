@@ -11,6 +11,7 @@ SET(pksav_headers
     contest_stats.h
     datetime.h
     error.h
+    items.h
     pokerus.h
     prng.h
     stats.h
