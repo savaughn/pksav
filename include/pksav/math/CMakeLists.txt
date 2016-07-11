@@ -10,12 +10,13 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_BINARY_DIR}/endian.h
 @ONLY)
 
-SET(pksav_utils_headers
+SET(pksav_math_headers
+    bcd.h
     ${CMAKE_CURRENT_BINARY_DIR}/endian.h
 )
 
 INSTALL(
-    FILES ${pksav_utils_headers}
-    DESTINATION ${INCLUDE_DIR}/pksav/utils
+    FILES ${pksav_math_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/math
     COMPONENT Headers
 )

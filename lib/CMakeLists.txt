@@ -17,6 +17,7 @@ SET(pksav_c_sources
     prng.c
     stats.c
     text.c
+    math/bcd.c
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}
