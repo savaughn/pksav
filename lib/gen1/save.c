@@ -47,8 +47,13 @@ bool pksav_file_is_gen1_save(
 
     uint8_t* gen1_save_data = malloc(PKSAV_GEN1_SAVE_SIZE);
     fseek(gen1_save, SEEK_SET, 0);
-    fread((void*)gen1_save_data, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save);
-    bool ret = _pksav_file_is_gen1_save(gen1_save_data);
+    size_t num_read = fread((void*)gen1_save_data, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save);
+    fclose(gen1_save);
+
+    bool ret = false;
+    if(num_read == PKSAV_GEN1_SAVE_SIZE) {
+        ret = _pksav_file_is_gen1_save(gen1_save_data);
+    }
 
     free(gen1_save_data);
     return ret;
@@ -72,8 +77,11 @@ pksav_error_t pksav_gen1_save_load(
 
     gen1_save->raw = malloc(PKSAV_GEN1_SAVE_SIZE);
     fseek(gen1_save_file, SEEK_SET, 0);
-    fread((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
+    size_t num_read = fread((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
     fclose(gen1_save_file);
+    if(num_read != PKSAV_GEN1_SAVE_SIZE) {
+        return PKSAV_ERROR_FILE_IO;
+    }
 
     if(!_pksav_file_is_gen1_save(gen1_save->raw)) {
         free(gen1_save->raw);
