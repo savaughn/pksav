@@ -34,17 +34,17 @@ static PKSAV_INLINE uint64_t lcrng64_next(
     return (0x5D588B656C078965UL * seed) + 0x269EC3;
 }
 
-struct pksav_mtrng {
+typedef struct {
     uint32_t nums[624];
     size_t index;
-};
+} pksav_mtrng_t;
 
 PKSAV_API void pksav_mtrng_populate(
-    struct pksav_mtrng* mtrng
+    pksav_mtrng_t* mtrng
 );
 
 PKSAV_API uint32_t pksav_mtrng_next(
-    struct pksav_mtrng* mtrng
+    pksav_mtrng_t* mtrng
 );
 
 #ifdef __cplusplus

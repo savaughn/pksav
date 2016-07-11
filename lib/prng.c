@@ -11,7 +11,7 @@
 #include <time.h>
 
 void pksav_mtrng_populate(
-    struct pksav_mtrng* mtrng
+    pksav_mtrng_t* mtrng
 ) {
     srand(time(NULL));
     for(size_t i = 0; i < 624; ++i) {
@@ -21,7 +21,7 @@ void pksav_mtrng_populate(
 }
 
 uint32_t pksav_mtrng_next(
-    struct pksav_mtrng* mtrng
+    pksav_mtrng_t* mtrng
 ) {
     uint32_t ret = mtrng->nums[mtrng->index];
     if(mtrng->index == 623) {

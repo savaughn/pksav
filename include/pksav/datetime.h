@@ -13,31 +13,31 @@
 #include <time.h>
 
 #pragma pack(push,1)
-struct pksav_gen1_time_t {
+typedef struct {
     uint16_t hours;
     uint8_t minutes;
     uint8_t seconds;
-};
+} pksav_gen1_time_t;
 
-struct pksav_gen2_time_t {
+typedef struct {
     uint8_t hours;
     uint8_t minutes;
     uint8_t seconds;
     uint8_t frames;
-};
+} pksav_gen2_time_t;
 
-struct pksav_gen3_time_t {
+typedef struct {
     uint16_t hours;
     uint8_t minutes;
     uint8_t seconds;
     uint8_t frames;
-};
+} pksav_gen3_time_t;
 
-struct pksav_date_t {
+typedef struct {
     uint8_t year;
     uint8_t month;
     uint8_t day;
-};
+} pksav_date_t;
 #pragma pack(pop)
 
 #ifdef __cplusplus
@@ -46,7 +46,7 @@ extern "C" {
 
 PKSAV_API int pksav_time_t_to_date_t(
     const time_t* time_in,
-    struct pksav_date_t* date_out
+    pksav_date_t* date_out
 );
 
 #ifdef __cplusplus

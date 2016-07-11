@@ -9,7 +9,7 @@
 
 int pksav_time_t_to_date_t(
     const time_t* time_in,
-    struct pksav_date_t* date_out
+    pksav_date_t* date_out
 ) {
     struct tm* gmtm = gmtime(time_in);
     if(gmtm->tm_year < 2000) {
