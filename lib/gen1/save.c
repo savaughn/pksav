@@ -113,9 +113,11 @@ pksav_error_t pksav_gen1_save_load(
     gen1_save->item_pc = (pksav_gen1_item_pc_t*)&gen1_save->raw[PKSAV_GEN1_ITEM_PC];
     gen1_save->time_played = (pksav_gen1_time_t*)&gen1_save->raw[PKSAV_GEN1_TIME_PLAYED];
     gen1_save->money = &gen1_save->raw[PKSAV_GEN1_MONEY];
+    gen1_save->casino_coins = &gen1_save->raw[PKSAV_GEN1_CASINO_COINS];
     gen1_save->trainer_id = (uint16_t*)&gen1_save->raw[PKSAV_GEN1_PLAYER_ID];
     gen1_save->trainer_name = &gen1_save->raw[PKSAV_GEN1_PLAYER_NAME];
     gen1_save->rival_name = &gen1_save->raw[PKSAV_GEN1_RIVAL_NAME];
+    gen1_save->pikachu_friendship = &gen1_save->raw[PKSAV_GEN1_PIKACHU_FRIENDSHIP];
 
     return PKSAV_ERROR_NONE;
 }
@@ -149,6 +151,19 @@ pksav_error_t pksav_gen1_save_set_money(
     }
 
     pksav_to_bcd(money, gen1_save->money);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_set_casino_coins(
+    pksav_gen1_save_t* gen1_save,
+    uint16_t casino_coins
+) {
+    if(casino_coins > 999) {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    pksav_to_bcd(casino_coins, gen1_save->casino_coins);
 
     return PKSAV_ERROR_NONE;
 }

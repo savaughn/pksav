@@ -73,10 +73,17 @@ typedef struct {
     pksav_gen1_item_pc_t* item_pc;
 
     pksav_gen1_time_t* time_played;
-    uint8_t* money;
     uint16_t* trainer_id;
+
+    // Stored in BCD
+    uint8_t* money;
+    uint8_t* casino_coins;
+
+    // Stored as strings
     uint8_t* trainer_name;
     uint8_t* rival_name;
+
+    uint8_t* pikachu_friendship;
 
     bool yellow;
     uint8_t* raw;
@@ -110,7 +117,13 @@ static PKSAV_INLINE void pksav_gen1_save_free(
 static PKSAV_INLINE uint32_t pksav_gen1_save_get_money(
     pksav_gen1_save_t* gen1_save
 ) {
-    return (uint32_t)(pksav_from_bcd(&gen1_save->raw[PKSAV_GEN1_MONEY], 3));
+    return (uint32_t)(pksav_from_bcd(gen1_save->money, 3));
+}
+
+static PKSAV_INLINE uint16_t pksav_gen1_save_get_casino_coins(
+    pksav_gen1_save_t* gen1_save
+) {
+    return (uint16_t)(pksav_from_bcd(gen1_save->casino_coins, 2));
 }
 
 static PKSAV_INLINE uint16_t pksav_gen1_save_get_trainer_id(
@@ -151,6 +164,12 @@ PKSAV_API pksav_error_t pksav_gen1_save_set_money(
     pksav_gen1_save_t* gen1_save,
     uint32_t money
 );
+
+PKSAV_API pksav_error_t pksav_gen1_save_set_casino_coins(
+    pksav_gen1_save_t* gen1_save,
+    uint16_t casino_coins
+);
+
 
 static PKSAV_INLINE void pksav_gen1_save_set_trainer_id(
     pksav_gen1_save_t* gen1_save,
