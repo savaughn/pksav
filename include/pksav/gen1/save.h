@@ -63,6 +63,20 @@ typedef enum {
 } pksav_gen1_save_offset_t;
 
 /*
+ * Badge positions in bitmap
+ */
+typedef enum {
+    PKSAV_GEN1_EARTH_BADGE = 0,
+    PKSAV_GEN1_VOLCANO_BADGE,
+    PKSAV_GEN1_MARSH_BADGE,
+    PKSAV_GEN1_SOUL_BADGE,
+    PKSAV_GEN1_RAINBOW_BADGE,
+    PKSAV_GEN1_THUNDER_BADGE,
+    PKSAV_GEN1_CASCADE_BADGE,
+    PKSAV_GEN1_BOULDER_BADGE
+} pksav_gen1_badge_t;
+
+/*
  * Savefile structure to be used by user
  */
 typedef struct {
@@ -82,6 +96,9 @@ typedef struct {
     // Stored as strings
     uint8_t* trainer_name;
     uint8_t* rival_name;
+
+    // Stored as a bitmap
+    uint8_t* badges;
 
     uint8_t* pikachu_friendship;
 
@@ -124,6 +141,13 @@ static PKSAV_INLINE uint16_t pksav_gen1_save_get_casino_coins(
     pksav_gen1_save_t* gen1_save
 ) {
     return (uint16_t)(pksav_from_bcd(gen1_save->casino_coins, 2));
+}
+
+static PKSAV_INLINE bool pksav_gen1_save_has_badge(
+    pksav_gen1_save_t* gen1_save,
+    pksav_gen1_badge_t badge
+) {
+    return ((*gen1_save->badges) & (1 << badge));
 }
 
 static PKSAV_INLINE uint16_t pksav_gen1_save_get_trainer_id(
@@ -170,6 +194,17 @@ PKSAV_API pksav_error_t pksav_gen1_save_set_casino_coins(
     uint16_t casino_coins
 );
 
+static PKSAV_INLINE void pksav_gen1_save_set_has_badge(
+    pksav_gen1_save_t* gen1_save,
+    pksav_gen1_badge_t badge,
+    bool has_badge
+) {
+    if(has_badge) {
+        (*gen1_save->badges) |= (1 << badge);
+    } else {
+        (*gen1_save->badges) &= (uint8_t)(1 << badge);
+    }
+}
 
 static PKSAV_INLINE void pksav_gen1_save_set_trainer_id(
     pksav_gen1_save_t* gen1_save,
