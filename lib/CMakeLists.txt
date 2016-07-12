@@ -22,6 +22,9 @@ ENDIF(ENABLE_GEN2)
 IF(ENABLE_GBA)
     ADD_SUBDIRECTORY(gba)
 ENDIF(ENABLE_GBA)
+IF(ENABLE_GCN)
+    ADD_SUBDIRECTORY(gcn)
+ENDIF(ENABLE_GCN)
 IF(ENABLE_GEN4)
     ADD_SUBDIRECTORY(gen4)
 ENDIF(ENABLE_GEN4)
@@ -43,6 +46,7 @@ SET(pksav_c_sources
     ${pksav_gen1_sources}
     ${pksav_gen2_sources}
     ${pksav_gba_sources}
+    ${pksav_gcn_sources}
     ${pksav_gen4_sources}
     ${pksav_gen5_sources}
 )
