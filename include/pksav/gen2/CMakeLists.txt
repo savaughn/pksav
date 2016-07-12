@@ -6,6 +6,8 @@
 #
 
 SET(pksav_gen2_headers
+    items.h
+    pokemon.h
     text.h
 )
 
