@@ -1,25 +1,56 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(__enabled_components "" CACHE INTERNAL "" FORCE)
-SET(__disabled_components "" CACHE INTERNAL "" FORCE)
+set(_pksav_enabled_components "" CACHE INTERNAL "" FORCE)
+set(_pksav_disabled_components "" CACHE INTERNAL "" FORCE)
 
-INCLUDE(CMakeDependentOption)
+########################################################################
+# Register a component into the system
+#  - name the component string name
+#  - var the global enable variable
+#  - enb the default enable setting
+#  - deps a list of dependencies
+#  - dis the default disable setting
+########################################################################
+MACRO(PKSAV_REGISTER_COMPONENT name var enb deps dis)
+    IF(NOT PKSAV_USED_AS_SUBMODULE)
+        MESSAGE(STATUS "")
+        MESSAGE(STATUS "Determining support for ${name}.")
+        FOREACH(dep ${deps})
+            MESSAGE(STATUS " - Dependency ${dep} = ${${dep}}")
+        ENDFOREACH(dep)
+    ENDIF(NOT PKSAV_USED_AS_SUBMODULE)
 
-MACRO(PKSAV_REGISTER_COMPONENT name var)
-    CMAKE_DEPENDENT_OPTION(${var} "${name}" ON "" OFF)
+    #setup the dependent option for this component
+    INCLUDE(CMakeDependentOption)
+    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${enb} "${deps}" ${dis})
 
+    #append the component into one of the lists
     IF(${var})
+        IF(NOT PKSAV_USED_AS_SUBMODULE)
+            MESSAGE(STATUS " - Enabling ${name}.")
+        ENDIF(NOT PKSAV_USED_AS_SUBMODULE)
         LIST(APPEND _pksav_enabled_components ${name})
-    ELSE()
+    ELSE(${var})
+        IF(NOT PKSAV_USED_AS_SUBMODULE)
+            MESSAGE(STATUS " - Disabling ${name}.")
+        ENDIF(NOT PKSAV_USED_AS_SUBMODULE)
         LIST(APPEND _pksav_disabled_components ${name})
     ENDIF(${var})
+    IF(NOT PKSAV_USED_AS_SUBMODULE)
+        MESSAGE(STATUS " - Override with -D${var}=ON/OFF")
+    ENDIF(NOT PKSAV_USED_AS_SUBMODULE)
+
+    #make components lists into global variables
+    SET(_pksav_enabled_components ${_pksav_enabled_components} CACHE INTERNAL "" FORCE)
+    SET(_pksav_disabled_components ${_pksav_disabled_components} CACHE INTERNAL "" FORCE)
 ENDMACRO(PKSAV_REGISTER_COMPONENT)
 
+#Print the summary of enabled/disabled components
 FUNCTION(PKSAV_PRINT_COMPONENT_SUMMARY)
     MESSAGE(STATUS "")
     MESSAGE(STATUS "######################################################")

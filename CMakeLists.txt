@@ -54,18 +54,23 @@ SET(DOCS_DIR share/doc/pksav)
 ####################################################################
 # Components
 ####################################################################
-PKSAV_REGISTER_COMPONENT("Generation I"     ENABLE_GEN1)
-PKSAV_REGISTER_COMPONENT("Generation II"    ENABLE_GEN2)
-PKSAV_REGISTER_COMPONENT("Game Boy Advance" ENABLE_GBA)
-PKSAV_REGISTER_COMPONENT("Gamecube"         ENABLE_GCN)
-PKSAV_REGISTER_COMPONENT("Nintendo DS"      ENABLE_NDS)
-PKSAV_REGISTER_COMPONENT("Generation VI"    ENABLE_GEN6)
+PKSAV_REGISTER_COMPONENT("Generation I"          ENABLE_GEN1 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation II"         ENABLE_GEN2 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Game Boy Advance"      ENABLE_GBA  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Gamecube"              ENABLE_GCN  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Nintendo DS"           ENABLE_NDS  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation VI"         ENABLE_GEN6 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Doxygen Documentation" ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
 
 ####################################################################
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
+
+IF(ENABLE_DOCS)
+    ADD_SUBDIRECTORY(docs)
+ENDIF(ENABLE_DOCS)
 
 ####################################################################
 # Final display
