@@ -5,12 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_gen5_headers
+SET(pksav_nds_headers
     text.h
 )
 
 INSTALL(
-    FILES ${pksav_gen5_headers}
-    DESTINATION ${INCLUDE_DIR}/pksav/gen5
+    FILES ${pksav_nds_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/nds
     COMPONENT Headers
 )

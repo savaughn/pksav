@@ -14,8 +14,7 @@
 #cmakedefine ENABLE_GEN2 1
 #cmakedefine ENABLE_GBA  1
 #cmakedefine ENABLE_GCN  1
-#cmakedefine ENABLE_GEN4 1
-#cmakedefine ENABLE_GEN5 1
+#cmakedefine ENABLE_NDS  1
 #cmakedefine ENABLE_GEN6 1
 
 #include <pksav/config.h>
@@ -47,15 +46,12 @@
 #endif /* ENABLE_GBA */
 
 #if ENABLE_GCN
+#include <pksav/gcn/text.h>
 #endif /* ENABLE_GCN */
 
-#if ENABLE_GEN4
-#include <pksav/gen4/text.h>
-#endif /* ENABLE_GEN4 */
-
-#if ENABLE_GEN5
-#include <pksav/gen5/text.h>
-#endif /* ENABLE_GEN5 */
+#if ENABLE_NDS
+#include <pksav/nds/text.h>
+#endif /* ENABLE_NDS */
 
 #if ENABLE_GEN6
 #endif /* ENABLE_GEN6 */
