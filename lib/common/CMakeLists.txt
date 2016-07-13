@@ -5,7 +5,9 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_common_sources "")
+SET(pksav_common_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/pokedex.c
+)
 
 IF(ENABLE_GEN1 OR ENABLE_GEN2 OR ENABLE_GBA OR ENABLE_NDS)
     LIST(APPEND pksav_common_sources
