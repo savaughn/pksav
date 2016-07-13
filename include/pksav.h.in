@@ -30,6 +30,7 @@
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 
+#include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
