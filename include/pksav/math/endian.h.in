@@ -13,6 +13,8 @@
 
 #include <pksav/config.h>
 
+#include <stdint.h>
+
 /*
  * Determined by CMake at compile-time
  */

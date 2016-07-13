@@ -39,6 +39,7 @@ MACRO(PKSAV_ADD_TEST test_name)
 ENDMACRO(PKSAV_ADD_TEST)
 
 SET(unit_tests
+    byteswap_test
     math_test
 )
 
