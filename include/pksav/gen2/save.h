@@ -14,7 +14,6 @@
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/text.h>
 
-#include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 #include <pksav/math/endian.h>
 
@@ -42,7 +41,12 @@ typedef struct {
 #define PKSAV_GEN2_SAVE_SIZE 0x8000
 
 typedef enum {
-    PKSAV_GEN2_GS,
+    PKSAV_GEN2_MALE = 0,
+    PKSAV_GEN2_FEMALE
+} pksav_gen2_gender_t;
+
+typedef enum {
+    PKSAV_GEN2_GS = 0,
     PKSAV_GEN2_CRYSTAL
 } pksav_gen2_game_t;
 
@@ -98,20 +102,27 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
  * Savefile structure to be used by user
  */
 typedef struct {
+    // Party/box pointers
     pksav_gen2_pokemon_party_t* pokemon_party;
     pksav_gen2_pokemon_box_t** pokemon_boxes;
     pksav_gen2_pokemon_box_names_t* pokemon_box_names;
 
+    // Item pointers
     pksav_gen2_item_bag_t* item_bag;
     pksav_gen2_item_pc_t* item_pc;
 
-    pksav_gen2_time_t* time_played;
-
-    uint8_t* money;
-    uint16_t* trainer_id;
+    // Trainer info
     uint8_t* trainer_name;
+    uint16_t* trainer_id;
+    uint8_t* trainer_gender;
+    uint8_t* money;
     uint8_t* rival_name;
 
+    // Game info
+    uint8_t* daylight_savings;
+    pksav_gen2_time_t* time_played;
+
+    // Save info
     pksav_gen2_game_t gen2_game;
     uint8_t* raw;
 } pksav_gen2_save_t;
@@ -145,13 +156,20 @@ static PKSAV_INLINE void pksav_gen2_save_free(
 static PKSAV_INLINE uint32_t pksav_gen2_save_get_money(
     pksav_gen2_save_t* gen2_save
 ) {
-    return (uint32_t)(pksav_from_bcd(&gen2_save->raw[PKSAV_GEN2_MONEY], 3));
+    return (uint32_t)(pksav_from_bcd(gen2_save->money, 3));
 }
 
 static PKSAV_INLINE uint16_t pksav_gen2_save_get_trainer_id(
     pksav_gen2_save_t* gen2_save
 ) {
     return pksav_bigendian16(*gen2_save->trainer_id);
+}
+
+static PKSAV_INLINE pksav_gen2_gender_t pksav_gen2_save_get_trainer_gender(
+    pksav_gen2_save_t* gen2_save
+) {
+    return PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER) ? PKSAV_GEN2_FEMALE
+                                                               : PKSAV_GEN2_MALE;
 }
 
 static PKSAV_INLINE void pksav_gen2_save_get_trainer_name_as_text(
@@ -182,6 +200,12 @@ static PKSAV_INLINE void pksav_gen2_save_get_rival_name_as_widetext(
     pksav_widetext_from_gen2(gen2_save->rival_name, output_text, 7);
 }
 
+static PKSAV_INLINE bool pksav_gen2_save_is_daylight_savings(
+    pksav_gen2_save_t* gen2_save
+) {
+    return PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS);
+}
+
 PKSAV_API pksav_error_t pksav_gen2_save_set_money(
     pksav_gen2_save_t* gen2_save,
     uint32_t money
@@ -193,6 +217,11 @@ static PKSAV_INLINE void pksav_gen2_save_set_trainer_id(
 ) {
     *gen2_save->trainer_id = pksav_bigendian16(trainer_id);
 }
+
+PKSAV_API pksav_error_t pksav_gen2_save_set_trainer_gender(
+    pksav_gen2_save_t* gen2_save,
+    pksav_gen2_gender_t gender
+);
 
 PKSAV_API pksav_error_t pksav_gen2_save_set_trainer_name_from_text(
     pksav_gen2_save_t* gen2_save,
@@ -213,6 +242,13 @@ PKSAV_API pksav_error_t pksav_gen2_save_set_rival_name_from_widetext(
     pksav_gen2_save_t* gen2_save,
     const wchar_t* rival_name
 );
+
+static PKSAV_INLINE void pksav_gen2_save_set_daylight_savings(
+    pksav_gen2_save_t* gen2_save,
+    bool is_dst
+) {
+    PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS) = is_dst ? 1 : 0;
+}
 
 #ifdef __cplusplus
 }

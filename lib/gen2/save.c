@@ -209,6 +209,17 @@ pksav_error_t pksav_gen2_save_set_money(
     return PKSAV_ERROR_NONE;
 }
 
+pksav_error_t pksav_gen2_save_set_trainer_gender(
+    pksav_gen2_save_t* gen2_save,
+    pksav_gen2_gender_t gender
+) {
+    if(gender < PKSAV_GEN2_MALE || gender > PKSAV_GEN2_FEMALE) {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER) = (uint8_t)gender;
+}
+
 pksav_error_t pksav_gen2_save_set_trainer_name_from_text(
     pksav_gen2_save_t* gen2_save,
     const char* trainer_name
