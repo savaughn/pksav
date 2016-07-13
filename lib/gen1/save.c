@@ -108,6 +108,8 @@ pksav_error_t pksav_gen1_save_load(
         gen1_save->pokemon_boxes[i] = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[offset];
     }
 
+    gen1_save->pokedex_seen = &gen1_save->raw[PKSAV_GEN1_POKEDEX_SEEN];
+    gen1_save->pokedex_owned = &gen1_save->raw[PKSAV_GEN1_POKEDEX_OWNED];
     gen1_save->item_bag = (pksav_gen1_item_bag_t*)&gen1_save->raw[PKSAV_GEN1_ITEM_BAG];
     gen1_save->item_pc = (pksav_gen1_item_pc_t*)&gen1_save->raw[PKSAV_GEN1_ITEM_PC];
     gen1_save->time_played = (pksav_gen1_time_t*)&gen1_save->raw[PKSAV_GEN1_TIME_PLAYED];

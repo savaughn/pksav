@@ -56,7 +56,17 @@ typedef enum {
      * The field pksav_gen1_save_t.trainer_name points to this location.
      */
     PKSAV_GEN1_PLAYER_NAME             = 0x2598,
+    /*!
+     * @brief Where the list of Pokémon the trainer has caught is stored in-game.
+     *
+     * The field pksav_gen1_save_t.pokedex_owned points to this location.
+     */
     PKSAV_GEN1_POKEDEX_OWNED           = 0x25A3,
+    /*!
+     * @brief Where the list of Pokémon the trainer has seen is stored in-game.
+     *
+     * The field pksav_gen1_save_t.pokedex_seen points to this location.
+     */
     PKSAV_GEN1_POKEDEX_SEEN            = 0x25B6,
     /*!
      * @brief Where the player's item bag is stored in-game.
@@ -186,6 +196,21 @@ typedef struct {
     pksav_gen1_item_bag_t* item_bag;
     //! A pointer to the trainer's item PC.
     pksav_gen1_item_pc_t* item_pc;
+
+    /*!
+     * @brief A pointer to the list of Pokémon seen by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* pokedex_seen;
+    /*!
+     * @brief A pointer to the list of Pokémon owned by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* pokedex_owned;
 
     //! A pointer to the amount of time this save file has been played.
     pksav_gen1_time_t* time_played;
