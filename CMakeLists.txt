@@ -61,7 +61,7 @@ PKSAV_REGISTER_COMPONENT("Gamecube"              ENABLE_GCN  ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Nintendo DS"           ENABLE_NDS  ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Generation VI"         ENABLE_GEN6 ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Doxygen Documentation" ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
-PKSAV_REGISTER_COMPONENT("Unit Tests"            ENABLE_TESTS ON OFF)
+PKSAV_REGISTER_COMPONENT("Unit Tests"            ENABLE_TESTS ON "" OFF)
 
 ####################################################################
 # Actual building

@@ -17,8 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <pksav-c/error.h>
-
 static int return_code;
 
 static char error_buffer[1024];
@@ -102,7 +100,6 @@ static char error_buffer[1024];
                 break; \
             default: \
                 return_code = EXIT_FAILURE; \
-                pksav_strerror(exception_buffer, 1024, &actual_exception_len); \
                 printf("unknown failure.\n"); \
                 break; \
         } \
