@@ -12,10 +12,6 @@
 #include <stdint.h>
 #include <string.h>
 
-/*
- * Gamecube games store strings in UCS-2 big endian format.
- */
-
 static PKSAV_INLINE void ucs2be_mbtowc(
     const uint8_t* mb,
     uint32_t* wc

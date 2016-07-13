@@ -16,11 +16,22 @@
 extern "C" {
 #endif
 
+//! Convert a number stored in binary-coded decimal (BCD) to Base-10.
+/*!
+ * \param buffer where BCD number is stored
+ * \param num_bytes number of bytes to convert
+ * \returns converted Base-10 number
+ */
 PKSAV_API size_t pksav_from_bcd(
     const uint8_t* buffer,
     size_t num_bytes
 );
 
+//! Convert a Base-10 number to binary-coded decimal (BCD).
+/*!
+ * \param num Base-10 number to convert
+ * \param buffer_out where to place converted BCD number
+ */
 PKSAV_API void pksav_to_bcd(
     size_t num,
     uint8_t* buffer_out

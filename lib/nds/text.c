@@ -376,16 +376,16 @@ void pksav_text_from_nds(
 void pksav_widetext_from_nds(
     bool gen4,
     const uint16_t* input_buffer,
-    wchar_t* output_widetext,
+    wchar_t* output_text,
     size_t num_chars
 ) {
     if(gen4) {
         _pksav_widetext_from_gen4(
-            input_buffer, output_widetext, num_chars
+            input_buffer, output_text, num_chars
         );
     } else {
         _pksav_widetext_from_gen5(
-            input_buffer, output_widetext, num_chars
+            input_buffer, output_text, num_chars
         );
     }
 }
@@ -409,17 +409,17 @@ void pksav_text_to_nds(
 
 void pksav_widetext_to_nds(
     bool gen4,
-    const wchar_t* input_widetext,
+    const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 ) {
     if(gen4) {
         _pksav_widetext_to_gen4(
-            input_widetext, output_buffer, num_chars
+            input_text, output_buffer, num_chars
         );
     } else {
         _pksav_widetext_to_gen5(
-            input_widetext, output_buffer, num_chars
+            input_text, output_buffer, num_chars
         );
     }
 }
