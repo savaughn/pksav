@@ -1,7 +1,7 @@
 /*!
- * @file    gen1/text.h
+ * @file    pksav/gen1/text.h
  * @ingroup PKSav
- * @brief   Conversions between C strings and the string format used in Generation I games
+ * @brief   Conversions between C strings and the string format used in Generation I games.
  *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *

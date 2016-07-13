@@ -1,5 +1,5 @@
 /*!
- * @file    gen2/text.h
+ * @file    pksav/gen2/text.h
  * @ingroup PKSav
  * @brief   Conversions between C strings and the string format used in Generation II games.
  *

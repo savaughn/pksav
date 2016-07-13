@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/math/base256.h
+ * @ingroup PKSav
+ * @brief   Conversions between Base-10 and Base-256 numbers.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/math/bcd.h
+ * @ingroup PKSav
+ * @brief   Conversions between Base-10 and binary-coded decimal (BCD) numbers.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

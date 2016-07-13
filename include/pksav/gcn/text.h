@@ -1,5 +1,5 @@
 /*!
- * @file    gcn/text.h
+ * @file    pksav/gcn/text.h
  * @ingroup PKSav
  * @brief   Conversions between C strings and the string format used in Gamecube games.
  *

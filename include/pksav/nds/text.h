@@ -1,5 +1,5 @@
 /*!
- * @file    nds/text.h
+ * @file    pksav/nds/text.h
  * @ingroup PKSav
  * @brief   Conversions between C strings and the string formats used in Generation IV-V games.
  *

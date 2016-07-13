@@ -1,5 +1,5 @@
 /*!
- * @file    error.h
+ * @file    pksav/error.h
  * @ingroup PKSav
  * @brief   Error codes returned from PKSav functions.
  *

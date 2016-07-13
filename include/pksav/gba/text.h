@@ -1,5 +1,5 @@
 /*!
- * @file    gba/text.h
+ * @file    pksav/gba/text.h
  * @ingroup PKSav
  * @brief   Conversions between C strings and the string format used in Game Boy Advance games.
  *
