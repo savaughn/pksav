@@ -41,7 +41,7 @@ void pksav_text_from_gcn(
         {
             break;
         } else {
-            ucs2be_wctomb(&input_buffer[i], &output_text[2*i]);
+            ucs2be_wctomb(&input_buffer[i], (uint8_t*)&output_text[2*i]);
         }
     }
 }
@@ -70,7 +70,7 @@ void pksav_text_to_gcn(
     memset(output_buffer, 0xFFFF, 4*num_chars);
 
     for(size_t i = 0; i < num_chars; i += 2) {
-        ucs2be_mbtowc(&input_text[i], &output_buffer[2*i]);
+        ucs2be_mbtowc((const uint8_t*)&input_text[i], &output_buffer[2*i]);
     }
 }
 

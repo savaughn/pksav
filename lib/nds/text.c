@@ -226,10 +226,6 @@ static void _pksav_text_from_gen4(const uint16_t*, char*, size_t);
 static void _pksav_widetext_from_gen4(const uint16_t*, wchar_t*, size_t);
 static void _pksav_text_to_gen4(const char*, uint16_t*, size_t);
 static void _pksav_widetext_to_gen4(const wchar_t*, uint16_t*, size_t);
-static void _pksav_text_from_gen5(const uint16_t*, char*, size_t);
-static void _pksav_widetext_from_gen5(const uint16_t*, wchar_t*, size_t);
-static void _pksav_text_to_gen5(const char*, uint16_t*, size_t);
-static void _pksav_widetext_to_gen5(const wchar_t*, uint16_t*, size_t);
 
 static void _pksav_text_from_gen4(
     const uint16_t* input_buffer,
