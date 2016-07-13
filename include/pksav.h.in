@@ -40,6 +40,7 @@
 #if ENABLE_GEN2
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/pokemon.h>
+#include <pksav/gen2/save.h>
 #include <pksav/gen2/text.h>
 #endif /* ENABLE_GEN2 */
 
