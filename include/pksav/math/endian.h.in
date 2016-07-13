@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/math/endian.h
+ * @ingroup PKSav
+ * @brief   Endianness (byte-ordering) conversions.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
@@ -15,11 +19,11 @@
 #cmakedefine PKSAV_BIG_ENDIAN
 #cmakedefine PKSAV_LITTLE_ENDIAN
 
-#if defined(PKSAV_PLATFORM_WIN32)
+#if defined(PKSAV_PLATFORM_WIN32) || defined(PKSAV_PLATFORM_MINGW)
 #    include <stdlib.h>
 #    define PKSAV_BYTESWAP16(num) _byteswap_ushort(num)
 #    define PKSAV_BYTESWAP32(num) _byteswap_ulong(num)
-#elif defined(PKSAV_PLATFORM_LINUX) || defined(PKSAV_PLATFORM_MINGW)
+#elif defined(PKSAV_PLATFORM_LINUX)
 #    include <byteswap.h>
 #    define PKSAV_BYTESWAP16(num) bswap_16(num)
 #    define PKSAV_BYTESWAP32(num) bswap_32(num)

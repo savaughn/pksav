@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav.h
+ * @ingroup PKSav
+ * @brief   Global include file, includes all PKSav headers.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

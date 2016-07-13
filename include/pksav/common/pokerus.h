@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/common/pokerus.h
+ * @ingroup PKSav
+ * @brief   Functions for getting and setting Pokérus values.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

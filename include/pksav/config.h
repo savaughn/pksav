@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/config.h
+ * @ingroup PKSav
+ * @brief   Platform-defining and platform-agnostic macros.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

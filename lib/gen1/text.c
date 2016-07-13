@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../common/text_common.h"
+
 #include <pksav/gen1/text.h>
 
 #include <string.h>
@@ -39,21 +41,6 @@ static const wchar_t pksav_gen1_char_map[] = {
     '\0',0x3C,0x3E,0x2D,'\0','\0',0x3F,0x21,0x2E,'\0','\0','\0','\0','\0','\0',0x2642,
     '\0',0xD7,'\0',0x2F,0x2C,0x2640,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
 };
-
-// C equivalent of std::distance
-static ssize_t wchar_map_index(
-    const wchar_t* char_map,
-    size_t char_map_size,
-    wchar_t to_find
-) {
-    for(ssize_t i = 0; i < (ssize_t)char_map_size; ++i) {
-        if(char_map[i] == to_find) {
-            return i;
-        }
-    }
-
-    return -1;
-}
 
 void pksav_text_from_gen1(
     const uint8_t* input_buffer,
