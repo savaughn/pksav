@@ -53,7 +53,7 @@ typedef enum {
     /*!
      * @brief Where the player's name is stored in-game.
      *
-     * This field pksav_gen1_save_t.trainer_name points to this location.
+     * The field pksav_gen1_save_t.trainer_name points to this location.
      */
     PKSAV_GEN1_PLAYER_NAME             = 0x2598,
     PKSAV_GEN1_POKEDEX_OWNED           = 0x25A3,
@@ -61,32 +61,32 @@ typedef enum {
     /*!
      * @brief Where the player's item bag is stored in-game.
      *
-     * This field pksav_gen1_save_t.item_bag points to this location.
+     * The field pksav_gen1_save_t.item_bag points to this location.
      */
     PKSAV_GEN1_ITEM_BAG                = 0x25C9,
     /*!
      * @brief Where the player's money amount is stored in-game.
      *
-     * This field pksav_gen1_save_t.money points to this location.
+     * The field pksav_gen1_save_t.money points to this location.
      */
     PKSAV_GEN1_MONEY                   = 0x25F3,
     /*!
      * @brief Where the rival's name is stored in-game.
      *
-     * This field pksav_gen1_save_t.rival_name points to this location.
+     * The field pksav_gen1_save_t.rival_name points to this location.
      */
     PKSAV_GEN1_RIVAL_NAME              = 0x25F6,
     PKSAV_GEN1_OPTIONS                 = 0x2601,
     /*!
      * @brief Where which badges the player has earned is stored in-game.
      *
-     * This field pksav_gen1_save_t.badges points to this location.
+     * The field pksav_gen1_save_t.badges points to this location.
      */
     PKSAV_GEN1_BADGES                  = 0x2602,
     /*!
      * @brief Where the player's trainer ID is stored in-game.
      *
-     * This field pksav_gen1_save_t.trainer_id points to this location.
+     * The field pksav_gen1_save_t.trainer_id points to this location.
      */
     PKSAV_GEN1_PLAYER_ID               = 0x2605,
     /*!
@@ -94,32 +94,32 @@ typedef enum {
      *
      * In Pokémon Red/Blue, this value is unused and is always set to 0.
      *
-     * This field pksav_gen1_save_t.pikachu_friendship points to this location.
+     * The field pksav_gen1_save_t.pikachu_friendship points to this location.
      */
     PKSAV_GEN1_PIKACHU_FRIENDSHIP      = 0x271C,
     /*!
      * @brief Where the player's item PC box is stored in-game.
      *
-     * This field pksav_gen1_save_t.item_pc points to this location.
+     * The field pksav_gen1_save_t.item_pc points to this location.
      */
     PKSAV_GEN1_ITEM_PC                 = 0x27E6,
     PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM = 0x284C,
     /*!
      * @brief Where the player's amount of casino coins is stored in-game.
      *
-     * This field pksav_gen1_save_t.casino_coins points to this location.
+     * The field pksav_gen1_save_t.casino_coins points to this location.
      */
     PKSAV_GEN1_CASINO_COINS            = 0x2850,
     /*!
      * @brief Where how long the save file has been played is stored in-game.
      *
-     * This field pksav_gen1_save_t.time_played points to this location.
+     * The field pksav_gen1_save_t.time_played points to this location.
      */
     PKSAV_GEN1_TIME_PLAYED             = 0x2CED,
     /*!
      * @brief Where the player's Pokémon party is stored in-game.
      *
-     * This field pksav_gen1_save_t.trainer_id points to this location.
+     * The field pksav_gen1_save_t.trainer_id points to this location.
      */
     PKSAV_GEN1_POKEMON_PARTY           = 0x2F2C,
     PKSAV_GEN1_CURRENT_POKEMON_BOX     = 0x30C0,
