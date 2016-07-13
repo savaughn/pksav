@@ -99,7 +99,6 @@ pksav_error_t pksav_gen1_save_load(
     // Set pointers
     gen1_save->pokemon_party = (pksav_gen1_pokemon_party_t*)&gen1_save->raw[PKSAV_GEN1_POKEMON_PARTY];
 
-    gen1_save->pokemon_boxes = malloc(sizeof(pksav_gen1_pokemon_box_t*)*12);
     for(uint8_t i = 0; i < 6; ++i) {
         uint16_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF + (sizeof(pksav_gen1_pokemon_box_t)*i);
         gen1_save->pokemon_boxes[i] = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[offset];
@@ -138,100 +137,6 @@ pksav_error_t pksav_gen1_save_save(
     // Write to file
     fwrite((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
     fclose(gen1_save_file);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_money(
-    pksav_gen1_save_t* gen1_save,
-    uint32_t money
-) {
-    if(money > 999999) {
-        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
-    }
-
-    pksav_to_bcd(money, gen1_save->money);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_casino_coins(
-    pksav_gen1_save_t* gen1_save,
-    uint16_t casino_coins
-) {
-    if(casino_coins > 999) {
-        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
-    }
-
-    pksav_to_bcd(casino_coins, gen1_save->casino_coins);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_trainer_name_from_text(
-    pksav_gen1_save_t* gen1_save,
-    const char* trainer_name
-) {
-    size_t name_len = strlen(trainer_name);
-    if(name_len > 7) {
-        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
-    }
-
-    pksav_text_to_gen1(
-        trainer_name,
-        gen1_save->trainer_name, 7
-    );
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_trainer_name_from_widetext(
-    pksav_gen1_save_t* gen1_save,
-    const wchar_t* trainer_name
-) {
-    size_t name_len = wcslen(trainer_name);
-    if(name_len > 7) {
-        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
-    }
-
-    pksav_widetext_to_gen1(
-        trainer_name,
-        gen1_save->trainer_name, 7
-    );
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_rival_name_from_text(
-    pksav_gen1_save_t* gen1_save,
-    const char* rival_name
-) {
-    size_t name_len = strlen(rival_name);
-    if(name_len > 7) {
-        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
-    }
-
-    pksav_text_to_gen1(
-        rival_name,
-        gen1_save->rival_name, 7
-    );
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_gen1_save_set_rival_name_from_widetext(
-    pksav_gen1_save_t* gen1_save,
-    const wchar_t* rival_name
-) {
-    size_t name_len = wcslen(rival_name);
-    if(name_len > 7) {
-        return PKSAV_ERROR_STRING_PARAM_TOO_LONG;
-    }
-
-    pksav_widetext_to_gen1(
-        rival_name,
-        gen1_save->rival_name, 7
-    );
 
     return PKSAV_ERROR_NONE;
 }
