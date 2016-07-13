@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../common/text_common.h"
 #include "../common/xds_common.h"
 
 #include <pksav/nds/text.h>
@@ -205,21 +206,6 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0x1112,0x1161,0x1162,0x1163,0x1164,0x1165,0x1166,0x1167,0x1168,0x1169,0x116D,0x116E,0x1172,0x1173,0x1175,0xB894,
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
-
-// C equivalent of std::distance
-static ssize_t wchar_map_index(
-    const wchar_t* char_map,
-    size_t char_map_size,
-    wchar_t to_find
-) {
-    for(ssize_t i = 0; i < (ssize_t)char_map_size; ++i) {
-        if(char_map[i] == to_find) {
-            return i;
-        }
-    }
-
-    return -1;
-}
 
 // Function prototypes
 static void _pksav_text_from_gen4(const uint16_t*, char*, size_t);
