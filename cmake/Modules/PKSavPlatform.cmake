@@ -43,6 +43,13 @@ ENDIF(PKSAV_BIG_ENDIAN)
 INCLUDE(CheckIncludeFile)
 SET(CMAKE_REQUIRED_FLAGS "${PKSAV_C_FLAGS}")
 CHECK_INCLUDE_FILE(stdbool.h HAVE_STDBOOL_H)
+IF(NOT HAVE_STDBOOL_H)
+    MESSAGE(FATAL_ERROR "PKSav requires the header stdbool.h to compile.")
+ENDIF(NOT HAVE_STDBOOL_H)
+CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
+IF(NOT HAVE_STDINT_H)
+    MESSAGE(FATAL_ERROR "PKSav requires the header stdint.h to compile.")
+ENDIF(NOT HAVE_STDINT_H)
 
 # Set compiler name for CMake display
 IF(MSVC)
