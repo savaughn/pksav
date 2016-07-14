@@ -24,7 +24,9 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 INCLUDE(PKSavPlatform)
 INCLUDE(PKSavComponent)
 
-FIND_PACKAGE(Doxygen)
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    FIND_PACKAGE(Doxygen)
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ########################################################################
 # Create uninstall target
@@ -60,8 +62,11 @@ PKSAV_REGISTER_COMPONENT("Game Boy Advance"      PKSAV_ENABLE_GBA  ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Gamecube"              PKSAV_ENABLE_GCN  ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Nintendo DS"           PKSAV_ENABLE_NDS  ON "" OFF)
 PKSAV_REGISTER_COMPONENT("Generation VI"         PKSAV_ENABLE_GEN6 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
-PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON "" OFF)
+
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
+    PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON "" OFF)
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ####################################################################
 # Actual building
@@ -82,9 +87,11 @@ ENDIF(ENABLE_TESTS)
 # Final display
 ####################################################################
 PKSAV_PRINT_COMPONENT_SUMMARY()
-MESSAGE(STATUS "")
-MESSAGE(STATUS "Building PKSav.")
-MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
-MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
-MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
-MESSAGE(STATUS "")
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "Building PKSav.")
+    MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
+    MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
+    MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
+    MESSAGE(STATUS "")
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)

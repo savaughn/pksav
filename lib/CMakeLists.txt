@@ -82,14 +82,16 @@ INSTALL(
 #
 # pkg-config file
 #
-FIND_PACKAGE(PkgConfig)
-IF(PKG_CONFIG_FOUND)
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/pksav.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/pksav.pc
-    @ONLY)
-    INSTALL(
-        FILES ${CMAKE_CURRENT_BINARY_DIR}/pksav.pc
-        DESTINATION ${LIBRARY_DIR}/pkgconfig
-    )
-ENDIF(PKG_CONFIG_FOUND)
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    FIND_PACKAGE(PkgConfig)
+    IF(PKG_CONFIG_FOUND)
+        CONFIGURE_FILE(
+            ${CMAKE_CURRENT_SOURCE_DIR}/pksav.pc.in
+            ${CMAKE_CURRENT_BINARY_DIR}/pksav.pc
+        @ONLY)
+        INSTALL(
+            FILES ${CMAKE_CURRENT_BINARY_DIR}/pksav.pc
+            DESTINATION ${LIBRARY_DIR}/pkgconfig
+        )
+    ENDIF(PKG_CONFIG_FOUND)
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
