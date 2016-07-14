@@ -6,8 +6,8 @@
 #
 
 INCLUDE_DIRECTORIES(
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_BINARY_DIR}/include
+    ${PKSAV_SOURCE_DIR}/include
+    ${PKSAV_BINARY_DIR}/include
 )
 
 #

@@ -24,8 +24,7 @@ ENDMACRO(PKSAV_BUILD_DOXYGEN_DOCS)
 
 FILE(GLOB_RECURSE h_files ${CMAKE_SOURCE_DIR}/include/*.h)
 LIST(APPEND h_files
-    ${CMAKE_SOURCE_DIR}/include/pksav.h.in
-    ${CMAKE_SOURCE_DIR}/include/pksav/math/endian.h.in
+    ${CMAKE_SOURCE_DIR}/include/pksav/config.h.in
 )
 
 PKSAV_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
