@@ -54,14 +54,14 @@ SET(DOCS_DIR share/doc/pksav)
 ####################################################################
 # Components
 ####################################################################
-PKSAV_REGISTER_COMPONENT("Generation I"          ENABLE_GEN1 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation II"         ENABLE_GEN2 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Game Boy Advance"      ENABLE_GBA  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Gamecube"              ENABLE_GCN  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Nintendo DS"           ENABLE_NDS  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation VI"         ENABLE_GEN6 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Doxygen Documentation" ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
-PKSAV_REGISTER_COMPONENT("Unit Tests"            ENABLE_TESTS ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation I"          PKSAV_ENABLE_GEN1 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation II"         PKSAV_ENABLE_GEN2 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Game Boy Advance"      PKSAV_ENABLE_GBA  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Gamecube"              PKSAV_ENABLE_GCN  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Nintendo DS"           PKSAV_ENABLE_NDS  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation VI"         PKSAV_ENABLE_GEN6 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
+PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON "" OFF)
 
 ####################################################################
 # Actual building
