@@ -11,16 +11,6 @@
 #ifndef PKSAV_H
 #define PKSAV_H
 
-/*
- * Set at build-time. Do not change!
- */
-#cmakedefine ENABLE_GEN1 1
-#cmakedefine ENABLE_GEN2 1
-#cmakedefine ENABLE_GBA  1
-#cmakedefine ENABLE_GCN  1
-#cmakedefine ENABLE_NDS  1
-#cmakedefine ENABLE_GEN6 1
-
 #include <pksav/config.h>
 
 #include <pksav/checksum.h>
@@ -35,40 +25,40 @@
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
-#if ENABLE_GEN1
+#if PKSAV_ENABLE_GEN1
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
-#endif /* ENABLE_GEN1 */
+#endif /* PKSAV_ENABLE_GEN1 */
 
-#if ENABLE_GEN2
+#if PKSAV_ENABLE_GEN2
 #include <pksav/gen2/text.h>
-#endif /* ENABLE_GEN2 */
+#endif /* PKSAV_ENABLE_GEN2 */
 
-#if ENABLE_GBA
+#if PKSAV_ENABLE_GBA
 #include <pksav/gba/text.h>
-#endif /* ENABLE_GBA */
+#endif /* PKSAV_ENABLE_GBA */
 
-#if ENABLE_GCN
+#if PKSAV_ENABLE_GCN
 #include <pksav/gcn/text.h>
-#endif /* ENABLE_GCN */
+#endif /* PKSAV_ENABLE_GCN */
 
-#if ENABLE_NDS
+#if PKSAV_ENABLE_NDS
 #include <pksav/nds/text.h>
-#endif /* ENABLE_NDS */
+#endif /* PKSAV_ENABLE_NDS */
 
-#if ENABLE_GEN6
+#if PKSAV_ENABLE_GEN6
 #include <pksav/gen6/hall_of_fame.h>
 #include <pksav/gen6/items.h>
 #include <pksav/gen6/pokemon.h>
 #include <pksav/gen6/text.h>
-#endif /* ENABLE_GEN6 */
+#endif /* PKSAV_ENABLE_GEN6 */
 
-#if ENABLE_GEN1 || ENABLE_GEN2
+#if PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
-#endif /* ENABLE_GEN1 || ENABLE_GEN2 */
+#endif /* PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2 */
 
 #include <pksav/math/endian.h>
 

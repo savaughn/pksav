@@ -7,11 +7,11 @@
 
 SET(pksav_math_sources "")
 
-IF(ENABLE_GEN1 OR ENABLE_GEN2)
+IF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2)
     LIST(APPEND pksav_math_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/base256.c
         ${CMAKE_CURRENT_SOURCE_DIR}/bcd.c
     )
-ENDIF(ENABLE_GEN1 OR ENABLE_GEN2)
+ENDIF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2)
 
 SET(pksav_math_sources ${pksav_math_sources} PARENT_SCOPE)

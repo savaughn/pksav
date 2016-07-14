@@ -15,12 +15,6 @@
 
 #include <stdint.h>
 
-/*
- * Determined by CMake at compile-time
- */
-#cmakedefine PKSAV_BIG_ENDIAN
-#cmakedefine PKSAV_LITTLE_ENDIAN
-
 #ifndef __DOXYGEN__
 #if defined(PKSAV_PLATFORM_WIN32) || defined(PKSAV_PLATFORM_MINGW)
 #    include <stdlib.h>
