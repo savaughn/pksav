@@ -42,6 +42,7 @@ bool pksav_file_is_gen1_save(
     fseek(gen1_save, SEEK_END, 0);
 
     if(ftell(gen1_save) < PKSAV_GEN1_SAVE_SIZE) {
+        fclose(gen1_save);
         return false;
     }
 
@@ -72,6 +73,7 @@ pksav_error_t pksav_gen1_save_load(
     fseek(gen1_save_file, SEEK_END, 0);
 
     if(ftell(gen1_save_file) < PKSAV_GEN1_SAVE_SIZE) {
+        fclose(gen1_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
