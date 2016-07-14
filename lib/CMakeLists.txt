@@ -28,6 +28,9 @@ ENDIF(ENABLE_GCN)
 IF(ENABLE_NDS)
     ADD_SUBDIRECTORY(nds)
 ENDIF(ENABLE_NDS)
+IF(ENABLE_GEN6)
+    ADD_SUBDIRECTORY(gen6)
+ENDIF(ENABLE_GEN6)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
@@ -45,6 +48,7 @@ SET(pksav_c_sources
     ${pksav_gba_sources}
     ${pksav_gcn_sources}
     ${pksav_nds_sources}
+    ${pksav_gen6_sources}
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}

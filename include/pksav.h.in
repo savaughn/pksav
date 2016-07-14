@@ -59,6 +59,7 @@
 #endif /* ENABLE_NDS */
 
 #if ENABLE_GEN6
+#include <pksav/gen6/text.h>
 #endif /* ENABLE_GEN6 */
 
 #if ENABLE_GEN1 || ENABLE_GEN2
