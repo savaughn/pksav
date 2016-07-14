@@ -5,15 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/pksav.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/pksav.h
-@ONLY)
-
-INSTALL(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/pksav.h
-    DESTINATION ${INCLUDE_DIR}
-    COMPONENT Headers
-)
+IF(NOT PKSAV_DONT_INSTALL_HEADERS)
+    INSTALL(
+        FILES pksav.h
+        DESTINATION ${INCLUDE_DIR}
+        COMPONENT Headers
+    )
+ENDIF(NOT PKSAV_DONT_INSTALL_HEADERS)
 
 ADD_SUBDIRECTORY(pksav)

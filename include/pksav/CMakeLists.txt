@@ -5,37 +5,43 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_headers
-    checksum.h
-    config.h
-    datetime.h
-    error.h
-    items.h
-    prng.h
-    stats.h
-)
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+@ONLY)
 
-INSTALL(
-    FILES ${pksav_headers}
-    DESTINATION ${INCLUDE_DIR}/pksav
-    COMPONENT Headers
-)
+IF(NOT PKSAV_DONT_INSTALL_HEADERS)
+    SET(pksav_headers
+        checksum.h
+        ${CMAKE_CURRENT_BINARY_DIR}/config.h
+        error.h
+        items.h
+        prng.h
+        stats.h
+    )
 
-ADD_SUBDIRECTORY(common)
-ADD_SUBDIRECTORY(math)
+    INSTALL(
+        FILES ${pksav_headers}
+        DESTINATION ${INCLUDE_DIR}/pksav
+        COMPONENT Headers
+    )
 
-IF(ENABLE_GEN1)
-    ADD_SUBDIRECTORY(gen1)
-ENDIF(ENABLE_GEN1)
-IF(ENABLE_GEN2)
-    ADD_SUBDIRECTORY(gen2)
-ENDIF(ENABLE_GEN2)
-IF(ENABLE_GBA)
-    ADD_SUBDIRECTORY(gba)
-ENDIF(ENABLE_GBA)
-IF(ENABLE_GCN)
-    ADD_SUBDIRECTORY(gcn)
-ENDIF(ENABLE_GCN)
-IF(ENABLE_NDS)
-    ADD_SUBDIRECTORY(nds)
-ENDIF(ENABLE_NDS)
+    ADD_SUBDIRECTORY(common)
+    ADD_SUBDIRECTORY(math)
+
+    IF(PKSAV_ENABLE_GEN1)
+        ADD_SUBDIRECTORY(gen1)
+    ENDIF(PKSAV_ENABLE_GEN1)
+    IF(PKSAV_ENABLE_GEN2)
+        ADD_SUBDIRECTORY(gen2)
+    ENDIF(PKSAV_ENABLE_GEN2)
+    IF(PKSAV_ENABLE_GBA)
+        ADD_SUBDIRECTORY(gba)
+    ENDIF(PKSAV_ENABLE_GBA)
+    IF(PKSAV_ENABLE_GCN)
+        ADD_SUBDIRECTORY(gcn)
+    ENDIF(PKSAV_ENABLE_GCN)
+    IF(PKSAV_ENABLE_NDS)
+        ADD_SUBDIRECTORY(nds)
+    ENDIF(PKSAV_ENABLE_NDS)
+ENDIF(NOT PKSAV_DONT_INSTALL_HEADERS)

@@ -48,4 +48,16 @@
 #    define PKSAV_PLATFORM_MACOS
 #endif
 
+/*
+ * Determined at compile-time, do not change!
+ */
+#cmakedefine PKSAV_ENABLE_GEN1 1
+#cmakedefine PKSAV_ENABLE_GEN2 1
+#cmakedefine PKSAV_ENABLE_GBA  1
+#cmakedefine PKSAV_ENABLE_GCN  1
+#cmakedefine PKSAV_ENABLE_NDS  1
+#cmakedefine PKSAV_ENABLE_GEN6 1
+#cmakedefine PKSAV_BIG_ENDIAN
+#cmakedefine PKSAV_LITTLE_ENDIAN
+
 #endif /* PKSAV_CONFIG_H */
