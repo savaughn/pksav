@@ -11,16 +11,6 @@
 #ifndef PKSAV_H
 #define PKSAV_H
 
-/*
- * Set at build-time. Do not change!
- */
-#cmakedefine PKSAV_ENABLE_GEN1 1
-#cmakedefine PKSAV_ENABLE_GEN2 1
-#cmakedefine PKSAV_ENABLE_GBA  1
-#cmakedefine PKSAV_ENABLE_GCN  1
-#cmakedefine PKSAV_ENABLE_NDS  1
-#cmakedefine PKSAV_ENABLE_GEN6 1
-
 #include <pksav/config.h>
 
 #include <pksav/checksum.h>

@@ -5,9 +5,14 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+@ONLY)
+
 SET(pksav_headers
     checksum.h
-    config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
     error.h
     items.h
     prng.h
