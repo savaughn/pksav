@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -23,4 +23,8 @@ MACRO(PKSAV_BUILD_DOXYGEN_DOCS files)
 ENDMACRO(PKSAV_BUILD_DOXYGEN_DOCS)
 
 FILE(GLOB_RECURSE h_files ${CMAKE_SOURCE_DIR}/include/*.h)
+LIST(APPEND h_files
+    ${CMAKE_SOURCE_DIR}/include/pksav/config.h.in
+)
+
 PKSAV_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")

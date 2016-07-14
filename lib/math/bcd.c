@@ -9,6 +9,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -35,7 +36,12 @@ void pksav_to_bcd(
     uint8_t* buffer_out
 ) {
     // Find the number of needed bytes
-    size_t num_bytes = (size_t)(log10(num) + 1);
+    size_t log10_num = log10(num);
+    size_t num_bytes = (size_t)((log10_num + 1) / 2);
+    if(log10_num % 2 == 0) {
+        ++num_bytes;
+    }
+
     memset(buffer_out, 0, num_bytes);
     size_t mult = 100;
 

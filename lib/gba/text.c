@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../common/text_common.h"
+
 #include <pksav/gba/text.h>
 
 #include <string.h>
@@ -46,21 +48,6 @@ static const wchar_t pksav_gba_char_map[] = {
     0x006C,0x006D,0x006E,0x006F,0x0070,0x0071,0x0072,0x0073,0x0074,0x0075,0x0076,0x0077,0x0078,0x0078,0x007A,0x25B6,
     0x003A,0x00C4,0x00D6,0x00DC,0x00E4,0x00F6,0x00F6,0x2B06,0x2B07,0x2B05,'\0','\0','\0','\0','\n','\0'
 };
-
-// C equivalent of std::distance
-static ssize_t wchar_map_index(
-    const wchar_t* char_map,
-    size_t char_map_size,
-    wchar_t to_find
-) {
-    for(ssize_t i = 0; i < (ssize_t)char_map_size; ++i) {
-        if(char_map[i] == to_find) {
-            return i;
-        }
-    }
-
-    return -1;
-}
 
 void pksav_text_from_gba(
     const uint8_t* input_buffer,

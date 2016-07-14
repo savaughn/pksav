@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/gen1/items.h
+ * @ingroup PKSav
+ * @brief   Native formats for item storage in Generation I games.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

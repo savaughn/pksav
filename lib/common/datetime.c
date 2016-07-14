@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/datetime.h>
+#include <pksav/common/datetime.h>
 
 pksav_error_t pksav_time_t_to_date_t(
     const time_t* time_in,

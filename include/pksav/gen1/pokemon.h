@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/gen1/pokemon.h
+ * @ingroup PKSav
+ * @brief   Native formats and convenience functions for Pokémon in Generation I games.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt

@@ -16,7 +16,17 @@ SET(pksav_VERSION_MINOR 0)
 SET(pksav_VERSION_PATCH 1)
 SET(pksav_VERSION "${pksav_VERSION_MAJOR}.${pksav_VERSION_MINOR}.${pksav_VERSION_PATCH}")
 
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
+SET(PKSAV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(PKSAV_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
+IF(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PKSAV_SOURCE_DIR})
+    SET(PKSAV_USED_AS_SUBPROJECT TRUE)
+    IF(NOT DEFINED PKSAV_DONT_INSTALL_HEADERS)
+        SET(PKSAV_DONT_INSTALL_HEADERS TRUE)
+    ENDIF(NOT DEFINED PKSAV_DONT_INSTALL_HEADERS)
+ENDIF(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PKSAV_SOURCE_DIR})
+
+SET(CMAKE_MODULE_PATH "${PKSAV_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 
 ####################################################################
 # Project configuration
@@ -24,19 +34,23 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 INCLUDE(PKSavPlatform)
 INCLUDE(PKSavComponent)
 
-FIND_PACKAGE(Doxygen)
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    FIND_PACKAGE(Doxygen)
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ########################################################################
 # Create uninstall target
 ########################################################################
-CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-@ONLY)
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    CONFIGURE_FILE(
+        ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+    @ONLY)
 
-ADD_CUSTOM_TARGET(uninstall
-    ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-)
+    ADD_CUSTOM_TARGET(uninstall
+        ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+    )
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ####################################################################
 # Set install subdirectories
@@ -54,13 +68,17 @@ SET(DOCS_DIR share/doc/pksav)
 ####################################################################
 # Components
 ####################################################################
-PKSAV_REGISTER_COMPONENT("Generation I"          ENABLE_GEN1 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation II"         ENABLE_GEN2 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Game Boy Advance"      ENABLE_GBA  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Gamecube"              ENABLE_GCN  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Nintendo DS"           ENABLE_NDS  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation VI"         ENABLE_GEN6 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Doxygen Documentation" ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
+PKSAV_REGISTER_COMPONENT("Generation I"     PKSAV_ENABLE_GEN1 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation II"    PKSAV_ENABLE_GEN2 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Game Boy Advance" PKSAV_ENABLE_GBA  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Gamecube"         PKSAV_ENABLE_GCN  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Nintendo DS"      PKSAV_ENABLE_NDS  ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Generation VI"    PKSAV_ENABLE_GEN6 ON "" OFF)
+
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS ON "DOXYGEN_FOUND" OFF)
+    PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON "" OFF)
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ####################################################################
 # Actual building
@@ -68,17 +86,24 @@ PKSAV_REGISTER_COMPONENT("Doxygen Documentation" ENABLE_DOCS ON "DOXYGEN_FOUND" 
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
-IF(ENABLE_DOCS)
+IF(PKSAV_ENABLE_DOCS)
     ADD_SUBDIRECTORY(docs)
-ENDIF(ENABLE_DOCS)
+ENDIF(PKSAV_ENABLE_DOCS)
+
+IF(PKSAV_ENABLE_TESTS)
+    ENABLE_TESTING()
+    ADD_SUBDIRECTORY(tests)
+ENDIF(PKSAV_ENABLE_TESTS)
 
 ####################################################################
 # Final display
 ####################################################################
 PKSAV_PRINT_COMPONENT_SUMMARY()
-MESSAGE(STATUS "")
-MESSAGE(STATUS "Building PKSav.")
-MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
-MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
-MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
-MESSAGE(STATUS "")
+IF(NOT PKSAV_USED_AS_SUBPROJECT)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "Building PKSav.")
+    MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
+    MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
+    MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
+    MESSAGE(STATUS "")
+ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)

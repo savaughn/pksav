@@ -5,5 +5,27 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_common_sources ""
-PARENT_SCOPE)
+SET(pksav_common_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/pokedex.c
+)
+
+IF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2 OR PKSAV_ENABLE_GBA OR PKSAV_ENABLE_NDS)
+    LIST(APPEND pksav_common_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/text_common.c
+    )
+ENDIF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2 OR PKSAV_ENABLE_GBA OR PKSAV_ENABLE_NDS)
+
+IF(PKSAV_ENABLE_GAMECUBE OR PKSAV_ENABLE_GEN6)
+    LIST(APPEND pksav_common_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/sha1.c
+    )
+ENDIF(PKSAV_ENABLE_GAMECUBE OR PKSAV_ENABLE_GEN6)
+
+IF(PKSAV_ENABLE_NDS OR PKSAV_ENABLE_GEN6)
+    LIST(APPEND pksav_common_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/datetime.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/xds_common.c
+    )
+ENDIF(PKSAV_ENABLE_NDS OR PKSAV_ENABLE_GEN6)
+
+SET(pksav_common_sources ${pksav_common_sources} PARENT_SCOPE)

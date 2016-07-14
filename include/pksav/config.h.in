@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/config.h
+ * @ingroup PKSav
+ * @brief   Platform-defining and platform-agnostic macros.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
@@ -43,5 +47,17 @@
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #    define PKSAV_PLATFORM_MACOS
 #endif
+
+/*
+ * Determined at compile-time, do not change!
+ */
+#cmakedefine PKSAV_ENABLE_GEN1 1
+#cmakedefine PKSAV_ENABLE_GEN2 1
+#cmakedefine PKSAV_ENABLE_GBA  1
+#cmakedefine PKSAV_ENABLE_GCN  1
+#cmakedefine PKSAV_ENABLE_NDS  1
+#cmakedefine PKSAV_ENABLE_GEN6 1
+#cmakedefine PKSAV_BIG_ENDIAN
+#cmakedefine PKSAV_LITTLE_ENDIAN
 
 #endif /* PKSAV_CONFIG_H */

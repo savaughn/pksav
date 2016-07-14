@@ -1,4 +1,8 @@
-/*
+/*!
+ * @file    pksav/math/endian.h
+ * @ingroup PKSav
+ * @brief   Endianness (byte-ordering) conversions.
+ *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
@@ -9,17 +13,14 @@
 
 #include <pksav/config.h>
 
-/*
- * Determined by CMake at compile-time
- */
-#cmakedefine PKSAV_BIG_ENDIAN
-#cmakedefine PKSAV_LITTLE_ENDIAN
+#include <stdint.h>
 
-#if defined(PKSAV_PLATFORM_WIN32)
+#ifndef __DOXYGEN__
+#if defined(PKSAV_PLATFORM_WIN32) || defined(PKSAV_PLATFORM_MINGW)
 #    include <stdlib.h>
 #    define PKSAV_BYTESWAP16(num) _byteswap_ushort(num)
 #    define PKSAV_BYTESWAP32(num) _byteswap_ulong(num)
-#elif defined(PKSAV_PLATFORM_LINUX) || defined(PKSAV_PLATFORM_MINGW)
+#elif defined(PKSAV_PLATFORM_LINUX)
 #    include <byteswap.h>
 #    define PKSAV_BYTESWAP16(num) bswap_16(num)
 #    define PKSAV_BYTESWAP32(num) bswap_32(num)
@@ -32,15 +33,27 @@
 #    define PKSAV_BYTESWAP32(num) ((PKSAV_BYTESWAP16((uint16)(num & 0xFFFF)) << 16) | \
                                    (PKSAV_BYTESWAP16((uint16_t)((num & 0xFFFF0000) >> 16))))
 #endif
+#endif /* __DOXYGEN__ */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/*!
+ * @brief Swaps the endianness (byte ordering) of a 16-bit number.
+ *
+ * When possible, this function uses an optimized version of this
+ * operation provided by the operating system.
+ */
 static PKSAV_INLINE uint16_t pksav_byteswap16(uint16_t num) {
     return PKSAV_BYTESWAP16(num);
 }
 
+/*!
+ * @brief Swaps the endianness of a given 16-bit number to/from big-endian.
+ *
+ * On big-endian platforms, this simply returns the given number.
+ */
 static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
 #ifdef PKSAV_LITTLE_ENDIAN
     return pksav_byteswap16(num);
@@ -49,6 +62,11 @@ static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
 #endif
 }
 
+/*!
+ * @brief Swaps the endianness of a given 16-bit number to/from little-endian.
+ *
+ * On little-endian platforms, this simply returns the given number.
+ */
 static PKSAV_INLINE uint16_t pksav_littleendian16(uint16_t num) {
 #ifdef PKSAV_LITTLE_ENDIAN
     return num;
@@ -57,10 +75,21 @@ static PKSAV_INLINE uint16_t pksav_littleendian16(uint16_t num) {
 #endif
 }
 
+/*!
+ * @brief Swaps the endianness (byte ordering) of a 32-bit number.
+ *
+ * When possible, this function uses an optimized version of this
+ * operation provided by the operating system.
+ */
 static PKSAV_INLINE uint32_t pksav_byteswap32(uint32_t num) {
     return PKSAV_BYTESWAP32(num);
 }
 
+/*!
+ * @brief Swaps the endianness of a given 32-bit number to/from big-endian.
+ *
+ * On big-endian platforms, this simply returns the given number.
+ */
 static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
 #ifdef PKSAV_LITTLE_ENDIAN
     return pksav_byteswap32(num);
@@ -69,6 +98,11 @@ static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
 #endif
 }
 
+/*!
+ * @brief Swaps the endianness of a given 32-bit number to/from little-endian.
+ *
+ * On little-endian platforms, this simply returns the given number.
+ */
 static PKSAV_INLINE uint32_t pksav_littleendian32(uint32_t num) {
 #ifdef PKSAV_LITTLE_ENDIAN
     return num;
