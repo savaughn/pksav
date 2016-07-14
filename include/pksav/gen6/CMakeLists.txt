@@ -7,6 +7,7 @@
 
 SET(pksav_gen6_headers
     items.h
+    pokemon.h
     text.h
 )
 

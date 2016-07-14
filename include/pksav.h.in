@@ -60,6 +60,7 @@
 
 #if ENABLE_GEN6
 #include <pksav/gen6/items.h>
+#include <pksav/gen6/pokemon.h>
 #include <pksav/gen6/text.h>
 #endif /* ENABLE_GEN6 */
 
