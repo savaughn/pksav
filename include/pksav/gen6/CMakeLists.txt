@@ -6,6 +6,7 @@
 #
 
 SET(pksav_gen6_headers
+    hall_of_fame.h
     items.h
     pokemon.h
     text.h
