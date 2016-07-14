@@ -34,7 +34,6 @@ ADD_SUBDIRECTORY(math)
 
 SET(pksav_c_sources
     checksum.c
-    datetime.c
     error.c
     prng.c
     stats.c
