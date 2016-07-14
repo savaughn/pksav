@@ -8,7 +8,6 @@
 SET(pksav_headers
     checksum.h
     config.h
-    datetime.h
     error.h
     items.h
     prng.h

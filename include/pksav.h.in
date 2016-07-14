@@ -24,12 +24,12 @@
 #include <pksav/config.h>
 
 #include <pksav/checksum.h>
-#include <pksav/datetime.h>
 #include <pksav/error.h>
 #include <pksav/items.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 
+#include <pksav/common/datetime.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
 #include <pksav/common/contest_stats.h>
