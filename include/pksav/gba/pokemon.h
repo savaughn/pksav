@@ -7,6 +7,8 @@
 #ifndef PKSAV_GBA_POKEMON_H
 #define PKSAV_GBA_POKEMON_H
 
+#include <pksav/config.h>
+
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
@@ -74,7 +76,7 @@ typedef union {
         pksav_gba_pokemon_attacks_t attacks;
         pksav_gba_pokemon_effort_t effort;
         pksav_gba_pokemon_misc_t misc;
-    } by_name;
+    };
 } pksav_gba_pokemon_blocks_t;
 
 typedef struct {
