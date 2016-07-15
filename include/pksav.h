@@ -15,7 +15,6 @@
 
 #include <pksav/checksum.h>
 #include <pksav/error.h>
-#include <pksav/items.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 
