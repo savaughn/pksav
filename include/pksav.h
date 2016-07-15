@@ -36,6 +36,8 @@
 #endif /* PKSAV_ENABLE_GEN2 */
 
 #if PKSAV_ENABLE_GBA
+#include <pksav/gba/items.h>
+#include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
 #endif /* PKSAV_ENABLE_GBA */
 
