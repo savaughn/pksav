@@ -34,6 +34,8 @@
 #define PKSAV_GBA_TOUGH_MASK uint32_t(7 << PKSAV_GBA_TOUGH_OFFSET)
 #define PKSAV_GBA_OBEDIENCE_MASK uint32_t(1 << 31)
 
+#pragma pack(push,1)
+
 typedef struct {
     uint16_t species;
     uint16_t held_item;
@@ -124,5 +126,7 @@ typedef struct {
     uint8_t box_names[14][9];
     uint8_t wallpapers[14];
 } pksav_gba_pokemon_pc_t;
+
+#pragma pack(pop)
 
 #endif /* PKSAV_GBA_POKEMON_H */

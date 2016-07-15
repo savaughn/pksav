@@ -8,6 +8,7 @@
 SET(pksav_gba_headers
     items.h
     pokemon.h
+    save_structs.h
     text.h
 )
 
