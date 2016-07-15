@@ -38,6 +38,7 @@
 #if PKSAV_ENABLE_GBA
 #include <pksav/gba/items.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/gba/save.h>
 #include <pksav/gba/save_structs.h>
 #include <pksav/gba/text.h>
 #endif /* PKSAV_ENABLE_GBA */

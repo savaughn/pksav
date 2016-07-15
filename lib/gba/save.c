@@ -5,10 +5,38 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pksav/config.h>
+
+#include <pksav/gba/items.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/gba/save.h>
 
 #include <stdbool.h>
 #include <string.h>
+
+static PKSAV_INLINE void _pksav_gba_save_unshuffle_sections(
+    const pksav_gba_save_sections_t* save_sections_in,
+    pksav_gba_save_sections_t* save_sections_out,
+    uint8_t section_nums[14]
+) {
+    for(uint8_t i = 0; i < 14; ++i) {
+        uint8_t section_id = save_sections_in->sections_arr[i].footer.section_id;
+        save_sections_out->sections_arr[section_id] = save_sections_in->sections_arr[i];
+
+        // Cache the original positions
+        section_nums[i] = section_id;
+    }
+}
+
+static PKSAV_INLINE void _pksav_gba_save_shuffle_sections(
+    const pksav_gba_save_sections_t* save_sections_in,
+    pksav_gba_save_sections_t* save_sections_out,
+    const uint8_t section_nums[14]
+) {
+    for(uint8_t i = 0; i < 14; ++i) {
+        save_sections_out->sections_arr[i] = save_sections_in->sections_arr[section_nums[i]];
+    }
+}
 
 static const uint8_t gen3_block_orders[24][4] = {
     /* A  E  G  M */
@@ -43,7 +71,7 @@ static void _pksav_crypt_gba_pokemon(
     bool encrypt
 ) {
     uint32_t security_key = gen3_pokemon->ot_id.id ^ gen3_pokemon->personality;
-    for(size_t i = 0; i < 12; i++) {
+    for(uint8_t i = 0; i < 12; ++i) {
         gen3_pokemon->blocks.blocks32[i] ^= security_key;
     }
 
@@ -67,4 +95,30 @@ static void _pksav_crypt_gba_pokemon(
     }
 
     gen3_pokemon->blocks = blocks;
+}
+
+static void _pksav_gba_save_crypt_items(
+    pksav_gba_item_storage_t* gba_item_storage,
+    uint32_t security_key,
+    pksav_gba_game_t gba_game
+) {
+    pksav_gba_item_t* items = (pksav_gba_item_t*)gba_item_storage;
+    uint8_t num_items = 0;
+    switch(gba_game) {
+        case PKSAV_GBA_RS:
+            num_items = sizeof(pksav_rs_item_storage_t) / sizeof(pksav_gba_item_t);
+            break;
+
+        case PKSAV_GBA_EMERALD:
+            num_items = sizeof(pksav_emerald_item_storage_t) / sizeof(pksav_gba_item_t);
+            break;
+
+        default:
+            num_items = sizeof(pksav_frlg_item_storage_t) / sizeof(pksav_gba_item_t);
+            break;
+    }
+    // Skip Item PC, which has 50 items in all games
+    for(uint8_t i = 50; i < num_items; ++i) {
+        items[i].count ^= (uint16_t)(security_key & 0xFFFF);
+    }
 }

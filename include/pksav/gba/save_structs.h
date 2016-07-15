@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -68,7 +68,7 @@ typedef union {
         pksav_gba_save_section_t section12;
         pksav_gba_save_section_t section13;
     } sections;
-} pksav_gba_save_t;
+} pksav_gba_save_sections_t;
 
 #pragma pack(pop)
 
