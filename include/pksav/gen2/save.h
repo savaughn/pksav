@@ -104,7 +104,7 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
 typedef struct {
     // Party/box pointers
     pksav_gen2_pokemon_party_t* pokemon_party;
-    pksav_gen2_pokemon_box_t** pokemon_boxes;
+    pksav_gen2_pokemon_box_t* pokemon_boxes[12];
     pksav_gen2_pokemon_box_names_t* pokemon_box_names;
 
     // Item pointers
@@ -149,7 +149,6 @@ PKSAV_API pksav_error_t pksav_gen2_save_save(
 static PKSAV_INLINE void pksav_gen2_save_free(
     pksav_gen2_save_t* gen2_save
 ) {
-    free(gen2_save->pokemon_boxes);
     free(gen2_save->raw);
 }
 

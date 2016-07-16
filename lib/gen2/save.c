@@ -149,7 +149,6 @@ pksav_error_t pksav_gen2_save_load(
     // Set pointers
     gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
 
-    gen2_save->pokemon_boxes = malloc(sizeof(pksav_gen2_pokemon_box_t*)*12);
     uint16_t pokemon_pc_first_half = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][gen2_save->gen2_game];
     uint16_t pokemon_pc_second_half = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][gen2_save->gen2_game];
 
