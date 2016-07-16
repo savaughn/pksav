@@ -16,7 +16,7 @@
 #include <stdint.h>
 
 void pksav_gba_crypt_pokemon(
-    pksav_gba_pc_pokemon_t* gen3_pokemon,
+    pksav_gba_pc_pokemon_t* gba_pokemon,
     bool encrypt
 );
 

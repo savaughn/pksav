@@ -17,6 +17,12 @@ typedef enum {
     PKSAV_GBA_FRLG
 } pksav_gba_game_t;
 
+// How many bytes in each section are read for the checksum
+static const uint16_t pksav_gba_section_sizes[14] = {
+    3884,3968,3968,3968,3848,3968,3968,
+    3968,3968,3968,3968,3968,3968,2000
+};
+
 #pragma pack(push,1)
 
 #pragma pack(pop)

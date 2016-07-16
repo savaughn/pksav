@@ -17,7 +17,7 @@
 #include <string.h>
 
 /*
- * Offsets and sizes
+ * Offsets
  */
 
 #define PKSAV_GBA_SAVE_SIZE  0x20000 // TODO: small Gen III saves
@@ -80,12 +80,6 @@ static const uint16_t pksav_gba_section4_offsets[][4] = {
     {0,0x000,0x000,0xBCC} // FR/LG only
 };
 
-// How many bytes in each section are read for the checksum
-static const uint16_t pksav_gba_section_sizes[14] = {
-    3884,3968,3968,3968,3848,3968,3968,
-    3968,3968,3968,3968,3968,3968,2000
-};
-
 static PKSAV_INLINE void _pksav_gba_save_unshuffle_sections(
     const pksav_gba_save_sections_t* save_sections_in,
     pksav_gba_save_sections_t* save_sections_out,
@@ -131,5 +125,23 @@ static void _pksav_gba_save_load_pokemon_pc(
         }
     }
 }
+
+/*
+
+    void gba_save::_save_pokemon_pc() {
+        for(size_t i = 0; i < 14; i++) {
+            for(size_t j = 0; j < 30; j++) {
+                set_gba_pokemon_checksum(decrypted_pokemon_pc.boxes[i].entries[j]);
+                encrypt_gba_pokemon(decrypted_pokemon_pc.boxes[i].entries[j]);
+            }
+        }
+
+        uint8_t* src_ptr = reinterpret_cast<uint8_t*>(&decrypted_pokemon_pc);
+        for(size_t i = 5; i <= 13; i++) {
+            memcpy(decrypted_save.sections_arr[i].data8, src_ptr, gba_section_sizes[i]);
+            src_ptr += gba_section_sizes[i];
+        }
+    }
+ */
 
 // TODO: Pokémon checksum, saving PC
