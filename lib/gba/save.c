@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "checksum.h"
 #include "crypt.h"
 
 #include <pksav/config.h>
@@ -126,22 +127,27 @@ static void _pksav_gba_save_load_pokemon_pc(
     }
 }
 
-/*
-
-    void gba_save::_save_pokemon_pc() {
-        for(size_t i = 0; i < 14; i++) {
-            for(size_t j = 0; j < 30; j++) {
-                set_gba_pokemon_checksum(decrypted_pokemon_pc.boxes[i].entries[j]);
-                encrypt_gba_pokemon(decrypted_pokemon_pc.boxes[i].entries[j]);
-            }
-        }
-
-        uint8_t* src_ptr = reinterpret_cast<uint8_t*>(&decrypted_pokemon_pc);
-        for(size_t i = 5; i <= 13; i++) {
-            memcpy(decrypted_save.sections_arr[i].data8, src_ptr, gba_section_sizes[i]);
-            src_ptr += gba_section_sizes[i];
+void _pksav_gba_save_save_pokemon_pc(
+    pksav_gba_pokemon_pc_t* pokemon_pc,
+    pksav_gba_save_sections_t* gba_save_sections_out
+) {
+    // Encrypt Pokémon
+    for(uint8_t i = 0; i < 14; ++i) {
+        for(uint8_t j = 0; j < 30; ++j) {
+            pksav_set_gba_pokemon_checksum(
+                &pokemon_pc->boxes[i].entries[j]
+            );
         }
     }
- */
 
-// TODO: Pokémon checksum, saving PC
+    // Copy contiguous data structure back into sections
+    uint8_t* src_ptr = (uint8_t*)pokemon_pc;
+    for(uint8_t i = 5; i <= 13; ++i) {
+        memcpy(
+            gba_save_sections_out->sections_arr[i].data8,
+            src_ptr,
+            pksav_gba_section_sizes[i]
+        );
+        src_ptr += pksav_gba_section_sizes[i];
+    }
+}
