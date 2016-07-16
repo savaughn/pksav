@@ -67,7 +67,7 @@ typedef union {
         pksav_gba_save_section_t section11;
         pksav_gba_save_section_t section12;
         pksav_gba_save_section_t section13;
-    } sections;
+    };
 } pksav_gba_save_sections_t;
 
 #pragma pack(pop)
