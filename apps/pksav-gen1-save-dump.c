@@ -65,6 +65,16 @@ int main(int argc, char* argv[]) {
         printf("Pikachu friendship: %d\n", *gen1_save.pikachu_friendship);
     }
 
+    printf("\nBadges:\n");
+    printf(" * Boulder Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_BOULDER_BADGE) ? "Yes" : "No"));
+    printf(" * Cascade Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_CASCADE_BADGE) ? "Yes" : "No"));
+    printf(" * Thunder Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_THUNDER_BADGE) ? "Yes" : "No"));
+    printf(" * Rainbow Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_RAINBOW_BADGE) ? "Yes" : "No"));
+    printf(" * Soul Badge:    %s\n", ((*gen1_save.badges & PKSAV_GEN1_SOUL_BADGE) ? "Yes" : "No"));
+    printf(" * Marsh Badge:   %s\n", ((*gen1_save.badges & PKSAV_GEN1_MARSH_BADGE) ? "Yes" : "No"));
+    printf(" * Volcano Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_VOLCANO_BADGE) ? "Yes" : "No"));
+    printf(" * Earth Badge:   %s\n", ((*gen1_save.badges & PKSAV_GEN1_EARTH_BADGE) ? "Yes" : "No"));
+
     char nickname[10];
     char otname[7];
     printf("\nPokémon Party (size %d):\n", gen1_save.pokemon_party->count);
