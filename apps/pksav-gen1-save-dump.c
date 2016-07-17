@@ -31,7 +31,8 @@ int main(int argc, char* argv[]) {
         printf("found %s save file.\n\n", save_type);
     }
 
-    char trainer_name[7];
+    char trainer_name[8];
+    memset(trainer_name, 0, 8);
     pksav_text_from_gen1(
         gen1_save.trainer_name,
         trainer_name, 7
@@ -75,8 +76,10 @@ int main(int argc, char* argv[]) {
     printf(" * Volcano Badge: %s\n", ((*gen1_save.badges & PKSAV_GEN1_VOLCANO_BADGE) ? "Yes" : "No"));
     printf(" * Earth Badge:   %s\n", ((*gen1_save.badges & PKSAV_GEN1_EARTH_BADGE) ? "Yes" : "No"));
 
-    char nickname[10];
-    char otname[7];
+    char nickname[11];
+    char otname[8];
+    memset(nickname, 0, 11);
+    memset(otname, 0, 8);
     printf("\nPokémon Party (size %d):\n", gen1_save.pokemon_party->count);
     for(uint8_t i = 0; i < gen1_save.pokemon_party->count; ++i) {
         pksav_text_from_gen1(
