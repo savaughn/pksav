@@ -14,33 +14,35 @@
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
 
-#define SECURITY_KEY1(sections,game) sections->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY1][game]/4]
-#define SECURITY_KEY2(sections,game) sections->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY2][game]/4]
-#define SAVE_INDEX(sections)         sections->section0.footer.save_index
+#include <pksav/math/endian.h>
+
+#define SECURITY_KEY1(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY1][game]/4]
+#define SECURITY_KEY2(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY2][game]/4]
+#define SAVE_INDEX(sections)         pksav_littleendian32((sections)->section0.footer.save_index)
 
 #define SECTION0_DATA8(sections,game,offset) \
-    sections->section0.data8[pksav_gba_section0_offsets[offset][game]]
+    (sections)->section0.data8[pksav_gba_section0_offsets[offset][game]]
 
 #define SECTION0_DATA32(sections,game,offset) \
-    sections->section0.data32[pksav_gba_section0_offsets[offset][game]/4]
+    (sections)->section0.data32[pksav_gba_section0_offsets[offset][game]/4]
 
 #define SECTION1_DATA8(sections,game,offset) \
-    sections->section1.data8[pksav_gba_section1_offsets[offset][game]]
+    (sections)->section1.data8[pksav_gba_section1_offsets[offset][game]]
 
 #define SECTION1_DATA32(sections,game,offset) \
-    sections->section1.data32[pksav_gba_section1_offsets[offset][game]/4]
+    (sections)->section1.data32[pksav_gba_section1_offsets[offset][game]/4]
 
 #define SECTION2_DATA8(sections,game,offset) \
-    sections->section2.data8[pksav_gba_section2_offsets[offset][game]]
+    (sections)->section2.data8[pksav_gba_section2_offsets[offset][game]]
 
 #define SECTION2_DATA32(sections,game,offset) \
-    sections->section2.data32[pksav_gba_section2_offsets[offset][game]/4]
+    (sections)->section2.data32[pksav_gba_section2_offsets[offset][game]/4]
 
 #define SECTION4_DATA8(sections,game,offset) \
-    sections->section4.data8[pksav_gba_section4_offsets[offset][game]]
+    (sections)->section4.data8[pksav_gba_section4_offsets[offset][game]]
 
 #define SECTION4_DATA32(sections,game,offset) \
-    sections->section4.data32[pksav_gba_section4_offsets[offset][game]/4]
+    (sections)->section4.data32[pksav_gba_section4_offsets[offset][game]/4]
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -268,20 +270,30 @@ pksav_error_t pksav_gba_save_load(
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
+    // Find the most recent save slot
+    const pksav_gba_save_sections_t* sections_pair = (const pksav_gba_save_sections_t*)gba_save->raw;
+    const pksav_gba_save_sections_t* most_recent;
+    if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
+        most_recent = &sections_pair[0];
+        gba_save->from_first_slot = true;
+    } else {
+        most_recent = &sections_pair[1];
+        gba_save->from_first_slot = false;
+    }
+
     // Set pointers
     gba_save->unshuffled = malloc(sizeof(pksav_gba_save_sections_t));
+    _pksav_gba_save_unshuffle_sections(
+        most_recent,
+        gba_save->unshuffled,
+        gba_save->shuffled_section_nums
+    );
+    gba_save->trainer_info = &gba_save->unshuffled->trainer_info;
     gba_save->rival_name = &SECTION4_DATA8(
                                gba_save->unshuffled,
                                gba_save->gba_game,
                                PKSAV_GBA_FRLG_RIVAL_NAME
                            );
-
-    _pksav_gba_save_unshuffle_sections(
-        (const pksav_gba_save_sections_t*)gba_save->raw,
-        gba_save->unshuffled,
-        gba_save->shuffled_section_nums
-    );
-    gba_save->trainer_info = &gba_save->unshuffled->trainer_info;
     gba_save->pokemon_party = (pksav_gba_pokemon_party_t*)&SECTION1_DATA8(
                                                               gba_save->unshuffled,
                                                               gba_save->gba_game,
