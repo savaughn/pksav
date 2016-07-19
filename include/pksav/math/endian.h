@@ -30,7 +30,7 @@
 #    define PKSAV_BYTESWAP32(num) OSSwapInt32(num)
 #else
 #    define PKSAV_BYTESWAP16(num) (((num & 0xFF) << 8) | ((num & 0xFF00) >> 8))
-#    define PKSAV_BYTESWAP32(num) ((PKSAV_BYTESWAP16((uint16)(num & 0xFFFF)) << 16) | \
+#    define PKSAV_BYTESWAP32(num) ((PKSAV_BYTESWAP16((uint16_t)(num & 0xFFFF)) << 16) | \
                                    (PKSAV_BYTESWAP16((uint16_t)((num & 0xFFFF0000) >> 16))))
 #endif
 #endif /* __DOXYGEN__ */
