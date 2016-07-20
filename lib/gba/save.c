@@ -165,6 +165,7 @@ bool pksav_file_is_gba_save(
     return ret;
 }
 
+// Assumes all dynamically allocated memory has already been allocated
 static void _pksav_gba_save_set_pointers(
     pksav_gba_save_t* gba_save
 ) {
