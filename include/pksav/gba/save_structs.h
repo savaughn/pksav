@@ -112,26 +112,54 @@ typedef struct {
     pksav_gba_time_t time_played;
 } pksav_gba_trainer_info_t;
 
+/*!
+ * @brief The internal storage of a save slot in a Game Boy Advance save file.
+ *
+ * Each save slot has 14 sections, which when unshuffled, provide common offsets
+ * for different structs.
+ *
+ * Each save file has two slots, and the game alternates which slot it saves to.
+ *
+ * PKSav stores this as a union, allowing the data to be accessed in various ways.
+ */
 typedef union {
+    //! Access individual bytes in the save slot.
     uint8_t data[sizeof(pksav_gba_save_section_t)*14];
+    //! Access sections as an array.
     pksav_gba_save_section_t sections_arr[14];
     struct {
+        //! Section 0 (trainer info).
         union {
+            //! Access the data as a normal section.
             pksav_gba_save_section_t section0;
+            //! Access the data as a trainer info struct.
             pksav_gba_trainer_info_t trainer_info;
         };
-        pksav_gba_save_section_t section1; // Team/items
-        pksav_gba_save_section_t section2; // Unknown
-        pksav_gba_save_section_t section3; // Unknown
-        pksav_gba_save_section_t section4; // Rival info
+        //! Section 1 (team/items).
+        pksav_gba_save_section_t section1;
+        //! Section 2.
+        pksav_gba_save_section_t section2;
+        //! Section 3.
+        pksav_gba_save_section_t section3;
+        //! Section 4 (rival info).
+        pksav_gba_save_section_t section4;
+        //! Section 5.
         pksav_gba_save_section_t section5;
+        //! Section 6.
         pksav_gba_save_section_t section6;
+        //! Section 7.
         pksav_gba_save_section_t section7;
+        //! Section 8.
         pksav_gba_save_section_t section8;
+        //! Section 9.
         pksav_gba_save_section_t section9;
+        //! Section 10.
         pksav_gba_save_section_t section10;
+        //! Section 11.
         pksav_gba_save_section_t section11;
+        //! Section 12.
         pksav_gba_save_section_t section12;
+        //! Section 13.
         pksav_gba_save_section_t section13;
     };
 } pksav_gba_save_slot_t;
