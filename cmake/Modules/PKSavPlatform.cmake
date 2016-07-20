@@ -30,14 +30,28 @@ ELSEIF(MSVC)
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
 ENDIF(PKSAV_GCC OR PKSAV_CLANG)
 
-# TODO: Boost-less cross-compile endianness-check
-IF(PKSAV_BIG_ENDIAN)
-    SET(PKSAV_BIG_ENDIAN TRUE)
-    SET(PKSAV_LITTLE_ENDIAN FALSE)
-ELSE()
+#
+# Currently, there is no Boostless way to check endianness when
+# cross-compiling. CMake has a function, but it doesn't work with
+# cross-compiling. As such, the user needs to specify it.
+#
+# If there is no specification, assume little-endian, as the majority
+# of platforms are.
+#
+MESSAGE(STATUS "")
+IF(NOT PKSAV_LITTLE_ENDIAN AND NOT PKSAV_BIG_ENDIAN)
+    MESSAGE(STATUS "No endianness specified. Assuming little endian.")
     SET(PKSAV_BIG_ENDIAN FALSE)
     SET(PKSAV_LITTLE_ENDIAN TRUE)
-ENDIF(PKSAV_BIG_ENDIAN)
+ELSEIF(PKSAV_BIG_ENDIAN)
+    MESSAGE(STATUS "Big endian specified.")
+    SET(PKSAV_BIG_ENDIAN TRUE)
+    SET(PKSAV_LITTLE_ENDIAN FALSE)
+ELSEIF(PKSAV_LITTLE_ENDIAN)
+    MESSAGE(STATUS "Little endian specified.")
+    SET(PKSAV_BIG_ENDIAN FALSE)
+    SET(PKSAV_LITTLE_ENDIAN TRUE)
+ENDIF(NOT PKSAV_LITTLE_ENDIAN AND NOT PKSAV_BIG_ENDIAN)
 
 # Checks for required headers
 INCLUDE(CheckIncludeFile)
