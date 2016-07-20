@@ -224,27 +224,84 @@
 
 #pragma pack(push,1)
 
+/*!
+ * @brief Internal representation of Pokémon statistics that increase
+ *        with growth in a Game Boy Advance game.
+ */
 typedef struct {
+    /*!
+     * @brief The Pokémon's species index.
+     *
+     * The index may not correspond to its National Pokédex number.
+     *
+     * This value is stored in little-endian, so access and modify it with
+     * the function ::pksav_littleendian16.
+     */
     uint16_t species;
+    /*!
+     * @brief The index for the Pokémon's held item.
+     *
+     * If the Pokémon is not holding any item, this field will be set to 0.
+     *
+     * This value is stored in little-endian, so access and modify it with
+     * the function ::pksav_littleendian16.
+     */
     uint16_t held_item;
+    /*!
+     * @brief The Pokémon's experience.
+     *
+     * This value is stored in little-endian, so access and modify it with
+     * the function ::pksav_littleendian32.
+     */
     uint32_t exp;
+    // TODO: confirm bitfield
     uint8_t pp_up;
+    //! The Pokémon's happiness/friendship (0-255).
     uint8_t friendship;
+    //! Unknown.
     uint16_t unknown_0xA;
 } pksav_gba_pokemon_growth_t;
 
+/*!
+ * @brief Internal representation of a Pokémon's moves and current PP in a
+ *        Game Boy Advance game.
+ */
 typedef struct {
+    /*!
+     * @brief Indices of the Pokémon's moves.
+     *
+     * If a move slot does not have a move, its value will be 0.
+     *
+     * These values are stored in little-endian, so access and modify them
+     * with the function ::pksav_littleendian16.
+     */
     uint16_t moves[4];
+    /*!
+     * @brief The PP for each of the Pokémon's moves.
+     *
+     * The maximum value for each slot is dependent on the move.
+     */
     uint8_t move_pps[4];
 } pksav_gba_pokemon_attacks_t;
 
+/*!
+ * @brief Internal representation of a Pokémon's EVs and contest stats
+ *        in a Game Boy Advance game.
+ */
 typedef struct {
+    //! A Pokémon's HP EV.
     uint8_t ev_hp;
+    //! A Pokémon's Attack EV.
     uint8_t ev_atk;
+    //! A Pokémon's Defense EV.
     uint8_t ev_def;
+    //! A Pokémon's Speed EV.
     uint8_t ev_spd;
+    //! A Pokémon's Special Attack EV.
     uint8_t ev_spatk;
+    //! A Pokémon's Special Defense EV.
     uint8_t ev_spdef;
+    //! A Pokémon's contest stats.
     pksav_contest_stats_t contest_stats;
 } pksav_gba_pokemon_effort_t;
 
