@@ -363,9 +363,19 @@ pksav_error_t pksav_gba_save_save(
         );
     }
 
+    // Find the least recent save slot, increment the save index, save into that
+    uint32_t save_index = pksav_littleendian32(SAVE_INDEX(gba_save->unshuffled) + 1);
+    for(uint8_t i = 0; i < 14; ++i) {
+        gba_save->unshuffled->sections_arr[i].footer.save_index = save_index;
+    }
+    pksav_gba_save_sections_t* sections_pair = (pksav_gba_save_sections_t*)gba_save->raw;
+    pksav_gba_save_sections_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
+                                                                     : &sections_pair[0];
+    gba_save->from_first_slot = !gba_save->from_first_slot;
+
     _pksav_gba_save_shuffle_sections(
         gba_save->unshuffled,
-        (pksav_gba_save_sections_t*)gba_save->raw,
+        save_into,
         gba_save->shuffled_section_nums
     );
 
