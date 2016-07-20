@@ -31,7 +31,7 @@ uint16_t pksav_get_gba_section_checksum(
 );
 
 static PKSAV_INLINE void pksav_set_gba_section_checksums(
-    pksav_gba_save_sections_t* sections
+    pksav_gba_save_slot_t* sections
 ) {
     for(uint8_t i = 0; i < 14; ++i) {
         sections->sections_arr[i].footer.checksum = pksav_get_gba_section_checksum(

@@ -67,7 +67,7 @@ typedef struct {
     uint32_t security_key;
     uint8_t shuffled_section_nums[14];
     bool from_first_slot;
-    pksav_gba_save_sections_t* unshuffled;
+    pksav_gba_save_slot_t* unshuffled;
     uint8_t* raw;
 } pksav_gba_save_t;
 

@@ -118,15 +118,15 @@ static bool _pksav_file_is_gba_save(
     const uint8_t* data,
     pksav_gba_game_t gba_game
 ) {
-    const pksav_gba_save_sections_t* save_sections = (const pksav_gba_save_sections_t*)data;
+    const pksav_gba_save_slot_t* save_slot = (const pksav_gba_save_slot_t*)data;
     for(uint8_t i = 0; i < 14; ++i) {
-        if(save_sections->sections_arr[i].footer.validation != PKSAV_GBA_VALIDATION) {
+        if(save_slot->sections_arr[i].footer.validation != PKSAV_GBA_VALIDATION) {
             return false;
         }
     }
 
-    uint32_t security_key1 = SECURITY_KEY1(save_sections, gba_game);
-    uint32_t security_key2 = SECURITY_KEY2(save_sections, gba_game);
+    uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
+    uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
     } else {
@@ -170,8 +170,8 @@ static void _pksav_gba_save_set_pointers(
     pksav_gba_save_t* gba_save
 ) {
     // Find the most recent save slot
-    const pksav_gba_save_sections_t* sections_pair = (const pksav_gba_save_sections_t*)gba_save->raw;
-    const pksav_gba_save_sections_t* most_recent;
+    const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)gba_save->raw;
+    const pksav_gba_save_slot_t* most_recent;
     if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
         most_recent = &sections_pair[0];
         gba_save->from_first_slot = true;
@@ -264,7 +264,7 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Allocate memory as needed and set pointers
-    gba_save->unshuffled = malloc(sizeof(pksav_gba_save_sections_t));
+    gba_save->unshuffled = malloc(sizeof(pksav_gba_save_slot_t));
     gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
     _pksav_gba_save_set_pointers(
         gba_save
@@ -308,8 +308,8 @@ pksav_error_t pksav_gba_save_save(
     for(uint8_t i = 0; i < 14; ++i) {
         gba_save->unshuffled->sections_arr[i].footer.save_index = save_index;
     }
-    pksav_gba_save_sections_t* sections_pair = (pksav_gba_save_sections_t*)gba_save->raw;
-    pksav_gba_save_sections_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
+    pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
+    pksav_gba_save_slot_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
                                                                      : &sections_pair[0];
     gba_save->from_first_slot = !gba_save->from_first_slot;
 
