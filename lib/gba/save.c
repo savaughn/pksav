@@ -7,6 +7,7 @@
 
 #include "checksum.h"
 #include "crypt.h"
+#include "shuffle.h"
 
 #include <pksav/config.h>
 
@@ -113,77 +114,6 @@ static const uint16_t pksav_gba_section4_offsets[][4] = {
     {0x000,0x000,0xBCC} // FR/LG only
 };
 
-static PKSAV_INLINE void _pksav_gba_save_unshuffle_sections(
-    const pksav_gba_save_sections_t* save_sections_in,
-    pksav_gba_save_sections_t* save_sections_out,
-    uint8_t section_nums[14]
-) {
-    for(uint8_t i = 0; i < 14; ++i) {
-        uint8_t section_id = save_sections_in->sections_arr[i].footer.section_id;
-        save_sections_out->sections_arr[section_id] = save_sections_in->sections_arr[i];
-
-        // Cache the original positions
-        section_nums[i] = section_id;
-    }
-}
-
-static PKSAV_INLINE void _pksav_gba_save_shuffle_sections(
-    const pksav_gba_save_sections_t* save_sections_in,
-    pksav_gba_save_sections_t* save_sections_out,
-    const uint8_t section_nums[14]
-) {
-    for(uint8_t i = 0; i < 14; ++i) {
-        save_sections_out->sections_arr[i] = save_sections_in->sections_arr[section_nums[i]];
-    }
-}
-
-static void _pksav_gba_save_load_pokemon_pc(
-    const pksav_gba_save_sections_t* gba_save_sections,
-    pksav_gba_pokemon_pc_t* pokemon_pc_out
-) {
-    // Copy data from sections into contiguous data structure
-    uint8_t* dst_ptr = (uint8_t*)pokemon_pc_out;
-    for(uint8_t i = 0; i < 13; ++i) {
-        memcpy(dst_ptr, gba_save_sections->sections_arr[i].data8, pksav_gba_section_sizes[i]);
-        dst_ptr += pksav_gba_section_sizes[i];
-    }
-
-    // Decrypt Pokémon
-    for(uint8_t i = 0; i < 14; ++i) {
-        for(uint8_t j = 0; j < 30; ++j) {
-            pksav_gba_crypt_pokemon(
-                &pokemon_pc_out->boxes[i].entries[j],
-                false
-            );
-        }
-    }
-}
-
-static void _pksav_gba_save_save_pokemon_pc(
-    pksav_gba_pokemon_pc_t* pokemon_pc,
-    pksav_gba_save_sections_t* gba_save_sections_out
-) {
-    // Encrypt Pokémon
-    for(uint8_t i = 0; i < 14; ++i) {
-        for(uint8_t j = 0; j < 30; ++j) {
-            pksav_set_gba_pokemon_checksum(
-                &pokemon_pc->boxes[i].entries[j]
-            );
-        }
-    }
-
-    // Copy contiguous data structure back into sections
-    uint8_t* src_ptr = (uint8_t*)pokemon_pc;
-    for(uint8_t i = 5; i <= 13; ++i) {
-        memcpy(
-            gba_save_sections_out->sections_arr[i].data8,
-            src_ptr,
-            pksav_gba_section_sizes[i]
-        );
-        src_ptr += pksav_gba_section_sizes[i];
-    }
-}
-
 static bool _pksav_file_is_gba_save(
     const uint8_t* data,
     pksav_gba_game_t gba_game
@@ -283,7 +213,7 @@ pksav_error_t pksav_gba_save_load(
 
     // Set pointers
     gba_save->unshuffled = malloc(sizeof(pksav_gba_save_sections_t));
-    _pksav_gba_save_unshuffle_sections(
+    pksav_gba_save_unshuffle_sections(
         most_recent,
         gba_save->unshuffled,
         gba_save->shuffled_section_nums
@@ -307,7 +237,7 @@ pksav_error_t pksav_gba_save_load(
     }
 
     gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
-    _pksav_gba_save_load_pokemon_pc(
+    pksav_gba_save_load_pokemon_pc(
         gba_save->unshuffled,
         gba_save->pokemon_pc
     );
@@ -351,7 +281,7 @@ pksav_error_t pksav_gba_save_save(
         gba_save->gba_game
     );
 
-    _pksav_gba_save_save_pokemon_pc(
+    pksav_gba_save_save_pokemon_pc(
         gba_save->pokemon_pc,
         gba_save->unshuffled
     );
@@ -373,7 +303,7 @@ pksav_error_t pksav_gba_save_save(
                                                                      : &sections_pair[0];
     gba_save->from_first_slot = !gba_save->from_first_slot;
 
-    _pksav_gba_save_shuffle_sections(
+    pksav_gba_save_shuffle_sections(
         gba_save->unshuffled,
         save_into,
         gba_save->shuffled_section_nums

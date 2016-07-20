@@ -9,5 +9,6 @@ SET(pksav_gba_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/checksum.c
     ${CMAKE_CURRENT_SOURCE_DIR}/crypt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/save.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/shuffle.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text.c
 PARENT_SCOPE)
