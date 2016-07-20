@@ -165,41 +165,9 @@ bool pksav_file_is_gba_save(
     return ret;
 }
 
-pksav_error_t pksav_gba_save_load(
-    const char* filepath,
+static void _pksav_gba_save_set_pointers(
     pksav_gba_save_t* gba_save
 ) {
-    // Read the file and make sure it's valid
-    FILE* gba_save_file = fopen(filepath, "r");
-    if(!gba_save_file) {
-        return PKSAV_ERROR_FILE_IO;
-    }
-
-    fseek(gba_save_file, SEEK_END, 0);
-
-    if(ftell(gba_save_file) < PKSAV_GBA_SAVE_SIZE) {
-        return PKSAV_ERROR_INVALID_SAVE;
-    }
-
-    gba_save->raw = malloc(PKSAV_GBA_SAVE_SIZE);
-    fseek(gba_save_file, SEEK_SET, 0);
-    size_t num_read = fread((void*)gba_save->raw, 1, PKSAV_GBA_SAVE_SIZE, gba_save_file);
-    fclose(gba_save_file);
-    if(num_read != PKSAV_GBA_SAVE_SIZE) {
-        return PKSAV_ERROR_FILE_IO;
-    }
-
-    if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_RS)) {
-        gba_save->gba_game = PKSAV_GBA_RS;
-    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_EMERALD)) {
-        gba_save->gba_game = PKSAV_GBA_EMERALD;
-    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_FRLG)) {
-        gba_save->gba_game = PKSAV_GBA_FRLG;
-    } else {
-        free(gba_save->raw);
-        return PKSAV_ERROR_INVALID_SAVE;
-    }
-
     // Find the most recent save slot
     const pksav_gba_save_sections_t* sections_pair = (const pksav_gba_save_sections_t*)gba_save->raw;
     const pksav_gba_save_sections_t* most_recent;
@@ -212,7 +180,6 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Set pointers
-    gba_save->unshuffled = malloc(sizeof(pksav_gba_save_sections_t));
     pksav_gba_save_unshuffle_sections(
         most_recent,
         gba_save->unshuffled,
@@ -236,7 +203,6 @@ pksav_error_t pksav_gba_save_load(
         );
     }
 
-    gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
     pksav_gba_save_load_pokemon_pc(
         gba_save->unshuffled,
         gba_save->pokemon_pc
@@ -259,6 +225,49 @@ pksav_error_t pksav_gba_save_load(
                           PKSAV_GBA_MONEY
                       );
     *gba_save->money ^= SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game);
+}
+
+pksav_error_t pksav_gba_save_load(
+    const char* filepath,
+    pksav_gba_save_t* gba_save
+) {
+    // Read the file and make sure it's valid
+    FILE* gba_save_file = fopen(filepath, "r");
+    if(!gba_save_file) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    fseek(gba_save_file, SEEK_END, 0);
+    if(ftell(gba_save_file) < PKSAV_GBA_SAVE_SIZE) {
+        return PKSAV_ERROR_INVALID_SAVE;
+    }
+
+    gba_save->raw = malloc(PKSAV_GBA_SAVE_SIZE);
+    fseek(gba_save_file, SEEK_SET, 0);
+    size_t num_read = fread((void*)gba_save->raw, 1, PKSAV_GBA_SAVE_SIZE, gba_save_file);
+    fclose(gba_save_file);
+    if(num_read != PKSAV_GBA_SAVE_SIZE) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    // Detect what kind of save this is
+    if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_RS)) {
+        gba_save->gba_game = PKSAV_GBA_RS;
+    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_EMERALD)) {
+        gba_save->gba_game = PKSAV_GBA_EMERALD;
+    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_FRLG)) {
+        gba_save->gba_game = PKSAV_GBA_FRLG;
+    } else {
+        free(gba_save->raw);
+        return PKSAV_ERROR_INVALID_SAVE;
+    }
+
+    // Allocate memory as needed and set pointers
+    gba_save->unshuffled = malloc(sizeof(pksav_gba_save_sections_t));
+    gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
+    _pksav_gba_save_set_pointers(
+        gba_save
+    );
 
     return PKSAV_ERROR_NONE;
 }
@@ -307,6 +316,11 @@ pksav_error_t pksav_gba_save_save(
         gba_save->unshuffled,
         save_into,
         gba_save->shuffled_section_nums
+    );
+
+    // With everything saved to the new slot, reload it
+    _pksav_gba_save_set_pointers(
+        gba_save
     );
 
     return PKSAV_ERROR_NONE;
