@@ -11,6 +11,31 @@
 #include <string.h>
 #include <wchar.h>
 
+#define PKSAV_GEN1_SAVE_SIZE 0x8000
+
+// Offsets in a Generation I save
+typedef enum {
+    PKSAV_GEN1_PLAYER_NAME             = 0x2598,
+    PKSAV_GEN1_POKEDEX_OWNED           = 0x25A3,
+    PKSAV_GEN1_POKEDEX_SEEN            = 0x25B6,
+    PKSAV_GEN1_ITEM_BAG                = 0x25C9,
+    PKSAV_GEN1_MONEY                   = 0x25F3,
+    PKSAV_GEN1_RIVAL_NAME              = 0x25F6,
+    PKSAV_GEN1_OPTIONS                 = 0x2601,
+    PKSAV_GEN1_BADGES                  = 0x2602,
+    PKSAV_GEN1_PLAYER_ID               = 0x2605,
+    PKSAV_GEN1_PIKACHU_FRIENDSHIP      = 0x271C,
+    PKSAV_GEN1_ITEM_PC                 = 0x27E6,
+    PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM = 0x284C,
+    PKSAV_GEN1_CASINO_COINS            = 0x2850,
+    PKSAV_GEN1_TIME_PLAYED             = 0x2CED,
+    PKSAV_GEN1_POKEMON_PARTY           = 0x2F2C,
+    PKSAV_GEN1_CURRENT_POKEMON_BOX     = 0x30C0,
+    PKSAV_GEN1_CHECKSUM                = 0x3523,
+    PKSAV_GEN1_POKEMON_PC_FIRST_HALF   = 0x4000,
+    PKSAV_GEN1_POKEMON_PC_SECOND_HALF  = 0x6000
+} pksav_gen1_save_offset_t;
+
 static uint8_t _pksav_get_gen1_save_checksum(
     const uint8_t* data
 ) {
