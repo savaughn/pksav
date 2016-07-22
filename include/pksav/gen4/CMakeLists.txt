@@ -6,6 +6,8 @@
 #
 
 SET(pksav_gen4_headers
+    items.h
+    save_structs.h
     text.h
 )
 
