@@ -305,36 +305,141 @@ typedef struct {
     pksav_contest_stats_t contest_stats;
 } pksav_gba_pokemon_effort_t;
 
+/*!
+ * @brief Internal representation of Pokémon information that doesn't fit in
+ *        other structs.
+ */
 typedef struct {
+    /*!
+     * @brief The Pokémon's Pokérus strain and duration.
+     *
+     * See <pksav/common/pokerus.h> for more details.
+     */
     uint8_t pokerus;
+    //! Where the Pokémon was originally met.
     uint8_t met_location;
+    /*!
+     * @brief Bitfield containing information about how the Pokémon was caught.
+     *
+     * The bitfield is arranged as follows:
+     *  * TODO: rest
+     *  * 12-14: Ball
+     *  * 15: OT gender (0 if male, 1 if female)
+     */
     uint16_t origin_info;
+    /*!
+     * @brief Bitfield containing the Pokémon's IVs, egg status, and ability.
+     *
+     * The bitfield is arranged as follows:
+     *  * 0-4: HP IV (0-31)
+     *  * 5-9: Attack IV (0-31)
+     *  * 10-14: Defense IV (0-31)
+     *  * 15-19: Speed IV (0-31)
+     *  * 20-24: Special Attack IV (0-31)
+     *  * 25-29: Special Defense IV (0-31)
+     *  * 30: 0 if this Pokémon is hatched, 1 if it is an egg
+     *  * 31: 0 if the Pokémon has its first ability, 1 if it has its second
+     */
     uint32_t iv_egg_ability;
+    /*!
+     * @brief Bitfield containing the Pokémon's ribbons and obedience information.
+     *
+     * The bitfield is arranged as follows:
+     *  * TODO: rest
+     *  * 31: needs to be set to 1 for a Mew or Deoxys to be obedient
+     */
     uint32_t ribbons_obedience;
 } pksav_gba_pokemon_misc_t;
 
+/*!
+ * @brief The grouping of all Game Boy Advance Pokémon blocks.
+ *
+ * This union allows the data to be parsed in multiple ways, which is useful for
+ * unshuffling and decryption.
+ */
 typedef union {
+    //! Parse the blocks byte-by-byte.
     uint8_t blocks8[48];
-    uint8_t blocks16[24];
+    //! Parse the blocks in two-byte chunks.
+    uint16_t blocks16[24];
+    //! Parse the blocks in four-byte chunks.
     uint32_t blocks32[12];
+    //! Parse individual blocks byte-by-byte.
     uint8_t blocks[4][12];
+    /*!
+     * @brief Parse the blocks in a consistent order once unshuffled.
+     *
+     * This order is completely arbitrary and is only laid out this way for
+     * a convenient interface.
+     */
     struct {
+        //! Growth-related information.
         pksav_gba_pokemon_growth_t growth;
+        //! Attacks and PP.
         pksav_gba_pokemon_attacks_t attacks;
+        //! EVs.
         pksav_gba_pokemon_effort_t effort;
+        //! Misc information.
         pksav_gba_pokemon_misc_t misc;
     };
 } pksav_gba_pokemon_blocks_t;
 
+/*!
+ * @brief The internal representation of Pokémon information that's shown in both
+ *        the party and PC.
+ */
 typedef struct {
+    /*!
+     * @brief The Pokémon's personality value, used to determine other values.
+     *
+     * This value is stored in little-endian, so use the function ::pksav_littleendian32
+     * to access or modify it.
+     */
     uint32_t personality;
+    //! This Pokémon's original trainer's ID.
     pksav_trainer_id_t ot_id;
+    /*!
+     * @brief This Pokémon's nickname.
+     *
+     * This value should be accessed with ::pksav_text_from_gba or ::pksav_widetext_from_gba
+     * and should be modified with ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     *
+     * In all cases, the num_chars parameter should be 10.
+     */
     uint8_t nickname[10];
+    /*!
+     * @brief The language of this Pokémon's original game.
+     *
+     * This value is stored in little-endian, so use the function ::pksav_littleendian16 to
+     * access or modify it.
+     */
     uint16_t language;
+    /*!
+     * @brief This Pokémon's nickname.
+     *
+     * This value should be accessed with ::pksav_text_from_gba or ::pksav_widetext_from_gba
+     * and should be modified with ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     *
+     * In all cases, the num_chars parameter should be 7.
+     */
     uint8_t otname[7];
+    /*!
+     * @brief This Pokémon's trainer-set markings.
+     *
+     * These markings do not mean anything in particular and are primarily used to sort
+     * Pokémon in the PC.
+     */
     uint8_t markings;
+    /*!
+     * @brief The checksum of the Pokémon blocks.
+     *
+     * Users should never need to access or modify this value, as ::pksav_gba_save_save
+     * automatically sets all checksum.
+     */
     uint16_t checksum;
+    //! Unknown.
     uint16_t unknown_0x1E;
+    //! Pokémon blocks.
     pksav_gba_pokemon_blocks_t blocks;
 } pksav_gba_pc_pokemon_t;
 
