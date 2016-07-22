@@ -121,7 +121,7 @@ typedef union {
         pksav_gen6_pokemon_blockB_t blockB;
         pksav_gen6_pokemon_blockC_t blockC;
         pksav_gen6_pokemon_blockD_t blockD;
-    } by_name;
+    };
 } pksav_gen6_pokemon_blocks_t;
 
 typedef struct {
