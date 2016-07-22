@@ -44,9 +44,13 @@
 #include <pksav/gcn/text.h>
 #endif /* PKSAV_ENABLE_GCN */
 
-#if PKSAV_ENABLE_NDS
-#include <pksav/nds/text.h>
-#endif /* PKSAV_ENABLE_NDS */
+#if PKSAV_ENABLE_GEN4
+#include <pksav/gen4/text.h>
+#endif /* PKSAV_ENABLE_GEN4 */
+
+#if PKSAV_ENABLE_GEN5
+#include <pksav/gen5/text.h>
+#endif /* PKSAV_ENABLE_GEN5 */
 
 #if PKSAV_ENABLE_GEN6
 #endif /* PKSAV_ENABLE_GEN6 */

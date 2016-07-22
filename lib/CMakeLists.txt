@@ -25,9 +25,12 @@ ENDIF(PKSAV_ENABLE_GBA)
 IF(PKSAV_ENABLE_GCN)
     ADD_SUBDIRECTORY(gcn)
 ENDIF(PKSAV_ENABLE_GCN)
-IF(PKSAV_ENABLE_NDS)
-    ADD_SUBDIRECTORY(nds)
-ENDIF(PKSAV_ENABLE_NDS)
+IF(PKSAV_ENABLE_GEN4)
+    ADD_SUBDIRECTORY(gen4)
+ENDIF(PKSAV_ENABLE_GEN4)
+IF(PKSAV_ENABLE_GEN5)
+    ADD_SUBDIRECTORY(gen5)
+ENDIF(PKSAV_ENABLE_GEN5)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
@@ -43,7 +46,8 @@ SET(pksav_c_sources
     ${pksav_gen2_sources}
     ${pksav_gba_sources}
     ${pksav_gcn_sources}
-    ${pksav_nds_sources}
+    ${pksav_gen4_sources}
+    ${pksav_gen5_sources}
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}
