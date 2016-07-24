@@ -118,7 +118,7 @@ typedef struct {
     /*!
      * @brief A pointer to the trainer's ID (stored in big-endian).
      *
-     * This value should be accessed with ::pksav_bigendian16.
+     * This value should be accessed and modified with ::pksav_bigendian16.
      */
     uint16_t* trainer_id;
 

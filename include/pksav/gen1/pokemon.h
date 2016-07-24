@@ -175,7 +175,20 @@ typedef struct {
 
 //! Native format for a Pokémon in the trainer's party in Generation I.
 typedef struct {
+    /*!
+     * @brief PC data.
+     *
+     * This data is accessible whether the Pokémon is in the PC or party.
+     */
     pksav_gen1_pc_pokemon_t pc;
+
+    /*!
+     * @brief Party data.
+     *
+     * This data is generated when the Pokémon is moved into the party. As
+     * all of it can be generated from the PC data, it is not stored until
+     * it needs to be used.
+     */
     pksav_gen1_pokemon_party_data_t party_data;
 } pksav_gen1_party_pokemon_t;
 
