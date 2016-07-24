@@ -6,7 +6,8 @@
  */
 
 #include <pksav/error.h>
-#include <pksav/stats.h>
+
+#include <pksav/common/stats.h>
 
 #include <math.h>
 
@@ -63,7 +64,7 @@ pksav_error_t pksav_set_gb_IV(
     uint8_t new_IV
 ) {
     if(new_IV > 15) {
-        return PKSAV_ERROR_INVALID_IV;
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
     switch(stat) {
@@ -149,7 +150,7 @@ pksav_error_t pksav_set_IV(
     uint8_t new_IV
 ) {
     if(new_IV > 31) {
-        return PKSAV_ERROR_INVALID_IV;
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
     switch(stat) {

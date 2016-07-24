@@ -18,14 +18,8 @@ typedef enum {
     PKSAV_ERROR_NONE = 0,
     //! A problem occurred reading/writing a save file
     PKSAV_ERROR_FILE_IO,
-    //! A parameter passed into the function was invalid in some way
-    PKSAV_ERROR_INVALID_PARAM,
     //! A numeric parameter passed into the function was outside the valid range
     PKSAV_ERROR_PARAM_OUT_OF_RANGE,
-    //! A string parameter passed into the function was too long
-    PKSAV_ERROR_STRING_PARAM_TOO_LONG,
-    //! The given generation was invalid for the function.
-    PKSAV_ERROR_INVALID_GENERATION,
     //! The given stat did not exist in the given generation
     /*!
      * The "Special Attack" and "Special Defense" stat was introduced in Generation II,
@@ -33,18 +27,6 @@ typedef enum {
      * produce this error.
      */
     PKSAV_ERROR_INVALID_STAT,
-    //! The EV passed into the function was outside the valid range
-    /*!
-     * For Generations I-II, this range is 0-65535. In later generations, this
-     * range is 0-255.
-     */
-    PKSAV_ERROR_INVALID_EV,
-    //! The IV passed into the function was outside the valid range
-    /*!
-     * For Generations I-II, this range is 0-15. In later generations, this
-     * range is 0-31.
-     */
-    PKSAV_ERROR_INVALID_IV,
     //! The filepath passed in the function is not a valid save file for the given generation.
     PKSAV_ERROR_INVALID_SAVE
 } pksav_error_t;
