@@ -18,6 +18,7 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         items.h
         prng.h
         stats.h
+        version.h
     )
 
     INSTALL(

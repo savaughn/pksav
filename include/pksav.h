@@ -18,6 +18,7 @@
 #include <pksav/items.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
+#include <pksav/version.h>
 
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/datetime.h>
