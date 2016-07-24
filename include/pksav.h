@@ -47,6 +47,7 @@
 
 #if PKSAV_ENABLE_GEN4
 #include <pksav/gen4/items.h>
+#include <pksav/gen4/pokemon.h>
 #include <pksav/gen4/save_structs.h>
 #include <pksav/gen4/text.h>
 #endif /* PKSAV_ENABLE_GEN4 */
