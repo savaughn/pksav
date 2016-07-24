@@ -13,16 +13,16 @@
 
 #include <pksav/config.h>
 
-#include <pksav/checksum.h>
 #include <pksav/error.h>
-#include <pksav/items.h>
-#include <pksav/prng.h>
-#include <pksav/stats.h>
+#include <pksav/version.h>
 
+#include <pksav/common/contest_stats.h>
 #include <pksav/common/datetime.h>
+#include <pksav/common/nds_pokemon.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
-#include <pksav/common/contest_stats.h>
+#include <pksav/common/prng.h>
+#include <pksav/common/stats.h>
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1
@@ -44,9 +44,13 @@
 #include <pksav/gcn/text.h>
 #endif /* PKSAV_ENABLE_GCN */
 
-#if PKSAV_ENABLE_NDS
-#include <pksav/nds/text.h>
-#endif /* PKSAV_ENABLE_NDS */
+#if PKSAV_ENABLE_GEN4
+#include <pksav/gen4/text.h>
+#endif /* PKSAV_ENABLE_GEN4 */
+
+#if PKSAV_ENABLE_GEN5
+#include <pksav/gen5/text.h>
+#endif /* PKSAV_ENABLE_GEN5 */
 
 #if PKSAV_ENABLE_GEN6
 #endif /* PKSAV_ENABLE_GEN6 */

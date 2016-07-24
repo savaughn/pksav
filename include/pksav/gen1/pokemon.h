@@ -11,11 +11,6 @@
 #ifndef PKSAV_GEN1_POKEMON_H
 #define PKSAV_GEN1_POKEMON_H
 
-#include <pksav/config.h>
-#include <pksav/error.h>
-
-#include <pksav/math/base256.h>
-
 #include <stdint.h>
 
 #pragma pack(push,1)
