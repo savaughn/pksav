@@ -13,6 +13,7 @@
 #include <pksav/gen4/save_structs.h>
 #include <pksav/gen4/items.h>
 
+#include <stdbool.h>
 #include <stdint.h>
 
 typedef enum {
@@ -20,5 +21,10 @@ typedef enum {
     PKSAV_GEN4_PLATINUM,
     PKSAV_GEN4_HGSS
 } pksav_gen4_game_t;
+
+PKSAV_API bool pksav_file_is_gen4_save(
+    const char* filepath,
+    pksav_gen4_game_t gen4_game
+);
 
 #endif /* PKSAV_GEN4_SAVE_H */
