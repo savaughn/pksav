@@ -19,10 +19,11 @@
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 
+#include <pksav/common/contest_stats.h>
 #include <pksav/common/datetime.h>
+#include <pksav/common/nds_pokemon.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
-#include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1
