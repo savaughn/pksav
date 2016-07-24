@@ -8,8 +8,11 @@
 SET(pksav_common_headers
     contest_stats.h
     datetime.h
+    nds_pokemon.h
     pokedex.h
     pokerus.h
+    prng.h
+    stats.h
     trainer_id.h
 )
 

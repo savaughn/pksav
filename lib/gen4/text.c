@@ -6,13 +6,12 @@
  */
 
 #include "../common/text_common.h"
-#include "../common/xds_common.h"
 
-#include <pksav/nds/text.h>
+#include <pksav/gen4/text.h>
 
 #include <string.h>
 
-#define PKSAV_NDS_TERMINATOR 0xFFFF
+#define PKSAV_GEN4_TERMINATOR 0xFFFF
 
 /*
  * Character map for Generation IV
@@ -207,13 +206,7 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
 
-// Function prototypes
-static void _pksav_text_from_gen4(const uint16_t*, char*, size_t);
-static void _pksav_widetext_from_gen4(const uint16_t*, wchar_t*, size_t);
-static void _pksav_text_to_gen4(const char*, uint16_t*, size_t);
-static void _pksav_widetext_to_gen4(const wchar_t*, uint16_t*, size_t);
-
-static void _pksav_text_from_gen4(
+void pksav_text_from_gen4(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -221,7 +214,7 @@ static void _pksav_text_from_gen4(
     memset(output_text, 0, num_chars);
 
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    _pksav_widetext_from_gen4(
+    pksav_widetext_from_gen4(
         input_buffer, widetext, num_chars
     );
 
@@ -229,7 +222,7 @@ static void _pksav_text_from_gen4(
     free(widetext);
 }
 
-static void _pksav_widetext_from_gen4(
+void pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -245,7 +238,7 @@ static void _pksav_widetext_from_gen4(
     }
 }
 
-static void _pksav_text_to_gen4(
+void pksav_text_to_gen4(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
@@ -253,19 +246,19 @@ static void _pksav_text_to_gen4(
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     mbstowcs(widetext, input_text, num_chars);
 
-    _pksav_widetext_to_gen4(
+    pksav_widetext_to_gen4(
         widetext, output_buffer, num_chars
     );
 
     free(widetext);
 }
 
-static void _pksav_widetext_to_gen4(
+void pksav_widetext_to_gen4(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 ) {
-    memset(output_buffer, PKSAV_NDS_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, PKSAV_GEN4_TERMINATOR, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
@@ -274,73 +267,5 @@ static void _pksav_widetext_to_gen4(
         } else {
             output_buffer[i] = (uint16_t)index;
         }
-    }
-}
-
-void pksav_text_from_nds(
-    bool gen4,
-    const uint16_t* input_buffer,
-    char* output_text,
-    size_t num_chars
-) {
-    if(gen4) {
-        _pksav_text_from_gen4(
-            input_buffer, output_text, num_chars
-        );
-    } else {
-        _pksav_text_from_xds(
-            input_buffer, output_text, num_chars
-        );
-    }
-}
-
-void pksav_widetext_from_nds(
-    bool gen4,
-    const uint16_t* input_buffer,
-    wchar_t* output_text,
-    size_t num_chars
-) {
-    if(gen4) {
-        _pksav_widetext_from_gen4(
-            input_buffer, output_text, num_chars
-        );
-    } else {
-        _pksav_widetext_from_xds(
-            input_buffer, output_text, num_chars
-        );
-    }
-}
-
-void pksav_text_to_nds(
-    bool gen4,
-    const char* input_text,
-    uint16_t* output_buffer,
-    size_t num_chars
-) {
-    if(gen4) {
-        _pksav_text_to_gen4(
-            input_text, output_buffer, num_chars
-        );
-    } else {
-        _pksav_text_to_xds(
-            input_text, output_buffer, num_chars
-        );
-    }
-}
-
-void pksav_widetext_to_nds(
-    bool gen4,
-    const wchar_t* input_text,
-    uint16_t* output_buffer,
-    size_t num_chars
-) {
-    if(gen4) {
-        _pksav_widetext_to_gen4(
-            input_text, output_buffer, num_chars
-        );
-    } else {
-        _pksav_widetext_to_xds(
-            input_text, output_buffer, num_chars
-        );
     }
 }

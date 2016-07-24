@@ -25,25 +25,26 @@ ENDIF(PKSAV_ENABLE_GBA)
 IF(PKSAV_ENABLE_GCN)
     ADD_SUBDIRECTORY(gcn)
 ENDIF(PKSAV_ENABLE_GCN)
-IF(PKSAV_ENABLE_NDS)
-    ADD_SUBDIRECTORY(nds)
-ENDIF(PKSAV_ENABLE_NDS)
+IF(PKSAV_ENABLE_GEN4)
+    ADD_SUBDIRECTORY(gen4)
+ENDIF(PKSAV_ENABLE_GEN4)
+IF(PKSAV_ENABLE_GEN5)
+    ADD_SUBDIRECTORY(gen5)
+ENDIF(PKSAV_ENABLE_GEN5)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
 
 SET(pksav_c_sources
-    checksum.c
     error.c
-    prng.c
-    stats.c
     ${pksav_common_sources}
     ${pksav_math_sources}
     ${pksav_gen1_sources}
     ${pksav_gen2_sources}
     ${pksav_gba_sources}
     ${pksav_gcn_sources}
-    ${pksav_nds_sources}
+    ${pksav_gen4_sources}
+    ${pksav_gen5_sources}
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}
@@ -64,20 +65,30 @@ IF(WIN32)
     SET(pksav_rc ${CMAKE_CURRENT_BINARY_DIR}/pksav.rc)
 ENDIF(WIN32)
 
-ADD_LIBRARY(pksav SHARED ${pksav_c_sources} ${pksav_rc})
-SET_TARGET_PROPERTIES(pksav PROPERTIES DEFINE_SYMBOL "PKSAV_DLL_EXPORTS")
-ADD_DEFINITIONS(-Dpksav_EXPORTS)
+IF(PKSAV_STATIC)
+    ADD_LIBRARY(pksav STATIC ${pksav_c_sources} ${pksav_rc})
+
+    INSTALL(
+        TARGETS pksav
+        LIBRARY DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .a
+        ARCHIVE DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .lib
+    )
+ELSE()
+    ADD_LIBRARY(pksav SHARED ${pksav_c_sources} ${pksav_rc})
+    SET_TARGET_PROPERTIES(pksav PROPERTIES DEFINE_SYMBOL "PKSAV_DLL_EXPORTS")
+    ADD_DEFINITIONS(-Dpksav_EXPORTS)
+
+    INSTALL(
+        TARGETS pksav
+        LIBRARY DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .so
+        ARCHIVE DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .lib
+        RUNTIME DESTINATION ${RUNTIME_DIR} COMPONENT Libraries # .dll
+    )
+ENDIF(PKSAV_STATIC)
 
 IF(UNIX)
     TARGET_LINK_LIBRARIES(pksav m)
 ENDIF(UNIX)
-
-INSTALL(
-    TARGETS pksav
-    LIBRARY DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .so
-    ARCHIVE DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .lib
-    RUNTIME DESTINATION ${RUNTIME_DIR} COMPONENT Libraries # .dll
-)
 
 #
 # pkg-config file

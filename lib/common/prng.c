@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/prng.h>
+#include <pksav/common/prng.h>
 
 #include <math.h>
 #include <time.h>
