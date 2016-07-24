@@ -17,11 +17,11 @@ typedef struct {
 } pksav_gen6_item_t;
 
 typedef struct {
-    pksav_item_t items[310];
-    pksav_item_t key_items[83];
-    pksav_item_t tms_hms[109];
-    pksav_item_t medicine[48];
-    pksav_item_t berries[64];
+    pksav_gen6_item_t items[310];
+    pksav_gen6_item_t key_items[83];
+    pksav_gen6_item_t tms_hms[109];
+    pksav_gen6_item_t medicine[48];
+    pksav_gen6_item_t berries[64];
     uint8_t unknown[0x66];
     uint16_t checksum;
 } pksav_gen6_bag_t;

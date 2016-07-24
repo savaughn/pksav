@@ -10,14 +10,23 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
 @ONLY)
 
+#
+# Create version header based on CMake variables
+#
+MATH(EXPR PKSAV_VERSION_NUMBER "(${PKSAV_VERSION_MAJOR} * 1000000) +
+                                (${PKSAV_VERSION_MINOR} * 1000) +
+                                 ${PKSAV_VERSION_PATCH}")
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+@ONLY)
+
 IF(NOT PKSAV_DONT_INSTALL_HEADERS)
     SET(pksav_headers
-        checksum.h
-        ${CMAKE_CURRENT_BINARY_DIR}/config.h
         error.h
-        items.h
-        prng.h
-        stats.h
+        ${CMAKE_CURRENT_BINARY_DIR}/config.h
+        ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )
 
     INSTALL(
@@ -41,9 +50,12 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
     IF(PKSAV_ENABLE_GCN)
         ADD_SUBDIRECTORY(gcn)
     ENDIF(PKSAV_ENABLE_GCN)
-    IF(PKSAV_ENABLE_NDS)
-        ADD_SUBDIRECTORY(nds)
-    ENDIF(PKSAV_ENABLE_NDS)
+    IF(PKSAV_ENABLE_GEN4)
+        ADD_SUBDIRECTORY(gen4)
+    ENDIF(PKSAV_ENABLE_GEN4)
+    IF(PKSAV_ENABLE_GEN5)
+        ADD_SUBDIRECTORY(gen5)
+    ENDIF(PKSAV_ENABLE_GEN5)
     IF(PKSAV_ENABLE_GEN6)
         ADD_SUBDIRECTORY(gen6)
     ENDIF(PKSAV_ENABLE_GEN6)
