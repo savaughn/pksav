@@ -5,6 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_nds_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/text.c
-PARENT_SCOPE)
+SET(pksav_gen5_headers
+    text.h
+)
+
+INSTALL(
+    FILES ${pksav_gen5_headers}
+    DESTINATION ${INCLUDE_DIR}/pksav/gen5
+    COMPONENT Headers
+)

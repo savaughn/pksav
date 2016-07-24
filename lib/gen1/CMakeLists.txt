@@ -6,7 +6,6 @@
 #
 
 SET(pksav_gen1_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon.c
     ${CMAKE_CURRENT_SOURCE_DIR}/save.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text.c
 PARENT_SCOPE)

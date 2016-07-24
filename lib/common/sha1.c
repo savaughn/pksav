@@ -89,7 +89,7 @@ Fixed alignment issue in SHA1Transform when SHA1HANDSOFF is defined.
 Modified 7/16
 By Nicholas Corgan <n.corgan@gmail.com>
 Still 100% public domain
-Added typedef to struct SHA1_CTX.
+Minor fixes/additions for various compiler compatibilities, no functional changes.
 
 */
 
@@ -158,7 +158,7 @@ void SHAPrintContext(SHA1_CTX *context, char *msg)
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 
-inline void SHA1Transform(u32 state[5], const u8 buffer[64])
+static inline void SHA1Transform(u32 state[5], const u8 buffer[64])
 {
 	u32 a, b, c, d, e;
 	u32 l[16];
@@ -224,7 +224,7 @@ inline void SHA1Init(SHA1_CTX* context)
 
 /* Run your data through this. */
 
-inline void SHA1Update(SHA1_CTX* context, const u8 *_data, u32 len)
+static inline void SHA1Update(SHA1_CTX* context, const u8 *_data, u32 len)
 {
 	u32 i, j;
 	const u8 *data = _data;
@@ -254,7 +254,7 @@ inline void SHA1Update(SHA1_CTX* context, const u8 *_data, u32 len)
 
 /* Add padding and return the message digest. */
 
-inline void SHA1Final(u8 digest[20], SHA1_CTX* context)
+static inline void SHA1Final(u8 digest[20], SHA1_CTX* context)
 {
 	u32 i;
 	u8 finalcount[8];

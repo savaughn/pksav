@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_PRNG_H
-#define PKSAV_PRNG_H
+#ifndef PKSAV_COMMON_PRNG_H
+#define PKSAV_COMMON_PRNG_H
 
 #include <pksav/config.h>
 
@@ -51,4 +51,4 @@ PKSAV_API uint32_t pksav_mtrng_next(
 }
 #endif
 
-#endif /* PKSAV_PRNG_H */
+#endif /* PKSAV_COMMON_PRNG_H */

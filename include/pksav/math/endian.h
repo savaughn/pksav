@@ -30,7 +30,7 @@
 #    define PKSAV_BYTESWAP32(num) OSSwapInt32(num)
 #else
 #    define PKSAV_BYTESWAP16(num) (((num & 0xFF) << 8) | ((num & 0xFF00) >> 8))
-#    define PKSAV_BYTESWAP32(num) ((PKSAV_BYTESWAP16((uint16)(num & 0xFFFF)) << 16) | \
+#    define PKSAV_BYTESWAP32(num) ((PKSAV_BYTESWAP16((uint16_t)(num & 0xFFFF)) << 16) | \
                                    (PKSAV_BYTESWAP16((uint16_t)((num & 0xFFFF0000) >> 16))))
 #endif
 #endif /* __DOXYGEN__ */
@@ -55,7 +55,7 @@ static PKSAV_INLINE uint16_t pksav_byteswap16(uint16_t num) {
  * On big-endian platforms, this simply returns the given number.
  */
 static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
-#ifdef PKSAV_LITTLE_ENDIAN
+#if PKSAV_LITTLE_ENDIAN
     return pksav_byteswap16(num);
 #else
     return num;
@@ -68,7 +68,7 @@ static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
  * On little-endian platforms, this simply returns the given number.
  */
 static PKSAV_INLINE uint16_t pksav_littleendian16(uint16_t num) {
-#ifdef PKSAV_LITTLE_ENDIAN
+#if PKSAV_LITTLE_ENDIAN
     return num;
 #else
     return pksav_byteswap16(num);
@@ -91,7 +91,7 @@ static PKSAV_INLINE uint32_t pksav_byteswap32(uint32_t num) {
  * On big-endian platforms, this simply returns the given number.
  */
 static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
-#ifdef PKSAV_LITTLE_ENDIAN
+#if PKSAV_LITTLE_ENDIAN
     return pksav_byteswap32(num);
 #else
     return num;
@@ -104,7 +104,7 @@ static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
  * On little-endian platforms, this simply returns the given number.
  */
 static PKSAV_INLINE uint32_t pksav_littleendian32(uint32_t num) {
-#ifdef PKSAV_LITTLE_ENDIAN
+#if PKSAV_LITTLE_ENDIAN
     return num;
 #else
     return pksav_byteswap32(num);
