@@ -14,8 +14,6 @@
 #include <pksav/config.h>
 
 #include <pksav/error.h>
-#include <pksav/prng.h>
-#include <pksav/stats.h>
 #include <pksav/version.h>
 
 #include <pksav/common/contest_stats.h>
@@ -23,6 +21,8 @@
 #include <pksav/common/nds_pokemon.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
+#include <pksav/common/prng.h>
+#include <pksav/common/stats.h>
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1

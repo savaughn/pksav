@@ -25,8 +25,6 @@ CONFIGURE_FILE(
 IF(NOT PKSAV_DONT_INSTALL_HEADERS)
     SET(pksav_headers
         error.h
-        prng.h
-        stats.h
         ${CMAKE_CURRENT_BINARY_DIR}/config.h
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )

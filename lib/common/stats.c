@@ -6,7 +6,8 @@
  */
 
 #include <pksav/error.h>
-#include <pksav/stats.h>
+
+#include <pksav/common/stats.h>
 
 #include <math.h>
 

@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_STATS_H
-#define PKSAV_STATS_H
+#ifndef PKSAV_COMMON_STATS_H
+#define PKSAV_COMMON_STATS_H
 
 #include <pksav/config.h>
 #include <pksav/error.h>
@@ -55,4 +55,4 @@ PKSAV_API pksav_error_t pksav_set_IV(
 }
 #endif
 
-#endif /* PKSAV_STATS_H */
+#endif /* PKSAV_COMMON_STATS_H */

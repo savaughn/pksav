@@ -37,8 +37,6 @@ ADD_SUBDIRECTORY(math)
 
 SET(pksav_c_sources
     error.c
-    prng.c
-    stats.c
     ${pksav_common_sources}
     ${pksav_math_sources}
     ${pksav_gen1_sources}
