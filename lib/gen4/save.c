@@ -106,3 +106,60 @@ bool pksav_file_is_gen4_save(
     free(gen4_save_data);
     return ret;
 }
+
+pksav_error_t pksav_gen4_save_load(
+    const char* filepath,
+    pksav_gen4_save_t* gen4_save
+) {
+    // Read the file and make sure it's valid
+    FILE* gen4_save_file = fopen(filepath, "r");
+    if(!gen4_save_file) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    fseek(gen4_save_file, SEEK_END, 0);
+
+    if(ftell(gen4_save_file) < PKSAV_GEN4_SAVE_SIZE) {
+        return PKSAV_ERROR_INVALID_SAVE;
+    }
+
+    gen4_save->raw = malloc(PKSAV_GEN4_SAVE_SIZE);
+    fseek(gen4_save_file, SEEK_SET, 0);
+    size_t num_read = fread((void*)gen4_save->raw, 1, PKSAV_GEN4_SAVE_SIZE, gen4_save_file);
+    fclose(gen4_save_file);
+    if(num_read != PKSAV_GEN4_SAVE_SIZE) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_DP)) {
+        gen4_save->gen4_game = PKSAV_GEN4_DP;
+    } else if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_PLATINUM)) {
+        gen4_save->gen4_game = PKSAV_GEN4_PLATINUM;
+    } else if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_HGSS)) {
+        gen4_save->gen4_game = PKSAV_GEN4_HGSS;
+    } else {
+        free(gen4_save->raw);
+        return PKSAV_ERROR_INVALID_SAVE;
+    }
+
+    // TODO: set block pointers, set struct member pointers
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen4_save_save(
+    const char* filepath,
+    pksav_gen4_save_t* gen4_save
+) {
+    // Make sure we can write to this file
+    FILE* gen4_save_file = fopen(filepath, "w");
+    if(!gen4_save_file) {
+        return PKSAV_ERROR_FILE_IO;
+    }
+
+    // Write to file
+    fwrite((void*)gen4_save->raw, 1, PKSAV_GEN4_SAVE_SIZE, gen4_save_file);
+    fclose(gen4_save_file);
+
+    return PKSAV_ERROR_NONE;
+}

@@ -18,6 +18,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef enum {
     PKSAV_GEN4_DP = 0,
@@ -76,13 +77,34 @@ typedef struct {
     uint8_t* sinnoh_johto_badges;
     uint8_t* hgss_kanto_badges;
 
+    // Do not change!
     pksav_gen4_game_t gen4_game;
+    #ifndef __DOXYGEN__
+    uint8_t* general_block;
+    uint8_t* storage_block;
     uint8_t* raw;
+    #endif
 } pksav_gen4_save_t;
 
 PKSAV_API bool pksav_file_is_gen4_save(
     const char* filepath,
     pksav_gen4_game_t gen4_game
 );
+
+PKSAV_API pksav_error_t pksav_gen4_save_load(
+    const char* filepath,
+    pksav_gen4_save_t* gen4_save
+);
+
+PKSAV_API pksav_error_t pksav_gen4_save_save(
+    const char* filepath,
+    pksav_gen4_save_t* gen4_save
+);
+
+static PKSAV_INLINE void pksav_gen4_save_free(
+    pksav_gen4_save_t* gen4_save
+) {
+    free(gen4_save->raw);
+}
 
 #endif /* PKSAV_GEN4_SAVE_H */
