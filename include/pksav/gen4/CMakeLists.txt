@@ -8,6 +8,7 @@
 SET(pksav_gen4_headers
     items.h
     pokemon.h
+    save.h
     save_structs.h
     text.h
 )

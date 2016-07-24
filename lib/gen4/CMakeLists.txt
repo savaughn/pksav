@@ -6,5 +6,6 @@
 #
 
 SET(pksav_gen4_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/save.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text.c
 PARENT_SCOPE)
