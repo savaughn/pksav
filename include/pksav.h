@@ -13,9 +13,7 @@
 
 #include <pksav/config.h>
 
-#include <pksav/checksum.h>
 #include <pksav/error.h>
-#include <pksav/items.h>
 #include <pksav/prng.h>
 #include <pksav/stats.h>
 #include <pksav/version.h>
