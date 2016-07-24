@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../common/nds_checksum.h"
+
 #include <pksav/gen4/save.h>
 
 #include <stdio.h>

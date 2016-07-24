@@ -36,7 +36,6 @@ ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
 
 SET(pksav_c_sources
-    checksum.c
     error.c
     prng.c
     stats.c

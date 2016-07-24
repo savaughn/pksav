@@ -5,61 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/checksum.h>
-
-#define PKSAV_GS_CHECKSUM1 0x2D69
-#define PKSAV_GS_CHECKSUM2 0x7E6D
-
-#define PKSAV_CRYSTAL_CHECKSUM1 0x2D02
-#define PKSAV_CRYSTAL_CHECKSUM2 0x1F0D
-
-void pksav_get_gen2_save_checksums(
-    bool crystal,
-    const uint8_t* data,
-    pksav_gen2_checksums_t* checksums_out
-) {
-    checksums_out->first = checksums_out->second = 0;
-
-    if(crystal) {
-        for(uint16_t i = 0x2009; i <= 0x2B82; ++i) {
-            checksums_out->first += data[i];
-        }
-
-        for(uint16_t i = 0x1209; i <= 0x1D82; ++i) {
-            checksums_out->second += data[i];
-        }
-    } else {
-        for(uint16_t i = 0x2009; i <= 0x2D68; ++i) {
-            checksums_out->first += data[i];
-        }
-
-        for(uint16_t i = 0x0C6B; i <= 0x17EC; ++i) {
-            checksums_out->second += data[i];
-        }
-        for(uint16_t i = 0x3D96; i <= 0x3F3F; ++i) {
-            checksums_out->second += data[i];
-        }
-        for(uint16_t i = 0x7E39; i <= 0x7E6C; ++i) {
-            checksums_out->second += data[i];
-        }
-    }
-}
-
-void pksav_set_gen2_save_checksums(
-    bool crystal,
-    uint8_t* data
-) {
-    uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
-                                       : PKSAV_GS_CHECKSUM1;
-    uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
-                                       : PKSAV_GS_CHECKSUM2;
-
-    pksav_gen2_checksums_t checksums;
-    pksav_get_gen2_save_checksums(crystal, data, &checksums);
-
-    data[checksum1_index] = checksums.first;
-    data[checksum2_index] = checksums.second;
-}
+#include "nds_checksum.h"
 
 static const uint16_t pksav_nds_seeds[256] = {
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50A5, 0x60C6, 0x70E7,
@@ -96,13 +42,25 @@ static const uint16_t pksav_nds_seeds[256] = {
     0x6E17, 0x7E36, 0x4E55, 0x5E74, 0x2E93, 0x3EB2, 0x0ED1, 0x1EF0
 };
 
-uint16_t pksav_get_nds_block_checksum(
-    uint8_t* data,
-    size_t len
+uint16_t pksav_nds_block_checksum(
+    const uint8_t* data,
+    uint16_t len
 ) {
     uint16_t ret = 0xFFFF;
-    for(size_t i = 0; i < len; i++) {
+    for(uint16_t i = 0; i < len; ++i) {
         ret = (ret << 8) ^ pksav_nds_seeds[data[i] ^ (ret >> 8)];
+    }
+
+    return ret;
+}
+
+uint16_t pksav_nds_pokemon_get_checksum(
+    const pksav_nds_pc_pokemon_t* nds_pokemon
+) {
+    uint16_t ret = 0;
+
+    for(uint16_t i = 0; i < (sizeof(pksav_nds_pokemon_blocks_t)/2); ++i) {
+        ret += nds_pokemon->blocks.blocks16[i];
     }
 
     return ret;
