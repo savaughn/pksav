@@ -8,6 +8,7 @@
 SET(pksav_common_headers
     contest_stats.h
     datetime.h
+    markings.h
     nds_pokemon.h
     pokedex.h
     pokerus.h
