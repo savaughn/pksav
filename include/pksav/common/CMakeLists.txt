@@ -10,6 +10,7 @@ SET(pksav_common_headers
     datetime.h
     gen4_encounter_type.h
     markings.h
+    nature.h
     nds_pokemon.h
     pokedex.h
     pokerus.h

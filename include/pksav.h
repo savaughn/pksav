@@ -20,6 +20,7 @@
 #include <pksav/common/datetime.h>
 #include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/markings.h>
+#include <pksav/common/nature.h>
 #include <pksav/common/nds_pokemon.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
