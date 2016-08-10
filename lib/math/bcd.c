@@ -13,6 +13,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * We know what we're doing in converting the size_t to ssize_t. Subtracting
+ * from a size_t equalling 0 with underflow, and we don't want that.
+ */
+#ifdef _MSC_VER
+#    pragma warning(disable: 4552) // expected operator with side effect
+#endif
+
 size_t pksav_from_bcd(
     const uint8_t* buffer,
     size_t num_bytes
@@ -36,7 +44,7 @@ void pksav_to_bcd(
     uint8_t* buffer_out
 ) {
     // Find the number of needed bytes
-    size_t log10_num = log10(num);
+    size_t log10_num = (size_t)log10((double)num);
     size_t num_bytes = (size_t)((log10_num + 1) / 2);
     if(log10_num % 2 == 0) {
         ++num_bytes;
