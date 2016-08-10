@@ -7,6 +7,8 @@
 #ifndef PKSAV_COMMON_TEXT_COMMON_H
 #define PKSAV_COMMON_TEXT_COMMON_H
 
+#include <pksav/config.h>
+
 #include <stdlib.h>
 
 ssize_t wchar_map_index(
