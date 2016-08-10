@@ -297,6 +297,6 @@ void pksav_sha1(
 ) {
     SHA1_CTX ctx;
     SHA1Init(&ctx);
-    SHA1Update(&ctx, start, (size_t)(end-start));
+    SHA1Update(&ctx, start, (u32)(end-start));
     SHA1Final(digest->u8, &ctx);
 }
