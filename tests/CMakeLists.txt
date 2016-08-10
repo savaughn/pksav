@@ -17,7 +17,7 @@ MACRO(PKSAV_ADD_TEST test_name)
     IF(CMAKE_CROSSCOMPILING)
         ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name})
     ELSE()
-        SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
+        SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}")
         IF(WIN32)
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             CONFIGURE_FILE(

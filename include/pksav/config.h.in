@@ -12,7 +12,7 @@
 #define PKSAV_CONFIG_H
 
 /***************************************************************************
- * Define cross-platform macros
+ * Define cross-platform macros, platform-specific stuff
  ***************************************************************************/
 #if defined(_MSC_VER)
 #    define PKSAV_EXPORT         __declspec(dllexport)
@@ -20,6 +20,11 @@
 #    define PKSAV_INLINE         __forceinline
 #    define PKSAV_UNUSED(x)      x
 #    pragma warning(disable: 4800) // forcing value to bool 'true' or 'false'
+
+// MSVC doesn't have ssize_t for C, so we need to define it
+#include <stdint.h>
+typedef intmax_t ssize_t;
+
 #elif defined(__GNUC__) && __GNUC__ >= 4
 #    define PKSAV_EXPORT         __attribute__((visibility("default")))
 #    define PKSAV_IMPORT         __attribute__((visibility("default")))
