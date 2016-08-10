@@ -13,7 +13,7 @@
 void pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 ) {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     for(size_t i = 0; i < 624; ++i) {
         mtrng->nums[i] = (uint32_t)rand();
     }

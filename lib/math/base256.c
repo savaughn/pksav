@@ -12,6 +12,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * We know what we're doing in converting the size_t to ssize_t. Subtracting
+ * from a size_t equalling 0 with underflow, and we don't want that.
+ */
+#ifdef _MSC_VER
+#    pragma warning(disable: 4552) // expected operator with side effect
+#endif
+
 size_t pksav_from_base256(
     const uint8_t* buffer,
     size_t num_bytes
@@ -30,7 +38,7 @@ void pksav_to_base256(
     size_t num,
     uint8_t* buffer_out
 ) {
-    size_t num_bytes = (size_t)((log(num) / log(256) + 1));
+    size_t num_bytes = (size_t)((log((double)num) / log(256) + 1));
     memset(buffer_out, 0, num_bytes);
     float exp = 1.0;
 
