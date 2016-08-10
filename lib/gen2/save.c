@@ -51,6 +51,9 @@ static void _pksav_gen2_get_save_checksums(
         for(uint16_t i = 0x7E39; i <= 0x7E6C; ++i) {
             checksums_out->second += data[i];
         }
+
+        checksums_out->first  = pksav_littleendian16(checksums_out->first);
+        checksums_out->second = pksav_littleendian16(checksums_out->second);
     }
 }
 
@@ -66,8 +69,8 @@ static void _pksav_gen2_set_save_checksums(
     pksav_gen2_checksums_t checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
-    data[checksum1_index] = checksums.first;
-    data[checksum2_index] = checksums.second;
+    *((uint16_t*)&data[checksum1_index]) = checksums.first;
+    *((uint16_t*)&data[checksum2_index]) = checksums.second;
 }
 
 static bool _pksav_file_is_gen2_save(
@@ -77,8 +80,12 @@ static bool _pksav_file_is_gen2_save(
     pksav_gen2_checksums_t checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
-    uint16_t actual_checksum1 = data[crystal ? PKSAV_CRYSTAL_CHECKSUM1 : PKSAV_GS_CHECKSUM1];
-    uint16_t actual_checksum2 = data[crystal ? PKSAV_CRYSTAL_CHECKSUM2 : PKSAV_GS_CHECKSUM2];
+    uint16_t actual_checksum1 = pksav_littleendian16(
+                                    data[crystal ? PKSAV_CRYSTAL_CHECKSUM1 : PKSAV_GS_CHECKSUM1]
+                                );
+    uint16_t actual_checksum2 = pksav_littleendian16(
+                                    data[crystal ? PKSAV_CRYSTAL_CHECKSUM2 : PKSAV_GS_CHECKSUM2]
+                                );
 
     return (checksums.first == actual_checksum1 &&
             checksums.second == actual_checksum2);
