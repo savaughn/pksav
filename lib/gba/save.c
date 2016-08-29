@@ -310,7 +310,7 @@ pksav_error_t pksav_gba_save_save(
     }
     pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
     pksav_gba_save_slot_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
-                                                                     : &sections_pair[0];
+                                                                 : &sections_pair[0];
     gba_save->from_first_slot = !gba_save->from_first_slot;
 
     pksav_gba_save_shuffle_sections(
