@@ -20,9 +20,12 @@ MACRO(PKSAV_BUILD_APP app_name)
     )
 ENDMACRO(PKSAV_BUILD_APP)
 
-SET(pksav_apps
-    pksav-gen1-save-dump
-)
+IF(PKSAV_ENABLE_GEN1)
+    LIST(APPEND pksav_apps pksav-gen1-save-dump)
+ENDIF(PKSAV_ENABLE_GEN1)
+IF(PKSAV_ENABLE_GEN2)
+    LIST(APPEND pksav_apps pksav-gen2-save-dump)
+ENDIF(PKSAV_ENABLE_GEN2)
 
 FOREACH(app ${pksav_apps})
     PKSAV_BUILD_APP(${app})
