@@ -77,21 +77,26 @@ static void _pksav_gen2_get_save_checksums(
     const uint8_t* data,
     pksav_gen2_checksums_t* checksums_out
 ) {
-    checksums_out->first = checksums_out->second = 0;
+    checksums_out->first  = 0;
+    checksums_out->second = 0;
 
     if(crystal) {
+        // Checksum 1
         for(uint16_t i = 0x2009; i <= 0x2B82; ++i) {
             checksums_out->first += data[i];
         }
 
+        // Checksum 2
         for(uint16_t i = 0x1209; i <= 0x1D82; ++i) {
             checksums_out->second += data[i];
         }
     } else {
+        // Checksum 1
         for(uint16_t i = 0x2009; i <= 0x2D68; ++i) {
             checksums_out->first += data[i];
         }
 
+        // Checksum 2
         for(uint16_t i = 0x0C6B; i <= 0x17EC; ++i) {
             checksums_out->second += data[i];
         }
@@ -127,14 +132,19 @@ static bool _pksav_file_is_gen2_save(
     bool crystal,
     const uint8_t* data
 ) {
+    uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
+                                       : PKSAV_GS_CHECKSUM1;
+    uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
+                                       : PKSAV_GS_CHECKSUM2;
+
     pksav_gen2_checksums_t checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
     uint16_t actual_checksum1 = pksav_littleendian16(
-                                    data[crystal ? PKSAV_CRYSTAL_CHECKSUM1 : PKSAV_GS_CHECKSUM1]
+                                    *((uint16_t*)&data[checksum1_index])
                                 );
     uint16_t actual_checksum2 = pksav_littleendian16(
-                                    data[crystal ? PKSAV_CRYSTAL_CHECKSUM2 : PKSAV_GS_CHECKSUM2]
+                                    *((uint16_t*)&data[checksum2_index])
                                 );
 
     return (checksums.first == actual_checksum1 &&
@@ -153,6 +163,7 @@ bool pksav_file_is_gen2_save(
     fseek(gen2_save, 0, SEEK_END);
 
     if(ftell(gen2_save) < PKSAV_GEN2_SAVE_SIZE) {
+        fclose(gen2_save);
         return false;
     }
 
