@@ -106,10 +106,10 @@ static void _pksav_gen2_get_save_checksums(
         for(uint16_t i = 0x7E39; i <= 0x7E6C; ++i) {
             checksums_out->second += data[i];
         }
-
-        checksums_out->first  = pksav_littleendian16(checksums_out->first);
-        checksums_out->second = pksav_littleendian16(checksums_out->second);
     }
+
+    checksums_out->first  = pksav_littleendian16(checksums_out->first);
+    checksums_out->second = pksav_littleendian16(checksums_out->second);
 }
 
 static void _pksav_gen2_set_save_checksums(
