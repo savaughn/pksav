@@ -147,8 +147,14 @@ static bool _pksav_file_is_gen2_save(
                                     *((uint16_t*)&data[checksum2_index])
                                 );
 
-    return (checksums.first == actual_checksum1 &&
-            checksums.second == actual_checksum2);
+    /*
+     * From what I've seen, valid Crystal saves don't always have both
+     * checksums set correctly.
+     */
+    return crystal ? (checksums.first == actual_checksum1 ||
+                      checksums.second == actual_checksum2)
+                   : (checksums.first == actual_checksum1 &&
+                      checksums.second == actual_checksum2);
 }
 
 bool pksav_file_is_gen2_save(
