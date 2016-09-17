@@ -54,7 +54,7 @@ typedef enum {
 typedef struct {
     // Party/box pointers
     pksav_gen2_pokemon_party_t* pokemon_party;
-    pksav_gen2_pokemon_box_t* pokemon_boxes[12];
+    pksav_gen2_pokemon_pc_t* pokemon_pc;
     pksav_gen2_pokemon_box_names_t* pokemon_box_names;
 
     // Item pointers

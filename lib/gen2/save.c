@@ -38,8 +38,7 @@ typedef enum {
     PKSAV_GEN2_POKEDEX_SEEN,
     PKSAV_GEN2_CURRENT_POKEMON_BOX,
     PKSAV_GEN2_PLAYER_GENDER,
-    PKSAV_GEN2_POKEMON_PC_FIRST_HALF,
-    PKSAV_GEN2_POKEMON_PC_SECOND_HALF,
+    PKSAV_GEN2_POKEMON_PC,
     PKSAV_GEN2_CHECKSUM1,
     PKSAV_GEN2_CHECKSUM2
 } pksav_gen2_field_t;
@@ -61,9 +60,7 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
     {0x2A6C,0x2A47}, // Pokedex seen
     {0x2D6C,0x2D10}, // Current Pokemon box list
     {0x3E3D,0x3E3D}, // Player gender (Crystal only)
-    {0x4000,0x4000}, // Pokemon PC (first half)
-    {0x6000,0x6000}, // Pokemon PC (second half)
-    {0x2D69,0x2D02}, // Checksum 1
+    {0x4000,0x4000}, // Pokemon PC
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
@@ -222,19 +219,7 @@ pksav_error_t pksav_gen2_save_load(
 
     // Set pointers
     gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
-
-    uint16_t pokemon_pc_first_half = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][gen2_save->gen2_game];
-    uint16_t pokemon_pc_second_half = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][gen2_save->gen2_game];
-
-    for(uint8_t i = 0; i < 6; ++i) {
-        uint16_t offset = pokemon_pc_first_half + (sizeof(pksav_gen2_pokemon_box_t)*i);
-        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
-    }
-    for(uint8_t i = 6; i < 12; ++i) {
-        uint16_t offset = pokemon_pc_second_half + (sizeof(pksav_gen2_pokemon_box_t)*(i-6));
-        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
-    }
-
+    gen2_save->pokemon_pc = (pksav_gen2_pokemon_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PC);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
     gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);

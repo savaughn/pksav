@@ -73,7 +73,12 @@ typedef struct {
     pksav_gen2_pc_pokemon_t entries[20];
     uint8_t otnames[20][11];
     uint8_t nicknames[20][11];
+    uint8_t padding[2];
 } pksav_gen2_pokemon_box_t;
+
+typedef struct {
+    pksav_gen2_pokemon_box_t boxes[14];
+} pksav_gen2_pokemon_pc_t;
 
 typedef struct {
     uint8_t names[14][9];
