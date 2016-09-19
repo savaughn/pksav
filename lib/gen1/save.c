@@ -126,6 +126,9 @@ pksav_error_t pksav_gen1_save_load(
     // Set pointers
     gen1_save->pokemon_party = (pksav_gen1_pokemon_party_t*)&gen1_save->raw[PKSAV_GEN1_POKEMON_PARTY];
 
+    gen1_save->current_pokemon_box_num = &gen1_save->raw[PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM];
+    gen1_save->current_pokemon_box = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[PKSAV_GEN1_CURRENT_POKEMON_BOX];
+
     for(uint8_t i = 0; i < 6; ++i) {
         uint16_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF + (sizeof(pksav_gen1_pokemon_box_t)*i);
         gen1_save->pokemon_boxes[i] = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[offset];

@@ -29,9 +29,9 @@
 //! Native representation of how much time has passed in a Generation I game.
 typedef struct {
     /*!
-     * @brief The number of hours (stored in big-endian).
+     * @brief The number of hours (stored in little-endian).
      *
-     * This value should be accessed and set with ::pksav_bigendian16.
+     * This value should be accessed and set with ::pksav_littleendian16.
      */
     uint16_t hours;
     //! The number of minutes (0-59).
@@ -85,6 +85,23 @@ typedef enum {
 typedef struct {
     //! A pointer to the trainer's Pokémon party.
     pksav_gen1_pokemon_party_t* pokemon_party;
+
+    /*!
+     * @brief The number of the current Pokémon box (0-11).
+     *
+     * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
+     * deposited and withdrawn from.
+     */
+    uint8_t* current_pokemon_box_num;
+
+    /*!
+     * @brief A pointer to the current Pokémon box.
+     *
+     * Pokémon are only deposited or withdrawn from this box, and its data is
+     * switched out when the current box is changed.
+     */
+    pksav_gen1_pokemon_box_t* current_pokemon_box;
+
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
      *
