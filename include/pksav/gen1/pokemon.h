@@ -13,6 +13,85 @@
 
 #include <stdint.h>
 
+/*!
+ * @brief The mask for a move's PP in the PP field.
+ *
+ * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
+ * get the PP of that move.
+ */
+#define PKSAV_GEN1_MOVE_PP_MASK ((uint8_t)0x3F)
+
+/*!
+ * @brief The mask for the number of PP Ups used on a move (1-3).
+ *
+ * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
+ * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
+ */
+#define PKSAV_GEN1_MOVE_PP_UP_MASK ((uint8_t)0xC0)
+
+/*!
+ * @brief Valid values for a Pokémon's current condition.
+ *
+ * This enum applies to the pksav_gen1_pc_pokemon_t.condition field.
+ */
+typedef enum {
+    //! No status ailment.
+    PKSAV_GEN1_CONDITION_NONE    = 0x00,
+    //! Sleep.
+    PKSAV_GEN1_CONDITION_ASLEEP  = 0x04,
+    /*!
+     * @brief Poison.
+     *
+     * Bad Poison (inflicted by Toxic) is considered separate and is not reflected
+     * in this field.
+     */
+    PKSAV_GEN1_CONDITION_POISON  = 0x08,
+    //! Burn.
+    PKSAV_GEN1_CONDITION_BURN    = 0x10,
+    //! Frozen.
+    PKSAV_GEN1_CONDITION_FROZEN  = 0x20,
+    //! Paralysis.
+    PKSAV_GEN1_CONDITION_PARALYZ = 0x40
+} pksav_gen1_condition_t;
+
+/*!
+ * @brief Valid values for a Pokémon's types.
+ *
+ * This enum applies to the indices of the pksav_gen1_pc_pokemon_t.types field.
+ */
+typedef enum {
+    //! Normal.
+    PKSAV_GEN1_TYPE_NORMAL   = 0x00,
+    //! Fighting.
+    PKSAV_GEN1_TYPE_FIGHTING = 0x01,
+    //! Flying.
+    PKSAV_GEN1_TYPE_FLYING   = 0x02,
+    //! Poison.
+    PKSAV_GEN1_TYPE_POISON   = 0x03,
+    //! Ground.
+    PKSAV_GEN1_TYPE_GROUND   = 0x04,
+    //! Rock.
+    PKSAV_GEN1_TYPE_ROCK     = 0x05,
+    //! Bug.
+    PKSAV_GEN1_TYPE_BUG      = 0x07,
+    //! Ghost.
+    PKSAV_GEN1_TYPE_GHOST    = 0x08,
+    //! Fire.
+    PKSAV_GEN1_TYPE_FIRE     = 0x14,
+    //! Water.
+    PKSAV_GEN1_TYPE_WATER    = 0x15,
+    //! Grass.
+    PKSAV_GEN1_TYPE_GRASS    = 0x16,
+    //! Electric.
+    PKSAV_GEN1_TYPE_ELECTRIC = 0x17,
+    //! Psychic.
+    PKSAV_GEN1_TYPE_PSYCHIC  = 0x18,
+    //! Ice.
+    PKSAV_GEN1_TYPE_ICE      = 0x19,
+    //! Dragon.
+    PKSAV_GEN1_TYPE_DRAGON   = 0x1A
+} pksav_gen1_type_t;
+
 #pragma pack(push,1)
 
 /*!
@@ -39,9 +118,9 @@ typedef struct {
     /*!
      * @brief The Pokémon's status ailments, if any.
      *
-     * TODO: enum for status ailments
+     * The enum ::pksav_gen1_condition_t contains all valid values for this field.
      */
-    uint8_t status;
+    uint8_t condition;
     /*!
      * @brief Indices for each of this Pokémon's types.
      *
@@ -51,7 +130,7 @@ typedef struct {
      * These fields have no real use in a save editing program and should have simply been
      * in a lookup table on the ROM itself.
      *
-     * TODO: enum for type indices
+     * The enum ::pksav_gen1_type_t contains all valid values for this field.
      */
     uint8_t types[2];
     /*!
@@ -118,9 +197,12 @@ typedef struct {
     /*!
      * @brief The Pokémon's PPs and number of PP Ups used for each move.
      *
-     * TODO: add masks
+     * Mask an index with ::PKSAV_GEN1_MOVE_PP_MASK to get the move PP.
+     *
+     * Mask an index with ::PKSAV_GEN1_MOVE_PP_UP_MASK to get the number of
+     * PP Ups applied to the move.
      */
-    uint8_t move_pps[4]; // TODO: PP, PP Up mask
+    uint8_t move_pps[4];
 } pksav_gen1_pc_pokemon_t;
 
 /*!
