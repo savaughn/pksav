@@ -24,23 +24,15 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#pragma pack(push,1)
-
-//! Native representation of how much time has passed in a Generation I game.
-typedef struct {
-    /*!
-     * @brief The number of hours (stored in little-endian).
-     *
-     * This value should be accessed and set with ::pksav_littleendian16.
-     */
-    uint16_t hours;
-    //! The number of minutes (0-59).
-    uint8_t minutes;
-    //! The number of second (0-59).
-    uint8_t seconds;
-} pksav_gen1_time_t;
-
-#pragma pack(pop)
+/*!
+ * @brief Mask for getting the current Pokémon box number.
+ *
+ * In the field for storing the current Pokémon box number, the relevant
+ * value is only stored in the lower four bytes.
+ *
+ * This is used with the pksav_gen1_save_t.current_pokemon_box_num field.
+ */
+#define PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK ((uint8_t)0x0F)
 
 /*!
  * @brief Bitmasks for checking if the player has a specific badge.
@@ -68,6 +60,24 @@ typedef enum {
     PKSAV_GEN1_BOULDER_BADGE  = 0x80
 } pksav_gen1_badge_t;
 
+#pragma pack(push,1)
+
+//! Native representation of how much time has passed in a Generation I game.
+typedef struct {
+    /*!
+     * @brief The number of hours (stored in little-endian).
+     *
+     * This value should be accessed and set with ::pksav_littleendian16.
+     */
+    uint16_t hours;
+    //! The number of minutes (0-59).
+    uint8_t minutes;
+    //! The number of second (0-59).
+    uint8_t seconds;
+} pksav_gen1_time_t;
+
+#pragma pack(pop)
+
 /*!
  * @brief The primary PKSav struct for interacting with Generation I save files.
  *
@@ -91,6 +101,9 @@ typedef struct {
      *
      * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
      * deposited and withdrawn from.
+     *
+     * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
+     * this value.
      */
     uint8_t* current_pokemon_box_num;
 

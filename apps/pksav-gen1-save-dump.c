@@ -95,6 +95,23 @@ int main(int argc, char* argv[]) {
         printf("   * OT: %s (%d)\n", otname, pksav_bigendian16(gen1_save.pokemon_party->party[i].pc.ot_id));
     }
 
+    printf("\nCurrent Pokémon Box (%d, size %d):\n",
+               (*gen1_save.current_pokemon_box_num & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK),
+               gen1_save.current_pokemon_box->count);
+    for(uint8_t j = 0; j < gen1_save.current_pokemon_box->count; ++j) {
+        pksav_text_from_gen1(
+            gen1_save.current_pokemon_box->nicknames[j],
+            nickname, 10
+        );
+        pksav_text_from_gen1(
+            gen1_save.current_pokemon_box->otnames[j],
+            otname, 7
+        );
+        printf(" * %s\n", nickname);
+        printf("   * Level: %d\n", gen1_save.current_pokemon_box->entries[j].level);
+        printf("   * OT: %s (%d)\n", otname, pksav_bigendian16(gen1_save.current_pokemon_box->entries[j].ot_id));
+    }
+
     for(uint8_t i = 0; i < 12; ++i) {
         printf("\nPokémon Box %d (size %d):\n", i, gen1_save.pokemon_boxes[i]->count);
         for(uint8_t j = 0; j < gen1_save.pokemon_boxes[i]->count; ++j) {
