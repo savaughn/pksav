@@ -219,6 +219,8 @@ pksav_error_t pksav_gen2_save_load(
 
     // Set pointers
     gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
+    gen2_save->current_pokemon_box_num = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM);
+    gen2_save->current_pokemon_box = (pksav_gen2_pokemon_box_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
     gen2_save->pokemon_pc = (pksav_gen2_pokemon_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PC);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
