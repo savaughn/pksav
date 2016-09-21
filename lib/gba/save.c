@@ -17,6 +17,8 @@
 
 #include <pksav/math/endian.h>
 
+#include <stdio.h>
+
 #define SECURITY_KEY1(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY1][game]/4]
 #define SECURITY_KEY2(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY2][game]/4]
 #define SAVE_INDEX(sections)         pksav_littleendian32((sections)->section0.footer.save_index)
@@ -127,6 +129,9 @@ static bool _pksav_file_is_gba_save(
 
     uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
     uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
+
+    printf("_pksav_file_is_gba_save (%d): %u %u\n", gba_game, security_key1, security_key2);
+
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
     } else {
@@ -145,14 +150,14 @@ bool pksav_file_is_gba_save(
         return false;
     }
 
-    fseek(gba_save, SEEK_END, 0);
+    fseek(gba_save, 0, SEEK_END);
 
     if(ftell(gba_save) < PKSAV_GBA_SAVE_SIZE) {
         return false;
     }
 
     uint8_t* gba_save_data = malloc(PKSAV_GBA_SAVE_SIZE);
-    fseek(gba_save, SEEK_SET, 0);
+    fseek(gba_save, 0, SEEK_SET);
     size_t num_read = fread((void*)gba_save_data, 1, PKSAV_GBA_SAVE_SIZE, gba_save);
     fclose(gba_save);
 
@@ -238,13 +243,13 @@ pksav_error_t pksav_gba_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    fseek(gba_save_file, SEEK_END, 0);
+    fseek(gba_save_file, 0, SEEK_END);
     if(ftell(gba_save_file) < PKSAV_GBA_SAVE_SIZE) {
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
     gba_save->raw = malloc(PKSAV_GBA_SAVE_SIZE);
-    fseek(gba_save_file, SEEK_SET, 0);
+    fseek(gba_save_file, 0, SEEK_SET);
     size_t num_read = fread((void*)gba_save->raw, 1, PKSAV_GBA_SAVE_SIZE, gba_save_file);
     fclose(gba_save_file);
     if(num_read != PKSAV_GBA_SAVE_SIZE) {
