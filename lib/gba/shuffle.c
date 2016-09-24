@@ -17,7 +17,7 @@ void pksav_gba_save_load_pokemon_pc(
 ) {
     // Copy data from sections into contiguous data structure
     uint8_t* dst_ptr = (uint8_t*)pokemon_pc_out;
-    for(uint8_t i = 0; i < 13; ++i) {
+    for(uint8_t i = 5; i <= 13; ++i) {
         memcpy(dst_ptr, gba_save_slot->sections_arr[i].data8, pksav_gba_section_sizes[i]);
         dst_ptr += pksav_gba_section_sizes[i];
     }

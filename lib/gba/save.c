@@ -208,7 +208,7 @@ static void _pksav_gba_save_set_pointers(
         );
     }
 
-    gba_save->pokemon_pc = malloc(sizeof(*gba_save->pokemon_pc));
+    gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
     pksav_gba_save_load_pokemon_pc(
         gba_save->unshuffled,
         gba_save->pokemon_pc
