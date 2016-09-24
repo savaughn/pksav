@@ -60,6 +60,7 @@ typedef struct {
     pksav_gba_item_storage_t* item_storage;
 
     uint32_t* money;
+    uint16_t* casino_coins;
 
     pksav_gba_game_t gba_game;
 

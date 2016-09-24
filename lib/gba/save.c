@@ -69,26 +69,28 @@ typedef enum {
 } pksav_gba_section0_field_t;
 
 static const uint16_t pksav_gba_section0_offsets[][4] = {
-    {0x019,0x019,0x01B},
-    {0x028,0x028,0x028},
-    {0x05C,0x05C,0x05C},
-    {0x0AC,0x0AC,0x1F4}, // RS has no security key
-    {0x0AC,0x0AC,0x1F4}, // Emerald has no game code
-    {0x0AC,0xAF8,0xF20}
+    {0x0019,0x0019,0x001B},
+    {0x0028,0x0028,0x0028},
+    {0x005C,0x005C,0x005C},
+    {0x00AC,0x00AC,0x01F4}, // RS has no security key
+    {0x00AC,0x00AC,0x01F4}, // Emerald has no game code
+    {0x00AC,0x0AF8,0x0F20}
 };
 
 typedef enum {
     PKSAV_GBA_POKEMON_PARTY = 0,
     PKSAV_GBA_MONEY,
+    PKSAV_GBA_CASINO_COINS,
     PKSAV_GBA_ITEM_STORAGE,
     PKSAV_GBA_POKEDEX_SEEN_B
 } pksav_gba_section1_field_t;
 
 static const uint16_t pksav_gba_section1_offsets[][4] = {
-    {0x234,0x490,0x498},
-    {0x234,0x490,0x498},
-    {0x034,0x290,0x298},
-    {0x938,0x988,0x5F8}
+    {0x0234,0x0234,0x0034},
+    {0x0490,0x0490,0x0290},
+    {0x0494,0x0494,0x0294},
+    {0x0498,0x0498,0x0298},
+    {0x0938,0x0988,0x05F8}
 };
 
 typedef enum {
@@ -97,8 +99,8 @@ typedef enum {
 } pksav_gba_section2_field_t;
 
 static const uint16_t pksav_gba_section2_offsets[][4] = {
-    {0x3A6,0x402,0x068},
-    {0x44C,0x4A8,0x11C}
+    {0x03A6,0x0402,0x0068},
+    {0x044C,0x04A8,0x011C}
 };
 
 typedef enum {
@@ -107,8 +109,8 @@ typedef enum {
 } pksav_gba_section4_field_t;
 
 static const uint16_t pksav_gba_section4_offsets[][4] = {
-    {0xC0C,0xCA4,0xB98},
-    {0x000,0x000,0xBCC} // FR/LG only
+    {0x0C0C,0x0CA4,0x0B98},
+    {0x0000,0x0000,0x0BCC} // FR/LG only
 };
 
 static bool _pksav_file_is_gba_save(
@@ -188,11 +190,15 @@ static void _pksav_gba_save_set_pointers(
         gba_save->shuffled_section_nums
     );
     gba_save->trainer_info = &gba_save->unshuffled->trainer_info;
-    gba_save->rival_name = &SECTION4_DATA8(
-                               gba_save->unshuffled,
-                               gba_save->gba_game,
-                               PKSAV_GBA_FRLG_RIVAL_NAME
-                           );
+    if(gba_save->gba_game == PKSAV_GBA_FRLG) {
+        gba_save->rival_name = &SECTION4_DATA8(
+                                   gba_save->unshuffled,
+                                   gba_save->gba_game,
+                                   PKSAV_GBA_FRLG_RIVAL_NAME
+                               );
+    } else {
+        gba_save->rival_name = NULL;
+    }
     gba_save->pokemon_party = (pksav_gba_pokemon_party_t*)&SECTION1_DATA8(
                                                               gba_save->unshuffled,
                                                               gba_save->gba_game,
