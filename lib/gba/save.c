@@ -130,8 +130,6 @@ static bool _pksav_file_is_gba_save(
     uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
     uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
 
-    printf("_pksav_file_is_gba_save (%d): %u %u\n", gba_game, security_key1, security_key2);
-
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
     } else {
@@ -209,6 +207,7 @@ static void _pksav_gba_save_set_pointers(
         );
     }
 
+    gba_save->pokemon_pc = malloc(sizeof(*gba_save->pokemon_pc));
     pksav_gba_save_load_pokemon_pc(
         gba_save->unshuffled,
         gba_save->pokemon_pc
