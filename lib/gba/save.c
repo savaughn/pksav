@@ -47,11 +47,6 @@
 #define SECTION4_DATA32(sections,game,offset) \
     (sections)->section4.data32[pksav_gba_section4_offsets[offset][game]/4]
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 /*
  * Offsets
  */
@@ -131,8 +126,6 @@ static bool _pksav_file_is_gba_save(
 
     uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
     uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
-
-    printf("%d %d %d\n", gba_game, security_key1, security_key2);
 
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
