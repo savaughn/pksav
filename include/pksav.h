@@ -67,6 +67,10 @@
 #include <pksav/math/bcd.h>
 #endif /* PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2 */
 
+#if PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN
+#include <pksav/common/gen3_ribbons.h>
+#endif /* PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN */
+
 #include <pksav/math/endian.h>
 
 #endif /* PKSAV_H */
