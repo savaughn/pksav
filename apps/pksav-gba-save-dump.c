@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
                                          gba_save.trainer_info->time_played.frames);
 
     printf("Money: %u\n", pksav_littleendian32(*gba_save.money));
+    printf("Casino Coins: %u\n", pksav_littleendian32(*gba_save.casino_coins));
 
     if(gba_save.gba_game == PKSAV_GBA_FRLG) {
         char rival_name[7];

@@ -32,6 +32,9 @@
 #define SECTION1_DATA8(sections,game,offset) \
     (sections)->section1.data8[pksav_gba_section1_offsets[offset][game]]
 
+#define SECTION1_DATA16(sections,game,offset) \
+    (sections)->section1.data16[pksav_gba_section1_offsets[offset][game]/2]
+
 #define SECTION1_DATA32(sections,game,offset) \
     (sections)->section1.data32[pksav_gba_section1_offsets[offset][game]/4]
 
@@ -233,6 +236,13 @@ static void _pksav_gba_save_set_pointers(
                           PKSAV_GBA_MONEY
                       );
     *gba_save->money ^= SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game);
+
+    gba_save->casino_coins = &SECTION1_DATA16(
+                                 gba_save->unshuffled,
+                                 gba_save->gba_game,
+                                 PKSAV_GBA_CASINO_COINS
+                             );
+    *gba_save->casino_coins ^= (uint16_t)(SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game) & 0xFFFF);
 }
 
 pksav_error_t pksav_gba_save_load(
@@ -292,6 +302,7 @@ pksav_error_t pksav_gba_save_save(
     }
 
     *gba_save->money ^= SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game);
+    *gba_save->casino_coins ^= (uint16_t)(SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game) & 0xFFFF);
 
     pksav_gba_save_crypt_items(
         gba_save->item_storage,

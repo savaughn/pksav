@@ -61,6 +61,8 @@ typedef struct {
     union {
         //! Access the data one byte at a time.
         uint8_t data8[3968];
+        //! Access the data in 2-byte chunks.
+        uint16_t data16[1984];
         //! Access the data in 4-byte chunks.
         uint32_t data32[992];
     };
