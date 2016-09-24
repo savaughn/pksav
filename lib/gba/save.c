@@ -151,6 +151,7 @@ bool pksav_file_is_gba_save(
     fseek(gba_save, 0, SEEK_END);
 
     if(ftell(gba_save) < PKSAV_GBA_SAVE_SIZE) {
+        fclose(gba_save);
         return false;
     }
 
@@ -244,6 +245,7 @@ pksav_error_t pksav_gba_save_load(
 
     fseek(gba_save_file, 0, SEEK_END);
     if(ftell(gba_save_file) < PKSAV_GBA_SAVE_SIZE) {
+        fclose(gba_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
@@ -282,8 +284,8 @@ pksav_error_t pksav_gba_save_save(
     pksav_gba_save_t* gba_save
 ) {
     // Make sure we can write to this file
-    FILE* gen1_save_file = fopen(filepath, "w");
-    if(!gen1_save_file) {
+    FILE* gba_save_file = fopen(filepath, "w");
+    if(!gba_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
 
@@ -327,6 +329,8 @@ pksav_error_t pksav_gba_save_save(
     _pksav_gba_save_set_pointers(
         gba_save
     );
+
+    fclose(gba_save_file);
 
     return PKSAV_ERROR_NONE;
 }
