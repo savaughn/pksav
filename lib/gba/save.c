@@ -122,13 +122,17 @@ static bool _pksav_file_is_gba_save(
 ) {
     const pksav_gba_save_slot_t* save_slot = (const pksav_gba_save_slot_t*)data;
     for(uint8_t i = 0; i < 14; ++i) {
-        if(save_slot->sections_arr[i].footer.validation != PKSAV_GBA_VALIDATION) {
+        if(pksav_littleendian32(save_slot->sections_arr[i].footer.validation) !=
+           PKSAV_GBA_VALIDATION
+        ) {
             return false;
         }
     }
 
     uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
     uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
+
+    printf("%d %d %d\n", gba_game, security_key1, security_key2);
 
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
@@ -208,7 +212,6 @@ static void _pksav_gba_save_set_pointers(
         );
     }
 
-    gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
     pksav_gba_save_load_pokemon_pc(
         gba_save->unshuffled,
         gba_save->pokemon_pc
@@ -258,12 +261,12 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Detect what kind of save this is
-    if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_RS)) {
-        gba_save->gba_game = PKSAV_GBA_RS;
-    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_EMERALD)) {
+    if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_EMERALD)) {
         gba_save->gba_game = PKSAV_GBA_EMERALD;
     } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_FRLG)) {
         gba_save->gba_game = PKSAV_GBA_FRLG;
+    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_RS)) {
+        gba_save->gba_game = PKSAV_GBA_RS;
     } else {
         free(gba_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
