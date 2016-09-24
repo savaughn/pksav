@@ -11,6 +11,9 @@ INCLUDE_DIRECTORIES(
 )
 
 MACRO(PKSAV_BUILD_APP app_name)
+    SET_SOURCE_FILES_PROPERTIES(${app_name}.c
+        PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
+    )
     ADD_EXECUTABLE(${app_name} ${app_name}.c)
     TARGET_LINK_LIBRARIES(${app_name} pksav)
     INSTALL(
