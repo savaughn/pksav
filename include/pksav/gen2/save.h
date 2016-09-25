@@ -83,6 +83,12 @@ typedef struct {
 extern "C" {
 #endif
 
+PKSAV_API bool pksav_buffer_is_gen2_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    bool crystal
+);
+
 PKSAV_API bool pksav_file_is_gen2_save(
     const char* filepath,
     bool crystal

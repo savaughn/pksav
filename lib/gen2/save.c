@@ -125,23 +125,28 @@ static void _pksav_gen2_set_save_checksums(
     *((uint16_t*)&data[checksum2_index]) = checksums.second;
 }
 
-static bool _pksav_file_is_gen2_save(
-    bool crystal,
-    const uint8_t* data
+bool pksav_buffer_is_gen2_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    bool crystal
 ) {
+    if(buffer_len < PKSAV_GEN2_SAVE_SIZE) {
+        return false;
+    }
+
     uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
                                        : PKSAV_GS_CHECKSUM1;
     uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
                                        : PKSAV_GS_CHECKSUM2;
 
     pksav_gen2_checksums_t checksums;
-    _pksav_gen2_get_save_checksums(crystal, data, &checksums);
+    _pksav_gen2_get_save_checksums(crystal, buffer, &checksums);
 
     uint16_t actual_checksum1 = pksav_littleendian16(
-                                    *((uint16_t*)&data[checksum1_index])
+                                    *((uint16_t*)&buffer[checksum1_index])
                                 );
     uint16_t actual_checksum2 = pksav_littleendian16(
-                                    *((uint16_t*)&data[checksum2_index])
+                                    *((uint16_t*)&buffer[checksum2_index])
                                 );
 
     /*
@@ -177,7 +182,11 @@ bool pksav_file_is_gen2_save(
 
     bool ret = false;
     if(num_read == PKSAV_GEN2_SAVE_SIZE) {
-        ret = _pksav_file_is_gen2_save(crystal, gen2_save_data);
+        ret = pksav_buffer_is_gen2_save(
+                  gen2_save_data,
+                  PKSAV_GEN2_SAVE_SIZE,
+                  crystal
+              );
     }
 
     free(gen2_save_data);
@@ -208,9 +217,19 @@ pksav_error_t pksav_gen2_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    if(_pksav_file_is_gen2_save(false, gen2_save->raw)) {
+    if(pksav_buffer_is_gen2_save(
+           gen2_save->raw,
+           PKSAV_GEN2_SAVE_SIZE,
+           false
+       )
+    ) {
         gen2_save->gen2_game = PKSAV_GEN2_GS;
-    } else if(_pksav_file_is_gen2_save(true, gen2_save->raw)) {
+    } else if(pksav_buffer_is_gen2_save(
+                  gen2_save->raw,
+                  PKSAV_GEN2_SAVE_SIZE,
+                  true
+              )
+    ) {
         gen2_save->gen2_game = PKSAV_GEN2_CRYSTAL;
     } else {
         free(gen2_save->raw);
