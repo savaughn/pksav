@@ -228,6 +228,19 @@ extern "C" {
 #endif
 
 /*!
+ * @brief Determines whether the given buffer is from a valid Generation I save file.
+ *
+ * This is determining by checking the data's checksum.
+ *
+ * \param buffer buffer to be checked
+ * \returns true if the buffer is a valid Generation I save file, false otherwise
+ */
+PKSAV_API bool pksav_buffer_is_gen1_save(
+    const uint8_t* buffer,
+    size_t buffer_len
+);
+
+/*!
  * @brief Determines whether the file at the given path is a valid Generation I save file.
  *
  * This is determined simply by checking the file's checksum.
