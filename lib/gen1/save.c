@@ -47,9 +47,14 @@ static uint8_t _pksav_get_gen1_save_checksum(
     return checksum;
 }
 
-static bool _pksav_file_is_gen1_save(
-    const uint8_t* data
+bool pksav_buffer_is_gen1_save(
+    const uint8_t* data,
+    size_t buffer_len
 ) {
+    if(buffer_len < PKSAV_GEN1_SAVE_SIZE) {
+        return false;
+    }
+
     uint8_t checksum = data[PKSAV_GEN1_CHECKSUM];
     uint8_t actual_checksum = _pksav_get_gen1_save_checksum(data);
 
@@ -78,7 +83,10 @@ bool pksav_file_is_gen1_save(
 
     bool ret = false;
     if(num_read == PKSAV_GEN1_SAVE_SIZE) {
-        ret = _pksav_file_is_gen1_save(gen1_save_data);
+        ret = pksav_buffer_is_gen1_save(
+                  gen1_save_data,
+                  PKSAV_GEN1_SAVE_SIZE
+              );
     }
 
     free(gen1_save_data);
@@ -110,7 +118,7 @@ pksav_error_t pksav_gen1_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    if(!_pksav_file_is_gen1_save(gen1_save->raw)) {
+    if(!pksav_buffer_is_gen1_save(gen1_save->raw, PKSAV_GEN1_SAVE_SIZE)) {
         free(gen1_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
