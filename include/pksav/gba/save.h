@@ -77,6 +77,19 @@ extern "C" {
 #endif
 
 /*!
+ * @brief Checks if the given buffer is a valid Game Boy Advance save.
+ *
+ * \param buffer buffer to check
+ * \param buffer_len size of the buffer to check
+ * \param gba_game which type of Game Boy Advance game to test for
+ */
+PKSAV_API bool pksav_buffer_is_gba_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    pksav_gba_game_t gba_game
+);
+
+/*!
  * @brief Checks if the given file is a valid Game Boy Advance save.
  *
  * \param filepath path of the file to check

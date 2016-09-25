@@ -116,11 +116,17 @@ static const uint16_t pksav_gba_section4_offsets[][4] = {
     {0x0000,0x0000,0x0BCC} // FR/LG only
 };
 
-static bool _pksav_file_is_gba_save(
-    const uint8_t* data,
+bool pksav_buffer_is_gba_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
     pksav_gba_game_t gba_game
 ) {
-    const pksav_gba_save_slot_t* save_slot = (const pksav_gba_save_slot_t*)data;
+    // TODO: validate small saves
+    if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
+        return false;
+    }
+
+    const pksav_gba_save_slot_t* save_slot = (const pksav_gba_save_slot_t*)buffer;
     for(uint8_t i = 0; i < 14; ++i) {
         if(pksav_littleendian32(save_slot->sections_arr[i].footer.validation) !=
            PKSAV_GBA_VALIDATION
@@ -164,7 +170,11 @@ bool pksav_file_is_gba_save(
 
     bool ret = false;
     if(num_read == PKSAV_GBA_SAVE_SIZE) {
-        ret = _pksav_file_is_gba_save(gba_save_data, gba_game);
+        ret = pksav_buffer_is_gba_save(
+                  gba_save_data,
+                  PKSAV_GBA_SAVE_SIZE,
+                  gba_game
+              );
     }
 
     free(gba_save_data);
@@ -270,13 +280,20 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Detect what kind of save this is
-    if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_EMERALD)) {
-        gba_save->gba_game = PKSAV_GBA_EMERALD;
-    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_FRLG)) {
-        gba_save->gba_game = PKSAV_GBA_FRLG;
-    } else if(_pksav_file_is_gba_save(gba_save->raw, PKSAV_GBA_RS)) {
-        gba_save->gba_game = PKSAV_GBA_RS;
-    } else {
+    bool found = false;
+    for(pksav_gba_game_t i = 0; i <= PKSAV_GBA_FRLG; ++i) {
+        if(pksav_buffer_is_gba_save(
+               gba_save->raw,
+               PKSAV_GBA_SAVE_SIZE,
+               i
+           )
+        ) {
+            gba_save->gba_game = i;
+            found = true;
+        }
+    }
+
+    if(!found) {
         free(gba_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
