@@ -72,12 +72,12 @@ typedef enum {
 } pksav_gba_section0_field_t;
 
 static const uint16_t pksav_gba_section0_offsets[][4] = {
-    {0x0019,0x0019,0x001B},
-    {0x0028,0x0028,0x0028},
-    {0x005C,0x005C,0x005C},
-    {0x00AC,0x00AC,0x01F4}, // RS has no security key
-    {0x00AC,0x00AC,0x01F4}, // Emerald has no game code
-    {0x00AC,0x0AF8,0x0F20}
+    {0x0019,0x0019,0x001B}, // National Pokédex A
+    {0x0028,0x0028,0x0028}, // Pokédex Owned
+    {0x005C,0x005C,0x005C}, // Pokédex Seen A
+    {0x00AC,0x00AC,0x00AC}, // Game Code
+    {0x00AC,0x00AC,0x0AF8}, // Security Key 1
+    {0x00AC,0x01F4,0x0F20}  // Security Key 2
 };
 
 typedef enum {
@@ -89,11 +89,11 @@ typedef enum {
 } pksav_gba_section1_field_t;
 
 static const uint16_t pksav_gba_section1_offsets[][4] = {
-    {0x0234,0x0234,0x0034},
-    {0x0490,0x0490,0x0290},
-    {0x0494,0x0494,0x0294},
-    {0x0498,0x0498,0x0298},
-    {0x0938,0x0988,0x05F8}
+    {0x0234,0x0234,0x0034}, // Pokémon Party
+    {0x0490,0x0490,0x0290}, // Money
+    {0x0494,0x0494,0x0294}, // Casino Coins
+    {0x0498,0x0498,0x0298}, // Item Storage
+    {0x0938,0x0988,0x05F8}  // Pokédex Seen B
 };
 
 typedef enum {
@@ -102,8 +102,8 @@ typedef enum {
 } pksav_gba_section2_field_t;
 
 static const uint16_t pksav_gba_section2_offsets[][4] = {
-    {0x03A6,0x0402,0x0068},
-    {0x044C,0x04A8,0x011C}
+    {0x03A6,0x0402,0x0068}, // National Pokédex B
+    {0x044C,0x04A8,0x011C}  // National Pokédex C
 };
 
 typedef enum {
@@ -112,8 +112,8 @@ typedef enum {
 } pksav_gba_section4_field_t;
 
 static const uint16_t pksav_gba_section4_offsets[][4] = {
-    {0x0C0C,0x0CA4,0x0B98},
-    {0x0000,0x0000,0x0BCC} // FR/LG only
+    {0x0C0C,0x0CA4,0x0B98}, // Pokédex Seen C
+    {0x0000,0x0000,0x0BCC}  // Rival Name (FR/LG only)
 };
 
 bool pksav_buffer_is_gba_save(
@@ -126,17 +126,29 @@ bool pksav_buffer_is_gba_save(
         return false;
     }
 
-    const pksav_gba_save_slot_t* save_slot = (const pksav_gba_save_slot_t*)buffer;
-    for(uint8_t i = 0; i < 14; ++i) {
-        if(pksav_littleendian32(save_slot->sections_arr[i].footer.validation) !=
-           PKSAV_GBA_VALIDATION
-        ) {
-            return false;
-        }
+    /*
+     * We need to find the most recent save slot and unshuffle it to properly find
+     * the info we need. Sadly, this means allocating another buffer.
+     */
+
+    const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)buffer;
+    const pksav_gba_save_slot_t* most_recent;
+    if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
+        most_recent = &sections_pair[0];
+    } else {
+        most_recent = &sections_pair[1];
     }
 
-    uint32_t security_key1 = SECURITY_KEY1(save_slot, gba_game);
-    uint32_t security_key2 = SECURITY_KEY2(save_slot, gba_game);
+    pksav_gba_save_slot_t unshuffled;
+    uint8_t section_nums[14];
+    pksav_gba_save_unshuffle_sections(
+        most_recent,
+        &unshuffled,
+        section_nums
+    );
+
+    uint32_t security_key1 = pksav_littleendian32(SECURITY_KEY1((&unshuffled), gba_game));
+    uint32_t security_key2 = pksav_littleendian32(SECURITY_KEY2((&unshuffled), gba_game));
 
     if(gba_game == PKSAV_GBA_RS) {
         return (security_key1 == security_key2) && (security_key1 == 0);
@@ -281,7 +293,7 @@ pksav_error_t pksav_gba_save_load(
 
     // Detect what kind of save this is
     bool found = false;
-    for(pksav_gba_game_t i = 0; i <= PKSAV_GBA_FRLG; ++i) {
+    for(pksav_gba_game_t i = PKSAV_GBA_RS; i <= PKSAV_GBA_FRLG; ++i) {
         if(pksav_buffer_is_gba_save(
                gba_save->raw,
                PKSAV_GBA_SAVE_SIZE,
@@ -290,6 +302,7 @@ pksav_error_t pksav_gba_save_load(
         ) {
             gba_save->gba_game = i;
             found = true;
+            break;
         }
     }
 
@@ -349,6 +362,9 @@ pksav_error_t pksav_gba_save_save(
                                                                  : &sections_pair[0];
     gba_save->from_first_slot = !gba_save->from_first_slot;
 
+    pksav_set_gba_section_checksums(
+        gba_save->unshuffled
+    );
     pksav_gba_save_shuffle_sections(
         gba_save->unshuffled,
         save_into,
