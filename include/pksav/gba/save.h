@@ -67,6 +67,7 @@ typedef struct {
     // Do not edit these
     uint32_t security_key;
     uint8_t shuffled_section_nums[14];
+    bool small_save;
     bool from_first_slot;
     pksav_gba_save_slot_t* unshuffled;
     uint8_t* raw;

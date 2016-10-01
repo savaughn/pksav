@@ -54,7 +54,9 @@
  * Offsets
  */
 
-#define PKSAV_GBA_SAVE_SIZE  0x20000 // TODO: small Gen III saves
+#define PKSAV_GBA_SMALL_SAVE_SIZE 0x10000
+#define PKSAV_GBA_SAVE_SIZE       0x20000
+
 #define PKSAV_GBA_VALIDATION 0x08012025
 
 typedef enum {
@@ -121,42 +123,45 @@ bool pksav_buffer_is_gba_save(
     size_t buffer_len,
     pksav_gba_game_t gba_game
 ) {
-    // TODO: validate small saves
-    if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
+    if(buffer_len < PKSAV_GBA_SMALL_SAVE_SIZE) {
         return false;
     }
 
     /*
-     * We need to find the most recent save slot and unshuffle it to properly find
-     * the info we need. Sadly, this means allocating another buffer.
+     * If the save is not a small save, we need to find the most recent save slot first.
+     *
+     * Once the proper save slot has been found, it needs to be unshuffled. Sadly, that
+     * means more memory allocation.
      */
-
     const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)buffer;
-    const pksav_gba_save_slot_t* most_recent;
-    if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
-        most_recent = &sections_pair[0];
+    const pksav_gba_save_slot_t* save_slot;
+    if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
+        save_slot = sections_pair;
+    } else if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
+        save_slot = &sections_pair[0];
     } else {
-        most_recent = &sections_pair[1];
+        save_slot = &sections_pair[1];
     }
 
     pksav_gba_save_slot_t unshuffled;
     uint8_t section_nums[14];
     pksav_gba_save_unshuffle_sections(
-        most_recent,
+        save_slot,
         &unshuffled,
         section_nums
     );
 
+    uint32_t game_code = pksav_littleendian32(SECTION0_DATA32((&unshuffled), gba_game, PKSAV_GBA_GAME_CODE));
     uint32_t security_key1 = pksav_littleendian32(SECURITY_KEY1((&unshuffled), gba_game));
     uint32_t security_key2 = pksav_littleendian32(SECURITY_KEY2((&unshuffled), gba_game));
 
     if(gba_game == PKSAV_GBA_RS) {
-        return (security_key1 == security_key2) && (security_key1 == 0);
+        return (game_code == 0) && (security_key1 == security_key2);
+    } else if(gba_game == PKSAV_GBA_FRLG) {
+        return (game_code == 1) && (security_key1 == security_key2);
     } else {
         return (security_key1 == security_key2);
     }
-
-    return true;
 }
 
 bool pksav_file_is_gba_save(
@@ -169,22 +174,23 @@ bool pksav_file_is_gba_save(
     }
 
     fseek(gba_save, 0, SEEK_END);
+    size_t filesize = ftell(gba_save);
 
-    if(ftell(gba_save) < PKSAV_GBA_SAVE_SIZE) {
+    if(filesize < PKSAV_GBA_SMALL_SAVE_SIZE) {
         fclose(gba_save);
         return false;
     }
 
-    uint8_t* gba_save_data = malloc(PKSAV_GBA_SAVE_SIZE);
+    uint8_t* gba_save_data = malloc(filesize);
     fseek(gba_save, 0, SEEK_SET);
-    size_t num_read = fread((void*)gba_save_data, 1, PKSAV_GBA_SAVE_SIZE, gba_save);
+    size_t num_read = fread((void*)gba_save_data, 1, filesize, gba_save);
     fclose(gba_save);
 
     bool ret = false;
-    if(num_read == PKSAV_GBA_SAVE_SIZE) {
+    if(num_read == filesize) {
         ret = pksav_buffer_is_gba_save(
                   gba_save_data,
-                  PKSAV_GBA_SAVE_SIZE,
+                  filesize,
                   gba_game
               );
     }
@@ -200,12 +206,18 @@ static void _pksav_gba_save_set_pointers(
     // Find the most recent save slot
     const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)gba_save->raw;
     const pksav_gba_save_slot_t* most_recent;
-    if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
-        most_recent = &sections_pair[0];
+
+    if(gba_save->small_save) {
+        most_recent = sections_pair;
         gba_save->from_first_slot = true;
     } else {
-        most_recent = &sections_pair[1];
-        gba_save->from_first_slot = false;
+        if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
+            most_recent = &sections_pair[0];
+            gba_save->from_first_slot = true;
+        } else {
+            most_recent = &sections_pair[1];
+            gba_save->from_first_slot = false;
+        }
     }
 
     // Set pointers
@@ -278,25 +290,29 @@ pksav_error_t pksav_gba_save_load(
     }
 
     fseek(gba_save_file, 0, SEEK_END);
-    if(ftell(gba_save_file) < PKSAV_GBA_SAVE_SIZE) {
+    size_t filesize = ftell(gba_save_file);
+
+    if(filesize < PKSAV_GBA_SMALL_SAVE_SIZE) {
         fclose(gba_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
-    gba_save->raw = malloc(PKSAV_GBA_SAVE_SIZE);
+    gba_save->raw = malloc(filesize);
     fseek(gba_save_file, 0, SEEK_SET);
-    size_t num_read = fread((void*)gba_save->raw, 1, PKSAV_GBA_SAVE_SIZE, gba_save_file);
+    size_t num_read = fread((void*)gba_save->raw, 1, filesize, gba_save_file);
     fclose(gba_save_file);
-    if(num_read != PKSAV_GBA_SAVE_SIZE) {
+    if(num_read != filesize) {
         return PKSAV_ERROR_FILE_IO;
     }
+
+    gba_save->small_save = (filesize < PKSAV_GBA_SAVE_SIZE);
 
     // Detect what kind of save this is
     bool found = false;
     for(pksav_gba_game_t i = PKSAV_GBA_RS; i <= PKSAV_GBA_FRLG; ++i) {
         if(pksav_buffer_is_gba_save(
                gba_save->raw,
-               PKSAV_GBA_SAVE_SIZE,
+               filesize,
                i
            )
         ) {
