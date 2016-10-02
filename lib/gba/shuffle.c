@@ -37,11 +37,15 @@ void pksav_gba_save_save_pokemon_pc(
     pksav_gba_pokemon_pc_t* pokemon_pc,
     pksav_gba_save_slot_t* gba_save_slot_out
 ) {
-    // Encrypt Pokémon
+    // Set Pokémon checksum and encrypt
     for(uint8_t i = 0; i < 14; ++i) {
         for(uint8_t j = 0; j < 30; ++j) {
             pksav_set_gba_pokemon_checksum(
                 &pokemon_pc->boxes[i].entries[j]
+            );
+            pksav_gba_crypt_pokemon(
+                &pokemon_pc->boxes[i].entries[j],
+                true
             );
         }
     }
