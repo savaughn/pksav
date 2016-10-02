@@ -19,6 +19,9 @@
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
 
+#include <pksav/common/pokedex.h>
+#include <pksav/common/stats.h>
+
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 #include <pksav/math/endian.h>
