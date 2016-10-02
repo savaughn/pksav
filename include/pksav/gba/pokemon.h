@@ -254,7 +254,17 @@ typedef struct {
      * the function ::pksav_littleendian32.
      */
     uint32_t exp;
-    // TODO: confirm bitfield
+    /*!
+     * @brief The number of PP Ups used for each move, stored in a bitfield.
+     *
+     * A PP Max being used on a move automatically sets the value to 3.
+     *
+     * The bitfield is arranges as follows:
+     *  * 0-1: Move 1 PP
+     *  * 2-3: Move 2 PP
+     *  * 4-5: Move 3 PP
+     *  * 6-7: Move 4 PP
+     */
     uint8_t pp_up;
     //! The Pokémon's happiness/friendship (0-255).
     uint8_t friendship;
@@ -322,8 +332,9 @@ typedef struct {
      * @brief Bitfield containing information about how the Pokémon was caught.
      *
      * The bitfield is arranged as follows:
-     *  * TODO: rest
-     *  * 12-14: Ball
+     *  * 0-6: Level met (0-100)
+     *  * 7-10: Origin game
+     *  * 11-14: Ball
      *  * 15: OT gender (0 if male, 1 if female)
      */
     uint16_t origin_info;
@@ -344,8 +355,27 @@ typedef struct {
     /*!
      * @brief Bitfield containing the Pokémon's ribbons and obedience information.
      *
+     * The enums in <pksav/common/gen3_ribbons.h> can be used to set or unset
+     * these values.
+     *
      * The bitfield is arranged as follows:
-     *  * TODO: rest
+     *  * 0-2: Cool contest level
+     *  * 3-5: Beauty contest level
+     *  * 6-8: Cute contest level
+     *  * 9-11: Smart contest level
+     *  * 12-14: Tough contest level
+     *  * 15: Champion ribbon
+     *  * 16: Winning ribbon
+     *  * 17: Victory ribbon
+     *  * 18: Artist ribbon
+     *  * 19: Effort ribbon
+     *  * 20: Marine ribbon
+     *  * 21: Land ribbon
+     *  * 22: Sky ribbon
+     *  * 23: Country ribbon
+     *  * 24: National ribbon
+     *  * 25: Earth ribbon
+     *  * 26: World ribbon
      *  * 31: needs to be set to 1 for a Mew or Deoxys to be obedient
      */
     uint32_t ribbons_obedience;
