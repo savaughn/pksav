@@ -203,8 +203,8 @@ typedef struct {
      * @brief The second value that indicates if the National Pokédex is unlocked.
      *
      * For Ruby/Sapphire/Emerald saves, this value should be set or unset with
-     * ::PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_B. For FireRed/Leafgreen saves, this value
-     * should be set with ::PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_B.
+     * ::PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_MASK_B. For FireRed/Leafgreen saves, this value
+     * should be set with ::PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_MASK_B.
      *
      * For Ruby/Sapphire/Emerald saves, any action taken on this value should be taken
      * on pksav_gba_save_t.rse_nat_pokedex_unlockedA and pksav_gba_save_t.nat_pokedex_unlockedC.
@@ -218,8 +218,8 @@ typedef struct {
      * @brief The third value that indicates if the National Pokédex is unlocked.
      *
      * For Ruby/Sapphire/Emerald saves, this value should be set or unset with
-     * ::PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_C. For FireRed/Leafgreen saves, this value
-     * should be set with ::PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_C.
+     * ::PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_MASK_C. For FireRed/Leafgreen saves, this value
+     * should be set with ::PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_MASK_C.
      *
      * For Ruby/Sapphire/Emerald saves, any action taken on this value should be taken
      * on pksav_gba_save_t.rse_nat_pokedex_unlockedA and pksav_gba_save_t.nat_pokedex_unlockedB.
