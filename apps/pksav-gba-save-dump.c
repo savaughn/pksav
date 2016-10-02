@@ -66,21 +66,26 @@ int main(int argc, char* argv[]) {
     memset(nickname, 0, 11);
     memset(otname, 0, 8);
     printf("\nPokémon Party (size %u):\n", pksav_littleendian32(gba_save.pokemon_party->count));
-    for(uint8_t i = 0; i < 6; ++i) { //gba_save.pokemon_party->count; ++i) {
-        pksav_text_from_gba(
-            gba_save.pokemon_party->party[i].pc.nickname,
-            nickname, 10
-        );
+    for(uint8_t i = 0; i < gba_save.pokemon_party->count; ++i) {
+        if(gba_save.pokemon_party->party[i].pc.blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
+            puts(" * EGG");
+        } else {
+            pksav_text_from_gba(
+                gba_save.pokemon_party->party[i].pc.nickname,
+                nickname, 10
+            );
+            printf(" * %s\n", nickname);
+        }
+        printf("   * Level: %d\n", gba_save.pokemon_party->party[i].party_data.level);
+
         pksav_text_from_gba(
             gba_save.pokemon_party->party[i].pc.otname,
             otname, 7
         );
-        printf(" * %s\n", nickname);
-        printf("   * Level: %d\n", gba_save.pokemon_party->party[i].party_data.level);
         printf("   * OT: %s (%05d)\n", otname, pksav_littleendian16(gba_save.pokemon_party->party[i].pc.ot_id.pid));
     }
 
-    /*for(uint8_t i = 0; i < 14; ++i) {
+    for(uint8_t i = 0; i < 14; ++i) {
         char box_name[9];
         memset(box_name, 0, 9);
         pksav_text_from_gba(
@@ -95,18 +100,22 @@ int main(int argc, char* argv[]) {
                 continue;
             }
 
-            pksav_text_from_gba(
-                gba_save.pokemon_pc->boxes[i].entries[j].nickname,
-                nickname, 10
-            );
+            if(gba_save.pokemon_pc->boxes[i].entries[j].blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
+                puts(" * EGG");
+            } else {
+                pksav_text_from_gba(
+                    gba_save.pokemon_pc->boxes[i].entries[j].nickname,
+                    nickname, 10
+                );
+                printf(" * %s\n", nickname);
+            }
             pksav_text_from_gba(
                 gba_save.pokemon_pc->boxes[i].entries[j].otname,
                 otname, 7
             );
-            printf(" * %s\n", nickname);
             printf("   * OT: %s (%05d)\n", otname, pksav_littleendian16(gba_save.pokemon_pc->boxes[i].entries[j].ot_id.pid));
         }
-    }*/
+    }
 
     pksav_gba_save_free(&gba_save);
 
