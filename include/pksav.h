@@ -33,10 +33,7 @@
 #endif /* PKSAV_ENABLE_GEN1 */
 
 #if PKSAV_ENABLE_GEN2
-#include <pksav/gen2/items.h>
-#include <pksav/gen2/pokemon.h>
-#include <pksav/gen2/save.h>
-#include <pksav/gen2/text.h>
+#include <pksav/gen2.h>
 #endif /* PKSAV_ENABLE_GEN2 */
 
 #if PKSAV_ENABLE_GBA

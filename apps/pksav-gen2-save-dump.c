@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav.h>
+#include <pksav/gen2.h>
 
 #include <stdio.h>
 #include <stdlib.h>
