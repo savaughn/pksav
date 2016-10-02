@@ -20,6 +20,7 @@
 #include <pksav/gba/save_structs.h>
 #include <pksav/gba/text.h>
 
+#include <pksav/common/condition.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
