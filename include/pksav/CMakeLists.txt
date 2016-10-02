@@ -29,16 +29,11 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )
 
-    INSTALL(
-        FILES ${pksav_headers}
-        DESTINATION ${INCLUDE_DIR}/pksav
-        COMPONENT Headers
-    )
-
     ADD_SUBDIRECTORY(common)
     ADD_SUBDIRECTORY(math)
 
     IF(PKSAV_ENABLE_GEN1)
+        LIST(APPEND pksav_headers gen1.h)
         ADD_SUBDIRECTORY(gen1)
     ENDIF(PKSAV_ENABLE_GEN1)
     IF(PKSAV_ENABLE_GEN2)
@@ -56,4 +51,10 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
     IF(PKSAV_ENABLE_GEN5)
         ADD_SUBDIRECTORY(gen5)
     ENDIF(PKSAV_ENABLE_GEN5)
+
+    INSTALL(
+        FILES ${pksav_headers}
+        DESTINATION ${INCLUDE_DIR}/pksav
+        COMPONENT Headers
+    )
 ENDIF(NOT PKSAV_DONT_INSTALL_HEADERS)
