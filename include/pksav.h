@@ -29,10 +29,7 @@
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1
-#include <pksav/gen1/items.h>
-#include <pksav/gen1/pokemon.h>
-#include <pksav/gen1/save.h>
-#include <pksav/gen1/text.h>
+#include <pksav/gen1.h>
 #endif /* PKSAV_ENABLE_GEN1 */
 
 #if PKSAV_ENABLE_GEN2

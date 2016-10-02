@@ -17,7 +17,7 @@
 #define PKSAV_GB_SPCL_IV_MASK ((uint16_t)0x000F)
 
 pksav_error_t pksav_get_gb_IV(
-    uint16_t* raw,
+    const uint16_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
 ) {
@@ -108,7 +108,7 @@ pksav_error_t pksav_set_gb_IV(
 #define PKSAV_SPDEF_IV_MASK ((uint32_t)0x3E000000)
 
 pksav_error_t pksav_get_IV(
-    uint32_t* raw,
+    const uint32_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
 ) {
