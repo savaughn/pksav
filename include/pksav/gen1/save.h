@@ -16,13 +16,10 @@
 
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
-#include <pksav/gen1/text.h>
-
-#include <pksav/math/bcd.h>
-#include <pksav/math/endian.h>
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /*!
  * @brief Mask for getting the current Pokémon box number.
