@@ -26,6 +26,9 @@
 #define SECTION0_DATA8(sections,game,offset) \
     (sections)->section0.data8[pksav_gba_section0_offsets[offset][game]]
 
+#define SECTION0_DATA16(sections,game,offset) \
+    (sections)->section0.data16[pksav_gba_section0_offsets[offset][game]/2]
+
 #define SECTION0_DATA32(sections,game,offset) \
     (sections)->section0.data32[pksav_gba_section0_offsets[offset][game]/4]
 
@@ -40,6 +43,9 @@
 
 #define SECTION2_DATA8(sections,game,offset) \
     (sections)->section2.data8[pksav_gba_section2_offsets[offset][game]]
+
+#define SECTION2_DATA16(sections,game,offset) \
+    (sections)->section2.data16[pksav_gba_section2_offsets[offset][game]/2]
 
 #define SECTION2_DATA32(sections,game,offset) \
     (sections)->section2.data32[pksav_gba_section2_offsets[offset][game]/4]
@@ -277,6 +283,59 @@ static void _pksav_gba_save_set_pointers(
                                  PKSAV_GBA_CASINO_COINS
                              );
     *gba_save->casino_coins ^= (uint16_t)(SECURITY_KEY1(gba_save->unshuffled, gba_save->gba_game) & 0xFFFF);
+
+    gba_save->pokedex_owned = &SECTION0_DATA8(
+                                  gba_save->unshuffled,
+                                  gba_save->gba_game,
+                                  PKSAV_GBA_POKEDEX_OWNED
+                              );
+
+    gba_save->pokedex_seenA = &SECTION0_DATA8(
+                                  gba_save->unshuffled,
+                                  gba_save->gba_game,
+                                  PKSAV_GBA_POKEDEX_SEEN_A
+                              );
+
+    gba_save->pokedex_seenB = &SECTION1_DATA8(
+                                  gba_save->unshuffled,
+                                  gba_save->gba_game,
+                                  PKSAV_GBA_POKEDEX_SEEN_B
+                              );
+
+    gba_save->pokedex_seenC = &SECTION4_DATA8(
+                                  gba_save->unshuffled,
+                                  gba_save->gba_game,
+                                  PKSAV_GBA_POKEDEX_SEEN_C
+                              );
+
+    if(gba_save->gba_game == PKSAV_GBA_FRLG) {
+        gba_save->rse_nat_pokedex_unlockedA = NULL;
+
+        gba_save->frlg_nat_pokedex_unlockedA = &SECTION0_DATA8(
+                                                   gba_save->unshuffled,
+                                                   gba_save->gba_game,
+                                                   PKSAV_GBA_NAT_POKEDEX_A
+                                               );
+    } else {
+        gba_save->rse_nat_pokedex_unlockedA = &SECTION0_DATA16(
+                                                  gba_save->unshuffled,
+                                                  gba_save->gba_game,
+                                                  PKSAV_GBA_NAT_POKEDEX_A
+                                              );
+        gba_save->frlg_nat_pokedex_unlockedA = NULL;
+    }
+
+    gba_save->nat_pokedex_unlockedB = &SECTION0_DATA8(
+                                          gba_save->unshuffled,
+                                          gba_save->gba_game,
+                                          PKSAV_GBA_NAT_POKEDEX_B
+                                      );
+
+    gba_save->nat_pokedex_unlockedC = &SECTION0_DATA16(
+                                          gba_save->unshuffled,
+                                          gba_save->gba_game,
+                                          PKSAV_GBA_NAT_POKEDEX_C
+                                      );
 }
 
 pksav_error_t pksav_gba_save_load(

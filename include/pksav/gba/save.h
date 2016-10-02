@@ -43,6 +43,14 @@ static const uint16_t pksav_gba_section_sizes[14] = {
 };
 #endif
 
+#define PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_MASK_A (uint16_t)(0x01DA)
+#define PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_MASK_B (uint8_t)(1 << 6)
+#define PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_MASK_C (uint16_t)(0x0203)
+
+#define PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_MASK_A (uint8_t)(0xB9)
+#define PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_MASK_B (uint8_t)(0x01)
+#define PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_MASK_C (uint16_t)(0x5862)
+
 /*!
  * @brief The structure representing a Game Boy Advance save.
  *
@@ -61,6 +69,17 @@ typedef struct {
 
     uint32_t* money;
     uint16_t* casino_coins;
+
+    uint8_t* pokedex_owned;
+    uint8_t* pokedex_seenA;
+    uint8_t* pokedex_seenB;
+    uint8_t* pokedex_seenC;
+
+    uint16_t* rse_nat_pokedex_unlockedA;
+    uint8_t* frlg_nat_pokedex_unlockedA;
+
+    uint8_t* nat_pokedex_unlockedB;
+    uint16_t* nat_pokedex_unlockedC;
 
     pksav_gba_game_t gba_game;
 
