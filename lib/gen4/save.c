@@ -125,38 +125,38 @@ static void _pksav_gen4_save_set_block_pointers(
      */
 
     gen4_save->general_block  = &GEN4_BLOCK_INFO_DATA(
-                                     PKSAV_GEN4_GENERAL_BLOCK_START,
-                                     gen4_save->gen4_game,
-                                     gen4_save->raw
-                                 );
+                                    PKSAV_GEN4_GENERAL_BLOCK_START,
+                                    gen4_save->gen4_game,
+                                    gen4_save->raw
+                                );
     gen4_save->general_footer = (pksav_gen4_footer_t*)(
                                     &GEN4_BLOCK_INFO_DATA(
-                                         PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
-                                         gen4_save->gen4_game,
-                                         gen4_save->raw
-                                     )
+                                        PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
+                                        gen4_save->gen4_game,
+                                        gen4_save->raw
+                                    )
                                 );
 
     gen4_save->storage_block  = &GEN4_BLOCK_INFO_DATA(
-                                     PKSAV_GEN4_STORAGE_BLOCK_START,
-                                     gen4_save->gen4_game,
-                                     gen4_save->raw
-                                 );
+                                    PKSAV_GEN4_STORAGE_BLOCK_START,
+                                    gen4_save->gen4_game,
+                                    gen4_save->raw
+                                );
     gen4_save->storage_footer = (pksav_gen4_footer_t*)(
                                     &GEN4_BLOCK_INFO_DATA(
-                                         PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
-                                         gen4_save->gen4_game,
-                                         gen4_save->raw
-                                     )
+                                        PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
+                                        gen4_save->gen4_game,
+                                        gen4_save->raw
+                                    )
                                 );
 
     if(!gen4_save->small_save) {
         pksav_gen4_footer_t* general_footer1 = (pksav_gen4_footer_t*)(
                                                    &GEN4_BLOCK_INFO_DATA(
-                                                        PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
-                                                        gen4_save->gen4_game,
-                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
-                                                    )
+                                                       PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
+                                                       gen4_save->gen4_game,
+                                                       (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
+                                                   )
                                                );
         if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
             if(gen4_save->general_footer->hgss.save_index < general_footer1->hgss.save_index) {
@@ -172,10 +172,10 @@ static void _pksav_gen4_save_set_block_pointers(
 
         pksav_gen4_footer_t* storage_footer1 = (pksav_gen4_footer_t*)(
                                                    &GEN4_BLOCK_INFO_DATA(
-                                                        PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
-                                                        gen4_save->gen4_game,
-                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
-                                                    )
+                                                       PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
+                                                       gen4_save->gen4_game,
+                                                       (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
+                                                   )
                                                );
         if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
             if(gen4_save->storage_footer->hgss.save_index < storage_footer1->hgss.save_index) {
@@ -188,6 +188,82 @@ static void _pksav_gen4_save_set_block_pointers(
                 gen4_save->storage_footer = storage_footer1;
             }
         }
+    }
+}
+
+static void _pksav_gen4_save_set_public_pointers(
+    pksav_gen4_save_t* gen4_save
+) {
+    gen4_save->pokemon_party = (pksav_gen4_pokemon_party_t*)(
+                                   &GEN4_OFFSET_DATA(
+                                       PKSAV_GEN4_PARTY,
+                                       gen4_save->gen4_game,
+                                       gen4_save->general_block
+                                   )
+                               );
+
+    // TODO: PC
+
+    gen4_save->item_bag = (pksav_gen4_item_bag_t*)(
+                              &GEN4_OFFSET_DATA(
+                                  PKSAV_GEN4_ITEM_BAG,
+                                  gen4_save->gen4_game,
+                                  gen4_save->general_block
+                              )
+                          );
+
+    gen4_save->trainer_name = (uint16_t*)(
+                                  &GEN4_OFFSET_DATA(
+                                      PKSAV_GEN4_TRAINER_NAME,
+                                      gen4_save->gen4_game,
+                                      gen4_save->general_block
+                                  )
+                              );
+
+    gen4_save->trainer_id = (pksav_trainer_id_t*)(
+                                &GEN4_OFFSET_DATA(
+                                    PKSAV_GEN4_TRAINER_ID,
+                                    gen4_save->gen4_game,
+                                    gen4_save->general_block
+                                )
+                            );
+
+    gen4_save->trainer_gender = &GEN4_OFFSET_DATA(
+                                    PKSAV_GEN4_TRAINER_GENDER,
+                                    gen4_save->gen4_game,
+                                    gen4_save->general_block
+                                );
+
+    gen4_save->money = (uint32_t*)(
+                           &GEN4_OFFSET_DATA(
+                               PKSAV_GEN4_TRAINER_MONEY,
+                               gen4_save->gen4_game,
+                               gen4_save->general_block
+                           )
+                       );
+
+    gen4_save->rival_name = (uint16_t*)(
+                                &GEN4_OFFSET_DATA(
+                                    PKSAV_GEN4_RIVAL_NAME,
+                                    gen4_save->gen4_game,
+                                    gen4_save->general_block
+                                )
+                            );
+
+    gen4_save->sinnoh_johto_badges = &GEN4_OFFSET_DATA(
+                                         PKSAV_GEN4_BADGES,
+                                         gen4_save->gen4_game,
+                                         gen4_save->general_block
+                                     );
+
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+        gen4_save->hgss_kanto_badges = &GEN4_OFFSET_DATA(
+                                           PKSAV_GEN4_HGSS_KANTO_BADGES,
+                                           gen4_save->gen4_game,
+                                           gen4_save->general_block
+                                       );
+    } else {
+        gen4_save->hgss_kanto_badges = NULL;
     }
 }
 
@@ -236,8 +312,9 @@ pksav_error_t pksav_gen4_save_load(
     _pksav_gen4_save_set_block_pointers(
         gen4_save
     );
-
-    // TODO: set block pointers, set struct member pointers
+    _pksav_gen4_save_set_public_pointers(
+        gen4_save
+    );
 
     return PKSAV_ERROR_NONE;
 }
