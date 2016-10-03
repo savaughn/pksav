@@ -17,7 +17,7 @@ Being written in C, it can easily be wrapped in a larger C/C++/Objective-C libra
 functions in languages such as C# or Java.
 
 Component status:
- * Generation I: in progress
+ * Generation I: complete
  * Generation II: in progress
  * Game Boy Advance: in progress
  * Gamecube: in progress
@@ -30,4 +30,4 @@ Platform status:
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/07/13
+README last updated: 2016/09/26

@@ -29,10 +29,7 @@
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1
-#include <pksav/gen1/items.h>
-#include <pksav/gen1/pokemon.h>
-#include <pksav/gen1/save.h>
-#include <pksav/gen1/text.h>
+#include <pksav/gen1.h>
 #endif /* PKSAV_ENABLE_GEN1 */
 
 #if PKSAV_ENABLE_GEN2
@@ -66,6 +63,10 @@
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 #endif /* PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2 */
+
+#if PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN
+#include <pksav/common/gen3_ribbons.h>
+#endif /* PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN */
 
 #include <pksav/math/endian.h>
 
