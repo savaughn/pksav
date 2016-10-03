@@ -44,6 +44,11 @@ PKSAV_API pksav_error_t pksav_time_t_to_date_t(
     pksav_date_t* date_out
 );
 
+PKSAV_API pksav_error_t pksav_time_t_to_uint32_t(
+    const time_t* time_in,
+    uint32_t* uint32_out
+);
+
 #ifdef __cplusplus
 }
 #endif
