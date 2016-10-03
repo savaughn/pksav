@@ -40,21 +40,30 @@ static const uint32_t pksav_gen4_block_info[][3] = {
 };
 
 typedef enum {
-    PKSAV_GEN4_TRAINER_NAME = 0,
+    PKSAV_GEN4_ADVENTURE_STARTED_TIME = 0,
+    PKSAV_GEN4_POKEMON_LEAGUE_CHAMP_TIME,
+    PKSAV_GEN4_TRAINER_NAME,
     PKSAV_GEN4_TRAINER_ID,
     PKSAV_GEN4_TRAINER_MONEY,
     PKSAV_GEN4_TRAINER_GENDER,
     PKSAV_GEN4_LANGUAGE,
     PKSAV_GEN4_BADGES,
     PKSAV_GEN4_HGSS_KANTO_BADGES,
+    PKSAV_GEN4_TOTAL_PLAYTIME,
     PKSAV_GEN4_AVATAR,
     PKSAV_GEN4_PARTY,
     PKSAV_GEN4_ITEM_BAG,
     PKSAV_GEN4_RIVAL_NAME,
-    PKSAV_GEN4_TRAINER_SIGNATURE
+    PKSAV_GEN4_TRAINER_SIGNATURE,
 } pksav_gen4_field_t;
 
+/*
+ * TODO: confirm Platinum offsets, probably in similar offsets,
+ *       relative to others
+ */
 static const uint16_t pksav_gen4_offsets[][3] = {
+    {0x0034,0x0034,0x0034}, // Adventure Started Time
+    {0x003C,0x003C,0x003C}, // Pokémon League Start Time
     {0x0064,0x0068,0x0064}, // Trainer Name
     {0x0074,0x0078,0x0074}, // Trainer ID
     {0x0078,0x007C,0x0078}, // Money
@@ -62,6 +71,7 @@ static const uint16_t pksav_gen4_offsets[][3] = {
     {0x007D,0x0081,0x007D}, // Language
     {0x007E,0x0082,0x007E}, // Badges
     {0x007E,0x0082,0x0083}, // Kanto Badges (HGSS only)
+    {0x0086,0x0086,0x0086}, // Total playtime
     {0x007F,0x0083,0x007F}, // Multiplayer Avatar
     {0x0098,0x00A0,0x0098}, // Party
     {0x0624,0x0630,0x0644}, // Item Bag
@@ -249,6 +259,30 @@ static void _pksav_gen4_save_set_public_pointers(
                                     gen4_save->general_block
                                 )
                             );
+
+    gen4_save->adventure_started_time = (uint32_t*)(
+                                            &GEN4_OFFSET_DATA(
+                                                PKSAV_GEN4_ADVENTURE_STARTED_TIME,
+                                                gen4_save->gen4_game,
+                                                gen4_save->general_block
+                                            )
+                                        );
+
+    gen4_save->pokemon_league_champ_time = (uint32_t*)(
+                                               &GEN4_OFFSET_DATA(
+                                                   PKSAV_GEN4_POKEMON_LEAGUE_CHAMP_TIME,
+                                                   gen4_save->gen4_game,
+                                                   gen4_save->general_block
+                                               )
+                                           );
+
+    gen4_save->total_playtime = (pksav_date_t*)(
+                                    &GEN4_OFFSET_DATA(
+                                        PKSAV_GEN4_ADVENTURE_STARTED_TIME,
+                                        gen4_save->gen4_game,
+                                        gen4_save->general_block
+                                    )
+                                );
 
     gen4_save->sinnoh_johto_badges = &GEN4_OFFSET_DATA(
                                          PKSAV_GEN4_BADGES,

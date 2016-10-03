@@ -9,6 +9,7 @@
 
 #include <pksav/config.h>
 
+#include <pksav/common/datetime.h>
 #include <pksav/common/trainer_id.h>
 
 #include <pksav/gen4/items.h>
@@ -73,6 +74,10 @@ typedef struct {
     uint8_t* trainer_gender;
     uint32_t* money;
     uint16_t* rival_name;
+
+    uint32_t* adventure_started_time;
+    uint32_t* pokemon_league_champ_time;
+    pksav_date_t* total_playtime;
 
     uint8_t* sinnoh_johto_badges;
     uint8_t* hgss_kanto_badges;
