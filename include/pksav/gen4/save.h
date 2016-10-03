@@ -9,6 +9,7 @@
 
 #include <pksav/config.h>
 
+#include <pksav/common/coordinates.h>
 #include <pksav/common/datetime.h>
 #include <pksav/common/trainer_id.h>
 
@@ -78,6 +79,9 @@ typedef struct {
     uint32_t* adventure_started_time;
     uint32_t* pokemon_league_champ_time;
     pksav_date_t* total_playtime;
+
+    pksav_coordinates_t* player_coordinates;
+    pksav_coordinates_t* hgss_follower_coordinates;
 
     uint8_t* sinnoh_johto_badges;
     uint8_t* hgss_kanto_badges;

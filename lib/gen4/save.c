@@ -54,6 +54,8 @@ typedef enum {
     PKSAV_GEN4_PARTY,
     PKSAV_GEN4_ITEM_BAG,
     PKSAV_GEN4_RIVAL_NAME,
+    PKSAV_GEN4_PLAYER_COORDINATES,
+    PKSAV_GEN4_HGSS_FOLLOWER_COORDINATES,
     PKSAV_GEN4_TRAINER_SIGNATURE,
 } pksav_gen4_field_t;
 
@@ -76,6 +78,8 @@ static const uint16_t pksav_gen4_offsets[][3] = {
     {0x0098,0x00A0,0x0098}, // Party
     {0x0624,0x0630,0x0644}, // Item Bag
     {0x25A8,0x27E8,0x22D4}, // Rival Name
+    {0x25FA,0x0000,0x236E}, // Player Coordinates (TODO: figure out Platinum's)
+    {0x0000,0x0000,0x23BE}, // Follower Coordinates (HGSS only)
     {0x59A4,0x5BA8,0x4538}, // Trainer Signature
 };
 
@@ -283,6 +287,26 @@ static void _pksav_gen4_save_set_public_pointers(
                                         gen4_save->general_block
                                     )
                                 );
+
+    gen4_save->player_coordinates = (pksav_coordinates_t*)(
+                                        &GEN4_OFFSET_DATA(
+                                            PKSAV_GEN4_PLAYER_COORDINATES,
+                                            gen4_save->gen4_game,
+                                            gen4_save->general_block
+                                        )
+                                    );
+
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+        gen4_save->hgss_follower_coordinates = (pksav_coordinates_t*)(
+                                                   &GEN4_OFFSET_DATA(
+                                                       PKSAV_GEN4_HGSS_FOLLOWER_COORDINATES,
+                                                       gen4_save->gen4_game,
+                                                       gen4_save->general_block
+                                                   )
+                                               );
+    } else {
+        gen4_save->hgss_follower_coordinates = NULL;
+    }
 
     gen4_save->sinnoh_johto_badges = &GEN4_OFFSET_DATA(
                                          PKSAV_GEN4_BADGES,
