@@ -17,6 +17,7 @@
 #include <pksav/version.h>
 
 #include <pksav/common/contest_stats.h>
+#include <pksav/common/coordinates.h>
 #include <pksav/common/datetime.h>
 #include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/markings.h>

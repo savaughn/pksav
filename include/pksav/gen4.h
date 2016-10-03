@@ -20,6 +20,8 @@
 #include <pksav/gen4/save_structs.h>
 #include <pksav/gen4/text.h>
 
+#include <pksav/common/contest_stats.h>
+#include <pksav/common/coordinates.h>
 #include <pksav/common/datetime.h>
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/gen4_encounter_type.h>
