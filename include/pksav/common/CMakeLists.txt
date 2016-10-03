@@ -7,6 +7,7 @@
 
 SET(pksav_common_headers
     contest_stats.h
+    coordinates.h
     datetime.h
     gen3_ribbons.h
     gen4_encounter_type.h

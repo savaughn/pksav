@@ -11,4 +11,18 @@
 #ifndef PKSAV_COMMON_COORDINATES_H
 #define PKSAV_COMMON_COORDINATES_H
 
+#pragma pack(push,1)
+
+//! (z,y,z) coordinates.
+typedef struct {
+    //! X coordinate.
+    uint16_t x;
+    //! Y coordinate.
+    uint16_t y;
+    //! Z coordinate.
+    uint16_t z;
+} pksav_coordinates_t;
+
+#pragma pack(pop)
+
 #endif /* PKSAV_COMMON_COORDINATES_H */
