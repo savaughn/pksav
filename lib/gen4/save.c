@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PKSAV_GEN4_SAVE_SIZE 0x80000
+#define PKSAV_GEN4_SMALL_SAVE_SIZE 0x40000
+#define PKSAV_GEN4_LARGE_SAVE_SIZE 0x80000
 
 typedef enum {
     PKSAV_GEN4_SAVE_A = 0x00000,
@@ -30,12 +31,12 @@ typedef enum {
 } pksav_gen4_block_info_field_t;
 
 static const uint32_t pksav_gen4_block_info[][3] = {
-    {0x00000,0x00000,0x00000}, // Small block start
-    {0x0C100,0x0CF2C,0x0F628}, // Small block length
-    {0x0CE0C,0x0CF18,0x0F618}, // Small block footer offset
-    {0x0C100,0x0CF2C,0x0F700}, // Big block start
-    {0x121E0,0x121E4,0x12310}, // Big block length
-    {0x1E2CC,0x1F0Fc,0x21A00}  // Big block footer offset
+    {0x00000,0x00000,0x00000}, // General block start
+    {0x0C100,0x0CF2C,0x0F628}, // General block length
+    {0x0CE0C,0x0CF18,0x0F618}, // General block footer offset
+    {0x0C100,0x0CF2C,0x0F700}, // Storage block start
+    {0x121E0,0x121E4,0x12310}, // Storage block length
+    {0x1E2CC,0x1F0Fc,0x21A00}  // Storage block footer offset
 };
 
 typedef enum {
@@ -71,6 +72,9 @@ static const uint16_t pksav_gen4_offsets[][3] = {
 #define GEN4_BLOCK_INFO(field,game) pksav_gen4_block_info[field][game]
 #define GEN4_OFFSET(field,game)     pksav_gen4_offsets[field][game]
 
+#define GEN4_BLOCK_INFO_DATA(field,game,raw) raw[GEN4_BLOCK_INFO(field,game)]
+#define GEN4_OFFSET_DATA(field,game,raw) raw[GEN4_OFFSET(field,game)]
+
 static bool _pksav_file_is_gen4_save(
     const uint8_t* data,
     pksav_gen4_game_t gen4_game
@@ -90,23 +94,101 @@ bool pksav_file_is_gen4_save(
     }
 
     fseek(gen4_save, SEEK_END, 0);
+    size_t save_size = ftell(gen4_save);
 
-    if(ftell(gen4_save) < PKSAV_GEN4_SAVE_SIZE) {
+    if(save_size < PKSAV_GEN4_SMALL_SAVE_SIZE) {
+        fclose(gen4_save);
         return false;
     }
 
-    uint8_t* gen4_save_data = malloc(PKSAV_GEN4_SAVE_SIZE);
+    uint8_t* gen4_save_data = malloc(save_size);
     fseek(gen4_save, SEEK_SET, 0);
-    size_t num_read = fread((void*)gen4_save_data, 1, PKSAV_GEN4_SAVE_SIZE, gen4_save);
+    size_t num_read = fread((void*)gen4_save_data, 1, save_size, gen4_save);
     fclose(gen4_save);
 
     bool ret = false;
-    if(num_read == PKSAV_GEN4_SAVE_SIZE) {
+    if(num_read == save_size) {
         ret = _pksav_file_is_gen4_save(gen4_save_data, gen4_game);
     }
 
     free(gen4_save_data);
     return ret;
+}
+
+static void _pksav_gen4_save_set_block_pointers(
+    pksav_gen4_save_t* gen4_save
+) {
+    /*
+     * By default, set the pointers to the first half of a large file, which
+     * works for both kinds. For large saves, check the second half and advance
+     * it if necessary.
+     */
+
+    gen4_save->general_block  = &GEN4_BLOCK_INFO_DATA(
+                                     PKSAV_GEN4_GENERAL_BLOCK_START,
+                                     gen4_save->gen4_game,
+                                     gen4_save->raw
+                                 );
+    gen4_save->general_footer = (pksav_gen4_footer_t*)(
+                                    &GEN4_BLOCK_INFO_DATA(
+                                         PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
+                                         gen4_save->gen4_game,
+                                         gen4_save->raw
+                                     )
+                                );
+
+    gen4_save->storage_block  = &GEN4_BLOCK_INFO_DATA(
+                                     PKSAV_GEN4_STORAGE_BLOCK_START,
+                                     gen4_save->gen4_game,
+                                     gen4_save->raw
+                                 );
+    gen4_save->storage_footer = (pksav_gen4_footer_t*)(
+                                    &GEN4_BLOCK_INFO_DATA(
+                                         PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
+                                         gen4_save->gen4_game,
+                                         gen4_save->raw
+                                     )
+                                );
+
+    if(!gen4_save->small_save) {
+        pksav_gen4_footer_t* general_footer1 = (pksav_gen4_footer_t*)(
+                                                   &GEN4_BLOCK_INFO_DATA(
+                                                        PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
+                                                        gen4_save->gen4_game,
+                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
+                                                    )
+                                               );
+        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+            if(gen4_save->general_footer->hgss.save_index < general_footer1->hgss.save_index) {
+                gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
+                gen4_save->general_footer = general_footer1;
+            }
+        } else {
+            if(gen4_save->general_footer->dppt.general_id < general_footer1->dppt.general_id) {
+                gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
+                gen4_save->general_footer = general_footer1;
+            }
+        }
+
+        pksav_gen4_footer_t* storage_footer1 = (pksav_gen4_footer_t*)(
+                                                   &GEN4_BLOCK_INFO_DATA(
+                                                        PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
+                                                        gen4_save->gen4_game,
+                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
+                                                    )
+                                               );
+        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+            if(gen4_save->storage_footer->hgss.save_index < storage_footer1->hgss.save_index) {
+                gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
+                gen4_save->storage_footer = storage_footer1;
+            }
+        } else {
+            if(gen4_save->storage_footer->dppt.storage_id < storage_footer1->dppt.storage_id) {
+                gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
+                gen4_save->storage_footer = storage_footer1;
+            }
+        }
+    }
 }
 
 pksav_error_t pksav_gen4_save_load(
@@ -120,16 +202,23 @@ pksav_error_t pksav_gen4_save_load(
     }
 
     fseek(gen4_save_file, SEEK_END, 0);
+    size_t save_size = ftell(gen4_save_file);
 
-    if(ftell(gen4_save_file) < PKSAV_GEN4_SAVE_SIZE) {
+    if(save_size >= PKSAV_GEN4_LARGE_SAVE_SIZE) {
+        gen4_save->small_save = false;
+    } else if(save_size >= PKSAV_GEN4_SMALL_SAVE_SIZE) {
+        gen4_save->small_save = true;
+    } else {
+        fclose(gen4_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
-    gen4_save->raw = malloc(PKSAV_GEN4_SAVE_SIZE);
+    gen4_save->raw = malloc(save_size);
     fseek(gen4_save_file, SEEK_SET, 0);
-    size_t num_read = fread((void*)gen4_save->raw, 1, PKSAV_GEN4_SAVE_SIZE, gen4_save_file);
+    size_t num_read = fread((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
-    if(num_read != PKSAV_GEN4_SAVE_SIZE) {
+    if(num_read != save_size) {
+        free(gen4_save->raw);
         return PKSAV_ERROR_FILE_IO;
     }
 
@@ -143,6 +232,10 @@ pksav_error_t pksav_gen4_save_load(
         free(gen4_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
+
+    _pksav_gen4_save_set_block_pointers(
+        gen4_save
+    );
 
     // TODO: set block pointers, set struct member pointers
 
@@ -160,7 +253,9 @@ pksav_error_t pksav_gen4_save_save(
     }
 
     // Write to file
-    fwrite((void*)gen4_save->raw, 1, PKSAV_GEN4_SAVE_SIZE, gen4_save_file);
+    size_t save_size = gen4_save->small_save ? PKSAV_GEN4_SMALL_SAVE_SIZE
+                                             : PKSAV_GEN4_LARGE_SAVE_SIZE;
+    fwrite((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
 
     return PKSAV_ERROR_NONE;

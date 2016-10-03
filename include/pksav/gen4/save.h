@@ -77,11 +77,14 @@ typedef struct {
     uint8_t* sinnoh_johto_badges;
     uint8_t* hgss_kanto_badges;
 
-    // Do not change!
+    // Do not edit these
     pksav_gen4_game_t gen4_game;
     #ifndef __DOXYGEN__
+    bool small_save;
     uint8_t* general_block;
+    pksav_gen4_footer_t* general_footer;
     uint8_t* storage_block;
+    pksav_gen4_footer_t* storage_footer;
     uint8_t* raw;
     #endif
 } pksav_gen4_save_t;
