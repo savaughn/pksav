@@ -25,6 +25,7 @@ ENDMACRO(PKSAV_BUILD_APP)
 
 SET(pksav_apps
     pksav-gen1-save-dump
+    pksav-gen4-save-dump
 )
 
 FOREACH(app ${pksav_apps})
