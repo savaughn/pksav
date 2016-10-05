@@ -229,6 +229,7 @@ typedef struct {
      */
     uint16_t* nat_pokedex_unlockedC;
 
+    //! @brief Which of the three game types this save corresponds to.
     pksav_gba_game_t gba_game;
 
     // Do not edit these
