@@ -6,6 +6,7 @@
 #
 
 SET(pksav_common_headers
+    condition.h
     contest_stats.h
     coordinates.h
     datetime.h
