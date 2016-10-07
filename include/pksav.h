@@ -38,7 +38,7 @@
 #endif /* PKSAV_ENABLE_GEN2 */
 
 #if PKSAV_ENABLE_GBA
-#include <pksav/gba/text.h>
+#include <pksav/gba.h>
 #endif /* PKSAV_ENABLE_GBA */
 
 #if PKSAV_ENABLE_GCN

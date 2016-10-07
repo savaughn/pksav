@@ -114,7 +114,7 @@ pksav_error_t pksav_get_IV(
 ) {
     switch(stat) {
         case PKSAV_STAT_HP:
-            *IV_out = (*raw) | PKSAV_HP_IV_MASK;
+            *IV_out = (*raw) & PKSAV_HP_IV_MASK;
             break;
 
         case PKSAV_STAT_ATTACK:
