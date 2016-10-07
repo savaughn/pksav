@@ -11,6 +11,7 @@
 
 #include <pksav/common/coordinates.h>
 #include <pksav/common/datetime.h>
+#include <pksav/common/trainer_card_signature.h>
 #include <pksav/common/trainer_id.h>
 
 #include <pksav/gen4/items.h>
@@ -82,6 +83,8 @@ typedef struct {
 
     pksav_coordinates_t* player_coordinates;
     pksav_coordinates_t* hgss_follower_coordinates;
+
+    pksav_trainer_card_signature_t* trainer_card_signature;
 
     uint8_t* sinnoh_johto_badges;
     uint8_t* hgss_kanto_badges;

@@ -80,7 +80,7 @@ static const uint16_t pksav_gen4_offsets[][3] = {
     {0x25A8,0x27E8,0x22D4}, // Rival Name
     {0x25FA,0x0000,0x236E}, // Player Coordinates (TODO: figure out Platinum's)
     {0x0000,0x0000,0x23BE}, // Follower Coordinates (HGSS only)
-    {0x59A4,0x5BA8,0x4538}, // Trainer Signature
+    {0x5904,0x5BA8,0x0000}, // Trainer Signature (TODO: in HGSS?)
 };
 
 #define GEN4_BLOCK_INFO(field,game) pksav_gen4_block_info[field][game]
@@ -322,6 +322,18 @@ static void _pksav_gen4_save_set_public_pointers(
                                        );
     } else {
         gen4_save->hgss_kanto_badges = NULL;
+    }
+
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+        gen4_save->trainer_card_signature = NULL;
+    } else {
+        gen4_save->trainer_card_signature = (pksav_trainer_card_signature_t*)(
+                                                &GEN4_OFFSET_DATA(
+                                                    PKSAV_GEN4_TRAINER_SIGNATURE,
+                                                    gen4_save->gen4_game,
+                                                    gen4_save->general_block
+                                                )
+                                            );
     }
 }
 
