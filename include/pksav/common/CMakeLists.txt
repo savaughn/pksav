@@ -18,6 +18,7 @@ SET(pksav_common_headers
     pokerus.h
     prng.h
     stats.h
+    trainer_card_signature.h
     trainer_id.h
 )
 
