@@ -19,7 +19,7 @@ functions in languages such as C# or Java.
 Component status:
  * Generation I: complete
  * Generation II: in progress
- * Game Boy Advance: in progress
+ * Game Boy Advance: complete
  * Gamecube: in progress
  * Nintendo DS: in progress
  * Generation VI: in progress
@@ -30,4 +30,4 @@ Platform status:
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/09/26
+README last updated: 2016/10/05
