@@ -230,7 +230,9 @@ void pksav_widetext_from_gen4(
     memset(output_text, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] < 0x400) {
+        if(input_buffer[i] == PKSAV_GEN4_TERMINATOR) {
+            break;
+        } else if(input_buffer[i] < 0x400) {
             output_text[i] = pksav_gen4_char_map1[input_buffer[i]];
         } else {
             output_text[i] = pksav_gen4_char_map2[input_buffer[i]];
@@ -258,7 +260,7 @@ void pksav_widetext_to_gen4(
     uint16_t* output_buffer,
     size_t num_chars
 ) {
-    memset(output_buffer, PKSAV_GEN4_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, 0xFF, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
