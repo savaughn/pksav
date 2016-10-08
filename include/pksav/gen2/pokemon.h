@@ -48,21 +48,120 @@
  * PC.
  */
 typedef struct {
+    /*!
+     * @brief Species index.
+     *
+     * This value is the same whether or not the Pokémon is in an egg. If this is
+     * the case, the value is reflected in pksav_gen2_pokemon_party_t.species or
+     * pksav_gen2_pokemon_box_t.species.
+     */
     uint8_t species;
+    /*!
+     * @brief Held item index.
+     *
+     * When a Generation I Pokémon is traded into a Generation II game, the
+     * pksav_gen2_pc_pokemon_t.catch_rate field is placed here. As such, there is
+     * a set held item corresponding to each species when trading up.
+     */
     uint8_t held_item;
+    /*!
+     * @brief Indices for each of this Pokémon's moves.
+     */
     uint8_t moves[4];
+    /*!
+     * @brief The Pokémon's original trainer's ID (stored in big-endian).
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ot_id;
+    /*!
+     * @brief The Pokémon's current total experience points (stored in Base-256).
+     *
+     * This value should be accessed with ::pksav_from_base256 (with a num_bytes
+     * value of 3) and set with ::pksav_to_base256.
+     */
     uint8_t exp[3];
+    /*!
+     * @brief The Pokémon's HP EV stat (stored in big-endian).
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ev_hp;
+    /*!
+     * @brief The Pokémon's Attack EV stat (stored in big-endian).
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ev_atk;
+    /*!
+     * @brief The Pokémon's Defense EV stat (stored in big-endian).
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ev_def;
+    /*!
+     * @brief The Pokémon's Speed EV stat (stored in big-endian).
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ev_spd;
+    /*!
+     * @brief The Pokémon's Special EV stat (stored in big-endian).
+     *
+     * The Special stat was removed in Generation II, but this field is kept in
+     * for compatibility with Generation I.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t ev_spcl;
+    /*!
+     * @brief The Pokémon's IV's, stored as a bitset.
+     *
+     * These values should be accessed with ::pksav_get_gb_IV and set
+     * with ::pksav_set_gb_IV.
+     */
     uint16_t iv_data;
+    /*!
+     * @brief The Pokémon's PPs and number of PP Ups used for each move.
+     *
+     * Mask an index with ::PKSAV_GEN2_MOVE_PP_MASK to get the move PP.
+     *
+     * Mask an index with ::PKSAV_GEN2_MOVE_PP_UP_MASK to get the number of
+     * PP Ups applied to the move.
+     */
     uint8_t move_pps[4];
+    /*!
+     * @brief A Pokémon's friendship/happiness value.
+     *
+     * This value is used in certain in-game events and is used to determine the power
+     * of Return and Frustration.
+     */
     uint8_t friendship;
+    /*!
+     * @brief The Pokémon's Pokérus strain and duration.
+     *
+     * See <pksav/common/pokerus.h> for more details.
+     */
     uint8_t pokerus;
+    /*!
+     * @brief Data about where and when a Pokémon was caught.
+     *
+     * The bitfield is arranged as follows:
+     *  * 0-6: location caught
+     *  * 7: 0 if original trainer is male, 1 if original trainer is female
+     *  * 8-13: level caught
+     *  * 14-15: time caught
+     *    * 1: 4:00 AM - 9:59 AM
+     *    * 2: 10:00 AM - 5:59 PM
+     *    * 3: 6:00 PM - 3:59 AM
+     *
+     * This data is only set in Crystal. Pokémon caught in Gold/Silver or traded up from
+     * Generation I will have this value set to 0.
+     */
     uint16_t caught_data;
+    /*!
+     * @brief The Pokémon's level.
+     */
     uint8_t level;
 } pksav_gen2_pc_pokemon_t;
 
@@ -73,7 +172,7 @@ typedef struct {
  * pksav_gen2_pc_pokemon_t.
  */
 typedef struct {
-    uint8_t status;
+    uint8_t condition;
     uint8_t unused;
     uint16_t current_hp;
     uint16_t max_hp;
@@ -173,11 +272,15 @@ typedef struct {
     uint8_t padding[2];
 } pksav_gen2_pokemon_box_t;
 
+//! Native representation of a Pokémon PC in Generation II.
 typedef struct {
+    //! Individual Pokémon boxes.
     pksav_gen2_pokemon_box_t boxes[14];
 } pksav_gen2_pokemon_pc_t;
 
+//! List of Pokémon box names in Generation II.
 typedef struct {
+    //! Individual names.
     uint8_t names[14][9];
 } pksav_gen2_pokemon_box_names_t;
 
