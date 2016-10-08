@@ -107,7 +107,7 @@ bool pksav_file_is_gen4_save(
         return false;
     }
 
-    fseek(gen4_save, SEEK_END, 0);
+    fseek(gen4_save, 0, SEEK_END);
     size_t save_size = ftell(gen4_save);
 
     if(save_size < PKSAV_GEN4_SMALL_SAVE_SIZE) {
@@ -116,7 +116,7 @@ bool pksav_file_is_gen4_save(
     }
 
     uint8_t* gen4_save_data = malloc(save_size);
-    fseek(gen4_save, SEEK_SET, 0);
+    fseek(gen4_save, 0, SEEK_SET);
     size_t num_read = fread((void*)gen4_save_data, 1, save_size, gen4_save);
     fclose(gen4_save);
 
@@ -347,7 +347,7 @@ pksav_error_t pksav_gen4_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    fseek(gen4_save_file, SEEK_END, 0);
+    fseek(gen4_save_file, 0, SEEK_END);
     size_t save_size = ftell(gen4_save_file);
 
     if(save_size >= PKSAV_GEN4_LARGE_SAVE_SIZE) {
@@ -360,7 +360,7 @@ pksav_error_t pksav_gen4_save_load(
     }
 
     gen4_save->raw = malloc(save_size);
-    fseek(gen4_save_file, SEEK_SET, 0);
+    fseek(gen4_save_file, 0, SEEK_SET);
     size_t num_read = fread((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
     if(num_read != save_size) {
