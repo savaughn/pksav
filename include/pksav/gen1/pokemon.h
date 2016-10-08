@@ -22,7 +22,7 @@
 #define PKSAV_GEN1_MOVE_PP_MASK ((uint8_t)0x3F)
 
 /*!
- * @brief The mask for the number of PP Ups used on a move (1-3).
+ * @brief The mask for the number of PP Ups used on a move (0-3).
  *
  * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
  * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
@@ -276,13 +276,13 @@ typedef struct {
 
 //! Native format for a trainer's Pokémon party in Generation I.
 typedef struct {
-    //! The actual number of Pokémon in the party (1-6).
+    //! The actual number of Pokémon in the party (0-6).
     uint8_t count;
     /*!
      * @brief The species indices of the Pokémon in the party.
      *
      * When the party is viewed in-game, it is this value that determines
-     * what Pokémon is showed, not the pksav_gen1_pc_pokemon_t.species value.
+     * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
      * The final index of this field should always be set to 0xFF.
      */
@@ -307,13 +307,13 @@ typedef struct {
 
 //! Native format for a Pokémon PC box in Generation I.
 typedef struct {
-    //! The actual number of Pokémon in the box (1-20).
+    //! The actual number of Pokémon in the box (0-20).
     uint8_t count;
     /*!
      * @brief The species indices of the Pokémon in the box.
      *
      * When the box is viewed in-game, it is this value that determines
-     * what Pokémon is showed, not the pksav_gen1_pc_pokemon_t.species value.
+     * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
      * The final index of this field should always be set to 0xFF.
      */
