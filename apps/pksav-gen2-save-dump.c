@@ -95,7 +95,14 @@ int main(int argc, char* argv[]) {
     }
 
     for(uint8_t i = 0; i < 14; ++i) {
-        printf("\nPokémon Box %d (size %d):\n", i, gen2_save.pokemon_pc->boxes[i].count);
+        char box_name[11];
+        pksav_text_from_gen2(
+            gen2_save.pokemon_box_names->names[i],
+            box_name, 11
+        );
+
+        printf("\nPokémon Box %d (name: \"%s\", size: %d):\n",
+               i, box_name, gen2_save.pokemon_pc->boxes[i].count);
 
         // Some boxes have invalid counts
         if(gen2_save.pokemon_pc->boxes[i].count > 20) {

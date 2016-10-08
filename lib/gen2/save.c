@@ -241,6 +241,7 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->current_pokemon_box_num = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM);
     gen2_save->current_pokemon_box = (pksav_gen2_pokemon_box_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
     gen2_save->pokemon_pc = (pksav_gen2_pokemon_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PC);
+    gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
     gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);
