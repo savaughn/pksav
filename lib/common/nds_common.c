@@ -5,7 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "nds_checksum.h"
+#include "nds_common.h"
+
+#include <string.h>
 
 static const uint16_t pksav_nds_seeds[256] = {
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50A5, 0x60C6, 0x70E7,
@@ -64,4 +66,57 @@ uint16_t pksav_nds_pokemon_get_checksum(
     }
 
     return ret;
+}
+
+static const uint8_t nds_block_orders[24][4] = {
+    {0, 1, 2, 3},
+    {0, 1, 3, 2},
+    {0, 2, 1, 3},
+    {0, 2, 3, 1},
+    {0, 3, 1, 2},
+    {0, 3, 2, 1},
+    {1, 0, 2, 3},
+    {1, 0, 3, 2},
+    {1, 2, 0, 3},
+    {1, 2, 3, 0},
+    {1, 3, 0, 2},
+    {1, 3, 2, 0},
+    {2, 0, 1, 3},
+    {2, 0, 3, 1},
+    {2, 1, 0, 3},
+    {2, 1, 3, 0},
+    {2, 3, 0, 1},
+    {2, 3, 1, 0},
+    {3, 0, 1, 2},
+    {3, 0, 2, 1},
+    {3, 1, 0, 2},
+    {3, 1, 2, 0},
+    {3, 2, 0, 1},
+    {3, 2, 1, 0}
+};
+
+void pksav_nds_crypt_pokemon(
+    pksav_nds_pc_pokemon_t* nds_pokemon,
+    bool encrypt
+) {
+    uint32_t index = (((nds_pokemon->personality >> 0xD) & 0x1F) % 24);
+    uint8_t blockA_index = nds_block_orders[index][0];
+    uint8_t blockB_index = nds_block_orders[index][1];
+    uint8_t blockC_index = nds_block_orders[index][2];
+    uint8_t blockD_index = nds_block_orders[index][3];
+
+    pksav_nds_pokemon_blocks_t blocks;
+    if(encrypt) {
+        memcpy(&blocks.blocks[blockA_index], &nds_pokemon->blocks.blockA, sizeof(pksav_nds_pokemon_blockA_t));
+        memcpy(&blocks.blocks[blockB_index], &nds_pokemon->blocks.blockB, sizeof(pksav_nds_pokemon_blockB_t));
+        memcpy(&blocks.blocks[blockC_index], &nds_pokemon->blocks.blockC, sizeof(pksav_nds_pokemon_blockC_t));
+        memcpy(&blocks.blocks[blockD_index], &nds_pokemon->blocks.blockD, sizeof(pksav_nds_pokemon_blockD_t));
+    } else {
+        memcpy(&blocks.blockA, &nds_pokemon->blocks.blocks[blockA_index], sizeof(pksav_nds_pokemon_blockA_t));
+        memcpy(&blocks.blockB, &nds_pokemon->blocks.blocks[blockB_index], sizeof(pksav_nds_pokemon_blockB_t));
+        memcpy(&blocks.blockC, &nds_pokemon->blocks.blocks[blockC_index], sizeof(pksav_nds_pokemon_blockC_t));
+        memcpy(&blocks.blockD, &nds_pokemon->blocks.blocks[blockD_index], sizeof(pksav_nds_pokemon_blockD_t));
+    }
+
+    nds_pokemon->blocks = blocks;
 }

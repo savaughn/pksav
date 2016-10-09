@@ -15,8 +15,6 @@
 
 #include <stdint.h>
 
-#pragma pack(push,1)
-
 #define PKSAV_NDS_ISEGG_MASK            ((uint32_t)(1 << 30))
 #define PKSAV_NDS_ISNICKNAMED_MASK      ((uint32_t)(1 << 31))
 #define PKSAV_NDS_FATEFULENCOUNTER_MASK ((uint8_t)(1 << 0))
@@ -25,6 +23,8 @@
 #define PKSAV_NDS_LEVELMET_MASK         ((uint8_t)0x7F)
 #define PKSAV_NDS_OTGENDER_MASK         ((uint8_t)0x80)
 #define PKSAV_NDS_OTGENDER_OFFSET       7
+
+#pragma pack(push,1)
 
 typedef struct {
     uint16_t species;

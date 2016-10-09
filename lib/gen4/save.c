@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../common/nds_checksum.h"
+#include "../common/nds_common.h"
 
 #include <pksav/gen4/save.h>
 
@@ -87,7 +87,7 @@ static const uint16_t pksav_gen4_offsets[][3] = {
 #define GEN4_OFFSET(field,game)     pksav_gen4_offsets[field][game]
 
 #define GEN4_BLOCK_INFO_DATA(field,game,raw) raw[GEN4_BLOCK_INFO(field,game)]
-#define GEN4_OFFSET_DATA(field,game,raw) raw[GEN4_OFFSET(field,game)]
+#define GEN4_OFFSET_DATA(field,game,raw)     raw[GEN4_OFFSET(field,game)]
 
 static bool _pksav_file_is_gen4_save(
     const uint8_t* data,
@@ -215,6 +215,12 @@ static void _pksav_gen4_save_set_public_pointers(
                                        gen4_save->general_block
                                    )
                                );
+    for(uint8_t i = 0; i < 6; ++i) {
+        pksav_nds_crypt_pokemon(
+            &gen4_save->pokemon_party->party[i].pc,
+            false
+        );
+    }
 
     // TODO: PC
 
@@ -337,6 +343,42 @@ static void _pksav_gen4_save_set_public_pointers(
     }
 }
 
+static void _pksav_gen4_save_set_block_checksums(
+    pksav_gen4_save_t* gen4_save
+) {
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+        gen4_save->general_footer->hgss.checksum = pksav_nds_block_get_checksum(
+                                                       gen4_save->general_block,
+                                                       GEN4_BLOCK_INFO(
+                                                           PKSAV_GEN4_GENERAL_BLOCK_LENGTH,
+                                                           gen4_save->gen4_game
+                                                       )
+                                                   );
+        gen4_save->storage_footer->hgss.checksum = pksav_nds_block_get_checksum(
+                                                       gen4_save->storage_block,
+                                                       GEN4_BLOCK_INFO(
+                                                           PKSAV_GEN4_STORAGE_BLOCK_LENGTH,
+                                                           gen4_save->gen4_game
+                                                       )
+                                                   );
+    } else {
+        gen4_save->general_footer->dppt.checksum = pksav_nds_block_get_checksum(
+                                                       gen4_save->general_block,
+                                                       GEN4_BLOCK_INFO(
+                                                           PKSAV_GEN4_GENERAL_BLOCK_LENGTH,
+                                                           gen4_save->gen4_game
+                                                       )
+                                                   );
+        gen4_save->storage_footer->dppt.checksum = pksav_nds_block_get_checksum(
+                                                       gen4_save->storage_block,
+                                                       GEN4_BLOCK_INFO(
+                                                           PKSAV_GEN4_STORAGE_BLOCK_LENGTH,
+                                                           gen4_save->gen4_game
+                                                       )
+                                                   );
+    }
+}
+
 pksav_error_t pksav_gen4_save_load(
     const char* filepath,
     pksav_gen4_save_t* gen4_save
@@ -398,6 +440,17 @@ pksav_error_t pksav_gen4_save_save(
     if(!gen4_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
+
+    for(uint8_t i = 0; i < 6; ++i) {
+        pksav_nds_pokemon_set_checksum(
+            &gen4_save->pokemon_party->party[i].pc
+        );
+        pksav_nds_crypt_pokemon(
+            &gen4_save->pokemon_party->party[i].pc,
+            true
+        );
+    }
+    _pksav_gen4_save_set_block_checksums(gen4_save);
 
     // Write to file
     size_t save_size = gen4_save->small_save ? PKSAV_GEN4_SMALL_SAVE_SIZE
