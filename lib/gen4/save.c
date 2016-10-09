@@ -36,7 +36,7 @@ static const uint32_t pksav_gen4_block_info[][3] = {
     {0x0CE0C,0x0CF18,0x0F618}, // General block footer offset
     {0x0C100,0x0CF2C,0x0F700}, // Storage block start
     {0x121E0,0x121E4,0x12310}, // Storage block length
-    {0x1E2CC,0x1F0Fc,0x21A00}  // Storage block footer offset
+    {0x1E2CC,0x1F0FC,0x21A00}  // Storage block footer offset
 };
 
 typedef enum {
@@ -75,7 +75,7 @@ static const uint16_t pksav_gen4_offsets[][3] = {
     {0x007E,0x0082,0x0083}, // Kanto Badges (HGSS only)
     {0x0086,0x0086,0x0086}, // Total playtime
     {0x007F,0x0083,0x007F}, // Multiplayer Avatar
-    {0x0098,0x00A0,0x0098}, // Party
+    {0x0094,0x009C,0x0094}, // Party
     {0x0624,0x0630,0x0644}, // Item Bag
     {0x25A8,0x27E8,0x22D4}, // Rival Name
     {0x25FA,0x0000,0x236E}, // Player Coordinates (TODO: figure out Platinum's)

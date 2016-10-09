@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 static const char* GEN4_GAME_NAMES[] = {
     "Diamond/Pearl", "Platinum", "HeartGold/SoulSilver"
@@ -31,6 +32,81 @@ int main(int argc, char* argv[]) {
        return EXIT_FAILURE;
     } else {
         printf("found %s save file.\n\n", GEN4_GAME_NAMES[gen4_save.gen4_game]);
+    }
+
+    char trainer_name[8];
+    memset(trainer_name, 0, 8);
+    pksav_text_from_gen4(
+        gen4_save.trainer_name,
+        trainer_name, 7
+    );
+    printf("Trainer: %s (PID: %05d, SID: %05d)\n",
+           trainer_name,
+           (int)pksav_littleendian16(gen4_save.trainer_id->pid),
+           (int)pksav_littleendian16(gen4_save.trainer_id->sid));
+
+    // TODO: time played
+
+    printf("Money: %u\n", pksav_littleendian32(*gen4_save.money));
+
+    char rival_name[7];
+    pksav_text_from_gen4(
+        gen4_save.rival_name,
+        rival_name, 7
+    );
+    printf("Rival: %s\n", rival_name);
+
+    if(gen4_save.gen4_game == PKSAV_GEN4_HGSS) {
+        printf("\nJohto Badges:\n");
+        printf(" * Zephyr Badge:  %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_ZEPHYR_BADGE) ? "Yes" : "No"));
+        printf(" * Hive Badge:    %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_HIVE_BADGE) ? "Yes" : "No"));
+        printf(" * Plain Badge:   %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_PLAIN_BADGE) ? "Yes" : "No"));
+        printf(" * Fog Badge:     %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_FOG_BADGE) ? "Yes" : "No"));
+        printf(" * Storm Badge:   %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_STORM_BADGE) ? "Yes" : "No"));
+        printf(" * Mineral Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_MINERAL_BADGE) ? "Yes" : "No"));
+        printf(" * Glacier Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_GLACIER_BADGE) ? "Yes" : "No"));
+        printf(" * Rising Badge:  %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_RISING_BADGE) ? "Yes" : "No"));
+
+        printf("\nKanto Badges:\n");
+        printf(" * Boulder Badge: %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_BOULDER_BADGE) ? "Yes" : "No"));
+        printf(" * Cascade Badge: %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_CASCADE_BADGE) ? "Yes" : "No"));
+        printf(" * Thunder Badge: %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_THUNDER_BADGE) ? "Yes" : "No"));
+        printf(" * Rainbow Badge: %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_RAINBOW_BADGE) ? "Yes" : "No"));
+        printf(" * Soul Badge:    %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_SOUL_BADGE) ? "Yes" : "No"));
+        printf(" * Marsh Badge:   %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_MARSH_BADGE) ? "Yes" : "No"));
+        printf(" * Volcano Badge: %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_VOLCANO_BADGE) ? "Yes" : "No"));
+        printf(" * Earth Badge:   %s\n", ((*gen4_save.hgss_kanto_badges & PKSAV_GEN4_EARTH_BADGE) ? "Yes" : "No"));
+    } else {
+        printf("\nBadges:\n");
+        printf(" * Zephyr Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_COAL_BADGE) ? "Yes" : "No"));
+        printf(" * Forest Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_FOREST_BADGE) ? "Yes" : "No"));
+        printf(" * Cobble Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_COBBLE_BADGE) ? "Yes" : "No"));
+        printf(" * Fen Badge:    %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_FEN_BADGE) ? "Yes" : "No"));
+        printf(" * Relic Badge:  %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_RELIC_BADGE) ? "Yes" : "No"));
+        printf(" * Mine Badge:   %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_MINE_BADGE) ? "Yes" : "No"));
+        printf(" * Icicle Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_ICICLE_BADGE) ? "Yes" : "No"));
+        printf(" * Beacon Badge: %s\n", ((*gen4_save.sinnoh_johto_badges & PKSAV_GEN4_BEACON_BADGE) ? "Yes" : "No"));
+    }
+
+    char nickname[11];
+    char otname[8];
+    memset(nickname, 0, 11);
+    memset(otname, 0, 8);
+    printf("\nPokémon Party (size %d):\n", pksav_littleendian32(gen4_save.pokemon_party->count));
+    for(uint8_t i = 0; i < pksav_littleendian32(gen4_save.pokemon_party->count); ++i) {
+        pksav_text_from_gen4(
+            gen4_save.pokemon_party->party[i].pc.blocks.blockC.nickname,
+            nickname, 10
+        );
+        pksav_text_from_gen4(
+            gen4_save.pokemon_party->party[i].pc.blocks.blockD.otname,
+            otname, 7
+        );
+        printf(" * %s\n", nickname);
+        printf("   * Level: %d\n", gen4_save.pokemon_party->party[i].party_data.level);
+        printf("   * OT: %s (PID: %d, SID: %d)\n", otname, 
+           (int)pksav_littleendian16(gen4_save.pokemon_party->party[i].pc.blocks.blockA.ot_id.pid),
+           (int)pksav_littleendian16(gen4_save.pokemon_party->party[i].pc.blocks.blockA.ot_id.sid));
     }
 
     pksav_gen4_save_free(&gen4_save);
