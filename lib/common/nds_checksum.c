@@ -42,12 +42,12 @@ static const uint16_t pksav_nds_seeds[256] = {
     0x6E17, 0x7E36, 0x4E55, 0x5E74, 0x2E93, 0x3EB2, 0x0ED1, 0x1EF0
 };
 
-uint16_t pksav_nds_block_checksum(
+uint16_t pksav_nds_block_get_checksum(
     const uint8_t* data,
-    uint16_t len
+    uint32_t len
 ) {
     uint16_t ret = 0xFFFF;
-    for(uint16_t i = 0; i < len; ++i) {
+    for(uint32_t i = 0; i < len; ++i) {
         ret = (ret << 8) ^ pksav_nds_seeds[data[i] ^ (ret >> 8)];
     }
 

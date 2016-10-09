@@ -9,14 +9,14 @@
 #define PKSAV_COMMON_NDS_CHECKSUM_H
 
 #include <pksav/config.h>
-
 #include <pksav/common/nds_pokemon.h>
+#include <pksav/gen4/save_structs.h>
 
 #include <stdint.h>
 
-uint16_t pksav_nds_block_checksum(
+uint16_t pksav_nds_block_get_checksum(
     const uint8_t* data,
-    uint16_t len
+    uint32_t len
 );
 
 uint16_t pksav_nds_pokemon_get_checksum(
