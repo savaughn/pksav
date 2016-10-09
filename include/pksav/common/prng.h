@@ -40,7 +40,7 @@ static PKSAV_INLINE uint16_t pksav_lcrng32_next(
     pksav_lcrng32_t* lcrng32
 ) {
     lcrng32->seed = (0x41C64E6D * (lcrng32->seed)) + 0x6073;
-    return (lcrng32->seed & 0xFFFF);
+    return ((lcrng32->seed >> 16) & 0xFFFF);
 }
 
 PKSAV_API void pksav_mtrng_populate(

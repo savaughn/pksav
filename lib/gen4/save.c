@@ -215,12 +215,6 @@ static void _pksav_gen4_save_set_public_pointers(
                                        gen4_save->general_block
                                    )
                                );
-    for(uint8_t i = 0; i < 6; ++i) {
-        pksav_nds_crypt_pokemon(
-            &gen4_save->pokemon_party->party[i].pc,
-            false
-        );
-    }
 
     // TODO: PC
 
@@ -427,6 +421,13 @@ pksav_error_t pksav_gen4_save_load(
     _pksav_gen4_save_set_public_pointers(
         gen4_save
     );
+
+    for(uint8_t i = 0; i < 6; ++i) {
+        pksav_nds_crypt_pokemon(
+            &gen4_save->pokemon_party->party[i].pc,
+            false
+        );
+    }
 
     return PKSAV_ERROR_NONE;
 }

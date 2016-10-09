@@ -7,6 +7,8 @@
 
 #include "nds_common.h"
 
+#include <pksav/common/prng.h>
+
 #include <string.h>
 
 static const uint16_t pksav_nds_seeds[256] = {
@@ -99,6 +101,12 @@ void pksav_nds_crypt_pokemon(
     pksav_nds_pc_pokemon_t* nds_pokemon,
     bool encrypt
 ) {
+    pksav_lcrng32_t lcrng32;
+    lcrng32.seed = nds_pokemon->checksum;
+    for(uint8_t i = 0; i < 64; ++i) {
+        nds_pokemon->blocks.blocks16[i] ^= pksav_lcrng32_next(&lcrng32);
+    }
+
     uint32_t index = (((nds_pokemon->personality >> 0xD) & 0x1F) % 24);
     uint8_t blockA_index = nds_block_orders[index][0];
     uint8_t blockB_index = nds_block_orders[index][1];
