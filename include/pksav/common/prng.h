@@ -16,28 +16,32 @@
 extern "C" {
 #endif
 
-static PKSAV_INLINE uint32_t arng_next(
-    uint32_t seed
-) {
-    return (0x6C078965 * seed) + 1;
-}
+typedef struct {
+    uint32_t seed;
+} pksav_arng_t;
 
-static PKSAV_INLINE uint32_t lcrng32_next(
-    uint32_t seed
-) {
-    return (0x41C64E6D * seed) + 0x6073;
-}
-
-static PKSAV_INLINE uint64_t lcrng64_next(
-    uint64_t seed
-) {
-    return (0x5D588B656C078965UL * seed) + 0x269EC3;
-}
+typedef struct {
+    uint32_t seed;
+} pksav_lcrng32_t;
 
 typedef struct {
     uint32_t nums[624];
     size_t index;
 } pksav_mtrng_t;
+
+static PKSAV_INLINE uint32_t pksav_arng_next(
+    pksav_arng_t* arng
+) {
+    arng->seed = (0x6C078965 * arng->seed) + 1;
+    return arng->seed;
+}
+
+static PKSAV_INLINE uint16_t pksav_lcrng32_next(
+    pksav_lcrng32_t* lcrng32
+) {
+    lcrng32->seed = (0x41C64E6D * (lcrng32->seed)) + 0x6073;
+    return (lcrng32->seed & 0xFFFF);
+}
 
 PKSAV_API void pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
