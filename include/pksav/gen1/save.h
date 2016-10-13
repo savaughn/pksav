@@ -230,6 +230,7 @@ extern "C" {
  * This is determining by checking the data's checksum.
  *
  * \param buffer buffer to be checked
+ * \param buffer_len length of the buffer passed in
  * \returns true if the buffer is a valid Generation I save file, false otherwise
  */
 PKSAV_API bool pksav_buffer_is_gen1_save(
