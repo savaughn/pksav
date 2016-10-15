@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-extern const int no_argument;
-extern const int required_argument;
-extern const int optional_argument;
+#define no_argument 0
+#define required_argument 1
+#define optional_argument 2
 
 extern char* optarg;
 extern int optind, opterr, optopt;
