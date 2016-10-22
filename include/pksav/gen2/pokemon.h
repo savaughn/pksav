@@ -11,7 +11,11 @@
 #ifndef PKSAV_GEN2_POKEMON_H
 #define PKSAV_GEN2_POKEMON_H
 
+#include <pksav/config.h>
+#include <pksav/error.h>
+
 #include <stdint.h>
+#include <time.h>
 
 /*!
  * @brief The mask for a move's PP in the PP field.
@@ -29,15 +33,21 @@
  */
 #define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8_t)0xC0)
 
-#define GEN2_TIME_OF_DAY_MASK    ((uint16_t)0xC000)
-#define GEN2_TIME_OF_DAY_OFFSET  14
+typedef enum {
+    PKSAV_GEN2_MORNING = 1,
+    PKSAV_GEN2_DAY,
+    PKSAV_GEN2_NIGHT
+} pksav_gen2_time_of_day;
 
-#define GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
-#define GEN2_LEVEL_CAUGHT_OFFSET 8
+#define PKSAV_GEN2_TIME_OF_DAY_MASK    ((uint16_t)0xC000)
+#define PKSAV_GEN2_TIME_OF_DAY_OFFSET  14
 
-#define GEN2_OT_GENDER_MASK      ((uint16_t)0x80)
+#define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
+#define PKSAV_GEN2_LEVEL_CAUGHT_OFFSET 8
 
-#define GEN2_LOCATION_MASK       ((uint16_t)0x7F)
+#define PKSAV_GEN2_OT_GENDER_MASK ((uint16_t)0x80)
+
+#define PKSAV_GEN2_LOCATION_MASK ((uint16_t)0x7F)
 
 #pragma pack(push,1)
 
@@ -285,5 +295,16 @@ typedef struct {
 } pksav_gen2_pokemon_box_names_t;
 
 #pragma pack(pop)
+
+/*!
+ * @brief Set the given Pokémon's caught time field based on the given C time.
+ *
+ * \param time_in C time to convert
+ * \param gen2_pokemon Pokémon to apply the change to
+ */
+PKSAV_API void pksav_gen2_pokemon_set_caught_data_time_field(
+    const time_t* time_in,
+    pksav_gen2_pc_pokemon_t* gen2_pokemon
+);
 
 #endif /* PKSAV_GEN2_POKEMON_H */
