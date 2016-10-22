@@ -1,7 +1,7 @@
 /*!
  * @file    pksav/gen2/pokemon.h
  * @ingroup PKSav
- * @brief   Native formats and convenience functions for Pokémon in Generation IIII games.
+ * @brief   Native formats and convenience functions for Pokémon in Generation II games.
  *
  * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
  *
@@ -32,15 +32,6 @@
  * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
  */
 #define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8_t)0xC0)
-
-typedef enum {
-    PKSAV_GEN2_MORNING = 1,
-    PKSAV_GEN2_DAY,
-    PKSAV_GEN2_NIGHT
-} pksav_gen2_time_of_day;
-
-#define PKSAV_GEN2_TIME_OF_DAY_MASK    ((uint16_t)0xC000)
-#define PKSAV_GEN2_TIME_OF_DAY_OFFSET  14
 
 #define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
 #define PKSAV_GEN2_LEVEL_CAUGHT_OFFSET 8
@@ -295,16 +286,5 @@ typedef struct {
 } pksav_gen2_pokemon_box_names_t;
 
 #pragma pack(pop)
-
-/*!
- * @brief Set the given Pokémon's caught time field based on the given C time.
- *
- * \param time_in C time to convert
- * \param gen2_pokemon Pokémon to apply the change to
- */
-PKSAV_API void pksav_gen2_pokemon_set_caught_data_time_field(
-    const time_t* time_in,
-    pksav_gen2_pc_pokemon_t* gen2_pokemon
-);
 
 #endif /* PKSAV_GEN2_POKEMON_H */

@@ -18,6 +18,7 @@
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/save.h>
 #include <pksav/gen2/text.h>
+#include <pksav/gen2/time_of_day.h>
 
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>

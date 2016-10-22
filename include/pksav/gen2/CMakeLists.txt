@@ -10,6 +10,7 @@ SET(pksav_gen2_headers
     pokemon.h
     save.h
     text.h
+    time_of_day.h
 )
 
 INSTALL(
