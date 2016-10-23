@@ -223,6 +223,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base HP stat, HP
      * EV, and HP IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t max_hp;
     /*!
@@ -230,6 +232,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Attack stat,
      * Attack EV, and Attack IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t atk;
     /*!
@@ -237,6 +241,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Defense stat,
      * Defense EV, and Defense IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t def;
     /*!
@@ -244,6 +250,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Speed stat,
      * Speed EV, and Speed IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spd;
     /*!
@@ -251,6 +259,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Special stat,
      * Special EV, and Special IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spcl;
 } pksav_gen1_pokemon_party_data_t;

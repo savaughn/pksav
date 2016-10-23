@@ -28,17 +28,52 @@
 /*!
  * @brief The mask for the number of PP Ups used on a move (0-3).
  *
- * Mask the value of one of the indices of pksav_gen2_pc_pokemon_t.move_pps to
- * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
+ * Mask the value of one of the indices of pksav_gen2_pc_pokemon_t.move_pps
+ * and shift it right by ::PKSAV_GEN2_MOVE_PP_UP_MASK to get the number of PP
+ * Ups used.
  */
 #define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8_t)0xC0)
 
+/*!
+ * @brief The offset of the number of PP UPs used on a move.
+ *
+ * Mask the value of one of the indices of pksav_gen2_pc_pokemon_t.move_pps
+ * with ::PKSAV_GEN2_MOVE_PP_UP_OFFSET and shift it right by this to get the
+ * number of PP Ups used.
+ */
+#define PKSAV_GEN2_MOVE_PP_UP_OFFSET 6
+
+/*!
+ * @brief The mask for the level at which a Pokémon was caught.
+ *
+ * Mask pksav_gen2_pc_pokemon_t.caught_data with this mask and shift it
+ * right by ::PKSAV_GEN2_LEVEL_CAUGHT_OFFSET to get the value.
+ */
 #define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
+
+/*!
+ * @brief The offset for the level at which a Pokémon was caught.
+ *
+ * Mask pksav_gen2_pc_pokemon_t.caught_data with ::PKSAV_GEN2_LEVEL_CAUGHT_MASK
+ * and shift it right by this offset to get the value.
+ */
 #define PKSAV_GEN2_LEVEL_CAUGHT_OFFSET 8
 
-#define PKSAV_GEN2_OT_GENDER_MASK ((uint16_t)0x80)
+/*!
+ * @brief The mask for setting a Pokémon's original trainer's gender.
+ *
+ * Mask pksav_gen2_pc_pokemon_t.caught_data with this mask to set the trainer's
+ * gender to female. Unmask it to set the trainer's gender to male.
+ */
+#define PKSAV_GEN2_OT_GENDER_MASK ((uint16_t)0x0080)
 
-#define PKSAV_GEN2_LOCATION_MASK ((uint16_t)0x7F)
+/*!
+ * @brief The mask for the index of the location at which the Pokémon was caught.
+ *
+ * Mask pksav_gen2_pc_pokemon_t.caught_data with this mask to get or set the
+ * location index.
+ */
+#define PKSAV_GEN2_LOCATION_MASK ((uint16_t)0x007F)
 
 #pragma pack(push,1)
 
@@ -174,13 +209,69 @@ typedef struct {
  */
 typedef struct {
     uint8_t condition;
+    //! Unused.
     uint8_t unused;
+    /*!
+     * @brief The Pokémon's current HP.
+     *
+     * This value should never be higher than pksav_gen2_pokemon_party_data_t.max_hp.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t current_hp;
+    /*!
+     * @brief The Pokémon's maximum HP.
+     *
+     * This value is calculated using the Pokémon's base HP stat, HP
+     * EV, and HP IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t max_hp;
+    /*!
+     * @brief The Pokémon's Attack.
+     *
+     * This value is calculated using the Pokémon's base Attack stat, Attack
+     * EV, and Attack IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t atk;
+    /*!
+     * @brief The Pokémon's Defense.
+     *
+     * This value is calculated using the Pokémon's base Defense stat, Defense
+     * EV, and Defense IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t def;
+    /*!
+     * @brief The Pokémon's Speed.
+     *
+     * This value is calculated using the Pokémon's base Speed stat, Speed
+     * EV, and Speed IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t spd;
+    /*!
+     * @brief The Pokémon's Special Attack.
+     *
+     * This value is calculated using the Pokémon's base Special Attack stat,
+     * Special EV, and Special IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t spatk;
+    /*!
+     * @brief The Pokémon's Special Defense.
+     *
+     * This value is calculated using the Pokémon's base Special Defense stat,
+     * Special EV, and Special IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
+     */
     uint16_t spdef;
 } pksav_gen2_pokemon_party_data_t;
 
