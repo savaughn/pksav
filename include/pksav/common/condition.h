@@ -1,7 +1,7 @@
 /*!
  * @file    pksav/common/condition.h
  * @ingroup PKSav
- * @brief   Possible values for how a Pokémon was caught in Generation IV.
+ * @brief   Possible values for a Pokémon's status conditions.
  *
  * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
@@ -11,7 +11,30 @@
 #ifndef PKSAV_COMMON_CONDITION_H
 #define PKSAV_COMMON_CONDITION_H
 
-//! Valid values (with one mask) for a Pokémon's possible conditions.
+/*!
+ * @brief Valid values for a Pokémon's current condition in Generations I-II.
+ */
+typedef enum {
+    //! No status ailment.
+    PKSAV_GB_CONDITION_NONE    = 0x00,
+    //! Sleep.
+    PKSAV_GB_CONDITION_ASLEEP  = 0x04,
+    /*!
+     * @brief Poison.
+     *
+     * Bad Poison (inflicted by Toxic) is considered separate and is not reflected
+     * in this field.
+     */
+    PKSAV_GB_CONDITION_POISON  = 0x08,
+    //! Burn.
+    PKSAV_GB_CONDITION_BURN    = 0x10,
+    //! Frozen.
+    PKSAV_GB_CONDITION_FROZEN  = 0x20,
+    //! Paralysis.
+    PKSAV_GB_CONDITION_PARALYZ = 0x40
+} pksav_gb_condition_t;
+
+//! Valid values (with one mask) for a Pokémon's possible conditions in Generations III+.
 typedef enum {
     //! No status ailment.
     PKSAV_CONDITION_NONE       = 0,
