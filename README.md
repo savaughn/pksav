@@ -16,12 +16,16 @@ internal workings of a larger library that provides users with a more convenient
 Being written in C, it can easily be wrapped in a larger C/C++/Objective-C library or be called as native
 functions in languages such as C# or Java.
 
+Currently, only American save files are supported, as save files from different regions are often laid
+out differently, usually to accomodate strings having different lengths between regions.
+
 Component status:
  * Generation I: complete
- * Generation II: in progress
+ * Generation II: complete
  * Game Boy Advance: complete
  * Gamecube: in progress
- * Nintendo DS: in progress
+ * Generation IV: in progress
+ * Generation V: in progress
  * Generation VI: in progress
 
 Platform status:
@@ -30,4 +34,4 @@ Platform status:
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/10/05
+README last updated: 2016/10/23

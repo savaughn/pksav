@@ -206,6 +206,7 @@ pksav_error_t pksav_gen2_save_load(
     fseek(gen2_save_file, 0, SEEK_END);
 
     if(ftell(gen2_save_file) < PKSAV_GEN2_SAVE_SIZE) {
+        fclose(gen2_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
 

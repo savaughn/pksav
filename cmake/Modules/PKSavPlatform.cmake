@@ -65,6 +65,9 @@ IF(NOT HAVE_STDINT_H)
     MESSAGE(FATAL_ERROR "PKSav requires the header stdint.h to compile.")
 ENDIF(NOT HAVE_STDINT_H)
 
+# Checks for platform-specific headers
+CHECK_INCLUDE_FILE(unistd.h HAVE_UNISTD_H)
+
 # Set compiler name for CMake display
 IF(MSVC)
     IF(MSVC12)
