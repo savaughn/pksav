@@ -18,10 +18,11 @@ functions in languages such as C# or Java.
 
 Component status:
  * Generation I: complete
- * Generation II: in progress
+ * Generation II: complete
  * Game Boy Advance: complete
  * Gamecube: in progress
- * Nintendo DS: in progress
+ * Generation IV: in progress
+ * Generation V: in progress
  * Generation VI: in progress
 
 Platform status:
