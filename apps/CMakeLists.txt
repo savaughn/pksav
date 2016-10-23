@@ -6,16 +6,19 @@
 #
 
 INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
 )
+
+ADD_SUBDIRECTORY(getopt)
 
 MACRO(PKSAV_BUILD_APP app_name)
     SET_SOURCE_FILES_PROPERTIES(${app_name}.c
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
     )
     ADD_EXECUTABLE(${app_name} ${app_name}.c)
-    TARGET_LINK_LIBRARIES(${app_name} pksav)
+    TARGET_LINK_LIBRARIES(${app_name} pksav getopt)
     INSTALL(
         TARGETS ${app_name}
         DESTINATION ${RUNTIME_DIR}
@@ -23,11 +26,18 @@ MACRO(PKSAV_BUILD_APP app_name)
     )
 ENDMACRO(PKSAV_BUILD_APP)
 
-SET(pksav_apps
-    pksav-gen1-save-dump
-    pksav-gba-save-dump
-    pksav-gen4-save-dump
-)
+IF(PKSAV_ENABLE_GEN1)
+    LIST(APPEND pksav_apps pksav-gen1-save-dump)
+ENDIF(PKSAV_ENABLE_GEN1)
+IF(PKSAV_ENABLE_GEN2)
+    LIST(APPEND pksav_apps pksav-gen2-save-dump)
+ENDIF(PKSAV_ENABLE_GEN2)
+IF(PKSAV_ENABLE_GBA)
+    LIST(APPEND pksav_apps pksav-gba-save-dump)
+ENDIF(PKSAV_ENABLE_GBA)
+IF(PKSAV_ENABLE_GEN4)
+    LIST(APPEND pksav_apps pksav-gen4-save-dump)
+ENDIF(PKSAV_ENABLE_GEN4)
 
 FOREACH(app ${pksav_apps})
     PKSAV_BUILD_APP(${app})

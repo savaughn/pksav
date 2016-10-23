@@ -22,37 +22,12 @@
 #define PKSAV_GEN1_MOVE_PP_MASK ((uint8_t)0x3F)
 
 /*!
- * @brief The mask for the number of PP Ups used on a move (1-3).
+ * @brief The mask for the number of PP Ups used on a move (0-3).
  *
  * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
  * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
  */
 #define PKSAV_GEN1_MOVE_PP_UP_MASK ((uint8_t)0xC0)
-
-/*!
- * @brief Valid values for a Pokémon's current condition.
- *
- * This enum applies to the pksav_gen1_pc_pokemon_t.condition field.
- */
-typedef enum {
-    //! No status ailment.
-    PKSAV_GEN1_CONDITION_NONE    = 0x00,
-    //! Sleep.
-    PKSAV_GEN1_CONDITION_ASLEEP  = 0x04,
-    /*!
-     * @brief Poison.
-     *
-     * Bad Poison (inflicted by Toxic) is considered separate and is not reflected
-     * in this field.
-     */
-    PKSAV_GEN1_CONDITION_POISON  = 0x08,
-    //! Burn.
-    PKSAV_GEN1_CONDITION_BURN    = 0x10,
-    //! Frozen.
-    PKSAV_GEN1_CONDITION_FROZEN  = 0x20,
-    //! Paralysis.
-    PKSAV_GEN1_CONDITION_PARALYZ = 0x40
-} pksav_gen1_condition_t;
 
 /*!
  * @brief Valid values for a Pokémon's types.
@@ -118,7 +93,7 @@ typedef struct {
     /*!
      * @brief The Pokémon's status ailments, if any.
      *
-     * The enum ::pksav_gen1_condition_t contains all valid values for this field.
+     * The enum ::pksav_gb_condition_t contains all valid values for this field.
      */
     uint8_t condition;
     /*!
@@ -223,6 +198,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base HP stat, HP
      * EV, and HP IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t max_hp;
     /*!
@@ -230,6 +207,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Attack stat,
      * Attack EV, and Attack IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t atk;
     /*!
@@ -237,6 +216,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Defense stat,
      * Defense EV, and Defense IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t def;
     /*!
@@ -244,6 +225,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Speed stat,
      * Speed EV, and Speed IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spd;
     /*!
@@ -251,6 +234,8 @@ typedef struct {
      *
      * This value is calculated using the Pokémon's base Special stat,
      * Special EV, and Special IV.
+     *
+     * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spcl;
 } pksav_gen1_pokemon_party_data_t;
@@ -276,13 +261,13 @@ typedef struct {
 
 //! Native format for a trainer's Pokémon party in Generation I.
 typedef struct {
-    //! The actual number of Pokémon in the party (1-6).
+    //! The actual number of Pokémon in the party (0-6).
     uint8_t count;
     /*!
      * @brief The species indices of the Pokémon in the party.
      *
      * When the party is viewed in-game, it is this value that determines
-     * what Pokémon is showed, not the pksav_gen1_pc_pokemon_t.species value.
+     * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
      * The final index of this field should always be set to 0xFF.
      */
@@ -307,13 +292,13 @@ typedef struct {
 
 //! Native format for a Pokémon PC box in Generation I.
 typedef struct {
-    //! The actual number of Pokémon in the box (1-20).
+    //! The actual number of Pokémon in the box (0-20).
     uint8_t count;
     /*!
      * @brief The species indices of the Pokémon in the box.
      *
      * When the box is viewed in-game, it is this value that determines
-     * what Pokémon is showed, not the pksav_gen1_pc_pokemon_t.species value.
+     * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
      * The final index of this field should always be set to 0xFF.
      */

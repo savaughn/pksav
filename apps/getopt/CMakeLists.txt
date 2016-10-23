@@ -5,8 +5,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(pksav_gen2_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/save.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/text.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/time_of_day.c
-PARENT_SCOPE)
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+ADD_LIBRARY(getopt STATIC getopt.c)
