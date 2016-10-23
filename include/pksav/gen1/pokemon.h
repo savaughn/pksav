@@ -30,31 +30,6 @@
 #define PKSAV_GEN1_MOVE_PP_UP_MASK ((uint8_t)0xC0)
 
 /*!
- * @brief Valid values for a Pokémon's current condition.
- *
- * This enum applies to the pksav_gen1_pc_pokemon_t.condition field.
- */
-typedef enum {
-    //! No status ailment.
-    PKSAV_GEN1_CONDITION_NONE    = 0x00,
-    //! Sleep.
-    PKSAV_GEN1_CONDITION_ASLEEP  = 0x04,
-    /*!
-     * @brief Poison.
-     *
-     * Bad Poison (inflicted by Toxic) is considered separate and is not reflected
-     * in this field.
-     */
-    PKSAV_GEN1_CONDITION_POISON  = 0x08,
-    //! Burn.
-    PKSAV_GEN1_CONDITION_BURN    = 0x10,
-    //! Frozen.
-    PKSAV_GEN1_CONDITION_FROZEN  = 0x20,
-    //! Paralysis.
-    PKSAV_GEN1_CONDITION_PARALYZ = 0x40
-} pksav_gen1_condition_t;
-
-/*!
  * @brief Valid values for a Pokémon's types.
  *
  * This enum applies to the indices of the pksav_gen1_pc_pokemon_t.types field.
@@ -118,7 +93,7 @@ typedef struct {
     /*!
      * @brief The Pokémon's status ailments, if any.
      *
-     * The enum ::pksav_gen1_condition_t contains all valid values for this field.
+     * The enum ::pksav_gb_condition_t contains all valid values for this field.
      */
     uint8_t condition;
     /*!

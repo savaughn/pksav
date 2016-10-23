@@ -19,6 +19,7 @@
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
 
+#include <pksav/common/condition.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/stats.h>
 

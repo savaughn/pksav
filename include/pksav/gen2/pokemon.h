@@ -208,6 +208,11 @@ typedef struct {
  * pksav_gen2_pc_pokemon_t.
  */
 typedef struct {
+    /*!
+     * @brief The Pokémon's status ailments, if any.
+     *
+     * The enum ::pksav_gb_condition_t contains all valid values for this field.
+     */
     uint8_t condition;
     //! Unused.
     uint8_t unused;

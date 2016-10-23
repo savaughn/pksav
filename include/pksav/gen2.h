@@ -20,6 +20,7 @@
 #include <pksav/gen2/text.h>
 #include <pksav/gen2/time_of_day.h>
 
+#include <pksav/common/condition.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
 #include <pksav/common/stats.h>
