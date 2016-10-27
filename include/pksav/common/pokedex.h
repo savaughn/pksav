@@ -8,6 +8,7 @@
 #define PKSAV_COMMON_POKEDEX_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -27,9 +28,10 @@ extern "C" {
  * \param pokedex_num Which Pokémon to check
  * \returns if Pokémon with the given Pokédex number has been seen/caught
  */
-PKSAV_API bool pksav_get_pokedex_bit(
+PKSAV_API pksav_error_t pksav_get_pokedex_bit(
     const uint8_t* raw,
-    uint16_t pokedex_num
+    uint16_t pokedex_num,
+    bool* result_out
 );
 
 /*!
@@ -43,7 +45,7 @@ PKSAV_API bool pksav_get_pokedex_bit(
  * \param pokedex_num Which Pokémon to set or unset
  * \param set Set whether or not Pokémon has been seen/caught
  */
-PKSAV_API void pksav_set_pokedex_bit(
+PKSAV_API pksav_error_t pksav_set_pokedex_bit(
     uint8_t* raw,
     uint16_t pokedex_num,
     bool set
