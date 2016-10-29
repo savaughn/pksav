@@ -1,6 +1,9 @@
 PKSav
 ===============================================
 
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt)
+[![Travis-CI Build](https://travis-ci.org/ncorgan/pksav.svg)](https://travis-ci.org/ncorgan/pksav)
+
 The goal of PKSav is to be a small, fast, and portable library for interacting with
 and manipulating Pokémon save files. It is written in pure C with no external dependencies,
 which allows it to be deployed on a wide variety of platforms, from PC's to smartphones to
@@ -34,4 +37,4 @@ Platform status:
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/10/23
+README last updated: 2016/10/29
