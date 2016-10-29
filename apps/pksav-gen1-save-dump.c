@@ -43,11 +43,13 @@ int main(int argc, char* argv[]) {
                                       gen1_save.time_played->minutes,
                                       gen1_save.time_played->seconds);
 
-    size_t money = pksav_from_bcd(
-                       gen1_save.money,
-                       3
-                   );
-    printf("Money: %zu\n", money);
+    uint32_t money = 0;
+    error_code = pksav_from_bcd(
+                     gen1_save.money,
+                     3,
+                     &money
+                 );
+    printf("Money: %u\n", money);
 
     char rival_name[7];
     pksav_text_from_gen1(
@@ -56,11 +58,13 @@ int main(int argc, char* argv[]) {
     );
     printf("Rival: %s\n", rival_name);
 
-    size_t casino_coins = pksav_from_bcd(
-                              gen1_save.casino_coins,
-                              2
-                          );
-    printf("Casino coins: %zu\n", casino_coins);
+    uint32_t casino_coins = 0;
+    error_code = pksav_from_bcd(
+                     gen1_save.casino_coins,
+                     2,
+                     &casino_coins
+                 );
+    printf("Casino coins: %u\n", casino_coins);
 
     if(gen1_save.yellow) {
         printf("Pikachu friendship: %d\n", *gen1_save.pikachu_friendship);

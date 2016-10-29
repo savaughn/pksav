@@ -12,6 +12,7 @@
 #define PKSAV_MATH_BASE256_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -24,20 +25,25 @@ extern "C" {
 /*!
  * \param buffer where original Base-256 number is stored
  * \param num_bytes number of bytes to convert
- * \returns converted Base-10 number
+ * \param result_out converted Base-10 number
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API size_t pksav_from_base256(
+PKSAV_API pksav_error_t pksav_from_base256(
     const uint8_t* buffer,
-    size_t num_bytes
+    size_t num_bytes,
+    uint32_t* result_out
 );
 
 //! Convert a Base-10 number to Base-256.
 /*!
  * \param num Base-10 number to convert
  * \param buffer_out where to store converted Base-256 number
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if buffer_out is NULL
  */
-PKSAV_API void pksav_to_base256(
-    size_t num,
+PKSAV_API pksav_error_t pksav_to_base256(
+    uint32_t num,
     uint8_t* buffer_out
 );
 

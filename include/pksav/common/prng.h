@@ -40,6 +40,13 @@ typedef struct {
     size_t index;
 } pksav_mtrng_t;
 
+/*!
+ * @brief Populate an MTRNG struct's random numbers.
+ *
+ * \param mtrng MTRNG struct to populate
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER
+ */
 PKSAV_API pksav_error_t pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 );

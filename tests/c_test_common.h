@@ -63,6 +63,13 @@ static char error_buffer[1024];
         longjmp(env, 1); \
     }
 
+#define PKSAV_ASSERT_UINTS_EQUAL(num1, num2) \
+    if(num1 != num2) { \
+        memset(error_buffer, '\0', 1024); \
+        sprintf(error_buffer, "Failed assertion: %s (%u) != %s (%u)", #num1, num1, #num2, num2); \
+        longjmp(env, 1); \
+    }
+
 #define PKSAV_ASSERT_FLOATS_CLOSE(f1, f2) \
     if(fabs(f1 - f2) > 0.0001) { \
         memset(error_buffer, '\0', 1024); \
