@@ -41,7 +41,7 @@ else
 
     cd $REPO_TOPLEVEL/travis-env/mingw
     [ $? -ne 0 ] && exit 1
-    cmake -DCMAKE_TOOLCHAIN=$REPO_TOPLEVEL/cmake/Toolchains/mingw_cross.cmake \
+    cmake -DCMAKE_TOOLCHAIN_FILE=$REPO_TOPLEVEL/cmake/Toolchains/mingw_cross.cmake \
 	  -DMINGW_PREFIX=x86_64-w64-mingw32 \
 	  $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
