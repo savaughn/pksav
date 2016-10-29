@@ -3,7 +3,7 @@ PKSav
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt)
 [![Travis-CI Build](https://travis-ci.org/ncorgan/pksav.svg)](https://travis-ci.org/ncorgan/pksav)
-[![Appveyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/pksav)](https://ci.appveyor.com/project/ncorgan/pksav)
+[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/pksav)](https://ci.appveyor.com/project/ncorgan/pksav)
 
 The goal of PKSav is to be a small, fast, and portable library for interacting with
 and manipulating Pokémon save files. It is written in pure C with no external dependencies,
@@ -23,7 +23,24 @@ functions in languages such as C# or Java.
 Currently, only American save files are supported, as save files from different regions are often laid
 out differently, usually to accomodate strings having different lengths between regions.
 
-Component status:
+Testing
+-------------------------------------
+
+Using [Travis](https://travis-ci.org/ncorgan/pksav) and
+[AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every commit in this
+repository is automatically tested under the following configurations:
+
+ * Compile and test:
+   * GCC 4.8.4
+   * Clang 3.5
+   * AppleClang 7.3.0
+   * MSVC 2015 (x86, x64)
+ * Cross-compile only:
+   * MinGW-GCC 4.8.2
+   * MSVC 2015 (ARM)
+
+Component Status
+-------------------------------------
  * Generation I: complete
  * Generation II: complete
  * Game Boy Advance: complete
@@ -32,7 +49,8 @@ Component status:
  * Generation V: in progress
  * Generation VI: in progress
 
-Platform status:
+Platform Status
+-------------------------------------
  * x86: supported
  * 3DS: TBA
  * iOS: TBA
