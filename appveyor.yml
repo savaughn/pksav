@@ -1,8 +1,5 @@
 environment:
   matrix:
-    - CMAKE_DASH_G: "Visual Studio 12 2013"
-    - CMAKE_DASH_G: "Visual Studio 12 2013 Win64"
-    - CMAKE_DASH_G: "Visual Studio 12 2013 ARM"
     - CMAKE_DASH_G: "Visual Studio 14 2015"
     - CMAKE_DASH_G: "Visual Studio 14 2015 Win64"
     - CMAKE_DASH_G: "Visual Studio 14 2015 ARM"
