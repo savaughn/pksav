@@ -7,14 +7,12 @@ platform: x64
 configuration: Release
 
 build:
-  project: pksav.vcxproj
+  project: ALL_BUILD.vcxproj
 
 before_build:
   - mkdir c:\projects\pksav\build
   - cd c:\projects\pksav\build
   - cmake -G "Visual Studio 14 2015 Win64" ..
-  - dir
 
 after_build:
-  - cd c:\projects\pksav\build
   - ctest --output-on-failure
