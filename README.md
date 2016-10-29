@@ -3,6 +3,7 @@ PKSav
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt)
 [![Travis-CI Build](https://travis-ci.org/ncorgan/pksav.svg)](https://travis-ci.org/ncorgan/pksav)
+[![Appveyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/pksav)](https://ci.appveyor.com/project/ncorgan/pksav)
 
 The goal of PKSav is to be a small, fast, and portable library for interacting with
 and manipulating Pokémon save files. It is written in pure C with no external dependencies,
