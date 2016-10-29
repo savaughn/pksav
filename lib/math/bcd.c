@@ -30,7 +30,7 @@ pksav_error_t pksav_from_bcd(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    size_t mult = 100;
+    uint32_t mult = 100;
 
     (*result_out) = (buffer[num_bytes-1] & 0x0F) + ((buffer[num_bytes-1] >> 4) * 10);
     for(ssize_t i = (ssize_t)(num_bytes-2); i >= 0; i--) {
