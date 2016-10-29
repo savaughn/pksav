@@ -19,11 +19,28 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     ctest --output-on-failure
 
 else
-    mkdir gcc
-    cd gcc
+    mkdir gcc clang mingw
+
+    cd $REPO_TOPLEVEL/gcc
     cmake $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
     ctest --output-on-failure
+    [ $? -ne 0 ] && exit 1
+
+    cd $REPO_TOPLEVEL/clang
+    CC=clang cmake $REPO_TOPLEVEL
+    [ $? -ne 0 ] && exit 1
+    make
+    [ $? -ne 0 ] && exit 1
+    ctest --output-on-failure
+    [ $? -ne 0 ] && exit 1
+
+    cd $REPO_TOPLEVEL/mingw
+    cmake -DCMAKE_TOOLCHAIN=$REPO_TOPLEVEL/cmake/Toolchains/mingw_cross.cmake \
+	  -DMINGW_PREFIX=x86_64-w64-mingw32 \
+	  $REPO_TOPLEVEL
+    [ $? -ne 0 ] && exit 1
+    make
 fi
