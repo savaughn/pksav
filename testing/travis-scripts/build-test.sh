@@ -19,6 +19,9 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     ctest --output-on-failure
 
 else
+    find $REPO_TOPLEVEL -name '*.[ch]' | xargs cppcheck 1>/dev/null
+    [ $? -ne 0 ] && exit 1
+
     mkdir gcc clang mingw
 
     cd $REPO_TOPLEVEL/travis-env/gcc

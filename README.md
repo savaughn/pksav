@@ -31,7 +31,7 @@ Using [Travis](https://travis-ci.org/ncorgan/pksav) and
 repository is automatically tested under the following configurations:
 
  * Compile and test:
-   * GCC 4.8.4
+   * GCC 4.8.4 (x86_64)
    * Clang 3.5
    * AppleClang 7.3.0
    * MSVC 2015 (x86, x64)

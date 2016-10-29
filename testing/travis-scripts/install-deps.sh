@@ -17,5 +17,6 @@ echo
 else
     sudo apt-get -y update
     sudo apt-get -y install build-essential cmake clang gcc \
-                            gcc-mingw-w64-x86-64
+                            gcc-mingw-w64-x86-64 cppcheck \
+                            valgrind
 fi
