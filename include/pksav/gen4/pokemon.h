@@ -19,15 +19,12 @@ typedef struct {
 } pksav_gen4_pokemon_party_t;
 
 typedef struct {
-    uint8_t padding[4];
     pksav_nds_pc_pokemon_t entries[30];
 } pksav_dppt_pokemon_box_t;
 
 typedef struct {
     pksav_nds_pc_pokemon_t entries[30];
-    uint8_t unknown1[2];
-    uint16_t checksum;
-    uint8_t unknown2[12];
+    uint8_t unknown[16];
 } pksav_hgss_pokemon_box_t;
 
 typedef struct {
@@ -43,7 +40,7 @@ typedef struct {
 
 typedef struct {
     pksav_hgss_pokemon_box_t boxes[18];
-    uint8_t unknown[24];
+    uint8_t unknown[8];
     pksav_gen4_box_name_t box_names[18];
 } pksav_hgss_pokemon_pc_t;
 
