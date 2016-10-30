@@ -47,33 +47,47 @@ static uint8_t _pksav_get_gen1_save_checksum(
     return checksum;
 }
 
-bool pksav_buffer_is_gen1_save(
+pksav_error_t pksav_buffer_is_gen1_save(
     const uint8_t* data,
-    size_t buffer_len
+    size_t buffer_len,
+    bool* result_out
 ) {
+    if(!data || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     if(buffer_len < PKSAV_GEN1_SAVE_SIZE) {
-        return false;
+         *result_out = false;
+         return PKSAV_ERROR_NONE;
     }
 
     uint8_t checksum = data[PKSAV_GEN1_CHECKSUM];
     uint8_t actual_checksum = _pksav_get_gen1_save_checksum(data);
+    *result_out = (checksum == actual_checksum);
 
-    return (checksum == actual_checksum);
+    return PKSAV_ERROR_NONE;
 }
 
-bool pksav_file_is_gen1_save(
-    const char* filepath
+pksav_error_t pksav_file_is_gen1_save(
+    const char* filepath,
+    bool* result_out
 ) {
+    if(!filepath || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     FILE* gen1_save = fopen(filepath, "r");
     if(!gen1_save) {
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     fseek(gen1_save, 0, SEEK_END);
 
     if(ftell(gen1_save) < PKSAV_GEN1_SAVE_SIZE) {
         fclose(gen1_save);
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     uint8_t* gen1_save_data = malloc(PKSAV_GEN1_SAVE_SIZE);
@@ -83,20 +97,29 @@ bool pksav_file_is_gen1_save(
 
     bool ret = false;
     if(num_read == PKSAV_GEN1_SAVE_SIZE) {
-        ret = pksav_buffer_is_gen1_save(
-                  gen1_save_data,
-                  PKSAV_GEN1_SAVE_SIZE
-              );
+        pksav_error_t status = pksav_buffer_is_gen1_save(
+                                   gen1_save_data,
+                                   PKSAV_GEN1_SAVE_SIZE,
+                                   &ret
+                               );
+        if(status) {
+            return status;
+        }
     }
 
     free(gen1_save_data);
-    return ret;
+    *result_out = ret;
+    return PKSAV_ERROR_NONE;
 }
 
 pksav_error_t pksav_gen1_save_load(
     const char* filepath,
     pksav_gen1_save_t* gen1_save
 ) {
+    if(!filepath || !gen1_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Read the file and make sure it's valid
     FILE* gen1_save_file = fopen(filepath, "r");
     if(!gen1_save_file) {
@@ -118,7 +141,14 @@ pksav_error_t pksav_gen1_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    if(!pksav_buffer_is_gen1_save(gen1_save->raw, PKSAV_GEN1_SAVE_SIZE)) {
+    bool buffer_is_valid = false;
+    pksav_buffer_is_gen1_save(
+        gen1_save->raw,
+        PKSAV_GEN1_SAVE_SIZE,
+        &buffer_is_valid
+    );
+
+    if(!buffer_is_valid) {
         free(gen1_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
@@ -166,6 +196,10 @@ pksav_error_t pksav_gen1_save_save(
     const char* filepath,
     pksav_gen1_save_t* gen1_save
 ) {
+    if(!filepath || !gen1_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Make sure we can write to this file
     FILE* gen1_save_file = fopen(filepath, "w");
     if(!gen1_save_file) {
@@ -178,6 +212,18 @@ pksav_error_t pksav_gen1_save_save(
     // Write to file
     fwrite((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
     fclose(gen1_save_file);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen1_save_free(
+    pksav_gen1_save_t* gen1_save
+) {
+    if(!gen1_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    free(gen1_save->raw);
 
     return PKSAV_ERROR_NONE;
 }
