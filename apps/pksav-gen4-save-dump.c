@@ -109,6 +109,24 @@ int main(int argc, char* argv[]) {
            (int)pksav_littleendian16(gen4_save.pokemon_party->party[i].pc.blocks.blockA.ot_id.sid));
     }
 
+    char box_name[11];
+    printf("\nPokémon PC:\n");
+    for(uint8_t i = 0; i < 18; ++i) {
+        if(gen4_save.gen4_game == PKSAV_GEN4_HGSS) {
+            pksav_text_from_gen4(
+                gen4_save.pokemon_pc->hgss.box_names[i].name,
+                box_name, 11
+            );
+        } else {
+            pksav_text_from_gen4(
+                gen4_save.pokemon_pc->dppt.box_names[i].name,
+                box_name, 11
+            );
+        }
+
+        printf("Box %d (%s)\n", (int)(i+1), box_name);
+    }
+
     pksav_gen4_save_free(&gen4_save);
 
     return EXIT_SUCCESS;

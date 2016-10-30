@@ -216,7 +216,9 @@ static void _pksav_gen4_save_set_public_pointers(
                                    )
                                );
 
-    // TODO: PC
+    gen4_save->pokemon_pc = (pksav_gen4_pokemon_pc_t*)(
+                                gen4_save->storage_block
+                            );
 
     gen4_save->item_bag = (pksav_gen4_item_bag_t*)(
                               &GEN4_OFFSET_DATA(
