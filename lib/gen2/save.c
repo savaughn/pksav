@@ -125,13 +125,19 @@ static void _pksav_gen2_set_save_checksums(
     *((uint16_t*)&data[checksum2_index]) = checksums.second;
 }
 
-bool pksav_buffer_is_gen2_save(
+pksav_error_t pksav_buffer_is_gen2_save(
     const uint8_t* buffer,
     size_t buffer_len,
-    bool crystal
+    bool crystal,
+    bool* result_out
 ) {
+    if(!buffer || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     if(buffer_len < PKSAV_GEN2_SAVE_SIZE) {
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
@@ -153,16 +159,22 @@ bool pksav_buffer_is_gen2_save(
      * From what I've seen, valid Crystal saves don't always have both
      * checksums set correctly.
      */
-    return crystal ? (checksums.first == actual_checksum1 ||
-                      checksums.second == actual_checksum2)
-                   : (checksums.first == actual_checksum1 &&
-                      checksums.second == actual_checksum2);
+    *result_out = crystal ? (checksums.first == actual_checksum1 ||
+                             checksums.second == actual_checksum2)
+                          : (checksums.first == actual_checksum1 &&
+                             checksums.second == actual_checksum2);
+    return PKSAV_ERROR_NONE;
 }
 
-bool pksav_file_is_gen2_save(
+pksav_error_t pksav_file_is_gen2_save(
     const char* filepath,
-    bool crystal
+    bool crystal,
+    bool* result_out
 ) {
+    if(!filepath || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     FILE* gen2_save = fopen(filepath, "r");
     if(!gen2_save) {
         return false;
@@ -181,22 +193,33 @@ bool pksav_file_is_gen2_save(
     fclose(gen2_save);
 
     bool ret = false;
+    pksav_error_t error_code = PKSAV_ERROR_NONE;
     if(num_read == PKSAV_GEN2_SAVE_SIZE) {
-        ret = pksav_buffer_is_gen2_save(
-                  gen2_save_data,
-                  PKSAV_GEN2_SAVE_SIZE,
-                  crystal
-              );
+        error_code = pksav_buffer_is_gen2_save(
+                         gen2_save_data,
+                         PKSAV_GEN2_SAVE_SIZE,
+                         crystal,
+                         &ret
+                     );
+        if(error_code) {
+            free(gen2_save_data);
+            return error_code;
+        }
     }
 
+    *result_out = ret;
     free(gen2_save_data);
-    return ret;
+    return PKSAV_ERROR_NONE;
 }
 
 pksav_error_t pksav_gen2_save_load(
     const char* filepath,
     pksav_gen2_save_t* gen2_save
 ) {
+    if(!filepath || !gen2_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Read the file and make sure it's valid
     FILE* gen2_save_file = fopen(filepath, "r");
     if(!gen2_save_file) {
@@ -218,23 +241,38 @@ pksav_error_t pksav_gen2_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    if(pksav_buffer_is_gen2_save(
-           gen2_save->raw,
-           PKSAV_GEN2_SAVE_SIZE,
-           false
-       )
-    ) {
-        gen2_save->gen2_game = PKSAV_GEN2_GS;
-    } else if(pksav_buffer_is_gen2_save(
-                  gen2_save->raw,
-                  PKSAV_GEN2_SAVE_SIZE,
-                  true
-              )
-    ) {
-        gen2_save->gen2_game = PKSAV_GEN2_CRYSTAL;
-    } else {
+    pksav_error_t error_code = PKSAV_ERROR_NONE;
+    bool is_valid = false;
+
+    error_code = pksav_buffer_is_gen2_save(
+                     gen2_save->raw,
+                     PKSAV_GEN2_SAVE_SIZE,
+                     false,
+                     &is_valid
+                 );
+    if(error_code) {
         free(gen2_save->raw);
-        return PKSAV_ERROR_INVALID_SAVE;
+        return error_code;
+    } else if(is_valid) {
+        gen2_save->gen2_game = PKSAV_GEN2_GS;
+    }
+
+    if(!is_valid) {
+        error_code = pksav_buffer_is_gen2_save(
+                         gen2_save->raw,
+                         PKSAV_GEN2_SAVE_SIZE,
+                         true,
+                         &is_valid
+                     );
+        if(error_code) {
+            free(gen2_save->raw);
+            return error_code;
+        } else if(is_valid) {
+            gen2_save->gen2_game = PKSAV_GEN2_CRYSTAL;
+        } else {
+            free(gen2_save->raw);
+            return PKSAV_ERROR_INVALID_SAVE;
+        }
     }
 
     // Set pointers
@@ -258,6 +296,10 @@ pksav_error_t pksav_gen2_save_save(
     const char* filepath,
     pksav_gen2_save_t* gen2_save
 ) {
+    if(!filepath || !gen2_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Make sure we can write to this file
     FILE* gen2_save_file = fopen(filepath, "w");
     if(!gen2_save_file) {
@@ -273,6 +315,18 @@ pksav_error_t pksav_gen2_save_save(
     // Write to file
     fwrite((void*)gen2_save->raw, 1, PKSAV_GEN2_SAVE_SIZE, gen2_save_file);
     fclose(gen2_save_file);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen2_save_free(
+    pksav_gen2_save_t* gen2_save
+) {
+    if(!gen2_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    free(gen2_save->raw);
 
     return PKSAV_ERROR_NONE;
 }
