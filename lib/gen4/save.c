@@ -326,17 +326,13 @@ static void _pksav_gen4_save_set_public_pointers(
         gen4_save->hgss_kanto_badges = NULL;
     }
 
-    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-        gen4_save->trainer_card_signature = NULL;
-    } else {
-        gen4_save->trainer_card_signature = (pksav_trainer_card_signature_t*)(
-                                                &GEN4_OFFSET_DATA(
-                                                    PKSAV_GEN4_TRAINER_SIGNATURE,
-                                                    gen4_save->gen4_game,
-                                                    gen4_save->general_block
-                                                )
-                                            );
-    }
+    gen4_save->trainer_card_signature = (pksav_trainer_card_signature_t*)(
+                                            &GEN4_OFFSET_DATA(
+                                                PKSAV_GEN4_TRAINER_SIGNATURE,
+                                                gen4_save->gen4_game,
+                                                gen4_save->general_block
+                                            )
+                                        );
 }
 
 static void _pksav_gen4_save_set_block_checksums(
@@ -424,11 +420,29 @@ pksav_error_t pksav_gen4_save_load(
         gen4_save
     );
 
+    // Decrypt party
     for(uint8_t i = 0; i < 6; ++i) {
         pksav_nds_crypt_pokemon(
             &gen4_save->pokemon_party->party[i].pc,
             false
         );
+    }
+
+    // Decrypt PC
+    for(uint8_t i = 0; i < 18; ++i) {
+        for(uint8_t j = 0; j < 30; ++j) {
+            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
+                    false
+                );
+            } else {
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
+                    false
+                );
+            }
+        }
     }
 
     return PKSAV_ERROR_NONE;
@@ -444,6 +458,7 @@ pksav_error_t pksav_gen4_save_save(
         return PKSAV_ERROR_FILE_IO;
     }
 
+    // Encrypt party
     for(uint8_t i = 0; i < 6; ++i) {
         pksav_nds_pokemon_set_checksum(
             &gen4_save->pokemon_party->party[i].pc
@@ -453,6 +468,31 @@ pksav_error_t pksav_gen4_save_save(
             true
         );
     }
+
+    // Encrypt PC
+    for(uint8_t i = 0; i < 18; ++i) {
+        for(uint8_t j = 0; j < 30; ++j) {
+            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+                pksav_nds_pokemon_set_checksum(
+                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j]
+                );
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
+                    true
+                );
+            } else {
+                pksav_nds_pokemon_set_checksum(
+                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j]
+                );
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
+                    true
+                );
+            }
+        }
+    }
+
+    // Set save checksums
     _pksav_gen4_save_set_block_checksums(gen4_save);
 
     // Write to file

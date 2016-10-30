@@ -125,6 +125,14 @@ int main(int argc, char* argv[]) {
         }
 
         printf("Box %d (%s)\n", (int)(i+1), box_name);
+
+        for(uint8_t j = 0; j < 30; ++j) {
+            pksav_text_from_gen4(
+                gen4_save.pokemon_pc->hgss.boxes[i].entries[j].blocks.blockC.nickname,
+                nickname, 10
+            );
+            printf(" * %s\n", nickname);
+        }
     }
 
     pksav_gen4_save_free(&gen4_save);
