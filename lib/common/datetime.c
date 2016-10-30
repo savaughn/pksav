@@ -11,6 +11,10 @@ pksav_error_t pksav_time_t_to_date_t(
     const time_t* time_in,
     pksav_date_t* date_out
 ) {
+    if(!time_in || !date_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     struct tm* gmtm = gmtime(time_in);
     if(gmtm->tm_year < 2000) {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
@@ -27,6 +31,10 @@ pksav_error_t pksav_time_t_to_uint32_t(
     const time_t* time_in,
     uint32_t* uint32_out
 ) {
+    if(!time_in || !uint32_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     struct tm* gmtm = gmtime(time_in);
     if(gmtm->tm_year < 2000) {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;

@@ -10,25 +10,38 @@
 #include <math.h>
 #include <time.h>
 
-void pksav_mtrng_populate(
+pksav_error_t pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 ) {
+    if(!mtrng) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     srand((unsigned int)time(NULL));
     for(size_t i = 0; i < 624; ++i) {
         mtrng->nums[i] = (uint32_t)rand();
     }
     mtrng->index = 0;
+
+    return PKSAV_ERROR_NONE;
 }
 
-uint32_t pksav_mtrng_next(
-    pksav_mtrng_t* mtrng
+pksav_error_t pksav_mtrng_next(
+    pksav_mtrng_t* mtrng,
+    uint32_t* next_out
 ) {
+    if(!mtrng || !next_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     uint32_t ret = mtrng->nums[mtrng->index];
     if(mtrng->index == 623) {
-        pksav_mtrng_populate(mtrng);
+        (void)pksav_mtrng_populate(mtrng);
     } else {
         ++mtrng->index;
     }
 
-    return ret;
+    *next_out = ret;
+
+    return PKSAV_ERROR_NONE;
 }

@@ -12,7 +12,8 @@ static const char* pksav_error_strs[] = {
     "File I/O error",
     "Parameter out of range",
     "Invalid stat enum",
-    "Invalid save file"
+    "Invalid save file",
+    "Null pointer passed as parameter"
 };
 
 const char* pksav_strerror(

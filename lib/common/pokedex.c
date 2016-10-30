@@ -18,20 +18,31 @@ static PKSAV_INLINE void _pksav_get_pokedex_bit_pos(
     *mask  = (uint8_t)(pow(2.0, ((pokedex_num-1)%8)));
 }
 
-bool pksav_get_pokedex_bit(
+pksav_error_t pksav_get_pokedex_bit(
     const uint8_t* raw,
-    uint16_t pokedex_num
+    uint16_t pokedex_num,
+    bool* result_out
 ) {
+    if(!raw) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     uint8_t index, mask;
     _pksav_get_pokedex_bit_pos(pokedex_num, &index, &mask);
-    return (bool)(raw[index] & mask);
+    *result_out = (bool)(raw[index] & mask);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void set_pokedex_bit(
+pksav_error_t set_pokedex_bit(
     uint8_t* raw,
     uint16_t pokedex_num,
     bool set
 ) {
+    if(!raw) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     uint8_t index, mask;
     _pksav_get_pokedex_bit_pos(pokedex_num, &index, &mask);
     if(set) {
@@ -39,4 +50,6 @@ void set_pokedex_bit(
     } else {
         raw[index] &= ~mask;
     }
+
+    return PKSAV_ERROR_NONE;
 }

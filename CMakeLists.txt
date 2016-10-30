@@ -98,7 +98,7 @@ ENDIF(PKSAV_ENABLE_DOCS)
 
 IF(PKSAV_ENABLE_TESTS)
     ENABLE_TESTING()
-    ADD_SUBDIRECTORY(tests)
+    ADD_SUBDIRECTORY(testing)
 ENDIF(PKSAV_ENABLE_TESTS)
 
 ####################################################################

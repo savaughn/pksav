@@ -206,27 +206,36 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
 
-void pksav_text_from_gen4(
+pksav_error_t pksav_text_from_gen4(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
 ) {
-    memset(output_text, 0, num_chars);
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
 
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     pksav_widetext_from_gen4(
         input_buffer, widetext, num_chars
     );
 
+    memset(output_text, 0, num_chars);
     wcstombs(output_text, widetext, num_chars);
     free(widetext);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_from_gen4(
+pksav_error_t pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
 ) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_text, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
@@ -238,13 +247,19 @@ void pksav_widetext_from_gen4(
             output_text[i] = pksav_gen4_char_map2[input_buffer[i]];
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_text_to_gen4(
+pksav_error_t pksav_text_to_gen4(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     mbstowcs(widetext, input_text, num_chars);
 
@@ -253,13 +268,19 @@ void pksav_text_to_gen4(
     );
 
     free(widetext);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_to_gen4(
+pksav_error_t pksav_widetext_to_gen4(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_buffer, 0xFF, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
@@ -270,4 +291,6 @@ void pksav_widetext_to_gen4(
             output_buffer[i] = (uint16_t)index;
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }

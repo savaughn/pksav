@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+REPO_TOPLEVEL=$PWD
+mkdir travis-env
+cd travis-env
+
+if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+
+echo
+
+else
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential cmake clang gcc \
+                            gcc-mingw-w64-x86-64
+fi
