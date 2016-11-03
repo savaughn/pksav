@@ -8,5 +8,5 @@
 SET(pksav_gen2_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/save.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/time_of_day.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/time.c
 PARENT_SCOPE)

@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pksav/gen2/time_of_day.h>
+#include <pksav/gen2/time.h>
 
 void pksav_gen2_set_caught_data_time_field(
     const time_t* time_in,

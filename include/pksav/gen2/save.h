@@ -13,30 +13,13 @@
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/text.h>
+#include <pksav/gen2/time.h>
 
 #include <pksav/math/bcd.h>
 #include <pksav/math/endian.h>
 
 #include <stdbool.h>
 #include <stdint.h>
-
-/*
- * Structures exclusive to Generation II games
- */
-#pragma pack(push,1)
-
-typedef struct {
-    uint8_t hours;
-    uint8_t minutes;
-    uint8_t seconds;
-    uint8_t frames;
-} pksav_gen2_time_t;
-
-#pragma pack(pop)
-
-/*
- * Savefile size and locations of fields within file
- */
 
 typedef enum {
     PKSAV_GEN2_MALE = 0,
