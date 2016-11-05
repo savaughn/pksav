@@ -12,6 +12,7 @@
 #define PKSAV_MATH_BCD_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -24,20 +25,25 @@ extern "C" {
 /*!
  * \param buffer where BCD number is stored
  * \param num_bytes number of bytes to convert
- * \returns converted Base-10 number
+ * \param result_out converted Base-10 number
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API size_t pksav_from_bcd(
+PKSAV_API pksav_error_t pksav_from_bcd(
     const uint8_t* buffer,
-    size_t num_bytes
+    size_t num_bytes,
+    uint32_t* result_out
 );
 
 //! Convert a Base-10 number to binary-coded decimal (BCD).
 /*!
  * \param num Base-10 number to convert
  * \param buffer_out where to place converted BCD number
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if buffer_out is NULL
  */
-PKSAV_API void pksav_to_bcd(
-    size_t num,
+PKSAV_API pksav_error_t pksav_to_bcd(
+    uint32_t num,
     uint8_t* buffer_out
 );
 

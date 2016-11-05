@@ -325,13 +325,13 @@ static void _pksav_gba_save_set_pointers(
         gba_save->frlg_nat_pokedex_unlockedA = NULL;
     }
 
-    gba_save->nat_pokedex_unlockedB = &SECTION0_DATA8(
+    gba_save->nat_pokedex_unlockedB = &SECTION2_DATA8(
                                           gba_save->unshuffled,
                                           gba_save->gba_game,
                                           PKSAV_GBA_NAT_POKEDEX_B
                                       );
 
-    gba_save->nat_pokedex_unlockedC = &SECTION0_DATA16(
+    gba_save->nat_pokedex_unlockedC = &SECTION2_DATA16(
                                           gba_save->unshuffled,
                                           gba_save->gba_game,
                                           PKSAV_GBA_NAT_POKEDEX_C

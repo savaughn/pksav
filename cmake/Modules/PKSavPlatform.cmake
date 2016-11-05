@@ -23,11 +23,12 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKSAV_GCC OR PKSAV_CLANG)
-    SET(PKSAV_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -fvisibility=hidden")
+    SET(PKSAV_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
 ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
+    ADD_DEFINITIONS(/WX)                       # Warnings become errors
 ENDIF(PKSAV_GCC OR PKSAV_CLANG)
 
 #
@@ -64,6 +65,9 @@ CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
 IF(NOT HAVE_STDINT_H)
     MESSAGE(FATAL_ERROR "PKSav requires the header stdint.h to compile.")
 ENDIF(NOT HAVE_STDINT_H)
+
+# Checks for platform-specific headers
+CHECK_INCLUDE_FILE(unistd.h HAVE_UNISTD_H)
 
 # Set compiler name for CMake display
 IF(MSVC)

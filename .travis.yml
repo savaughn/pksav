@@ -1,0 +1,13 @@
+os:
+ - linux
+ - osx
+
+sudo: required
+dist: trusty
+
+before_install:
+  - git submodule update --init --recursive
+  - bash testing/travis-scripts/install-deps.sh
+
+script:
+  - bash testing/travis-scripts/build-test.sh

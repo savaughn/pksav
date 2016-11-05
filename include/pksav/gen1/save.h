@@ -230,11 +230,15 @@ extern "C" {
  * This is determining by checking the data's checksum.
  *
  * \param buffer buffer to be checked
- * \returns true if the buffer is a valid Generation I save file, false otherwise
+ * \param buffer_len length of the buffer passed in
+ * \param result_out whether or not the given buffer has a valid Generation I save file
+ * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API bool pksav_buffer_is_gen1_save(
+PKSAV_API pksav_error_t pksav_buffer_is_gen1_save(
     const uint8_t* buffer,
-    size_t buffer_len
+    size_t buffer_len,
+    bool* result_out
 );
 
 /*!
@@ -243,10 +247,13 @@ PKSAV_API bool pksav_buffer_is_gen1_save(
  * This is determined simply by checking the file's checksum.
  *
  * \param filepath path to the file to be checked
- * \returns true if the file is a valid Generation I save file, false otherwise
+ * \param result_out whether or not the given buffer has a valid Generation I save file
+ * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API bool pksav_file_is_gen1_save(
-    const char* filepath
+PKSAV_API pksav_error_t pksav_file_is_gen1_save(
+    const char* filepath,
+    bool* result_out
 );
 
 /*!
@@ -257,6 +264,7 @@ PKSAV_API bool pksav_file_is_gen1_save(
  * \param filepath path to the file to be loaded
  * \param gen1_save PKSav struct in which to load file
  * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen1_save is NULL
  * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs reading the file
  * \returns ::PKSAV_ERROR_INVALID_SAVE if the given file is not a valid Generation I save file
  */
@@ -273,6 +281,7 @@ PKSAV_API pksav_error_t pksav_gen1_save_load(
  * \param filepath where the save file should be written
  * \param gen1_save the same to be written
  * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen1_save is NULL
  * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs writing the file
  */
 PKSAV_API pksav_error_t pksav_gen1_save_save(
@@ -284,12 +293,12 @@ PKSAV_API pksav_error_t pksav_gen1_save_save(
  * @brief Frees memory allocated for a pksav_gen1_save_t.
  *
  * \param gen1_save save whose memory should be freed
+ * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if gen1_save is NULL
  */
-static PKSAV_INLINE void pksav_gen1_save_free(
+PKSAV_API pksav_error_t pksav_gen1_save_free(
     pksav_gen1_save_t* gen1_save
-) {
-    free(gen1_save->raw);
-}
+);
 
 #ifdef __cplusplus
 }

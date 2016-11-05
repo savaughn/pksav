@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "pksav_getopt.h"
+
 #include <pksav/gba.h>
 
 #include <stdio.h>
@@ -18,11 +20,10 @@ static const char* GBA_GAME_NAMES[] = {
 int main(int argc, char* argv[]) {
     printf("PKSav - Game Boy Advance Save Dump\n\n");
 
-    if(argc != 2) {
-        fprintf(stderr, "Usage: pksav-gba-save-dump <filename>\n");
+    if(pksav_getopt(argc, argv)) {
+        return EXIT_FAILURE;
     }
 
-    const char* filepath = argv[1];
     printf("Attempting to load file at \"%s\"...", filepath);
 
     pksav_gba_save_t gba_save;
@@ -35,7 +36,6 @@ int main(int argc, char* argv[]) {
     }
 
     char trainer_name[8];
-    memset(trainer_name, 0, 8);
     pksav_text_from_gba(
         gba_save.trainer_info->name,
         trainer_name, 7
@@ -62,59 +62,64 @@ int main(int argc, char* argv[]) {
     }
 
     char nickname[11];
-    char otname[8];
-    memset(nickname, 0, 11);
-    memset(otname, 0, 8);
-    printf("\nPokémon Party (size %u):\n", pksav_littleendian32(gba_save.pokemon_party->count));
-    for(uint8_t i = 0; i < gba_save.pokemon_party->count; ++i) {
-        if(gba_save.pokemon_party->party[i].pc.blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
-            puts(" * EGG");
-        } else {
-            pksav_text_from_gba(
-                gba_save.pokemon_party->party[i].pc.nickname,
-                nickname, 10
-            );
-            printf(" * %s\n", nickname);
-        }
-        printf("   * Level: %d\n", gba_save.pokemon_party->party[i].party_data.level);
-
-        pksav_text_from_gba(
-            gba_save.pokemon_party->party[i].pc.otname,
-            otname, 7
-        );
-        printf("   * OT: %s (%05d)\n", otname, pksav_littleendian16(gba_save.pokemon_party->party[i].pc.ot_id.pid));
-    }
-
-    for(uint8_t i = 0; i < 14; ++i) {
-        char box_name[9];
-        memset(box_name, 0, 9);
-        pksav_text_from_gba(
-            gba_save.pokemon_pc->box_names[i],
-            box_name, 9
-        );
-
-        printf("\nPokémon Box %d (%s):\n", (i+1), box_name);
-
-        for(uint8_t j = 0; j < 30; ++j) {
-            if(gba_save.pokemon_pc->boxes[i].entries[j].ot_id.id == 0) {
-                continue;
-            }
-
-            if(gba_save.pokemon_pc->boxes[i].entries[j].blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
+    if(pksav_getopt_party || pksav_getopt_all) {
+        printf("\nPokémon Party (size %u):\n", pksav_littleendian32(gba_save.pokemon_party->count));
+        for(uint8_t i = 0; i < gba_save.pokemon_party->count; ++i) {
+            if(gba_save.pokemon_party->party[i].pc.blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
                 puts(" * EGG");
             } else {
                 pksav_text_from_gba(
-                    gba_save.pokemon_pc->boxes[i].entries[j].nickname,
+                    gba_save.pokemon_party->party[i].pc.nickname,
                     nickname, 10
                 );
                 printf(" * %s\n", nickname);
             }
+            printf("   * Level: %d\n", gba_save.pokemon_party->party[i].party_data.level);
+
             pksav_text_from_gba(
-                gba_save.pokemon_pc->boxes[i].entries[j].otname,
-                otname, 7
+                gba_save.pokemon_party->party[i].pc.otname,
+                trainer_name, 7
             );
-            printf("   * OT: %s (%05d)\n", otname, pksav_littleendian16(gba_save.pokemon_pc->boxes[i].entries[j].ot_id.pid));
+            printf("   * OT: %s (%05d)\n", trainer_name, pksav_littleendian16(gba_save.pokemon_party->party[i].pc.ot_id.pid));
         }
+    }
+
+    if(pksav_getopt_pc || pksav_getopt_all) {
+        for(uint8_t i = 0; i < 14; ++i) {
+            char box_name[9];
+            memset(box_name, 0, 9);
+            pksav_text_from_gba(
+                gba_save.pokemon_pc->box_names[i],
+                box_name, 9
+            );
+
+            printf("\nPokémon Box %d (%s):\n", (i+1), box_name);
+
+            for(uint8_t j = 0; j < 30; ++j) {
+                if(gba_save.pokemon_pc->boxes[i].entries[j].ot_id.id == 0) {
+                    continue;
+                }
+
+                if(gba_save.pokemon_pc->boxes[i].entries[j].blocks.misc.iv_egg_ability & PKSAV_GBA_EGG_MASK) {
+                    puts(" * EGG");
+                } else {
+                    pksav_text_from_gba(
+                        gba_save.pokemon_pc->boxes[i].entries[j].nickname,
+                        nickname, 10
+                    );
+                    printf(" * %s\n", nickname);
+                }
+                pksav_text_from_gba(
+                    gba_save.pokemon_pc->boxes[i].entries[j].otname,
+                    trainer_name, 7
+                );
+                printf("   * OT: %s (%05d)\n", trainer_name, pksav_littleendian16(gba_save.pokemon_pc->boxes[i].entries[j].ot_id.pid));
+            }
+        }
+    }
+
+    if(pksav_getopt_items || pksav_getopt_all) {
+        // TODO
     }
 
     pksav_gba_save_free(&gba_save);

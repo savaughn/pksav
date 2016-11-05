@@ -66,15 +66,17 @@ typedef struct {
 extern "C" {
 #endif
 
-PKSAV_API bool pksav_buffer_is_gen2_save(
+PKSAV_API pksav_error_t pksav_buffer_is_gen2_save(
     const uint8_t* buffer,
     size_t buffer_len,
-    bool crystal
+    bool crystal,
+    bool* result_out
 );
 
-PKSAV_API bool pksav_file_is_gen2_save(
+PKSAV_API pksav_error_t pksav_file_is_gen2_save(
     const char* filepath,
-    bool crystal
+    bool crystal,
+    bool* result_out
 );
 
 PKSAV_API pksav_error_t pksav_gen2_save_load(
@@ -87,11 +89,9 @@ PKSAV_API pksav_error_t pksav_gen2_save_save(
     pksav_gen2_save_t* gen2_save
 );
 
-static PKSAV_INLINE void pksav_gen2_save_free(
+PKSAV_API pksav_error_t pksav_gen2_save_free(
     pksav_gen2_save_t* gen2_save
-) {
-    free(gen2_save->raw);
-}
+);
 
 #ifdef __cplusplus
 }

@@ -11,6 +11,10 @@
 
 #include <stdlib.h>
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 ssize_t wchar_map_index(
     const wchar_t* char_map,
     size_t char_map_size,

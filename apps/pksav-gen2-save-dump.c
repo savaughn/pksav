@@ -45,11 +45,13 @@ int main(int argc, char* argv[]) {
                                          gen2_save.time_played->seconds,
                                          gen2_save.time_played->frames);
 
-    size_t money = pksav_from_bcd(
-                       gen2_save.money,
-                       3
-                   );
-    printf("Money: %zu\n", money);
+    uint32_t money = 0;
+    error_code = pksav_from_bcd(
+                     gen2_save.money,
+                     3,
+                     &money
+                 );
+    printf("Money: %u\n", money);
 
     char rival_name[7];
     pksav_text_from_gen2(
