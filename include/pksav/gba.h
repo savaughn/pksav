@@ -23,6 +23,7 @@
 #include <pksav/common/condition.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/gen3_ribbons.h>
+#include <pksav/common/item.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/nature.h>
 #include <pksav/common/pokedex.h>

@@ -9,6 +9,8 @@
 
 #include <stdint.h>
 
+#include <pksav/common/item.h>
+
 #pragma pack(push,1)
 
 //! Internal representation of an item slot in a Game Boy Advance game.
