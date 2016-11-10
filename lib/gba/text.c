@@ -49,27 +49,36 @@ static const wchar_t pksav_gba_char_map[] = {
     0x003A,0x00C4,0x00D6,0x00DC,0x00E4,0x00F6,0x00F6,0x2B06,0x2B07,0x2B05,'\0','\0','\0','\0','\n','\0'
 };
 
-void pksav_text_from_gba(
+pksav_error_t pksav_text_from_gba(
     const uint8_t* input_buffer,
     char* output_text,
     size_t num_chars
 ) {
-    memset(output_text, 0, num_chars);
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
 
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     pksav_widetext_from_gba(
         input_buffer, widetext, num_chars
     );
 
+    memset(output_text, 0, num_chars);
     wcstombs(output_text, widetext, num_chars);
     free(widetext);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_from_gba(
+pksav_error_t pksav_widetext_from_gba(
     const uint8_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
 ) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_text, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
@@ -79,13 +88,19 @@ void pksav_widetext_from_gba(
             output_text[i] = pksav_gba_char_map[input_buffer[i]];
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_text_to_gba(
+pksav_error_t pksav_text_to_gba(
     const char* input_text,
     uint8_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     mbstowcs(widetext, input_text, num_chars);
 
@@ -94,13 +109,19 @@ void pksav_text_to_gba(
     );
 
     free(widetext);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_to_gba(
+pksav_error_t pksav_widetext_to_gba(
     const wchar_t* input_text,
     uint8_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
@@ -111,4 +132,6 @@ void pksav_widetext_to_gba(
             output_buffer[i] = (uint8_t)index;
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }

@@ -26,6 +26,7 @@ extern "C" {
  *
  * \param raw Pokédex buffer
  * \param pokedex_num Which Pokémon to check
+ * \param result_out where result is returned
  * \returns if Pokémon with the given Pokédex number has been seen/caught
  */
 PKSAV_API pksav_error_t pksav_get_pokedex_bit(

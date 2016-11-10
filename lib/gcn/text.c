@@ -27,11 +27,15 @@ static PKSAV_INLINE void ucs2be_wctomb(
     mb[1] = (uint8_t)(*wc);
 }
 
-void pksav_text_from_gcn(
+pksav_error_t pksav_text_from_gcn(
     const uint32_t* input_buffer,
     char* output_text,
     size_t num_chars
 ) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_text, 0, num_chars);
 
     for(size_t i = 0; i < (num_chars/2); ++i) {
@@ -44,41 +48,58 @@ void pksav_text_from_gcn(
             ucs2be_wctomb(&input_buffer[i], (uint8_t*)&output_text[2*i]);
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_from_gcn(
+pksav_error_t pksav_widetext_from_gcn(
     const uint32_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
 ) {
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
 
     char* text = malloc(num_chars);
     pksav_text_from_gcn(
         input_buffer, text, num_chars
     );
 
+    memset(output_text, 0, sizeof(wchar_t)*num_chars);
     mbstowcs(output_text, text, num_chars);
     free(text);
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_text_to_gcn(
+pksav_error_t pksav_text_to_gcn(
     const char* input_text,
     uint32_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_buffer, 0xFFFF, 4*num_chars);
 
     for(size_t i = 0; i < num_chars; i += 2) {
         ucs2be_mbtowc((const uint8_t*)&input_text[i], &output_buffer[2*i]);
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_widetext_to_gcn(
+pksav_error_t pksav_widetext_to_gcn(
     const wchar_t* input_text,
     uint32_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     char* text = malloc(num_chars);
     wcstombs(text, input_text, num_chars);
 
@@ -87,4 +108,6 @@ void pksav_widetext_to_gcn(
     );
 
     free(text);
+
+    return PKSAV_ERROR_NONE;
 }

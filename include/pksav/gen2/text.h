@@ -12,6 +12,7 @@
 #define PKSAV_GEN2_TEXT_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -31,8 +32,10 @@ extern "C" {
  * \param input_buffer Generation II string
  * \param output_text output buffer in which to place converted text
  * \param num_chars the number of characters to convert
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API void pksav_text_from_gen2(
+PKSAV_API pksav_error_t pksav_text_from_gen2(
     const uint8_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -49,8 +52,10 @@ PKSAV_API void pksav_text_from_gen2(
  * \param input_buffer Generation II string
  * \param output_text output buffer in which to place converted text
  * \param num_chars the number of characters to convert
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API void pksav_widetext_from_gen2(
+PKSAV_API pksav_error_t pksav_widetext_from_gen2(
     const uint8_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -67,8 +72,10 @@ PKSAV_API void pksav_widetext_from_gen2(
  * \param input_text C string to convert
  * \param output_buffer output buffer in which to place Generation II string
  * \param num_chars the number of characters to convert
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API void pksav_text_to_gen2(
+PKSAV_API pksav_error_t pksav_text_to_gen2(
     const char* input_text,
     uint8_t* output_buffer,
     size_t num_chars
@@ -85,8 +92,10 @@ PKSAV_API void pksav_text_to_gen2(
  * \param input_text C string to convert
  * \param output_buffer output buffer in which to place Generation II string
  * \param num_chars the number of characters to convert
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API void pksav_widetext_to_gen2(
+PKSAV_API pksav_error_t pksav_widetext_to_gen2(
     const wchar_t* input_text,
     uint8_t* output_buffer,
     size_t num_chars
