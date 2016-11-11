@@ -103,6 +103,7 @@ pksav_error_t pksav_file_is_gen1_save(
                                    &ret
                                );
         if(status) {
+            free(gen1_save_data);
             return status;
         }
     }
