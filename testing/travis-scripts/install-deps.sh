@@ -7,8 +7,6 @@
 #
 
 REPO_TOPLEVEL=$PWD
-mkdir travis-env
-cd travis-env
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
