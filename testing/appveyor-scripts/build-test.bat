@@ -20,6 +20,11 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
     set PATH=c:\projects\pksav\test-env\build\lib\Debug;"%PATH%"
     set PATH=c:\projects\pksav\test-env\build\apps\Debug;"%PATH%"
 
+    @echo on
+
+    where pksav-gen1-save-dump
+    where pksav-gen2-save-dump
+
     pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
     if not %ERRORLEVEL%==0 goto fail
 
