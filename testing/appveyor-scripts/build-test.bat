@@ -5,7 +5,7 @@ mkdir c:\projects\pksav\test-env\build
 cd c:\projects\pksav\test-env\build
 if not %ERRORLEVEL%==0 goto fail
 
-cmake -G "%CMAKE_DASH_G%" -DCMAKE_BUILD_TYPE=Debug ..\..
+cmake -G "%CMAKE_DASH_G%" ..\..
 if not %ERRORLEVEL%==0 goto fail
 
 msbuild ALL_BUILD.vcxproj
