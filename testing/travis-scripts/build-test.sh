@@ -6,10 +6,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-# For testing
-echo
-exit 0
-
 REPO_TOPLEVEL=$PWD
 mkdir -p test-env
 cd test-env
@@ -37,13 +33,13 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     DYLD_LIBRARY_PATH=$PWD/build/lib:$OLD_DYLD_LIBRARY_PATH
 
     # App testing
-    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
+    /usr/local/opt/valgrind/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
     [ $? -ne 0 ] && exit 1
-    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
+    /usr/local/opt/valgrind/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
     [ $? -ne 0 ] && exit 1
-    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
+    /usr/local/opt/valgrind/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
     [ $? -ne 0 ] && exit 1
-    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+    /usr/local/opt/valgrind/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
     [ $? -ne 0 ] && exit 1
 else
     # Check source

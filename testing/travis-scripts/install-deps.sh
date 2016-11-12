@@ -16,9 +16,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     brew --prefix valgrind
     brew info valgrind
 
-    ls -l /usr/local/bin | grep valgrind
-    ls -l /usr/local/opt/valgrind
-
 else
     sudo apt-get -y update
     sudo apt-get -y install build-essential cmake clang gcc \
