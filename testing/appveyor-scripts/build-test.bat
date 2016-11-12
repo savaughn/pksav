@@ -20,16 +20,16 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
     set SAVEDIR=c:\projects\pksav\testing\pksav-test-saves
     set PATH="%PATH%";c:\projects\pksav\test-env\build\lib\Debug;c:\projects\pksav\test-env\build\apps\Debug
 
-    pksav-gen1-save-dump --all --input="%SAVEDIR%\red_blue\pokemon_red.sav"
+    start /WAIT pksav-gen1-save-dump --all --input="%SAVEDIR%\red_blue\pokemon_red.sav"
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen1-save-dump --all --input="%SAVEDIR%\yellow\pokemon_yellow.sav"
+    start /WAIT pksav-gen1-save-dump --all --input="%SAVEDIR%\yellow\pokemon_yellow.sav"
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen2-save-dump "%SAVEDIR%\gold_silver\pokemon_gold.sav"
+    start /WAIT pksav-gen2-save-dump "%SAVEDIR%\gold_silver\pokemon_gold.sav"
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen2-save-dump "%SAVEDIR%\crystal\pokemon_crystal.sav"
+    start /WAIT pksav-gen2-save-dump "%SAVEDIR%\crystal\pokemon_crystal.sav"
     if not %ERRORLEVEL%==0 goto fail
 )
 
