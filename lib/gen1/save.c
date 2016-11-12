@@ -103,6 +103,7 @@ pksav_error_t pksav_file_is_gen1_save(
                                    &ret
                                );
         if(status) {
+            free(gen1_save_data);
             return status;
         }
     }
@@ -121,7 +122,7 @@ pksav_error_t pksav_gen1_save_load(
     }
 
     // Read the file and make sure it's valid
-    FILE* gen1_save_file = fopen(filepath, "r");
+    FILE* gen1_save_file = fopen(filepath, "rb");
     if(!gen1_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -201,7 +202,7 @@ pksav_error_t pksav_gen1_save_save(
     }
 
     // Make sure we can write to this file
-    FILE* gen1_save_file = fopen(filepath, "w");
+    FILE* gen1_save_file = fopen(filepath, "wb");
     if(!gen1_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }

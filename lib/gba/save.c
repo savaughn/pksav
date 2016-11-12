@@ -343,7 +343,7 @@ pksav_error_t pksav_gba_save_load(
     pksav_gba_save_t* gba_save
 ) {
     // Read the file and make sure it's valid
-    FILE* gba_save_file = fopen(filepath, "r");
+    FILE* gba_save_file = fopen(filepath, "rb");
     if(!gba_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -401,7 +401,7 @@ pksav_error_t pksav_gba_save_save(
     pksav_gba_save_t* gba_save
 ) {
     // Make sure we can write to this file
-    FILE* gba_save_file = fopen(filepath, "w");
+    FILE* gba_save_file = fopen(filepath, "wb");
     if(!gba_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
