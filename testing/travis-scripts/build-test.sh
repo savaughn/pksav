@@ -39,7 +39,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
     [ $? -ne 0 ] && exit 1
-    -gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+    pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
     [ $? -ne 0 ] && exit 1
 else
     # Check source
