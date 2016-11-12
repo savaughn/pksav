@@ -12,6 +12,7 @@ cd test-env
 [ $? -ne 0 ] && exit 1
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+    # Compile test
     mkdir -p build
     cmake $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
@@ -19,6 +20,21 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     ctest --output-on-failure
 
+    # Set up runtime testing
+    cd $REPO_TOPLEVEL
+    SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
+    PATH=$PWD/$dir/apps:$OLD_PATH
+    LD_LIBRARY_PATH=$PWD/$dir/lib:$OLD_LD_LIBRARY_PATH
+
+    # App testing
+    valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
+    [ $? -ne 0 ] && exit 1
+    valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
+    [ $? -ne 0 ] && exit 1
+    valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
+    [ $? -ne 0 ] && exit 1
+    valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+    [ $? -ne 0 ] && exit 1
 else
     # Check source
     find $REPO_TOPLEVEL -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
@@ -59,14 +75,14 @@ else
 
     # Set up runtime testing
     cd $REPO_TOPLEVEL/test-env
-    export SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
+    SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
     OLD_PATH=$PATH
     OLD_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 
     for dir in gcc clang
     do
-        export PATH=$PWD/$dir/apps:$OLD_PATH
-        export LD_LIBRARY_PATH=$PWD/$dir/lib:$OLD_LD_LIBRARY_PATH
+        PATH=$PWD/$dir/apps:$OLD_PATH
+        LD_LIBRARY_PATH=$PWD/$dir/lib:$OLD_LD_LIBRARY_PATH
 
         # App testing
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
@@ -78,6 +94,6 @@ else
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
         [ $? -ne 0 ] && exit 1
     done
-
-    echo # So we can check the last Valgrind for an error code
 fi
+
+echo # So we can check the last Valgrind for an error code
