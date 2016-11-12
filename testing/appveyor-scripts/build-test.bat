@@ -22,19 +22,16 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
 
     @echo on
 
-    where pksav-gen1-save-dump
-    where pksav-gen2-save-dump
-
-    pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
+    call pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
+    call pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
+    call pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
+    call pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
     if not %ERRORLEVEL%==0 goto fail
 )
 
