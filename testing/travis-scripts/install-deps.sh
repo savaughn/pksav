@@ -12,7 +12,8 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
     brew update
     brew install doxygen valgrind
-    brew link valgrind
+    brew info valgrind
+    brew --prefix valgrind
 
 else
     sudo apt-get -y update

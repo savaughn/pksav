@@ -19,12 +19,16 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     make
     [ $? -ne 0 ] && exit 1
     ctest --output-on-failure
+    [ $? -ne 0 ] && exit 1
 
     # Set up runtime testing
     cd $REPO_TOPLEVEL
     SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
+    OLD_PATH=$PATH
+    OLD_DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+    
     PATH=$PWD/build/apps:$OLD_PATH
-    LD_LIBRARY_PATH=$PWD/build/lib:$OLD_LD_LIBRARY_PATH
+    DYLD_LIBRARY_PATH=$PWD/build/lib:$OLD_DYLD_LIBRARY_PATH
 
     # App testing
     if [ `whereis valgrind` ]
