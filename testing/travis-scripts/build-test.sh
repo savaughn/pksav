@@ -37,9 +37,9 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
     [ $? -ne 0 ] && exit 1
-    pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
+    pksav-gen2-save-dump --all --input=$SAVEDIR/gold_silver/pokemon_gold.sav
     [ $? -ne 0 ] && exit 1
-    pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+    pksav-gen2-save-dump --all --input=$SAVEDIR/crystal/pokemon_crystal.sav
     [ $? -ne 0 ] && exit 1
     pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
     [ $? -ne 0 ] && exit 1
@@ -101,9 +101,9 @@ else
         [ $? -ne 0 ] && exit 1
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
         [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
+        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump --all --input=$SAVEDIR/gold_silver/pokemon_gold.sav
         [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump --all --input=$SAVEDIR/crystal/pokemon_crystal.sav
         [ $? -ne 0 ] && exit 1
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
         [ $? -ne 0 ] && exit 1

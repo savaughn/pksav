@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
                  );
     printf("Money: %u\n", money);
 
-    char rival_name[7] = {0};
+    char rival_name[8] = {0};
     pksav_text_from_gen1(
         gen1_save.rival_name,
         rival_name, 7
