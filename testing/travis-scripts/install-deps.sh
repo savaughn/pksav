@@ -7,15 +7,15 @@
 #
 
 REPO_TOPLEVEL=$PWD
-mkdir travis-env
-cd travis-env
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
-echo
+    brew update
+    brew install doxygen
 
 else
     sudo apt-get -y update
     sudo apt-get -y install build-essential cmake clang gcc \
-                            gcc-mingw-w64-x86-64
+                            gcc-mingw-w64-x86-64 cppcheck \
+                            valgrind doxygen
 fi

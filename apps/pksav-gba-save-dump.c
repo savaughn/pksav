@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
         printf("found %s save file.\n\n", GBA_GAME_NAMES[gba_save.gba_game]);
     }
 
-    char trainer_name[8];
+    char trainer_name[8] = {0};
     pksav_text_from_gba(
         gba_save.trainer_info->name,
         trainer_name, 7
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
         printf("Rival: %s\n", rival_name);
     }
 
-    char nickname[11];
+    char nickname[11] = {0};
     if(pksav_getopt_party || pksav_getopt_all) {
         printf("\nPokémon Party (size %u):\n", pksav_littleendian32(gba_save.pokemon_party->count));
         for(uint8_t i = 0; i < gba_save.pokemon_party->count; ++i) {
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 
     if(pksav_getopt_pc || pksav_getopt_all) {
         for(uint8_t i = 0; i < 14; ++i) {
-            char box_name[9];
+            char box_name[9] = {0};
             memset(box_name, 0, 9);
             pksav_text_from_gba(
                 gba_save.pokemon_pc->box_names[i],

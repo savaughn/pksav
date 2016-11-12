@@ -221,7 +221,7 @@ pksav_error_t pksav_gen2_save_load(
     }
 
     // Read the file and make sure it's valid
-    FILE* gen2_save_file = fopen(filepath, "r");
+    FILE* gen2_save_file = fopen(filepath, "rb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -301,7 +301,7 @@ pksav_error_t pksav_gen2_save_save(
     }
 
     // Make sure we can write to this file
-    FILE* gen2_save_file = fopen(filepath, "w");
+    FILE* gen2_save_file = fopen(filepath, "wb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }

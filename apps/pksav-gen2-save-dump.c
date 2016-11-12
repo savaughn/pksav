@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         printf("found %s save file.\n\n", save_type);
     }
 
-    char trainer_name[8];
+    char trainer_name[8] = {0};
     memset(trainer_name, 0, 8);
     pksav_text_from_gen2(
         gen2_save.trainer_name,
@@ -53,15 +53,15 @@ int main(int argc, char* argv[]) {
                  );
     printf("Money: %u\n", money);
 
-    char rival_name[7];
+    char rival_name[8] = {0};
     pksav_text_from_gen2(
         gen2_save.rival_name,
         rival_name, 7
     );
     printf("Rival: %s\n", rival_name);
 
-    char nickname[11];
-    char otname[8];
+    char nickname[11] = {0};
+    char otname[8] = {0};
     memset(nickname, 0, 11);
     memset(otname, 0, 8);
     printf("\nPokémon Party (size %d):\n", gen2_save.pokemon_party->count);
