@@ -1,5 +1,4 @@
 @setlocal enableextensions enabledelayedexpansion
-@echo on
 
 mkdir c:\projects\pksav\test-env\build
 
