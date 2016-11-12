@@ -30,14 +30,18 @@ Using [Travis](https://travis-ci.org/ncorgan/pksav) and
 [AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every commit in this
 repository is automatically tested under the following configurations:
 
- * Compile and test:
-   * GCC 4.8.4 (x86_64)
+ * Compile, unit test, application test:
+   * GCC 4.8.4
    * Clang 3.5
    * AppleClang 7.3.0
    * MSVC 2015 (x86, x64)
  * Cross-compile only:
    * MinGW-GCC 4.8.2
    * MSVC 2015 (ARM)
+
+All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/). All natively built tests
+and command-line applications are run, with GCC-built and Clang-built applications being run through
+[Valgrind](http://valgrind.org/). Any problems reported are treated as failures.
 
 Component Status
 -------------------------------------
@@ -56,4 +60,4 @@ Platform Status
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/10/29
+README last updated: 2016/11/12
