@@ -11,10 +11,7 @@ REPO_TOPLEVEL=$PWD
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
     brew update
-    brew install doxygen valgrind
-
-    brew --prefix valgrind
-    brew info valgrind
+    brew install doxygen
 
 else
     sudo apt-get -y update
