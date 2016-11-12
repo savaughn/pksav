@@ -41,6 +41,12 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
     [ $? -ne 0 ] && exit 1
+    pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
+    [ $? -ne 0 ] && exit 1
+    pksav-gba-save-dump --all --input=$SAVEDIR/emerald/pokemon_emerald.sav
+    [ $? -ne 0 ] && exit 1
+    pksav-gba-save-dump --all --input=$SAVEDIR/firered_leafgreen/pokemon_firered.sav
+    [ $? -ne 0 ] && exit 1
 else
     # Check source
     find $REPO_TOPLEVEL -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
@@ -98,6 +104,12 @@ else
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
         [ $? -ne 0 ] && exit 1
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+        [ $? -ne 0 ] && exit 1
+        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
+        [ $? -ne 0 ] && exit 1
+        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/emerald/pokemon_emerald.sav
+        [ $? -ne 0 ] && exit 1
+        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/firered_leafgreen/pokemon_firered.sav
         [ $? -ne 0 ] && exit 1
     done
 fi
