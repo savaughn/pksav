@@ -10,11 +10,12 @@ REPO_TOPLEVEL=$PWD
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
-echo
+    brew update
+    brew install doxygen valgrind
 
 else
     sudo apt-get -y update
     sudo apt-get -y install build-essential cmake clang gcc \
                             gcc-mingw-w64-x86-64 cppcheck \
-                            valgrind
+                            valgrind doxygen
 fi
