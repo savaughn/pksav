@@ -23,11 +23,11 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     # Set up runtime testing
     cd $REPO_TOPLEVEL
     SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
-    PATH=$PWD/$dir/apps:$OLD_PATH
-    LD_LIBRARY_PATH=$PWD/$dir/lib:$OLD_LD_LIBRARY_PATH
+    PATH=$PWD/build/apps:$OLD_PATH
+    LD_LIBRARY_PATH=$PWD/build/lib:$OLD_LD_LIBRARY_PATH
 
     # App testing
-    if [ `which valgrind` ]
+    if [ `whereis valgrind` ]
     then
         valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
         [ $? -ne 0 ] && exit 1
