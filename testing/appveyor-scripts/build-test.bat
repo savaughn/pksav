@@ -1,4 +1,5 @@
 @setlocal enableextensions enabledelayedexpansion
+@echo on
 
 mkdir c:\projects\pksav\test-env\build
 
@@ -20,18 +21,16 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
     set PATH=c:\projects\pksav\test-env\build\lib\Debug;"%PATH%"
     set PATH=c:\projects\pksav\test-env\build\apps\Debug;"%PATH%"
 
-    @echo on
-
-    call pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
+    start pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    call pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
+    start pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    call pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
+    start pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    call pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
+    start pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
     if not %ERRORLEVEL%==0 goto fail
 )
 
