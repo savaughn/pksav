@@ -14,6 +14,8 @@ cd test-env
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     # Compile test
     mkdir -p build
+    cd build
+
     cmake $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
@@ -22,7 +24,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
 
     # Set up runtime testing
-    cd $REPO_TOPLEVEL
+    cd $REPO_TOPLEVEL/test-env
     SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
     OLD_PATH=$PATH
     OLD_DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
@@ -31,26 +33,14 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     DYLD_LIBRARY_PATH=$PWD/build/lib:$OLD_DYLD_LIBRARY_PATH
 
     # App testing
-    if [ `whereis valgrind` ]
-    then
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
-        [ $? -ne 0 ] && exit 1
-    else
-        pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
-        [ $? -ne 0 ] && exit 1
-        pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
-        [ $? -ne 0 ] && exit 1
-        pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
-        [ $? -ne 0 ] && exit 1
-        pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
-        [ $? -ne 0 ] && exit 1
-    fi
+    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
+    [ $? -ne 0 ] && exit 1
+    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
+    [ $? -ne 0 ] && exit 1
+    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
+    [ $? -ne 0 ] && exit 1
+    /usr/local/opt/valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
+    [ $? -ne 0 ] && exit 1
 else
     # Check source
     find $REPO_TOPLEVEL -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
