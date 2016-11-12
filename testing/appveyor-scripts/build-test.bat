@@ -8,7 +8,7 @@ if not %ERRORLEVEL%==0 goto fail
 cmake -G "%CMAKE_DASH_G%" -DCMAKE_BUILD_TYPE=Debug ..\..
 if not %ERRORLEVEL%==0 goto fail
 
-msbuild /v:n /p:configuration=Debug ALL_BUILD.vcxproj
+msbuild ALL_BUILD.vcxproj
 if not %ERRORLEVEL%==0 goto fail
 
 :: Don't run anything when cross-compiling
@@ -21,9 +21,16 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
     set PATH=c:\projects\pksav\test-env\build\apps\Debug;%PATH%
 
     pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
+    if not %ERRORLEVEL%==0 goto fail
+
     pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
+    if not %ERRORLEVEL%==0 goto fail
+
     pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
+    if not %ERRORLEVEL%==0 goto fail
+
     pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
+    if not %ERRORLEVEL%==0 goto fail
 )
 
 goto pass
