@@ -14,23 +14,23 @@ if not %ERRORLEVEL%==0 goto fail
 
 :: Don't run anything when cross-compiling
 if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
-    ctest --output-on-failure
+    start /WAIT ctest --output-on-failure
     if not %ERRORLEVEL%==0 goto fail
 
     set SAVEDIR=c:\projects\pksav\testing\pksav-test-saves
     set PATH=c:\projects\pksav\test-env\build\lib\Debug;"%PATH%"
     set PATH=c:\projects\pksav\test-env\build\apps\Debug;"%PATH%"
 
-    start pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
+    start /WAIT pksav-gen1-save-dump --all --input=%SAVEDIR%\red_blue\pokemon_red.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    start pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
+    start /WAIT pksav-gen1-save-dump --all --input=%SAVEDIR%\yellow\pokemon_yellow.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    start pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
+    start /WAIT pksav-gen2-save-dump %SAVEDIR%\gold_silver\pokemon_gold.sav
     if not %ERRORLEVEL%==0 goto fail
 
-    start pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
+    start /WAIT pksav-gen2-save-dump %SAVEDIR%\crystal\pokemon_crystal.sav
     if not %ERRORLEVEL%==0 goto fail
 )
 
