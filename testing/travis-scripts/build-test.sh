@@ -22,31 +22,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     ctest --output-on-failure
     [ $? -ne 0 ] && exit 1
-
-    # Set up runtime testing
-    cd $REPO_TOPLEVEL/test-env
-    SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
-    OLD_PATH=$PATH
-    OLD_DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
-    
-    PATH=$PWD/build/apps:$OLD_PATH
-    DYLD_LIBRARY_PATH=$PWD/build/lib:$OLD_DYLD_LIBRARY_PATH
-
-    # App testing
-    pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gba-save-dump --all --input=$SAVEDIR/emerald/pokemon_emerald.sav
-    [ $? -ne 0 ] && exit 1
-    pksav-gba-save-dump --all --input=$SAVEDIR/firered_leafgreen/pokemon_firered.sav
-    [ $? -ne 0 ] && exit 1
 else
     # Check source
     find $REPO_TOPLEVEL -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
@@ -84,34 +59,6 @@ else
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
-
-    # Set up runtime testing
-    cd $REPO_TOPLEVEL/test-env
-    SAVEDIR=$REPO_TOPLEVEL/testing/pksav-test-saves
-    OLD_PATH=$PATH
-    OLD_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-
-    for dir in gcc clang
-    do
-        PATH=$PWD/$dir/apps:$OLD_PATH
-        LD_LIBRARY_PATH=$PWD/$dir/lib:$OLD_LD_LIBRARY_PATH
-
-        # App testing
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/red_blue/pokemon_red.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen1-save-dump --all --input=$SAVEDIR/yellow/pokemon_yellow.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/gold_silver/pokemon_gold.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gen2-save-dump $SAVEDIR/crystal/pokemon_crystal.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/ruby_sapphire/pokemon_ruby.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/emerald/pokemon_emerald.sav
-        [ $? -ne 0 ] && exit 1
-        valgrind --leak-check=full --track-origins=yes --error-exitcode=1 pksav-gba-save-dump --all --input=$SAVEDIR/firered_leafgreen/pokemon_firered.sav
-        [ $? -ne 0 ] && exit 1
-    done
 fi
 
-echo # So we can check the last Valgrind for an error code
+echo # So we can check the last error code

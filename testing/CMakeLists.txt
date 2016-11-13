@@ -7,5 +7,10 @@
 
 FIND_PACKAGE(VALGRIND)
 
+# Test dependencies
+ADD_SUBDIRECTORY(getopt)
 ADD_SUBDIRECTORY(Unity)
+
+# Tests
+ADD_SUBDIRECTORY(save-tests)
 ADD_SUBDIRECTORY(unit-tests)
