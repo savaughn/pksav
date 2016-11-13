@@ -221,6 +221,9 @@ PKSAV_API pksav_error_t pksav_gen2_save_save(
 /*!
  * @brief Frees memory allocated for a pksav_gen2_save_t.
  *
+ * After this function is called, all pointer members of the given save file will
+ * be set to NULL.
+ *
  * \param gen2_save save whose memory should be freed
  * \returns ::PKSAV_ERROR_NONE upon success
  * \returns ::PKSAV_ERROR_NULL_POINTER if gen2_save is NULL

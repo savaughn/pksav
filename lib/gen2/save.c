@@ -322,11 +322,29 @@ pksav_error_t pksav_gen2_save_save(
 pksav_error_t pksav_gen2_save_free(
     pksav_gen2_save_t* gen2_save
 ) {
-    if(!gen2_save) {
+    if(!gen2_save || !gen2_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
+    // Free dynamically allocated memory
     free(gen2_save->raw);
+
+    // Set all pointer members to NULL
+    gen2_save->pokemon_party = NULL;
+    gen2_save->current_pokemon_box_num = NULL;
+    gen2_save->current_pokemon_box = NULL;
+    gen2_save->pokemon_pc = NULL;
+    gen2_save->pokemon_box_names = NULL;
+    gen2_save->item_bag = NULL;
+    gen2_save->item_pc = NULL;
+    gen2_save->trainer_name = NULL;
+    gen2_save->trainer_id = NULL;
+    gen2_save->trainer_gender = NULL;
+    gen2_save->money = NULL;
+    gen2_save->rival_name = NULL;
+    gen2_save->daylight_savings = NULL;
+    gen2_save->time_played = NULL;
+    gen2_save->raw = NULL;
 
     return PKSAV_ERROR_NONE;
 }
