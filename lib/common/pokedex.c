@@ -23,7 +23,7 @@ pksav_error_t pksav_get_pokedex_bit(
     uint16_t pokedex_num,
     bool* result_out
 ) {
-    if(!raw) {
+    if(!raw || !result_out) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
@@ -34,7 +34,7 @@ pksav_error_t pksav_get_pokedex_bit(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t set_pokedex_bit(
+pksav_error_t pksav_set_pokedex_bit(
     uint8_t* raw,
     uint16_t pokedex_num,
     bool set

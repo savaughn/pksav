@@ -21,7 +21,7 @@ static void byteswap32_test() {
     TEST_ASSERT_EQUAL(num2, 0x12EFCDAB);
 }
 
-PKSAV_C_TEST_MAIN(
-    PKSAV_C_TEST(byteswap16_test)
-    PKSAV_C_TEST(byteswap32_test)
+PKSAV_TEST_MAIN(
+    PKSAV_TEST(byteswap16_test)
+    PKSAV_TEST(byteswap32_test)
 )

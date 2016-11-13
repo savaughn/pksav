@@ -220,7 +220,7 @@ pksav_error_t pksav_gen1_save_save(
 pksav_error_t pksav_gen1_save_free(
     pksav_gen1_save_t* gen1_save
 ) {
-    if(!gen1_save) {
+    if(!gen1_save || !gen1_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 

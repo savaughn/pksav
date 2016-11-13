@@ -66,8 +66,8 @@ static void bcd_even_count_test() {
     TEST_ASSERT_EQUAL(num1, num2);
 }
 
-PKSAV_C_TEST_MAIN(
-    PKSAV_C_TEST(base256_test)
-    PKSAV_C_TEST(bcd_odd_count_test)
-    PKSAV_C_TEST(bcd_even_count_test)
+PKSAV_TEST_MAIN(
+    PKSAV_TEST(base256_test)
+    PKSAV_TEST(bcd_odd_count_test)
+    PKSAV_TEST(bcd_even_count_test)
 )

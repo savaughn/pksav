@@ -48,6 +48,7 @@ ENDMACRO(PKSAV_ADD_TEST)
 SET(unit_tests
     byteswap_test
     math_test
+    null_pointer_test
 )
 
 FOREACH(test ${unit_tests})

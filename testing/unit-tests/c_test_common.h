@@ -9,7 +9,7 @@
 
 #include <Unity/unity.h>
 
-#define PKSAV_C_TEST(test_func) \
+#define PKSAV_TEST(test_func) \
 { \
     Unity.CurrentTestName = #test_func; \
     ++Unity.NumberOfTests; \
@@ -19,7 +19,7 @@
     UnityConcludeTest(); \
 }
 
-#define PKSAV_C_TEST_MAIN(...) \
+#define PKSAV_TEST_MAIN(...) \
     int main(int argc, char** argv) { \
         (void)argc; \
         (void)argv; \
