@@ -43,6 +43,8 @@ All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 and command-line applications are run, with GCC-built and Clang-built applications being run through
 [Valgrind](http://valgrind.org/). Any problems reported are treated as failures.
 
+Unit tests use the [Unity](https://github.com/ThrowTheSwitch/Unity) framework.
+
 Component Status
 -------------------------------------
  * Generation I: complete

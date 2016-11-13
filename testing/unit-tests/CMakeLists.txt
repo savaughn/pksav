@@ -11,9 +11,15 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_BINARY_DIR}/include
 )
 
+ADD_SUBDIRECTORY(Unity)
+
 MACRO(PKSAV_ADD_TEST test_name)
+    SET_SOURCE_FILES_PROPERTIES(${test_name}.c
+        PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
+    )
     ADD_EXECUTABLE(${test_name} ${test_name}.c)
-    TARGET_LINK_LIBRARIES(${test_name} pksav)
+    TARGET_LINK_LIBRARIES(${test_name} pksav unity)
+
     IF(CMAKE_CROSSCOMPILING)
         ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name})
     ELSE()
