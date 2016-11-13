@@ -27,21 +27,21 @@ Testing
 -------------------------------------
 
 Using [Travis](https://travis-ci.org/ncorgan/pksav) and
-[AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every commit in this
+[AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every push to this
 repository is automatically tested under the following configurations:
 
- * Compile, unit test, application test:
+ * Compile, unit test (through [Valgrind](http://valgrind.org)), application test (through
+   [Valgrind](http://valgrind.org)):
    * GCC 4.8.4
    * Clang 3.5
+ * Compile, unit test, application test:
    * AppleClang 7.3.0
    * MSVC 2015 (x86, x64)
  * Cross-compile only:
    * MinGW-GCC 4.8.2
    * MSVC 2015 (ARM)
 
-All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/). All natively built tests
-and command-line applications are run, with GCC-built and Clang-built applications being run through
-[Valgrind](http://valgrind.org/). Any problems reported are treated as failures.
+All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
 Unit tests use the [Unity](https://github.com/ThrowTheSwitch/Unity) framework.
 

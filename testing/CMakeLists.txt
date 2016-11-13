@@ -5,4 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+FIND_PACKAGE(VALGRIND)
+
 ADD_SUBDIRECTORY(unit-tests)
