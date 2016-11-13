@@ -31,6 +31,15 @@ if "x%CMAKE_DASH_G:ARM=%"=="x%CMAKE_DASH_G%" (
 
     pksav-gen2-save-dump "!SAVEDIR!\crystal\pokemon_crystal.sav"
     if not !ERRORLEVEL!==0 goto fail
+
+    pksav-gba-save-dump --all --input="!SAVEDIR!\ruby_sapphire\pokemon_ruby.sav"
+    if not !ERRORLEVEL!==0 goto fail
+
+    pksav-gba-save-dump --all --input="!SAVEDIR!\emerald\pokemon_emerald.sav"
+    if not !ERRORLEVEL!==0 goto fail
+
+    pksav-gba-save-dump --all --input="!SAVEDIR!\firered_leafgreen\pokemon_firered.sav"
+    if not !ERRORLEVEL!==0 goto fail
 )
 
 goto pass
