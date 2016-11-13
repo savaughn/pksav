@@ -27,7 +27,7 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
                 ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
             @ONLY)
-            ADD_UNIT_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
         ELSE()
             # If Valgrind is found, use it.
             IF(VALGRIND_FOUND)
