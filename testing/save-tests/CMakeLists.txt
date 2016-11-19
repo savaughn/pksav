@@ -8,8 +8,8 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_BINARY_DIR}/include
+    ${PKSAV_SOURCE_DIR}/include
+    ${PKSAV_BINARY_DIR}/include
 )
 
 SET(SAVEDIR ${CMAKE_CURRENT_SOURCE_DIR}/../pksav-test-saves)

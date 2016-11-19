@@ -8,8 +8,8 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_BINARY_DIR}/include
+    ${PKSAV_SOURCE_DIR}/include
+    ${PKSAV_BINARY_DIR}/include
 )
 
 MACRO(PKSAV_ADD_UNIT_TEST test_name)
@@ -42,7 +42,13 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
                 ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.sh.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh
             @ONLY)
-            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
+
+            IF(PKSAV_USED_AS_SUBPROJECT)
+                ADD_TEST(pksav_${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
+            ELSE()
+                ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
+            ENDIF(PKSAV_USED_AS_SUBPROJECT)
+
         ENDIF(WIN32)
     ENDIF(NOT CMAKE_CROSSCOMPILING)
 ENDMACRO(PKSAV_ADD_UNIT_TEST)
