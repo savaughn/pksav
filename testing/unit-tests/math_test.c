@@ -20,7 +20,7 @@ PKSAV_TEST_MAIN(
         uint32_t num2 = 0;
         uint8_t base256_buffer2[3] = {0, 0, 0};
 
-        status = pksav_to_base256(num1, base256_buffer2);
+        status = pksav_to_base256(num1, base256_buffer2, 3);
         PKSAV_ASSERT_INTS_EQUAL(status, PKSAV_ERROR_NONE);
         PKSAV_ASSERT(!memcmp(base256_buffer1, base256_buffer2, 3));
 

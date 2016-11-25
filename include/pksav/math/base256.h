@@ -39,12 +39,14 @@ PKSAV_API pksav_error_t pksav_from_base256(
 /*!
  * \param num Base-10 number to convert
  * \param buffer_out where to store converted Base-256 number
+ * \param buffer_size size of the buffer_out parameter
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if buffer_out is NULL
  */
 PKSAV_API pksav_error_t pksav_to_base256(
     uint32_t num,
-    uint8_t* buffer_out
+    uint8_t* buffer_out,
+    size_t buffer_size
 );
 
 #ifdef __cplusplus
