@@ -12,6 +12,7 @@
 
 #include <pksav/gba/items.h>
 #include <pksav/gba/save_structs.h>
+#include <pksav/gba/pokemon.h>
 
 #include <stdbool.h>
 #include <stdint.h>
