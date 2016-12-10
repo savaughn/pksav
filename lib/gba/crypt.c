@@ -69,23 +69,23 @@ void pksav_gba_crypt_pokemon(
 }
 
 void pksav_gba_save_crypt_items(
-    pksav_gba_item_storage_t* gba_item_storage,
+    pksav_gba_item_storage_t* item_storage,
     uint32_t security_key,
     pksav_gba_game_t gba_game
 ) {
-    pksav_gba_item_t* items = (pksav_gba_item_t*)gba_item_storage;
+    pksav_item_t* items = (pksav_item_t*)item_storage;
     uint8_t num_items = 0;
     switch(gba_game) {
         case PKSAV_GBA_RS:
-            num_items = sizeof(pksav_rs_item_storage_t) / sizeof(pksav_gba_item_t);
+            num_items = sizeof(pksav_rs_item_storage_t) / sizeof(pksav_item_t);
             break;
 
         case PKSAV_GBA_EMERALD:
-            num_items = sizeof(pksav_emerald_item_storage_t) / sizeof(pksav_gba_item_t);
+            num_items = sizeof(pksav_emerald_item_storage_t) / sizeof(pksav_item_t);
             break;
 
         default:
-            num_items = sizeof(pksav_frlg_item_storage_t) / sizeof(pksav_gba_item_t);
+            num_items = sizeof(pksav_frlg_item_storage_t) / sizeof(pksav_item_t);
             break;
     }
     // Skip Item PC, which has 50 items in all games

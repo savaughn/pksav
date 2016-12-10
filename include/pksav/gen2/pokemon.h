@@ -377,7 +377,12 @@ typedef struct {
 
 //! List of Pokémon box names in Generation II.
 typedef struct {
-    //! Individual names.
+    /*!
+     * @brief Each box name.
+     *
+     * To access a name, you should use the functions ::pksav_text_from_gen2
+     * or ::pksav_widetext_from_gen2 (with a num_chars value of 9).
+     */
     uint8_t names[14][9];
 } pksav_gen2_pokemon_box_names_t;
 
