@@ -16,7 +16,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     mkdir -p build
     cd build
 
-    cmake $REPO_TOPLEVEL
+    cmake -DCMAKE_BUILD_TYPE=Debug $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
