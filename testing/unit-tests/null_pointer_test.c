@@ -582,6 +582,378 @@ static void pksav_gen2_save_h_test() {
     TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
 }
 
+/*
+ * pksav/gen2/text.h
+ */
+static void pksav_gen2_text_h_test() {
+    pksav_error_t status = PKSAV_ERROR_NONE;
+
+    uint8_t dummy_uint8_t = 0;
+    char dummy_char = 0;
+    wchar_t dummy_wchar_t = 0;
+
+    /*
+     * pksav_text_from_gen2
+     */
+
+    status = pksav_text_from_gen2(
+        NULL,
+        &dummy_char,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_from_gen2(
+        &dummy_uint8_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_from_gen2(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_widetext_from_gen2
+     */
+
+    status = pksav_widetext_from_gen2(
+        NULL,
+        &dummy_wchar_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_from_gen2(
+        &dummy_uint8_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_from_gen2(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_text_to_gen2
+     */
+
+    status = pksav_text_to_gen2(
+        NULL,
+        &dummy_uint8_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_to_gen2(
+        &dummy_char,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_to_gen2(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_widetext_to_gen2
+     */
+
+    status = pksav_widetext_to_gen2(
+        NULL,
+        &dummy_uint8_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_to_gen2(
+        &dummy_wchar_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_to_gen2(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+}
+
+/*
+ * pksav/gen2/time.h
+ */
+static void pksav_gen2_time_h_test() {
+    pksav_error_t status = PKSAV_ERROR_NONE;
+
+    time_t dummy_time_t = 0;
+    uint16_t dummy_uint16_t = 0;
+
+    /*
+     * pksav_gen2_set_caught_data_time_field
+     */
+
+    status = pksav_gen2_set_caught_data_time_field(
+        NULL,
+        &dummy_uint16_t
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gen2_set_caught_data_time_field(
+        &dummy_time_t,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gen2_set_caught_data_time_field(
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+}
+
+/*
+ * pksav/gba/save.h
+ */
+static void pksav_gba_save_h_test() {
+    pksav_error_t status = PKSAV_ERROR_NONE;
+
+    uint8_t dummy_uint8_t = 0;
+    bool dummy_bool = false;
+    pksav_gba_save_t dummy_pksav_gba_save_t;
+    char dummy_char = 0;
+
+    /*
+     * pksav_buffer_is_gba_save
+     */
+
+    status = pksav_buffer_is_gba_save(
+        NULL,
+        0,
+        PKSAV_GBA_RS,
+        &dummy_bool
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_buffer_is_gba_save(
+        &dummy_uint8_t,
+        0,
+        PKSAV_GBA_RS,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_buffer_is_gba_save(
+        NULL,
+        0,
+        PKSAV_GBA_RS,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_file_is_gba_save
+     */
+
+    status = pksav_file_is_gba_save(
+        NULL,
+        PKSAV_GBA_RS,
+        &dummy_bool
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_file_is_gba_save(
+        &dummy_char,
+        PKSAV_GBA_RS,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_file_is_gba_save(
+        NULL,
+        PKSAV_GBA_RS,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_gba_save_load
+     */
+
+    status = pksav_gba_save_load(
+        NULL,
+        &dummy_pksav_gba_save_t
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gba_save_load(
+        &dummy_char,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gba_save_load(
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_gba_save_save
+     */
+
+    status = pksav_gba_save_save(
+        NULL,
+        &dummy_pksav_gba_save_t
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gba_save_save(
+        &dummy_char,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_gba_save_save(
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_gba_save_free
+     */
+
+    status = pksav_gba_save_free(
+        NULL
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+}
+
+/*
+ * pksav/gba/text.h
+ */
+static void pksav_gba_text_h_test() {
+    pksav_error_t status = PKSAV_ERROR_NONE;
+
+    uint8_t dummy_uint8_t = 0;
+    char dummy_char = 0;
+    wchar_t dummy_wchar_t = 0;
+
+    /*
+     * pksav_text_from_gba
+     */
+
+    status = pksav_text_from_gba(
+        NULL,
+        &dummy_char,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_from_gba(
+        &dummy_uint8_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_from_gba(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_widetext_from_gba
+     */
+
+    status = pksav_widetext_from_gba(
+        NULL,
+        &dummy_wchar_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_from_gba(
+        &dummy_uint8_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_from_gba(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_text_to_gba
+     */
+
+    status = pksav_text_to_gba(
+        NULL,
+        &dummy_uint8_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_to_gba(
+        &dummy_char,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_text_to_gba(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    /*
+     * pksav_widetext_to_gba
+     */
+
+    status = pksav_widetext_to_gba(
+        NULL,
+        &dummy_uint8_t,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_to_gba(
+        &dummy_wchar_t,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+
+    status = pksav_widetext_to_gba(
+        NULL,
+        NULL,
+        0
+    );
+    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+}
+
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_common_datetime_h_test)
     PKSAV_TEST(pksav_common_pokedex_h_test)
@@ -590,4 +962,8 @@ PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen1_save_h_test)
     PKSAV_TEST(pksav_gen1_text_h_test)
     PKSAV_TEST(pksav_gen2_save_h_test)
+    PKSAV_TEST(pksav_gen2_text_h_test)
+    PKSAV_TEST(pksav_gen2_time_h_test)
+    PKSAV_TEST(pksav_gba_save_h_test)
+    PKSAV_TEST(pksav_gba_text_h_test)
 )
