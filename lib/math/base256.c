@@ -32,7 +32,7 @@ pksav_error_t pksav_from_base256(
     *result_out = 0;
     float exp = 0.0;
 
-    for(ssize_t i = (ssize_t)(num_bytes-1); i >= 0; i--) {
+    for(ssize_t i = (ssize_t)(num_bytes-1); i >= 0; --i) {
         (*result_out) += buffer[i] * (uint32_t)(pow(256.0f, exp++));
     }
 
@@ -41,21 +41,21 @@ pksav_error_t pksav_from_base256(
 
 pksav_error_t pksav_to_base256(
     uint32_t num,
-    uint8_t* buffer_out
+    uint8_t* buffer_out,
+    size_t buffer_size
 ) {
     if(!buffer_out) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    size_t num_bytes = (size_t)((log((double)num) / log(256) + 1));
-    memset(buffer_out, 0, num_bytes);
-    float exp = 1.0;
+    memset(buffer_out, 0, buffer_size);
 
-    buffer_out[num_bytes-1] = (uint8_t)(num % 256);
-    for(ssize_t i = (ssize_t)(num_bytes-2); i >= 0; i--) {
+    float exp = 1.0f;
+    buffer_out[buffer_size-1] = (uint8_t)(num % 256);
+    for(ssize_t i = (ssize_t)(buffer_size-2); i >= 0; --i) {
         num -= buffer_out[i+1];
-        buffer_out[i] = (uint8_t)((size_t)(num / pow(256,exp)) % (size_t)(pow(256,exp)));
-        exp++;
+        buffer_out[i] = (uint8_t)((uint32_t)(num / pow(256,exp)) % (uint32_t)(pow(256,exp)));
+        ++exp;
     }
 
     return PKSAV_ERROR_NONE;

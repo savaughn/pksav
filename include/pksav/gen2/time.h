@@ -51,15 +51,26 @@ typedef enum {
 //! The offset of the time of day information in the pksav_gen2_pc_pokemon_t.caught_data field.
 #define PKSAV_GEN2_TIME_OF_DAY_OFFSET  14
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * @brief Set the given caught time field based on the given C time.
  *
  * \param time_in C time to convert
  * \param caught_data
+ * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if time_in or caught_data is NULL
  */
-PKSAV_API void pksav_gen2_set_caught_data_time_field(
+
+PKSAV_API pksav_error_t pksav_gen2_set_caught_data_time_field(
     const time_t* time_in,
     uint16_t* caught_data
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKSAV_GEN2_TIME_H */

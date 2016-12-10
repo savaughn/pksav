@@ -22,10 +22,10 @@ MACRO(PKSAV_BUILD_DOXYGEN_DOCS files)
     INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${DOCS_DIR} COMPONENT doxygen)
 ENDMACRO(PKSAV_BUILD_DOXYGEN_DOCS)
 
-FILE(GLOB_RECURSE h_files ${CMAKE_SOURCE_DIR}/include/*.h)
+FILE(GLOB_RECURSE h_files ${PKSAV_SOURCE_DIR}/include/*.h)
 LIST(APPEND h_files
-    ${CMAKE_SOURCE_DIR}/include/pksav/config.h.in
-    ${CMAKE_SOURCE_DIR}/include/pksav/version.h.in
+    ${PKSAV_SOURCE_DIR}/include/pksav/config.h.in
+    ${PKSAV_SOURCE_DIR}/include/pksav/version.h.in
 )
 
 PKSAV_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
