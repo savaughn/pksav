@@ -10,7 +10,7 @@ cmake -G "%GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=Release ..\..
 if not !ERRORLEVEL!==0 goto fail
 
 :: Generator-specific build command
-if %GENERATOR_NAME%=="MinGW Makefiles" (
+if "x%GENERATOR_NAME%"=="xMinGW Makefiles" (
     make
 ) else (
     msbuild /p:configuration=Release ALL_BUILD.vcxproj
