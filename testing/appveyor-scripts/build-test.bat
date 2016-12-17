@@ -8,12 +8,14 @@ if not !ERRORLEVEL!==0 goto fail
 
 :: MinGW builds can't have sh.exe in the PATH, which is the case by default
 
+where cmake
 if not !ERRORLEVEL!==0 goto fail
 if "x%GENERATOR_NAME%"=="xMinGW Makefiles" (
     set PATH="C:\mingw-w64\i686-5.3.0-posix-dwarf-rt_v4-rev0\mingw32\bin;C:\Program Files (x86)\CMake\bin"
 )
 
 cmake -G "%GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=Release ..\..
+if not !ERRORLEVEL!==0 goto fail
 
 :: Generator-specific build command
 if "x%GENERATOR_NAME%"=="xMinGW Makefiles" (
