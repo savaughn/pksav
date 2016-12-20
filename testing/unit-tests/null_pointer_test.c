@@ -13,6 +13,7 @@
  * pksav/common/datetime.h
  */
 static void pksav_common_datetime_h_test() {
+#if defined(PKSAV_ENABLE_GEN4) || defined(PKSAV_ENABLE_GEN5) || defined(PKSAV_ENABLE_GEN6)
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
@@ -62,6 +63,7 @@ static void pksav_common_datetime_h_test() {
         NULL
     );
     TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+#endif /* defined(PKSAV_ENABLE_GEN4) || defined(PKSAV_ENABLE_GEN5) || defined(PKSAV_ENABLE_GEN6) */
 }
 
 /*
