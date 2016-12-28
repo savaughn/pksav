@@ -289,6 +289,12 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->trainer_name = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_NAME);
     gen2_save->rival_name = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_RIVAL_NAME);
 
+    if(gen2_save->gen2_game == PKSAV_GEN2_CRYSTAL) {
+        gen2_save->trainer_gender = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER);
+    } else {
+        gen2_save->trainer_gender = NULL;
+    }
+
     return PKSAV_ERROR_NONE;
 }
 
