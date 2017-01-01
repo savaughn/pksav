@@ -12,11 +12,21 @@ INCLUDE_DIRECTORIES(
     ${PKSAV_BINARY_DIR}/include
 )
 
-MACRO(PKSAV_ADD_UNIT_TEST test_name)
-    SET_SOURCE_FILES_PROPERTIES(${test_name}.c
+MACRO(PKSAV_ADD_UNIT_TEST test_name configure)
+    IF(${configure})
+        CONFIGURE_FILE(
+            ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.c
+            ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.c
+        @ONLY)
+        SET(src ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.c)
+    ELSE()
+        SET(src ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.c)
+    ENDIF(${configure})
+
+    SET_SOURCE_FILES_PROPERTIES(${src}
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
     )
-    ADD_EXECUTABLE(${test_name} ${test_name}.c)
+    ADD_EXECUTABLE(${test_name} ${src})
     TARGET_LINK_LIBRARIES(${test_name} pksav unity)
 
     IF(NOT CMAKE_CROSSCOMPILING)
@@ -60,5 +70,13 @@ SET(unit_tests
 )
 
 FOREACH(test ${unit_tests})
-    PKSAV_ADD_UNIT_TEST(${test})
+    PKSAV_ADD_UNIT_TEST(${test} FALSE)
 ENDFOREACH(test ${unit_tests})
+
+SET(unit_tests_configure
+    save_detection_test
+)
+
+FOREACH(test ${unit_tests_configure})
+    PKSAV_ADD_UNIT_TEST(${test} TRUE)
+ENDFOREACH(test ${unit_tests_configure})
