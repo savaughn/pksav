@@ -34,14 +34,19 @@ MACRO(PKSAV_ADD_SAVE_TEST test_name test_saves)
                     ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.bat.in
                     ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.bat
                 @ONLY)
-                ADD_TEST(${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.bat)
+
+                IF(PKSAV_USED_AS_SUBPROJECT)
+                    ADD_TEST(pksav_${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.bat)
+                ELSE()
+                    ADD_TEST(${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.bat)
+                ENDIF(PKSAV_USED_AS_SUBPROJECT)
             ELSE()
                 # If Valgrind is found, use it.
-                IF(VALGRIND_FOUND)
+                IF(VALGRIND_FOUND AND TEST_WITH_VALGRIND)
                     SET(TEST_CMD "${VALGRIND_PROGRAM} --leak-check=full --track-origins=yes --error-exitcode=1 ${CMAKE_CURRENT_BINARY_DIR}/${test_name} --all --input=${SAVEDIR}/${save}")
                 ELSE()
                     SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${test_name} --all --input=${SAVEDIR}/${save}")
-                ENDIF(VALGRIND_FOUND)
+                ENDIF(VALGRIND_FOUND AND TEST_WITH_VALGRIND)
                 IF(APPLE)
                     SET(DY "DY")
                 ENDIF(APPLE)
@@ -50,7 +55,12 @@ MACRO(PKSAV_ADD_SAVE_TEST test_name test_saves)
                     ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.sh.in
                     ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.sh
                 @ONLY)
-                ADD_TEST(${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.sh)
+
+                IF(PKSAV_USED_AS_SUBPROJECT)
+                    ADD_TEST(pksav_${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.sh)
+                ELSE()
+                    ADD_TEST(${test_name}_${save_base} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_${save_base}.sh)
+                ENDIF(PKSAV_USED_AS_SUBPROJECT)
             ENDIF(WIN32)
         ENDFOREACH(save ${test_saves})
     ENDIF(NOT CMAKE_CROSSCOMPILING)
