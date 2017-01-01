@@ -20,6 +20,15 @@ typedef union {
     //! Convenience struct to allow individual access to secret and public IDs.
     struct {
         /*!
+         * @brief Public ID.
+         *
+         * This is the value shown in-game.
+         *
+         * This value is stored in little-endian and should be accessed and
+         * modified with ::pksav_littleendian16.
+         */
+        uint16_t pid;
+        /*!
          * @brief Secret ID.
          *
          * This value is never shown in-game and exists to prevent
@@ -29,15 +38,6 @@ typedef union {
          * modified with ::pksav_littleendian16.
          */
         uint16_t sid;
-        /*!
-         * @brief Public ID.
-         *
-         * This is the value shown in-game.
-         *
-         * This value is stored in little-endian and should be accessed and
-         * modified with ::pksav_littleendian16.
-         */
-        uint16_t pid;
     };
     /*!
      * @brief Full ID.

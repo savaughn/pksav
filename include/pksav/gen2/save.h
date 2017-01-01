@@ -102,7 +102,10 @@ typedef struct {
     /*!
      * @brief A pointer to the trainer's gender.
      *
-     * Valid values are ::PKSAV_GEN2_MALE or ::PKSAV_GEN2_FEMALE.
+     * As Crystal was the first game in the franchise to introduce a female player
+     * character, this value is set to NULL for Gold and Silver saves.
+     *
+     * For Crystal saves, valid values are ::PKSAV_GEN2_MALE or ::PKSAV_GEN2_FEMALE.
      */
     uint8_t* trainer_gender;
 
