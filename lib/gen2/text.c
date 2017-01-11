@@ -121,7 +121,7 @@ pksav_error_t pksav_widetext_to_gen2(
         if(input_text[i] == 0x20) {
             output_buffer[i] = PKSAV_GEN2_SPACE;
         } else {
-            ssize_t index = wchar_map_index(pksav_gen2_char_map, 255, input_text[i]);
+            ssize_t index = wchar_map_index(pksav_gen2_char_map, 256, input_text[i]);
             if(index == -1) {
                 break;
             } else {

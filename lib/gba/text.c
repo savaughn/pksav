@@ -125,7 +125,7 @@ pksav_error_t pksav_widetext_to_gba(
     memset(output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gba_char_map, 255, input_text[i]);
+        ssize_t index = wchar_map_index(pksav_gba_char_map, 256, input_text[i]);
         if(index == -1) {
             break;
         } else {
