@@ -105,25 +105,25 @@ int main(int argc, char* argv[]) {
             );
 
             printf("\nPokémon Box %d (name: \"%s\", size: %d):\n",
-                   i, box_name, gen2_save.pokemon_pc->boxes[i].count);
+                   i, box_name, gen2_save.pokemon_boxes[i]->count);
 
             // Some boxes have invalid counts
-            if(gen2_save.pokemon_pc->boxes[i].count > 20) {
+            if(gen2_save.pokemon_boxes[i]->count > 20) {
                 continue;
             }
 
-            for(uint8_t j = 0; j < gen2_save.pokemon_pc->boxes[i].count; ++j) {
+            for(uint8_t j = 0; j < gen2_save.pokemon_boxes[i]->count; ++j) {
                 pksav_text_from_gen2(
-                    gen2_save.pokemon_pc->boxes[i].nicknames[j],
+                    gen2_save.pokemon_boxes[i]->nicknames[j],
                     nickname, 10
                 );
                 pksav_text_from_gen2(
-                    gen2_save.pokemon_pc->boxes[i].otnames[j],
+                    gen2_save.pokemon_boxes[i]->otnames[j],
                     trainer_name, 7
                 );
                 printf(" * %s\n", nickname);
-                printf("   * Level: %d\n", gen2_save.pokemon_pc->boxes[i].entries[j].level);
-                printf("   * OT: %s (%d)\n", trainer_name, pksav_bigendian16(gen2_save.pokemon_pc->boxes[i].entries[j].ot_id));
+                printf("   * Level: %d\n", gen2_save.pokemon_boxes[i]->entries[j].level);
+                printf("   * OT: %s (%d)\n", trainer_name, pksav_bigendian16(gen2_save.pokemon_boxes[i]->entries[j].ot_id));
             }
         }
     }
