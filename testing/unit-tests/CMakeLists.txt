@@ -67,6 +67,7 @@ ENDMACRO(PKSAV_ADD_UNIT_TEST)
 SET(unit_tests
     byteswap_test
     gen1_save_test
+    gen2_save_test
     math_test
     null_pointer_test
 )
