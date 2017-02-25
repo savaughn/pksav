@@ -42,7 +42,7 @@ static void pksav_gen1_save_detection_test(
                 sizeof(buffer),
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 
     // Test with file
@@ -50,7 +50,7 @@ static void pksav_gen1_save_detection_test(
                 filepath,
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 }
 
@@ -101,7 +101,7 @@ static void pksav_gen2_save_detection_test(
                 crystal,
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 
     // Test with file
@@ -110,7 +110,7 @@ static void pksav_gen2_save_detection_test(
                 crystal,
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 }
 
@@ -161,7 +161,7 @@ static void pksav_gba_save_detection_test(
                 gba_game,
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 
     // Test with file
@@ -170,7 +170,7 @@ static void pksav_gba_save_detection_test(
                 gba_game,
                 &is_valid
             );
-    TEST_ASSERT_EQUAL(error, PKSAV_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_valid);
 }
 

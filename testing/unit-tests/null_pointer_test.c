@@ -28,19 +28,19 @@ static void pksav_common_datetime_h_test() {
         NULL,
         &dummy_pksav_date_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_time_t_to_date_t(
         &dummy_time_t,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_time_t_to_date_t(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_time_to_uint32_t
@@ -50,19 +50,19 @@ static void pksav_common_datetime_h_test() {
         NULL,
         &dummy_uint32_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_time_t_to_uint32_t(
         &dummy_time_t,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_time_t_to_uint32_t(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 #endif /* defined(PKSAV_ENABLE_GEN4) || defined(PKSAV_ENABLE_GEN5) || defined(PKSAV_ENABLE_GEN6) */
 }
 
@@ -84,21 +84,21 @@ static void pksav_common_pokedex_h_test() {
         0,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_pokedex_bit(
         &dummy_uint8_t,
         0,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_pokedex_bit(
         NULL,
         0,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_set_pokedex_bit
@@ -109,7 +109,7 @@ static void pksav_common_pokedex_h_test() {
         0,
         false
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -134,7 +134,7 @@ static void pksav_common_prng_h_test() {
     status = pksav_mtrng_populate(
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_mtrng_next
@@ -144,19 +144,19 @@ static void pksav_common_prng_h_test() {
         NULL,
         &dummy_uint32_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_mtrng_next(
         &dummy_pksav_mtrng_t,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_mtrng_next(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -178,21 +178,21 @@ static void pksav_common_stats_h_test() {
         PKSAV_STAT_NONE,
         &dummy_uint8_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_gb_IV(
         &dummy_uint16_t,
         PKSAV_STAT_NONE,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_gb_IV(
         NULL,
         PKSAV_STAT_NONE,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_set_gb_IV
@@ -203,7 +203,7 @@ static void pksav_common_stats_h_test() {
         PKSAV_STAT_NONE,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_get_IV
@@ -214,21 +214,21 @@ static void pksav_common_stats_h_test() {
         PKSAV_STAT_NONE,
         &dummy_uint8_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_IV(
         &dummy_uint32_t,
         PKSAV_STAT_NONE,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_get_IV(
         NULL,
         PKSAV_STAT_NONE,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -252,21 +252,21 @@ static void pksav_gen1_save_h_test() {
         0,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gen1_save(
         &dummy_uint8_t,
         0,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gen1_save(
         NULL,
         0,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_file_is_gen1_save
@@ -276,19 +276,19 @@ static void pksav_gen1_save_h_test() {
         NULL,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gen1_save(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gen1_save(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen1_save_load
@@ -298,19 +298,19 @@ static void pksav_gen1_save_h_test() {
         NULL,
         &dummy_pksav_gen1_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen1_save_load(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen1_save_load(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen1_save_save
@@ -320,19 +320,19 @@ static void pksav_gen1_save_h_test() {
         NULL,
         &dummy_pksav_gen1_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen1_save_save(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen1_save_save(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen1_save_free
@@ -341,12 +341,12 @@ static void pksav_gen1_save_h_test() {
     status = pksav_gen1_save_free(
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen1_save_free(
         &dummy_pksav_gen1_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -368,21 +368,21 @@ static void pksav_gen1_text_h_test() {
         &dummy_char,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gen1(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gen1(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_from_gen1
@@ -393,21 +393,21 @@ static void pksav_gen1_text_h_test() {
         &dummy_wchar_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gen1(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gen1(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_text_to_gen1
@@ -418,21 +418,21 @@ static void pksav_gen1_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen1(
         &dummy_char,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen1(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_to_gen1
@@ -443,21 +443,21 @@ static void pksav_gen1_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gen1(
         &dummy_wchar_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gen1(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -482,7 +482,7 @@ static void pksav_gen2_save_h_test() {
         false,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gen2_save(
         &dummy_uint8_t,
@@ -490,7 +490,7 @@ static void pksav_gen2_save_h_test() {
         false,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gen2_save(
         NULL,
@@ -498,7 +498,7 @@ static void pksav_gen2_save_h_test() {
         false,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_file_is_gen2_save
@@ -509,21 +509,21 @@ static void pksav_gen2_save_h_test() {
         false,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gen2_save(
         &dummy_char,
         false,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gen2_save(
         NULL,
         false,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen2_save_load
@@ -533,19 +533,19 @@ static void pksav_gen2_save_h_test() {
         NULL,
         &dummy_pksav_gen2_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_save_load(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_save_load(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen2_save_save
@@ -555,19 +555,19 @@ static void pksav_gen2_save_h_test() {
         NULL,
         &dummy_pksav_gen2_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_save_save(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_save_save(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gen2_save_free
@@ -576,12 +576,12 @@ static void pksav_gen2_save_h_test() {
     status = pksav_gen2_save_free(
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_save_free(
         &dummy_pksav_gen2_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -603,21 +603,21 @@ static void pksav_gen2_text_h_test() {
         &dummy_char,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gen2(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gen2(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_from_gen2
@@ -628,21 +628,21 @@ static void pksav_gen2_text_h_test() {
         &dummy_wchar_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gen2(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gen2(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_text_to_gen2
@@ -653,21 +653,21 @@ static void pksav_gen2_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen2(
         &dummy_char,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen2(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_to_gen2
@@ -678,21 +678,21 @@ static void pksav_gen2_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gen2(
         &dummy_wchar_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gen2(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -712,19 +712,19 @@ static void pksav_gen2_time_h_test() {
         NULL,
         &dummy_uint16_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_set_caught_data_time_field(
         &dummy_time_t,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gen2_set_caught_data_time_field(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -748,7 +748,7 @@ static void pksav_gba_save_h_test() {
         PKSAV_GBA_RS,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gba_save(
         &dummy_uint8_t,
@@ -756,7 +756,7 @@ static void pksav_gba_save_h_test() {
         PKSAV_GBA_RS,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_buffer_is_gba_save(
         NULL,
@@ -764,7 +764,7 @@ static void pksav_gba_save_h_test() {
         PKSAV_GBA_RS,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_file_is_gba_save
@@ -775,21 +775,21 @@ static void pksav_gba_save_h_test() {
         PKSAV_GBA_RS,
         &dummy_bool
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gba_save(
         &dummy_char,
         PKSAV_GBA_RS,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_file_is_gba_save(
         NULL,
         PKSAV_GBA_RS,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gba_save_load
@@ -799,19 +799,19 @@ static void pksav_gba_save_h_test() {
         NULL,
         &dummy_pksav_gba_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gba_save_load(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gba_save_load(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gba_save_save
@@ -821,19 +821,19 @@ static void pksav_gba_save_h_test() {
         NULL,
         &dummy_pksav_gba_save_t
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gba_save_save(
         &dummy_char,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_gba_save_save(
         NULL,
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_gba_save_free
@@ -842,7 +842,7 @@ static void pksav_gba_save_h_test() {
     status = pksav_gba_save_free(
         NULL
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 /*
@@ -864,21 +864,21 @@ static void pksav_gba_text_h_test() {
         &dummy_char,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gba(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_from_gba(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_from_gba
@@ -889,21 +889,21 @@ static void pksav_gba_text_h_test() {
         &dummy_wchar_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gba(
         &dummy_uint8_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_from_gba(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_text_to_gba
@@ -914,21 +914,21 @@ static void pksav_gba_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gba(
         &dummy_char,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gba(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
      * pksav_widetext_to_gba
@@ -939,21 +939,21 @@ static void pksav_gba_text_h_test() {
         &dummy_uint8_t,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gba(
         &dummy_wchar_t,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_widetext_to_gba(
         NULL,
         NULL,
         0
     );
-    TEST_ASSERT_EQUAL(status, PKSAV_ERROR_NULL_POINTER);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 }
 
 PKSAV_TEST_MAIN(
