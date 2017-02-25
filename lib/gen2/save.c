@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -38,7 +38,8 @@ typedef enum {
     PKSAV_GEN2_POKEDEX_SEEN,
     PKSAV_GEN2_CURRENT_POKEMON_BOX,
     PKSAV_GEN2_PLAYER_GENDER,
-    PKSAV_GEN2_POKEMON_PC,
+    PKSAV_GEN2_POKEMON_PC_FIRST_HALF,
+    PKSAV_GEN2_POKEMON_PC_SECOND_HALF,
     PKSAV_GEN2_CHECKSUM1,
     PKSAV_GEN2_CHECKSUM2
 } pksav_gen2_field_t;
@@ -60,7 +61,8 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
     {0x2A6C,0x2A47}, // Pokedex seen
     {0x2D6C,0x2D10}, // Current Pokemon box list
     {0x3E3D,0x3E3D}, // Player gender (Crystal only)
-    {0x4000,0x4000}, // Pokemon PC
+    {0x4000,0x4000}, // Pokemon PC (first half)
+    {0x6000,0x6000}, // Pokemon PC (second half)
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
@@ -279,7 +281,16 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
     gen2_save->current_pokemon_box_num = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM);
     gen2_save->current_pokemon_box = (pksav_gen2_pokemon_box_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
-    gen2_save->pokemon_pc = (pksav_gen2_pokemon_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PC);
+
+    for(uint8_t i = 0; i < 7; ++i) {
+        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*i);
+        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+    }
+    for(uint8_t i = 7; i < 14; ++i) {
+        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*(i-7));
+        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+    }
+
     gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
@@ -339,7 +350,9 @@ pksav_error_t pksav_gen2_save_free(
     gen2_save->pokemon_party = NULL;
     gen2_save->current_pokemon_box_num = NULL;
     gen2_save->current_pokemon_box = NULL;
-    gen2_save->pokemon_pc = NULL;
+    for(int i = 0; i < 14; ++i) {
+        gen2_save->pokemon_boxes[i] = NULL;
+    }
     gen2_save->pokemon_box_names = NULL;
     gen2_save->item_bag = NULL;
     gen2_save->item_pc = NULL;

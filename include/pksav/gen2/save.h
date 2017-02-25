@@ -70,7 +70,7 @@ typedef struct {
     pksav_gen2_pokemon_box_t* current_pokemon_box;
 
     //! A pointer to the Pokémon PC.
-    pksav_gen2_pokemon_pc_t* pokemon_pc;
+    pksav_gen2_pokemon_box_t* pokemon_boxes[14];
 
     //! A pointer to the Pokémon PC's box names.
     pksav_gen2_pokemon_box_names_t* pokemon_box_names;

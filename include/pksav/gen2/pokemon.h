@@ -369,12 +369,6 @@ typedef struct {
     uint8_t padding[2];
 } pksav_gen2_pokemon_box_t;
 
-//! Native representation of a Pokémon PC in Generation II.
-typedef struct {
-    //! Individual Pokémon boxes.
-    pksav_gen2_pokemon_box_t boxes[14];
-} pksav_gen2_pokemon_pc_t;
-
 //! List of Pokémon box names in Generation II.
 typedef struct {
     /*!
