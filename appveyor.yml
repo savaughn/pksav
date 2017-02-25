@@ -3,7 +3,6 @@ environment:
     - GENERATOR_NAME: "Visual Studio 14 2015"
     - GENERATOR_NAME: "Visual Studio 14 2015 Win64"
     - GENERATOR_NAME: "Visual Studio 14 2015 ARM"
-    - GENERATOR_NAME: "MinGW Makefiles"
 
 platform: x64
 configuration: Release
