@@ -55,28 +55,28 @@ static void pksav_gen1_save_detection_test(
 }
 
 static void pksav_red_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%sred_blue%spokemon_red.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gen1_save_detection_test(strbuffer);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
 // TODO: Blue
 
 static void pksav_yellow_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%syellow%spokemon_yellow.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gen1_save_detection_test(strbuffer);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
@@ -115,28 +115,28 @@ static void pksav_gen2_save_detection_test(
 }
 
 static void pksav_gold_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%sgold_silver%spokemon_gold.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gen2_save_detection_test(strbuffer, false);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
 // TODO: Silver
 
 static void pksav_crystal_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%scrystal%spokemon_crystal.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gen2_save_detection_test(strbuffer, true);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
@@ -175,40 +175,40 @@ static void pksav_gba_save_detection_test(
 }
 
 static void pksav_ruby_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%sruby_sapphire%spokemon_ruby.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gba_save_detection_test(strbuffer, PKSAV_GBA_RS);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
 // TODO: Sapphire
 
 static void pksav_emerald_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%semerald%spokemon_emerald.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gba_save_detection_test(strbuffer, PKSAV_GBA_EMERALD);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 
 static void pksav_firered_save_detection_test() {
-    char* pksav_test_files = getenv("PKSAV_TEST_FILES");
-    if(pksav_test_files) {
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(pksav_test_saves) {
         snprintf(strbuffer, sizeof(strbuffer), "%s%sfirered_leafgreen%spokemon_firered.sav",
-                 pksav_test_files, FS_SEPARATOR, FS_SEPARATOR
+                 pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
         );
         pksav_gba_save_detection_test(strbuffer, PKSAV_GBA_FRLG);
     } else {
-        TEST_FAIL_MESSAGE("Could not find save files.");
+        TEST_FAIL_MESSAGE("Could not find save saves.");
     }
 }
 

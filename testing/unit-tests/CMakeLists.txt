@@ -21,7 +21,7 @@ ENDIF(UNIX)
 
 MACRO(PKSAV_ADD_UNIT_TEST test_name)
     SET(src ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.c)
-    SET(PKSAV_TEST_FILES "${PKSAV_SOURCE_DIR}/testing/pksav-test-saves")
+    SET(PKSAV_TEST_SAVES "${PKSAV_SOURCE_DIR}/testing/pksav-test-saves")
 
     SET_SOURCE_FILES_PROPERTIES(${src}
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
@@ -33,7 +33,7 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
         IF(WIN32)
             SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}")
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
-            STRING(REPLACE "/" "\\" PKSAV_TEST_FILES "${PKSAV_TEST_FILES}")
+            STRING(REPLACE "/" "\\" PKSAV_TEST_SAVES "${PKSAV_TEST_SAVES}")
             CONFIGURE_FILE(
                 ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
