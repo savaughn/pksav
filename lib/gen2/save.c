@@ -63,6 +63,7 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
     {0x3E3D,0x3E3D}, // Player gender (Crystal only)
     {0x4000,0x4000}, // Pokemon PC (first half)
     {0x6000,0x6000}, // Pokemon PC (second half)
+    {0x2D69,0x2D0D}, // Checksum 1
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
@@ -123,8 +124,8 @@ static void _pksav_gen2_set_save_checksums(
     pksav_gen2_checksums_t checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
-    *((uint16_t*)&data[checksum1_index]) = checksums.first;
-    *((uint16_t*)&data[checksum2_index]) = checksums.second;
+    *((uint16_t*)&data[checksum1_index]) = pksav_littleendian16(checksums.first);
+    *((uint16_t*)&data[checksum2_index]) = pksav_littleendian16(checksums.second);
 }
 
 pksav_error_t pksav_buffer_is_gen2_save(
