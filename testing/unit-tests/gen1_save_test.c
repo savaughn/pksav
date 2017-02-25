@@ -16,7 +16,13 @@
 // TODO: replace when size is moved to header
 #define GEN1_SAVE_SIZE 0x8000
 
-static void pksav_buffer_is_gen1_save_test() {
+static void pksav_buffer_is_gen1_save_test(
+    const char* subdir,
+    const char* save_name
+) {
+    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(save_name);
+
     static char filepath[256];
     static uint8_t save_buffer[GEN1_SAVE_SIZE];
     pksav_error_t error = PKSAV_ERROR_NONE;
@@ -28,8 +34,8 @@ static void pksav_buffer_is_gen1_save_test() {
 
     snprintf(
         filepath, sizeof(filepath),
-        "%s%sred_blue%spokemon_red.sav",
-        pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
+        "%s%s%s%s%s",
+        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
     if(read_file_into_buffer(filepath, save_buffer, GEN1_SAVE_SIZE)) {
@@ -46,7 +52,13 @@ static void pksav_buffer_is_gen1_save_test() {
     TEST_ASSERT_TRUE(is_buffer_gen1_save);
 }
 
-static void pksav_file_is_gen1_save_test() {
+static void pksav_file_is_gen1_save_test(
+    const char* subdir,
+    const char* save_name
+) {
+    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(save_name);
+
     static char filepath[256];
     pksav_error_t error = PKSAV_ERROR_NONE;
 
@@ -57,8 +69,8 @@ static void pksav_file_is_gen1_save_test() {
 
     snprintf(
         filepath, sizeof(filepath),
-        "%s%sred_blue%spokemon_red.sav",
-        pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
+        "%s%s%s%s%s",
+        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
     bool is_file_gen1_save = false;
@@ -70,7 +82,13 @@ static void pksav_file_is_gen1_save_test() {
     TEST_ASSERT_TRUE(is_file_gen1_save);
 }
 
-static void gen1_save_load_and_save_match_test() {
+static void gen1_save_load_and_save_match_test(
+    const char* subdir,
+    const char* save_name
+) {
+    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(save_name);
+
     static char original_filepath[256];
     static char tmp_save_filepath[256];
     pksav_gen1_save_t gen1_save;
@@ -83,13 +101,13 @@ static void gen1_save_load_and_save_match_test() {
 
     snprintf(
         original_filepath, sizeof(original_filepath),
-        "%s%sred_blue%spokemon_red.sav",
-        pksav_test_saves, FS_SEPARATOR, FS_SEPARATOR
+        "%s%s%s%s%s",
+        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
     snprintf(
         tmp_save_filepath, sizeof(tmp_save_filepath),
-        "%s%spksav_red_%d.sav",
-        get_tmp_dir(), FS_SEPARATOR, get_pid()
+        "%s%spksav_%d_%s",
+        get_tmp_dir(), FS_SEPARATOR, get_pid(), save_name
     );
 
     error = pksav_gen1_save_load(
@@ -119,8 +137,36 @@ static void gen1_save_load_and_save_match_test() {
     TEST_ASSERT_FALSE(files_differ);
 }
 
+static void pksav_buffer_is_red_save_test() {
+    pksav_buffer_is_gen1_save_test("red_blue", "pokemon_red.sav");
+}
+
+static void pksav_file_is_red_save_test() {
+    pksav_file_is_gen1_save_test("red_blue", "pokemon_red.sav");
+}
+
+static void red_save_load_and_save_match_test() {
+    gen1_save_load_and_save_match_test("red_blue", "pokemon_red.sav");
+}
+
+static void pksav_buffer_is_yellow_save_test() {
+    pksav_buffer_is_gen1_save_test("yellow", "pokemon_yellow.sav");
+}
+
+static void pksav_file_is_yellow_save_test() {
+    pksav_file_is_gen1_save_test("yellow", "pokemon_yellow.sav");
+}
+
+static void yellow_save_load_and_save_match_test() {
+    gen1_save_load_and_save_match_test("yellow", "pokemon_yellow.sav");
+}
+
 PKSAV_TEST_MAIN(
-    PKSAV_TEST(pksav_buffer_is_gen1_save_test)
-    PKSAV_TEST(pksav_file_is_gen1_save_test)
-    PKSAV_TEST(gen1_save_load_and_save_match_test)
+    PKSAV_TEST(pksav_buffer_is_red_save_test)
+    PKSAV_TEST(pksav_file_is_red_save_test)
+    PKSAV_TEST(red_save_load_and_save_match_test)
+
+    PKSAV_TEST(pksav_buffer_is_yellow_save_test)
+    PKSAV_TEST(pksav_file_is_yellow_save_test)
+    PKSAV_TEST(yellow_save_load_and_save_match_test)
 )
