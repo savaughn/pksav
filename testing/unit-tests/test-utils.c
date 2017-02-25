@@ -12,6 +12,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef PKSAV_PLATFORM_WIN32
+#    include <windows.h>
+#else
+#    include <unistd.h>
+#endif
+
 int get_filesize(
     const char* filename,
     size_t* result_out
@@ -96,4 +102,49 @@ int do_files_differ(
 
     // Should not reach here
     return -1;
+}
+
+int get_pid() {
+#ifdef PKSAV_PLATFORM_WIN32
+    return (int)GetCurrentProcessId();
+#else
+    return (int)getpid();
+#endif
+}
+
+// Direct port of boost::archive::tmpdir()
+const char* get_tmp_dir() {
+    const char* ret = NULL;
+
+    ret = getenv("TMP");
+    if(ret) {
+        return ret;
+    }
+    ret = getenv("TMPDIR");
+    if(ret) {
+        return ret;
+    }
+    ret = getenv("TEMP");
+    if(ret) {
+        return ret;
+    }
+
+    // Somehow, none of these exist, so just guess.
+    ret = "/tmp";
+
+    return ret;
+}
+
+int delete_file(
+    const char* filepath
+) {
+    if(!filepath) {
+        return -1;
+    }
+
+#ifdef PKSAV_PLATFORM_WIN32
+    return (DeleteFile(filepath) != 0) ? 0 : 1;
+#else
+    return remove(filepath);
+#endif
 }

@@ -37,4 +37,12 @@ int do_files_differ(
     bool* result_out
 );
 
+int get_pid();
+
+const char* get_tmp_dir();
+
+int delete_file(
+    const char* filepath
+);
+
 #endif /* PKSAV_TEST_UTILS_H */
