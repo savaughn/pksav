@@ -8,9 +8,17 @@
 #ifndef PKSAV_TEST_UTILS_H
 #define PKSAV_TEST_UTILS_H
 
+#include <pksav/config.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+#ifdef PKSAV_PLATFORM_WIN32
+#    define FS_SEPARATOR "\\"
+#else
+#    define FS_SEPARATOR "/"
+#endif
 
 int get_filesize(
     const char* filename,
