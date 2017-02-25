@@ -69,7 +69,6 @@ SET(unit_tests
     gen1_save_test
     math_test
     null_pointer_test
-    save_detection_test
 )
 
 FOREACH(test ${unit_tests})
