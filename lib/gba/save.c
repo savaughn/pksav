@@ -456,10 +456,15 @@ pksav_error_t pksav_gba_save_save(
     for(uint8_t i = 0; i < 14; ++i) {
         gba_save->unshuffled->sections_arr[i].footer.save_index = save_index;
     }
-    pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
-    pksav_gba_save_slot_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
-                                                                 : &sections_pair[0];
-    gba_save->from_first_slot = !gba_save->from_first_slot;
+
+    pksav_gba_save_slot_t* save_into = NULL;
+    if(!gba_save->small_save) {
+        pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
+        save_into = gba_save->from_first_slot ? &sections_pair[1] : &sections_pair[0];
+        gba_save->from_first_slot = !gba_save->from_first_slot;
+    } else {
+        save_into = (pksav_gba_save_slot_t*)gba_save->raw;
+    }
 
     pksav_set_gba_section_checksums(
         gba_save->unshuffled
@@ -473,6 +478,14 @@ pksav_error_t pksav_gba_save_save(
     // With everything saved to the new slot, reload it
     _pksav_gba_save_set_pointers(
         gba_save
+    );
+
+    // Write to file
+    fwrite(
+        (void*)gba_save->raw,
+        1,
+        (gba_save->small_save ? PKSAV_GBA_SMALL_SAVE_SIZE : PKSAV_GBA_SAVE_SIZE),
+        gba_save_file
     );
 
     fclose(gba_save_file);
