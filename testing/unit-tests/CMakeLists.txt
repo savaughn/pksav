@@ -12,6 +12,12 @@ INCLUDE_DIRECTORIES(
     ${PKSAV_BINARY_DIR}/include
 )
 
+ADD_LIBRARY(pksav-test-utils STATIC test-utils.c)
+IF(UNIX)
+    SET_TARGET_PROPERTIES(pksav-test-utils
+        PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS} -fPIC"
+    )
+ENDIF(UNIX)
 
 MACRO(PKSAV_ADD_UNIT_TEST test_name)
     SET(src ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.c)
@@ -21,7 +27,7 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS}"
     )
     ADD_EXECUTABLE(${test_name} ${src})
-    TARGET_LINK_LIBRARIES(${test_name} pksav unity)
+    TARGET_LINK_LIBRARIES(${test_name} pksav unity pksav-test-utils)
 
     IF(NOT CMAKE_CROSSCOMPILING)
         IF(WIN32)
