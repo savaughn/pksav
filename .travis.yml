@@ -4,7 +4,7 @@ matrix:
  - include:
     # Default/older GCC
     - os: linux
-    - compiler: gcc
+      compiler: gcc
     # Newer GCC
     - os: linux
       compiler: gcc
