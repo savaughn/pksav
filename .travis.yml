@@ -17,6 +17,9 @@ matrix:
             - gcc-6
       env:
         - NEWCC=gcc-6
+    - compiler: gcc
+      env:
+        - NEWCC=x86_64-w64-mingw32
     # Default/older Clang
     - compiler: clang
     # Newer Clang
