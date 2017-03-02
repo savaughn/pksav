@@ -2,16 +2,13 @@ language: c
 
 os:
  - linux
- - osx
 
 matrix:
- - include:
-    # Linux, default/older GCC
-    - os: linux
-      compiler: gcc
-    # Linux, newer GCC
-    - os: linux
-      compiler: gcc
+  include:
+    # Default/older GCC
+    - compiler: gcc
+    # Newer GCC
+    - compiler: gcc
       addons:
         apt:
           sources:
@@ -20,12 +17,10 @@ matrix:
             - gcc-6
       env:
         - NEWCC=gcc-6
-    # Linux, default/older Clang
-    - os: linux
-      compiler: clang
-    # Linux, newer Clang
-    - os: linux
-      compiler: clang
+    # Default/older Clang
+    - compiler: clang
+    # Newer Clang
+    - compiler: clang
       addons:
         apt:
           sources:
@@ -34,8 +29,7 @@ matrix:
             - clang-4.0
       env:
         - NEWCC=clang-4.0
-    # Default OS X
-    - os: osx
+
 
 sudo: required
 dist: trusty
