@@ -3,7 +3,11 @@ language: c
 os:
  - linux
 
+dummy_build: true
+
 matrix:
+  exclude:
+    - dummy_build: true
   include:
     # Default/older GCC
     - compiler: gcc
