@@ -12,6 +12,7 @@
 #include <pksav/gba/save.h>
 
 #include <stdio.h>
+#include <string.h>
 
 // TODO: replace when size is moved to header
 #define GBA_SAVE_SIZE 0x20000
@@ -127,21 +128,54 @@ static void gba_save_load_and_save_match_test(
                 &gba_save
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-    error = pksav_gba_save_free(&gba_save);
+
+    pksav_gba_save_t tmp_save;
+    error = pksav_gba_save_load(
+                tmp_save_filepath,
+                &tmp_save
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(gba_save.gba_game, tmp_save.gba_game);
+
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gba_save.trainer_info, tmp_save.trainer_info, sizeof(*tmp_save.trainer_info))
+    );
+    if(tmp_save.gba_game == PKSAV_GBA_FRLG) {
+        TEST_ASSERT_EQUAL(0,
+            memcmp(gba_save.rival_name, tmp_save.rival_name, 7)
+        );
+    }
+    TEST_ASSERT_EQUAL(*gba_save.money, *tmp_save.money);
+    TEST_ASSERT_EQUAL(*gba_save.casino_coins, *tmp_save.casino_coins);
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gba_save.pokedex_owned, tmp_save.pokedex_owned, 49)
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gba_save.pokedex_seenA, tmp_save.pokedex_seenA, 49)
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gba_save.pokedex_seenB, tmp_save.pokedex_seenB, 49)
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gba_save.pokedex_seenC, tmp_save.pokedex_seenC, 49)
+    );
+    if(tmp_save.gba_game == PKSAV_GBA_FRLG) {
+        TEST_ASSERT_EQUAL(*gba_save.frlg_nat_pokedex_unlockedA, *tmp_save.frlg_nat_pokedex_unlockedA);
+    } else {
+        TEST_ASSERT_EQUAL(*gba_save.rse_nat_pokedex_unlockedA, *tmp_save.rse_nat_pokedex_unlockedA);
+    }
+    TEST_ASSERT_EQUAL(*gba_save.nat_pokedex_unlockedB, *tmp_save.nat_pokedex_unlockedB);
+    TEST_ASSERT_EQUAL(*gba_save.nat_pokedex_unlockedC, *tmp_save.nat_pokedex_unlockedC);
+
+    error = pksav_gba_save_free(&tmp_save);
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-    bool files_differ = false;
-    if(do_files_differ(original_filepath, tmp_save_filepath, &files_differ)) {
-        if(delete_file(tmp_save_filepath)) {
-            TEST_FAIL_MESSAGE("Comparing the two saves failed. Failed to clean up temp file.");
-        }
-        TEST_FAIL_MESSAGE("Comparing the two saves failed.");
-    }
+    error = pksav_gba_save_free(&gba_save);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
     if(delete_file(tmp_save_filepath)) {
         TEST_FAIL_MESSAGE("Failed to clean up temp file.");
     }
-    TEST_ASSERT_FALSE(files_differ);
 }
 
 static void pksav_buffer_is_ruby_save_test() {
