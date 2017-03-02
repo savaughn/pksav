@@ -1,8 +1,37 @@
-language: cpp
+language: c
 
-os:
- - linux
- - osx
+matrix:
+ - include:
+    # Default/older GCC
+    - os: linux
+    - compiler: gcc
+    # Newer GCC
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+      env:
+        - NEWCC=gcc-6
+    # Default/older Clang, dependencies
+    - os: linux
+      compiler: clang
+    # Newer Clang, dependencies
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+      env:
+        - NEWCC=clang-4.0
+    # Default OS X
+    - os: osx
 
 sudo: required
 dist: trusty
