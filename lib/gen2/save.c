@@ -178,7 +178,7 @@ pksav_error_t pksav_file_is_gen2_save(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    FILE* gen2_save = fopen(filepath, "r");
+    FILE* gen2_save = fopen(filepath, "rb");
     if(!gen2_save) {
         return false;
     }

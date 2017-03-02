@@ -47,7 +47,7 @@ int read_file_into_buffer(
         return -1;
     }
 
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(filename, "rb");
     if(!file) {
         return -1;
     }

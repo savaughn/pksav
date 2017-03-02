@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -187,7 +187,7 @@ pksav_error_t pksav_file_is_gba_save(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    FILE* gba_save = fopen(filepath, "r");
+    FILE* gba_save = fopen(filepath, "rb");
     if(!gba_save) {
         *result_out = false;
         return PKSAV_ERROR_NONE;
