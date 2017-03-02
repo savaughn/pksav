@@ -295,6 +295,7 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
+    gen2_save->daylight_savings = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS);
     gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);
     gen2_save->money = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_MONEY);
     gen2_save->trainer_id = (uint16_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_ID);
