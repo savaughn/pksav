@@ -1,11 +1,15 @@
 language: c
 
+os:
+ - linux
+ - osx
+
 matrix:
  - include:
-    # Default/older GCC
+    # Linux, default/older GCC
     - os: linux
       compiler: gcc
-    # Newer GCC
+    # Linux, newer GCC
     - os: linux
       compiler: gcc
       addons:
@@ -16,10 +20,10 @@ matrix:
             - gcc-6
       env:
         - NEWCC=gcc-6
-    # Default/older Clang, dependencies
+    # Linux, default/older Clang
     - os: linux
       compiler: clang
-    # Newer Clang, dependencies
+    # Linux, newer Clang
     - os: linux
       compiler: clang
       addons:
