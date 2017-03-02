@@ -7,6 +7,4 @@
 #
 
 sudo apt-get -y update
-sudo apt-get -y install build-essential cmake clang gcc \
-		    gcc-mingw-w64-x86-64 cppcheck \
-		    valgrind doxygen
+sudo apt-get -y install cmake cppcheck doxygen gcc-mingw-w64-x86-64
