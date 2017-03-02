@@ -30,13 +30,12 @@ Using [Travis](https://travis-ci.org/ncorgan/pksav) and
 [AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every push to this
 repository is automatically tested under the following configurations:
 
- * Compile, unit test (through [Valgrind](http://valgrind.org)), application test (through
-   [Valgrind](http://valgrind.org)):
-   * GCC 4.8.4
-   * Clang 3.5
- * Compile, unit test, application test:
-   * AppleClang 7.3.0
-   * MSVC 2015 (x86, x64)
+ * Compile, unit test:
+   * Ubuntu 14.04 (x64)
+     * GCC: 4.8.4, 6.2.0
+     * Clang: 3.5.0, 4.0.0
+   * Windows Server 2012 R2 (x86, x64)
+     * MSVC 2015 (x86, x64)
  * Cross-compile only:
    * MinGW-GCC 4.8.2
    * MSVC 2015 (ARM)
@@ -62,4 +61,4 @@ Platform Status
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/11/12
+README last updated: 2016/03/01
