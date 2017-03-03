@@ -66,12 +66,22 @@ ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
 SET(unit_tests
     byteswap_test
-    gen1_save_test
-    gen2_save_test
-    gba_save_test
-    math_test
     null_pointer_test
 )
+
+IF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2)
+    LIST(APPEND unit_tests math_test)
+ENDIF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2)
+
+IF(PKSAV_ENABLE_GEN1)
+    LIST(APPEND unit_tests gen1_save_test)
+ENDIF(PKSAV_ENABLE_GEN1)
+IF(PKSAV_ENABLE_GEN2)
+    LIST(APPEND unit_tests gen2_save_test)
+ENDIF(PKSAV_ENABLE_GEN2)
+IF(PKSAV_ENABLE_GBA)
+    LIST(APPEND unit_tests gba_save_test)
+ENDIF(PKSAV_ENABLE_GBA)
 
 FOREACH(test ${unit_tests})
     PKSAV_ADD_UNIT_TEST(${test})
