@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 
 #include <pksav/gba/text.h>
 
+#include <locale.h>
 #include <string.h>
 
 #define PKSAV_GBA_LAST_CHAR  0xF9 // Just control characters past here
@@ -100,6 +101,8 @@ pksav_error_t pksav_text_to_gba(
     if(!input_text || !output_buffer) {
         return PKSAV_ERROR_NULL_POINTER;
     }
+
+    setlocale(LC_CTYPE, "en_US.utf8");
 
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     mbstowcs(widetext, input_text, num_chars);
