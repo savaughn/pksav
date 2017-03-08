@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -431,8 +431,8 @@ typedef struct {
     /*!
      * @brief This Pokémon's nickname.
      *
-     * This value should be accessed with ::pksav_text_from_gba or ::pksav_widetext_from_gba
-     * and should be modified with ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     * This value should be accessed with ::pksav_text_from_gba and modified with
+     * ::pksav_text_to_gba.
      *
      * In all cases, the num_chars parameter should be 10.
      */
@@ -447,8 +447,8 @@ typedef struct {
     /*!
      * @brief This Pokémon's nickname.
      *
-     * This value should be accessed with ::pksav_text_from_gba or ::pksav_widetext_from_gba
-     * and should be modified with ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     * This value should be accessed with ::pksav_text_from_gba and modified with
+     * ::pksav_text_to_gba.
      *
      * In all cases, the num_chars parameter should be 7.
      */

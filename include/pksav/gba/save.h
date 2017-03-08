@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -112,9 +112,8 @@ typedef struct {
     /*!
      * @brief The rival's name in FireRed/LeafGreen.
      *
-     * This name should be accessed with ::pksav_text_from_gba or
-     * ::pksav_widetext_from_gba. This name should be modified with
-     * ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     * This name should be accessed with ::pksav_text_from_gba and modified with
+     * ::pksav_text_to_gba.
      *
      * In either case, the num_chars parameter should be 7.
      *
