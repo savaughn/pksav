@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,18 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+void pksav_mbstowcs(
+    wchar_t* output,
+    const char* input,
+    size_t num_chars
+);
+
+void pksav_wcstombs(
+    char* output,
+    const wchar_t* input,
+    size_t num_chars
+);
 
 ssize_t wchar_map_index(
     const wchar_t* char_map,

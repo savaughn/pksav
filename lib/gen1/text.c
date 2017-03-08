@@ -9,9 +9,6 @@
 
 #include <pksav/gen1/text.h>
 
-#include <locale.h>
-#include <string.h>
-
 #define PKSAV_GEN1_TERMINATOR 0x50
 #define PKSAV_GEN1_SPACE      0x7F
 
@@ -52,15 +49,13 @@ pksav_error_t pksav_text_from_gen1(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    setlocale(LC_CTYPE, "en_US.utf8");
-
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
     pksav_widetext_from_gen1(
         input_buffer, widetext, num_chars
     );
 
     memset(output_text, 0, num_chars);
-    wcstombs(output_text, widetext, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
     free(widetext);
 
     return PKSAV_ERROR_NONE;
@@ -97,10 +92,8 @@ pksav_error_t pksav_text_to_gen1(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    setlocale(LC_CTYPE, "en_US.utf8");
-
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
 
     pksav_widetext_to_gen1(
         widetext, output_buffer, num_chars

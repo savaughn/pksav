@@ -9,9 +9,6 @@
 
 #include <pksav/gba/text.h>
 
-#include <locale.h>
-#include <string.h>
-
 #define PKSAV_GBA_LAST_CHAR  0xF9 // Just control characters past here
 #define PKSAV_GBA_TERMINATOR 0xFF
 
@@ -65,7 +62,7 @@ pksav_error_t pksav_text_from_gba(
     );
 
     memset(output_text, 0, num_chars);
-    wcstombs(output_text, widetext, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
     free(widetext);
 
     return PKSAV_ERROR_NONE;
@@ -102,10 +99,8 @@ pksav_error_t pksav_text_to_gba(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    setlocale(LC_CTYPE, "en_US.utf8");
-
     wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
 
     pksav_widetext_to_gba(
         widetext, output_buffer, num_chars
