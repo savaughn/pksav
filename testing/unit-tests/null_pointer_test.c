@@ -360,7 +360,6 @@ static void pksav_gen1_text_h_test() {
 
     uint8_t dummy_uint8_t = 0;
     char dummy_char = 0;
-    wchar_t dummy_wchar_t = 0;
 
     /*
      * pksav_text_from_gen1
@@ -549,7 +548,6 @@ static void pksav_gen2_text_h_test() {
 
     uint8_t dummy_uint8_t = 0;
     char dummy_char = 0;
-    wchar_t dummy_wchar_t = 0;
 
     /*
      * pksav_text_from_gen2
@@ -766,7 +764,6 @@ static void pksav_gba_text_h_test() {
 
     uint8_t dummy_uint8_t = 0;
     char dummy_char = 0;
-    wchar_t dummy_wchar_t = 0;
 
     /*
      * pksav_text_from_gba
