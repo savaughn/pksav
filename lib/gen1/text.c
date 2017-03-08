@@ -42,28 +42,8 @@ static const wchar_t pksav_gen1_char_map[] = {
     0x00,0xD7,0x00,0x2F,0x2C,0x2640,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
 };
 
-pksav_error_t pksav_text_from_gen1(
-    const uint8_t* input_buffer,
-    char* output_text,
-    size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_widetext_from_gen1(
-        input_buffer, widetext, num_chars
-    );
-
-    memset(output_text, 0, num_chars);
-    pksav_wcstombs(output_text, widetext, num_chars);
-    free(widetext);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_widetext_from_gen1(
+static pksav_error_t _pksav_widetext_from_gen1(
     const uint8_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -85,28 +65,7 @@ pksav_error_t pksav_widetext_from_gen1(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_to_gen1(
-    const char* input_text,
-    uint8_t* output_buffer,
-    size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_mbstowcs(widetext, input_text, num_chars);
-
-    pksav_widetext_to_gen1(
-        widetext, output_buffer, num_chars
-    );
-
-    free(widetext);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_widetext_to_gen1(
+static pksav_error_t _pksav_widetext_to_gen1(
     const wchar_t* input_text,
     uint8_t* output_buffer,
     size_t num_chars
@@ -129,6 +88,48 @@ pksav_error_t pksav_widetext_to_gen1(
             }
         }
     }
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_from_gen1(
+    const uint8_t* input_buffer,
+    char* output_text,
+    size_t num_chars
+) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    _pksav_widetext_from_gen1(
+        input_buffer, widetext, num_chars
+    );
+
+    memset(output_text, 0, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
+    free(widetext);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_to_gen1(
+    const char* input_text,
+    uint8_t* output_buffer,
+    size_t num_chars
+) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
+
+    _pksav_widetext_to_gen1(
+        widetext, output_buffer, num_chars
+    );
+
+    free(widetext);
 
     return PKSAV_ERROR_NONE;
 }

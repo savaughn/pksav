@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -388,31 +388,6 @@ static void pksav_gen1_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
-     * pksav_widetext_from_gen1
-     */
-
-    status = pksav_widetext_from_gen1(
-        NULL,
-        &dummy_wchar_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gen1(
-        &dummy_uint8_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gen1(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
      * pksav_text_to_gen1
      */
 
@@ -431,31 +406,6 @@ static void pksav_gen1_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen1(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_widetext_to_gen1
-     */
-
-    status = pksav_widetext_to_gen1(
-        NULL,
-        &dummy_uint8_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gen1(
-        &dummy_wchar_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gen1(
         NULL,
         NULL,
         0
@@ -627,31 +577,6 @@ static void pksav_gen2_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
-     * pksav_widetext_from_gen2
-     */
-
-    status = pksav_widetext_from_gen2(
-        NULL,
-        &dummy_wchar_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gen2(
-        &dummy_uint8_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gen2(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
      * pksav_text_to_gen2
      */
 
@@ -670,31 +595,6 @@ static void pksav_gen2_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gen2(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_widetext_to_gen2
-     */
-
-    status = pksav_widetext_to_gen2(
-        NULL,
-        &dummy_uint8_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gen2(
-        &dummy_wchar_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gen2(
         NULL,
         NULL,
         0
@@ -894,31 +794,6 @@ static void pksav_gba_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     /*
-     * pksav_widetext_from_gba
-     */
-
-    status = pksav_widetext_from_gba(
-        NULL,
-        &dummy_wchar_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gba(
-        &dummy_uint8_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_from_gba(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
      * pksav_text_to_gba
      */
 
@@ -937,31 +812,6 @@ static void pksav_gba_text_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_text_to_gba(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_widetext_to_gba
-     */
-
-    status = pksav_widetext_to_gba(
-        NULL,
-        &dummy_uint8_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gba(
-        &dummy_wchar_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_widetext_to_gba(
         NULL,
         NULL,
         0
