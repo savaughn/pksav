@@ -11,6 +11,44 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(PKSAV_PLATFORM_MINGW) || defined(PKSAV_PLATFORM_WIN32)
+
+#include <windows.h>
+
+void pksav_mbstowcs(
+    wchar_t* output,
+    const char* input,
+    size_t num_chars
+) {
+    MultiByteToWideChar(
+        CP_UTF8,
+        0,
+        input,
+        -1,
+        output,
+        (int)num_chars
+    );
+}
+
+void pksav_wcstombs(
+    char* output,
+    const wchar_t* input,
+    size_t num_chars
+) {
+    WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        input,
+        -1,
+        output,
+        (int)num_chars,
+        NULL,
+        NULL
+    );
+}
+
+#else
+
 void pksav_mbstowcs(
     wchar_t* output,
     const char* input,
@@ -36,6 +74,8 @@ void pksav_wcstombs(
         (void)setlocale(LC_CTYPE, old_locale);
     }
 }
+
+#endif
 
 // C equivalent of std::distance
 ssize_t wchar_map_index(
