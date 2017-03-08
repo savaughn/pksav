@@ -9,6 +9,8 @@
 
 #include <pksav/gba/text.h>
 
+#include <string.h>
+
 #define PKSAV_GBA_LAST_CHAR  0xF9 // Just control characters past here
 #define PKSAV_GBA_TERMINATOR 0xFF
 

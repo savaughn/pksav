@@ -9,6 +9,8 @@
 
 #include <pksav/gen1/text.h>
 
+#include <string.h>
+
 #define PKSAV_GEN1_TERMINATOR 0x50
 #define PKSAV_GEN1_SPACE      0x7F
 
