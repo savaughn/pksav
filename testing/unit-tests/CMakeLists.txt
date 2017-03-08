@@ -67,6 +67,7 @@ ENDMACRO(PKSAV_ADD_UNIT_TEST)
 SET(unit_tests
     byteswap_test
     null_pointer_test
+    text_conversion_test
 )
 
 IF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2)
