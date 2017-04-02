@@ -89,18 +89,30 @@ static const uint32_t pksav_gen4_offsets[][3] = {
 #define GEN4_BLOCK_INFO_DATA(field,game,raw) raw[GEN4_BLOCK_INFO(field,game)]
 #define GEN4_OFFSET_DATA(field,game,raw)     raw[GEN4_OFFSET(field,game)]
 
-static bool _pksav_file_is_gen4_save(
-    const uint8_t* data,
-    pksav_gen4_game_t gen4_game
+pksav_error_t pksav_buffer_is_gen4_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    pksav_gen4_game_t gen4_game,
+    bool* result_out
 ) {
-    static const uint16_t gen4_offsets[] = {0xC0F4,0xCF20,0xF61C};
+    if(!buffer || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
 
-    return (*(const uint32_t*)&data[gen4_offsets[gen4_game]] == GEN4_BLOCK_INFO(PKSAV_GEN4_GENERAL_BLOCK_LENGTH,gen4_game));
+    if(buffer_len < PKSAV_GEN4_SMALL_SAVE_SIZE) {
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
+    }
+
+    static const uint16_t gen4_offsets[] = {0xC0F4,0xCF20,0xF61C};
+    *result_out = (*(const uint32_t*)&buffer[gen4_offsets[gen4_game]] == GEN4_BLOCK_INFO(PKSAV_GEN4_GENERAL_BLOCK_LENGTH,gen4_game));
+    return PKSAV_ERROR_NONE;
 }
 
-bool pksav_file_is_gen4_save(
+pksav_error_t pksav_file_is_gen4_save(
     const char* filepath,
-    pksav_gen4_game_t gen4_game
+    pksav_gen4_game_t gen4_game,
+    bool* result_out
 ) {
     FILE* gen4_save = fopen(filepath, "rb");
     if(!gen4_save) {
@@ -122,11 +134,17 @@ bool pksav_file_is_gen4_save(
 
     bool ret = false;
     if(num_read == save_size) {
-        ret = _pksav_file_is_gen4_save(gen4_save_data, gen4_game);
+        pksav_buffer_is_gen4_save(
+            gen4_save_data,
+            save_size,
+            gen4_game,
+            &ret
+        );
     }
 
     free(gen4_save_data);
-    return ret;
+    *result_out = ret;
+    return PKSAV_ERROR_NONE;
 }
 
 static void _pksav_gen4_save_set_block_pointers(
@@ -402,13 +420,22 @@ pksav_error_t pksav_gen4_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_DP)) {
-        gen4_save->gen4_game = PKSAV_GEN4_DP;
-    } else if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_PLATINUM)) {
-        gen4_save->gen4_game = PKSAV_GEN4_PLATINUM;
-    } else if(_pksav_file_is_gen4_save(gen4_save->raw, PKSAV_GEN4_HGSS)) {
-        gen4_save->gen4_game = PKSAV_GEN4_HGSS;
-    } else {
+    // Detect what type of save this is.
+    bool found = false;
+    for(pksav_gen4_game_t i = PKSAV_GEN4_DP; i <= PKSAV_GEN4_HGSS; ++i) {
+        pksav_buffer_is_gen4_save(
+            gen4_save->raw,
+            save_size,
+            i,
+            &found
+        );
+        if(found) {
+            gen4_save->gen4_game = i;
+            break;
+        }
+    }
+
+    if(!found) {
         free(gen4_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
@@ -501,5 +528,16 @@ pksav_error_t pksav_gen4_save_save(
     fwrite((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
 
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gen4_save_free(
+    pksav_gen4_save_t* gen4_save
+) {
+    if(!gen4_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    free(gen4_save->raw);
     return PKSAV_ERROR_NONE;
 }

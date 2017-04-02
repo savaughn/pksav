@@ -14,13 +14,9 @@
 #include <stdio.h>
 #include <string.h>
 
-// TODO: change when functions changed to match other components
-
 // TODO: replace when size is moved to header
 #define GEN4_SAVE_SIZE 0x80000
 
-// TODO: enable when buffer function implemented
-/*
 static void pksav_buffer_is_gen4_save_test(
     const char* subdir,
     const char* save_name,
@@ -58,7 +54,6 @@ static void pksav_buffer_is_gen4_save_test(
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_buffer_gen4_save);
 }
-*/
 
 static void pksav_file_is_gen4_save_test(
     const char* subdir,
@@ -69,7 +64,7 @@ static void pksav_file_is_gen4_save_test(
     TEST_ASSERT_NOT_NULL(save_name);
 
     static char filepath[256];
-    //pksav_error_t error = PKSAV_ERROR_NONE;
+    pksav_error_t error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
     if(!pksav_test_saves) {
@@ -83,10 +78,12 @@ static void pksav_file_is_gen4_save_test(
     );
 
     bool is_file_gen4_save = false;
-    is_file_gen4_save = pksav_file_is_gen4_save(
-                            filepath,
-                            game
-                        );
+    error = pksav_file_is_gen4_save(
+                filepath,
+                game,
+                &is_file_gen4_save
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_file_gen4_save);
 }
 
@@ -181,41 +178,9 @@ static void gen4_save_load_and_save_match_test(
     }
 }
 
-/*static void pksav_buffer_is_ruby_save_test() {
-    pksav_buffer_is_gba_save_test("ruby_sapphire", "pokemon_ruby.sav", PKSAV_GBA_RS);
+static void pksav_buffer_is_diamond_save_test() {
+    pksav_buffer_is_gen4_save_test("diamond_pearl", "pokemon_diamond.sav", PKSAV_GEN4_DP);
 }
-
-static void pksav_file_is_ruby_save_test() {
-    pksav_file_is_gba_save_test("ruby_sapphire", "pokemon_ruby.sav", PKSAV_GBA_RS);
-}
-
-static void ruby_save_load_and_save_match_test() {
-    gba_save_load_and_save_match_test("ruby_sapphire", "pokemon_ruby.sav", PKSAV_GBA_RS);
-}
-
-static void pksav_buffer_is_emerald_save_test() {
-    pksav_buffer_is_gba_save_test("emerald", "pokemon_emerald.sav", PKSAV_GBA_EMERALD);
-}
-
-static void pksav_file_is_emerald_save_test() {
-    pksav_file_is_gba_save_test("emerald", "pokemon_emerald.sav", PKSAV_GBA_EMERALD);
-}
-
-static void emerald_save_load_and_save_match_test() {
-    gba_save_load_and_save_match_test("emerald", "pokemon_emerald.sav", PKSAV_GBA_EMERALD);
-}
-
-static void pksav_buffer_is_firered_save_test() {
-    pksav_buffer_is_gba_save_test("firered_leafgreen", "pokemon_firered.sav", PKSAV_GBA_FRLG);
-}
-
-static void pksav_file_is_firered_save_test() {
-    pksav_file_is_gba_save_test("firered_leafgreen", "pokemon_firered.sav", PKSAV_GBA_FRLG);
-}
-
-static void firered_save_load_and_save_match_test() {
-    gba_save_load_and_save_match_test("firered_leafgreen", "pokemon_firered.sav", PKSAV_GBA_FRLG);
-}*/
 
 static void pksav_file_is_diamond_save_test() {
     pksav_file_is_gen4_save_test("diamond_pearl", "pokemon_diamond.sav", PKSAV_GEN4_DP);
@@ -225,12 +190,20 @@ static void diamond_save_load_and_save_match_test() {
     gen4_save_load_and_save_match_test("diamond_pearl", "pokemon_diamond.sav", PKSAV_GEN4_DP);
 }
 
+static void pksav_buffer_is_platinum_save_test() {
+    pksav_buffer_is_gen4_save_test("platinum", "pokemon_platinum.sav", PKSAV_GEN4_PLATINUM);
+}
+
 static void pksav_file_is_platinum_save_test() {
     pksav_file_is_gen4_save_test("platinum", "pokemon_platinum.sav", PKSAV_GEN4_PLATINUM);
 }
 
 static void platinum_save_load_and_save_match_test() {
     gen4_save_load_and_save_match_test("platinum", "pokemon_platinum.sav", PKSAV_GEN4_PLATINUM);
+}
+
+static void pksav_buffer_is_soulsilver_save_test() {
+    pksav_buffer_is_gen4_save_test("heartgold_soulsilver", "pokemon_soulsilver.sav", PKSAV_GEN4_HGSS);
 }
 
 static void pksav_file_is_soulsilver_save_test() {
@@ -242,10 +215,13 @@ static void soulsilver_save_load_and_save_match_test() {
 }
 
 PKSAV_TEST_MAIN(
+    PKSAV_TEST(pksav_buffer_is_diamond_save_test)
     PKSAV_TEST(pksav_file_is_diamond_save_test)
     PKSAV_TEST(diamond_save_load_and_save_match_test)
+    PKSAV_TEST(pksav_buffer_is_platinum_save_test)
     PKSAV_TEST(pksav_file_is_platinum_save_test)
     PKSAV_TEST(platinum_save_load_and_save_match_test)
+    PKSAV_TEST(pksav_buffer_is_soulsilver_save_test)
     PKSAV_TEST(pksav_file_is_soulsilver_save_test)
     PKSAV_TEST(soulsilver_save_load_and_save_match_test)
 )

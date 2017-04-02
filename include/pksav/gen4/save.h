@@ -101,9 +101,17 @@ typedef struct {
     #endif
 } pksav_gen4_save_t;
 
-PKSAV_API bool pksav_file_is_gen4_save(
+PKSAV_API pksav_error_t pksav_buffer_is_gen4_save(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    pksav_gen4_game_t gen4_game,
+    bool* result_out
+);
+
+PKSAV_API pksav_error_t pksav_file_is_gen4_save(
     const char* filepath,
-    pksav_gen4_game_t gen4_game
+    pksav_gen4_game_t gen4_game,
+    bool* result_out
 );
 
 PKSAV_API pksav_error_t pksav_gen4_save_load(
@@ -116,10 +124,8 @@ PKSAV_API pksav_error_t pksav_gen4_save_save(
     pksav_gen4_save_t* gen4_save
 );
 
-static PKSAV_INLINE void pksav_gen4_save_free(
+PKSAV_API pksav_error_t pksav_gen4_save_free(
     pksav_gen4_save_t* gen4_save
-) {
-    free(gen4_save->raw);
-}
+);
 
 #endif /* PKSAV_GEN4_SAVE_H */
