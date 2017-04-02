@@ -102,7 +102,7 @@ bool pksav_file_is_gen4_save(
     const char* filepath,
     pksav_gen4_game_t gen4_game
 ) {
-    FILE* gen4_save = fopen(filepath, "r");
+    FILE* gen4_save = fopen(filepath, "rb");
     if(!gen4_save) {
         return false;
     }
@@ -376,7 +376,7 @@ pksav_error_t pksav_gen4_save_load(
     pksav_gen4_save_t* gen4_save
 ) {
     // Read the file and make sure it's valid
-    FILE* gen4_save_file = fopen(filepath, "r");
+    FILE* gen4_save_file = fopen(filepath, "rb");
     if(!gen4_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -453,7 +453,7 @@ pksav_error_t pksav_gen4_save_save(
     pksav_gen4_save_t* gen4_save
 ) {
     // Make sure we can write to this file
-    FILE* gen4_save_file = fopen(filepath, "w");
+    FILE* gen4_save_file = fopen(filepath, "wb");
     if(!gen4_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
