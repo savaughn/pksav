@@ -389,6 +389,51 @@ static void _pksav_gen4_save_set_block_checksums(
     }
 }
 
+static void _pksav_gen4_crypt_all_pokemon(
+    pksav_gen4_save_t* gen4_save,
+    bool encrypt
+) {
+    // Party
+    for(uint8_t i = 0; i < 6; ++i) {
+        if(encrypt) {
+            pksav_nds_pokemon_set_checksum(
+                &gen4_save->pokemon_party->party[i].pc
+            );
+        }
+        pksav_nds_crypt_pokemon(
+            &gen4_save->pokemon_party->party[i].pc,
+            encrypt
+        );
+    }
+
+    // PC
+    for(uint8_t i = 0; i < 18; ++i) {
+        for(uint8_t j = 0; j < 30; ++j) {
+            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+                if(encrypt) {
+                    pksav_nds_pokemon_set_checksum(
+                        &gen4_save->pokemon_pc->hgss.boxes[i].entries[j]
+                    );
+                }
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
+                    encrypt
+                );
+            } else {
+                if(encrypt) {
+                    pksav_nds_pokemon_set_checksum(
+                        &gen4_save->pokemon_pc->dppt.boxes[i].entries[j]
+                    );
+                }
+                pksav_nds_crypt_pokemon(
+                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
+                    encrypt
+                );
+            }
+        }
+    }
+}
+
 pksav_error_t pksav_gen4_save_load(
     const char* filepath,
     pksav_gen4_save_t* gen4_save
@@ -446,31 +491,10 @@ pksav_error_t pksav_gen4_save_load(
     _pksav_gen4_save_set_public_pointers(
         gen4_save
     );
-
-    // Decrypt party
-    for(uint8_t i = 0; i < 6; ++i) {
-        pksav_nds_crypt_pokemon(
-            &gen4_save->pokemon_party->party[i].pc,
-            false
-        );
-    }
-
-    // Decrypt PC
-    for(uint8_t i = 0; i < 18; ++i) {
-        for(uint8_t j = 0; j < 30; ++j) {
-            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-                pksav_nds_crypt_pokemon(
-                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
-                    false
-                );
-            } else {
-                pksav_nds_crypt_pokemon(
-                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
-                    false
-                );
-            }
-        }
-    }
+    _pksav_gen4_crypt_all_pokemon(
+        gen4_save,
+        false
+    );
 
     return PKSAV_ERROR_NONE;
 }
@@ -485,39 +509,11 @@ pksav_error_t pksav_gen4_save_save(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    // Encrypt party
-    for(uint8_t i = 0; i < 6; ++i) {
-        pksav_nds_pokemon_set_checksum(
-            &gen4_save->pokemon_party->party[i].pc
-        );
-        pksav_nds_crypt_pokemon(
-            &gen4_save->pokemon_party->party[i].pc,
-            true
-        );
-    }
-
-    // Encrypt PC
-    for(uint8_t i = 0; i < 18; ++i) {
-        for(uint8_t j = 0; j < 30; ++j) {
-            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-                pksav_nds_pokemon_set_checksum(
-                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j]
-                );
-                pksav_nds_crypt_pokemon(
-                    &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
-                    true
-                );
-            } else {
-                pksav_nds_pokemon_set_checksum(
-                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j]
-                );
-                pksav_nds_crypt_pokemon(
-                    &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
-                    true
-                );
-            }
-        }
-    }
+    // Encrypt all Pokémon
+    _pksav_gen4_crypt_all_pokemon(
+        gen4_save,
+        true
+    );
 
     // Set save checksums
     _pksav_gen4_save_set_block_checksums(gen4_save);
@@ -527,6 +523,12 @@ pksav_error_t pksav_gen4_save_save(
                                              : PKSAV_GEN4_LARGE_SAVE_SIZE;
     fwrite((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
+
+    // Decrypt all Pokémon again
+    _pksav_gen4_crypt_all_pokemon(
+        gen4_save,
+        false
+    );
 
     return PKSAV_ERROR_NONE;
 }

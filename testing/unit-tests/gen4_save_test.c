@@ -140,9 +140,15 @@ static void gen4_save_load_and_save_match_test(
     TEST_ASSERT_EQUAL(0,
         memcmp(gen4_save.pokemon_party, tmp_save.pokemon_party, sizeof(pksav_gen4_pokemon_party_t))
     );
-    TEST_ASSERT_EQUAL(0,
-        memcmp(gen4_save.pokemon_pc, tmp_save.pokemon_pc, sizeof(pksav_gen4_pokemon_pc_t))
-    );
+    if(gen4_save.gen4_game == PKSAV_GEN4_HGSS) {
+        TEST_ASSERT_EQUAL(0,
+            memcmp(gen4_save.pokemon_pc, tmp_save.pokemon_pc, sizeof(gen4_save.pokemon_pc->hgss))
+        );
+    } else {
+        TEST_ASSERT_EQUAL(0,
+            memcmp(gen4_save.pokemon_pc, tmp_save.pokemon_pc, sizeof(gen4_save.pokemon_pc->dppt))
+        );
+    }
     TEST_ASSERT_EQUAL(0,
         memcmp(gen4_save.item_bag, tmp_save.item_bag, sizeof(pksav_gen4_item_bag_t))
     );
