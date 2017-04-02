@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,9 @@
 
 #include <pksav/gen4/text.h>
 
+#include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 
 #define PKSAV_GEN4_TERMINATOR 0xFFFF
 
@@ -52,6 +54,7 @@ static const wchar_t pksav_gen4_char_map1[] = { //0x0000,
     0x266A,0x0025,0x2600,0x2601,0x2602,0x2603,0x263A,0x265A,0x265B,0x2639,0x2197,0x2198,0x263D,0x0020,0x2074,0x20A7,
     0x20A6,0x00B0,0x005F,0xFF3F,
 };
+static const size_t map1_size = sizeof(pksav_gen4_char_map1)/sizeof(wchar_t);
 
 static const wchar_t pksav_gen4_char_map2[] = {
     0xAC00,0xAC01,0xAC04,0xAC07,0xAC08,0xAC09,0xAC0A,0xAC10,0xAC11,0xAC12,0xAC13,0xAC14,0xAC15,0xAC16,0xAC17,0xAC19,
@@ -205,6 +208,7 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0x1112,0x1161,0x1162,0x1163,0x1164,0x1165,0x1166,0x1167,0x1168,0x1169,0x116D,0x116E,0x1172,0x1173,0x1175,0xB894,
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
+static const size_t map2_size = sizeof(pksav_gen4_char_map2)/sizeof(wchar_t);
 
 static pksav_error_t _pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
@@ -242,9 +246,14 @@ static pksav_error_t _pksav_widetext_to_gen4(
     memset(output_buffer, 0xFF, sizeof(uint16_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
+        ssize_t index = wchar_map_index(pksav_gen4_char_map1, map1_size, input_text[i]);
         if(index == -1) {
-            break;
+            index = wchar_map_index(pksav_gen4_char_map2, map2_size, input_text[i]);
+            if(index == -1) {
+                break;
+            } else {
+                output_buffer[i] = (uint16_t)index;
+            }
         } else {
             output_buffer[i] = (uint16_t)index;
         }
