@@ -137,41 +137,49 @@ static void gen4_save_load_and_save_match_test(
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(gen4_save.gen4_game, tmp_save.gen4_game);
 
-    /*TEST_ASSERT_EQUAL(0,
-        memcmp(gba_save.trainer_info, tmp_save.trainer_info, sizeof(*tmp_save.trainer_info))
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.pokemon_party, tmp_save.pokemon_party, sizeof(pksav_gen4_pokemon_party_t))
     );
-    if(tmp_save.gba_game == PKSAV_GBA_FRLG) {
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.pokemon_pc, tmp_save.pokemon_pc, sizeof(pksav_gen4_pokemon_pc_t))
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.item_bag, tmp_save.item_bag, sizeof(pksav_gen4_item_bag_t))
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.trainer_name, tmp_save.trainer_name, 16)
+    );
+    TEST_ASSERT_EQUAL(*gen4_save.trainer_gender, *tmp_save.trainer_gender);
+    TEST_ASSERT_EQUAL(*gen4_save.money, *tmp_save.money);
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.rival_name, tmp_save.rival_name, 16)
+    );
+    TEST_ASSERT_EQUAL(*gen4_save.adventure_started_time, *tmp_save.adventure_started_time);
+    TEST_ASSERT_EQUAL(*gen4_save.pokemon_league_champ_time, *tmp_save.pokemon_league_champ_time);
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.total_playtime, tmp_save.total_playtime, sizeof(pksav_date_t))
+    );
+    TEST_ASSERT_EQUAL(0,
+        memcmp(gen4_save.player_coordinates, tmp_save.player_coordinates, sizeof(pksav_coordinates_t))
+    );
+    if(gen4_save.gen4_game == PKSAV_GEN4_HGSS) {
         TEST_ASSERT_EQUAL(0,
-            memcmp(gba_save.rival_name, tmp_save.rival_name, 7)
+            memcmp(gen4_save.hgss_follower_coordinates, tmp_save.hgss_follower_coordinates, sizeof(pksav_coordinates_t))
         );
     }
-    TEST_ASSERT_EQUAL(*gba_save.money, *tmp_save.money);
-    TEST_ASSERT_EQUAL(*gba_save.casino_coins, *tmp_save.casino_coins);
     TEST_ASSERT_EQUAL(0,
-        memcmp(gba_save.pokedex_owned, tmp_save.pokedex_owned, 49)
+        memcmp(gen4_save.trainer_card_signature, tmp_save.trainer_card_signature, sizeof(pksav_trainer_card_signature_t))
     );
-    TEST_ASSERT_EQUAL(0,
-        memcmp(gba_save.pokedex_seenA, tmp_save.pokedex_seenA, 49)
-    );
-    TEST_ASSERT_EQUAL(0,
-        memcmp(gba_save.pokedex_seenB, tmp_save.pokedex_seenB, 49)
-    );
-    TEST_ASSERT_EQUAL(0,
-        memcmp(gba_save.pokedex_seenC, tmp_save.pokedex_seenC, 49)
-    );
-    if(tmp_save.gba_game == PKSAV_GBA_FRLG) {
-        TEST_ASSERT_EQUAL(*gba_save.frlg_nat_pokedex_unlockedA, *tmp_save.frlg_nat_pokedex_unlockedA);
-    } else {
-        TEST_ASSERT_EQUAL(*gba_save.rse_nat_pokedex_unlockedA, *tmp_save.rse_nat_pokedex_unlockedA);
+    TEST_ASSERT_EQUAL(*gen4_save.sinnoh_johto_badges, *tmp_save.sinnoh_johto_badges);
+    if(gen4_save.gen4_game == PKSAV_GEN4_HGSS) {
+        TEST_ASSERT_EQUAL(*gen4_save.hgss_kanto_badges, *tmp_save.hgss_kanto_badges);
     }
-    TEST_ASSERT_EQUAL(*gba_save.nat_pokedex_unlockedB, *tmp_save.nat_pokedex_unlockedB);
-    TEST_ASSERT_EQUAL(*gba_save.nat_pokedex_unlockedC, *tmp_save.nat_pokedex_unlockedC);*/
 
-    pksav_gen4_save_free(&tmp_save);
-    //TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    error = pksav_gen4_save_free(&tmp_save);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-    pksav_gen4_save_free(&gen4_save);
-    //TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    error = pksav_gen4_save_free(&gen4_save);
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
     if(delete_file(tmp_save_filepath)) {
         TEST_FAIL_MESSAGE("Failed to clean up temp file.");
