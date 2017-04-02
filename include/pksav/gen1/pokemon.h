@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Native formats for Pokémon in Generation I games.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -277,15 +277,15 @@ typedef struct {
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen1
-     * or ::pksav_widetext_from_gen1 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen1
+     * with a num_chars value of 10.
      */
     uint8_t otnames[6][11];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen1
-     * or ::pksav_widetext_from_gen1 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen1
+     * with a num_chars value of 10.
      */
     uint8_t nicknames[6][11];
 } pksav_gen1_pokemon_party_t;
@@ -308,15 +308,15 @@ typedef struct {
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen1
-     * or ::pksav_widetext_from_gen1 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen1
+     * with a num_chars value of 10.
      */
     uint8_t otnames[20][11];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen1
-     * or ::pksav_widetext_from_gen1 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen1
+     * with a num_chars value of 10).
      */
     uint8_t nicknames[20][11];
 } pksav_gen1_pokemon_box_t;

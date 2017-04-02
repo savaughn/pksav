@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Functions for interacting with Generation I save files.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -167,21 +167,21 @@ typedef struct {
     /*!
      * @brief A pointer to the trainer's name.
      *
-     * This value should be accessed with ::pksav_text_from_gen1 or
-     * ::pksav_widetext_from_gen1, both with a num_chars value of 7.
+     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
+     * value of 7.
      *
-     * This value should be set with ::pksav_text_to_gen1 or
-     * ::pksav_widetext_to_gen1, both with a num_chars value of 7.
+     * This value should be set with ::pksav_text_to_gen1 with a num_chars
+     * value of 7.
      */
     uint8_t* trainer_name;
     /*!
      * @brief A pointer to the rival's name.
      *
-     * This value should be accessed with ::pksav_text_from_gen1 or
-     * ::pksav_widetext_from_gen1, both with a num_chars value of 7.
+     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
+     * value of 7.
      *
-     * This value should be set with ::pksav_text_to_gen1 or
-     * ::pksav_widetext_to_gen1, both with a num_chars value of 7.
+     * This value should be set with ::pksav_text_to_gen1 with a num_chars
+     * value of 7.
      */
     uint8_t* rival_name;
 

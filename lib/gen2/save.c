@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -38,7 +38,8 @@ typedef enum {
     PKSAV_GEN2_POKEDEX_SEEN,
     PKSAV_GEN2_CURRENT_POKEMON_BOX,
     PKSAV_GEN2_PLAYER_GENDER,
-    PKSAV_GEN2_POKEMON_PC,
+    PKSAV_GEN2_POKEMON_PC_FIRST_HALF,
+    PKSAV_GEN2_POKEMON_PC_SECOND_HALF,
     PKSAV_GEN2_CHECKSUM1,
     PKSAV_GEN2_CHECKSUM2
 } pksav_gen2_field_t;
@@ -60,7 +61,9 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
     {0x2A6C,0x2A47}, // Pokedex seen
     {0x2D6C,0x2D10}, // Current Pokemon box list
     {0x3E3D,0x3E3D}, // Player gender (Crystal only)
-    {0x4000,0x4000}, // Pokemon PC
+    {0x4000,0x4000}, // Pokemon PC (first half)
+    {0x6000,0x6000}, // Pokemon PC (second half)
+    {0x2D69,0x2D0D}, // Checksum 1
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
@@ -121,8 +124,8 @@ static void _pksav_gen2_set_save_checksums(
     pksav_gen2_checksums_t checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
-    *((uint16_t*)&data[checksum1_index]) = checksums.first;
-    *((uint16_t*)&data[checksum2_index]) = checksums.second;
+    *((uint16_t*)&data[checksum1_index]) = pksav_littleendian16(checksums.first);
+    *((uint16_t*)&data[checksum2_index]) = pksav_littleendian16(checksums.second);
 }
 
 pksav_error_t pksav_buffer_is_gen2_save(
@@ -175,7 +178,7 @@ pksav_error_t pksav_file_is_gen2_save(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    FILE* gen2_save = fopen(filepath, "r");
+    FILE* gen2_save = fopen(filepath, "rb");
     if(!gen2_save) {
         return false;
     }
@@ -221,7 +224,7 @@ pksav_error_t pksav_gen2_save_load(
     }
 
     // Read the file and make sure it's valid
-    FILE* gen2_save_file = fopen(filepath, "r");
+    FILE* gen2_save_file = fopen(filepath, "rb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -279,15 +282,31 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
     gen2_save->current_pokemon_box_num = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM);
     gen2_save->current_pokemon_box = (pksav_gen2_pokemon_box_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
-    gen2_save->pokemon_pc = (pksav_gen2_pokemon_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PC);
+
+    for(uint8_t i = 0; i < 7; ++i) {
+        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*i);
+        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+    }
+    for(uint8_t i = 7; i < 14; ++i) {
+        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*(i-7));
+        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+    }
+
     gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
+    gen2_save->daylight_savings = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS);
     gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);
     gen2_save->money = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_MONEY);
     gen2_save->trainer_id = (uint16_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_ID);
     gen2_save->trainer_name = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_NAME);
     gen2_save->rival_name = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_RIVAL_NAME);
+
+    if(gen2_save->gen2_game == PKSAV_GEN2_CRYSTAL) {
+        gen2_save->trainer_gender = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER);
+    } else {
+        gen2_save->trainer_gender = NULL;
+    }
 
     return PKSAV_ERROR_NONE;
 }
@@ -301,7 +320,7 @@ pksav_error_t pksav_gen2_save_save(
     }
 
     // Make sure we can write to this file
-    FILE* gen2_save_file = fopen(filepath, "w");
+    FILE* gen2_save_file = fopen(filepath, "wb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -322,11 +341,31 @@ pksav_error_t pksav_gen2_save_save(
 pksav_error_t pksav_gen2_save_free(
     pksav_gen2_save_t* gen2_save
 ) {
-    if(!gen2_save) {
+    if(!gen2_save || !gen2_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
+    // Free dynamically allocated memory
     free(gen2_save->raw);
+
+    // Set all pointer members to NULL
+    gen2_save->pokemon_party = NULL;
+    gen2_save->current_pokemon_box_num = NULL;
+    gen2_save->current_pokemon_box = NULL;
+    for(int i = 0; i < 14; ++i) {
+        gen2_save->pokemon_boxes[i] = NULL;
+    }
+    gen2_save->pokemon_box_names = NULL;
+    gen2_save->item_bag = NULL;
+    gen2_save->item_pc = NULL;
+    gen2_save->trainer_name = NULL;
+    gen2_save->trainer_id = NULL;
+    gen2_save->trainer_gender = NULL;
+    gen2_save->money = NULL;
+    gen2_save->rival_name = NULL;
+    gen2_save->daylight_savings = NULL;
+    gen2_save->time_played = NULL;
+    gen2_save->raw = NULL;
 
     return PKSAV_ERROR_NONE;
 }

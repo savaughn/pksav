@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -76,7 +76,7 @@ pksav_error_t pksav_file_is_gen1_save(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    FILE* gen1_save = fopen(filepath, "r");
+    FILE* gen1_save = fopen(filepath, "rb");
     if(!gen1_save) {
         *result_out = false;
         return PKSAV_ERROR_NONE;
@@ -103,6 +103,7 @@ pksav_error_t pksav_file_is_gen1_save(
                                    &ret
                                );
         if(status) {
+            free(gen1_save_data);
             return status;
         }
     }
@@ -121,7 +122,7 @@ pksav_error_t pksav_gen1_save_load(
     }
 
     // Read the file and make sure it's valid
-    FILE* gen1_save_file = fopen(filepath, "r");
+    FILE* gen1_save_file = fopen(filepath, "rb");
     if(!gen1_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -201,7 +202,7 @@ pksav_error_t pksav_gen1_save_save(
     }
 
     // Make sure we can write to this file
-    FILE* gen1_save_file = fopen(filepath, "w");
+    FILE* gen1_save_file = fopen(filepath, "wb");
     if(!gen1_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -219,7 +220,7 @@ pksav_error_t pksav_gen1_save_save(
 pksav_error_t pksav_gen1_save_free(
     pksav_gen1_save_t* gen1_save
 ) {
-    if(!gen1_save) {
+    if(!gen1_save || !gen1_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 

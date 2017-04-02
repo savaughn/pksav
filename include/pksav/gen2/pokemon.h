@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Native formats and convenience functions for Pokémon in Generation II games.
  *
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -320,15 +320,15 @@ typedef struct {
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen2
-     * or ::pksav_widetext_from_gen2 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen2
+     * with a num_chars value of 10.
      */
     uint8_t otnames[6][11];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen2
-     * or ::pksav_widetext_from_gen2 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen2
+     * with a num_chars value of 10.
      */
     uint8_t nicknames[6][11];
 } pksav_gen2_pokemon_party_t;
@@ -354,30 +354,29 @@ typedef struct {
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen2
-     * or ::pksav_widetext_from_gen2 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen2
+     * with a num_chars value of 10.
      */
     uint8_t otnames[20][11];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *
-     * To access this value, you should use the functions ::pksav_text_from_gen2
-     * or ::pksav_widetext_from_gen2 (with a num_chars value of 10).
+     * To access this value, you should use the function ::pksav_text_from_gen2
+     * with a num_chars value of 10.
      */
     uint8_t nicknames[20][11];
     //! Padding.
     uint8_t padding[2];
 } pksav_gen2_pokemon_box_t;
 
-//! Native representation of a Pokémon PC in Generation II.
-typedef struct {
-    //! Individual Pokémon boxes.
-    pksav_gen2_pokemon_box_t boxes[14];
-} pksav_gen2_pokemon_pc_t;
-
 //! List of Pokémon box names in Generation II.
 typedef struct {
-    //! Individual names.
+    /*!
+     * @brief Each box name.
+     *
+     * To access a name, you should use the function ::pksav_text_from_gen2
+     * with a num_chars value of 9.
+     */
     uint8_t names[14][9];
 } pksav_gen2_pokemon_box_names_t;
 

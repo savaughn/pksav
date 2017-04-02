@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -124,13 +124,19 @@ static const uint16_t pksav_gba_section4_offsets[][4] = {
     {0x0000,0x0000,0x0BCC}  // Rival Name (FR/LG only)
 };
 
-bool pksav_buffer_is_gba_save(
+pksav_error_t pksav_buffer_is_gba_save(
     const uint8_t* buffer,
     size_t buffer_len,
-    pksav_gba_game_t gba_game
+    pksav_gba_game_t gba_game,
+    bool* result_out
 ) {
+    if(!buffer || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     if(buffer_len < PKSAV_GBA_SMALL_SAVE_SIZE) {
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     /*
@@ -162,21 +168,29 @@ bool pksav_buffer_is_gba_save(
     uint32_t security_key2 = pksav_littleendian32(SECURITY_KEY2((&unshuffled), gba_game));
 
     if(gba_game == PKSAV_GBA_RS) {
-        return (game_code == 0) && (security_key1 == security_key2);
+        *result_out = (game_code == 0) && (security_key1 == security_key2);
     } else if(gba_game == PKSAV_GBA_FRLG) {
-        return (game_code == 1) && (security_key1 == security_key2);
+        *result_out = (game_code == 1) && (security_key1 == security_key2);
     } else {
-        return (security_key1 == security_key2);
+        *result_out = (security_key1 == security_key2);
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-bool pksav_file_is_gba_save(
+pksav_error_t pksav_file_is_gba_save(
     const char* filepath,
-    pksav_gba_game_t gba_game
+    pksav_gba_game_t gba_game,
+    bool* result_out
 ) {
-    FILE* gba_save = fopen(filepath, "r");
+    if(!filepath || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    FILE* gba_save = fopen(filepath, "rb");
     if(!gba_save) {
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     fseek(gba_save, 0, SEEK_END);
@@ -194,15 +208,17 @@ bool pksav_file_is_gba_save(
 
     bool ret = false;
     if(num_read == filesize) {
-        ret = pksav_buffer_is_gba_save(
-                  gba_save_data,
-                  filesize,
-                  gba_game
-              );
+        pksav_buffer_is_gba_save(
+            gba_save_data,
+            filesize,
+            gba_game,
+            &ret
+        );
     }
 
     free(gba_save_data);
-    return ret;
+    *result_out = ret;
+    return PKSAV_ERROR_NONE;
 }
 
 // Assumes all dynamically allocated memory has already been allocated
@@ -342,8 +358,12 @@ pksav_error_t pksav_gba_save_load(
     const char* filepath,
     pksav_gba_save_t* gba_save
 ) {
+    if(!filepath || !gba_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Read the file and make sure it's valid
-    FILE* gba_save_file = fopen(filepath, "r");
+    FILE* gba_save_file = fopen(filepath, "rb");
     if(!gba_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -369,14 +389,14 @@ pksav_error_t pksav_gba_save_load(
     // Detect what kind of save this is
     bool found = false;
     for(pksav_gba_game_t i = PKSAV_GBA_RS; i <= PKSAV_GBA_FRLG; ++i) {
-        if(pksav_buffer_is_gba_save(
-               gba_save->raw,
-               filesize,
-               i
-           )
-        ) {
+        pksav_buffer_is_gba_save(
+            gba_save->raw,
+            filesize,
+            i,
+            &found
+        );
+        if(found) {
             gba_save->gba_game = i;
-            found = true;
             break;
         }
     }
@@ -400,8 +420,12 @@ pksav_error_t pksav_gba_save_save(
     const char* filepath,
     pksav_gba_save_t* gba_save
 ) {
+    if(!filepath || !gba_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Make sure we can write to this file
-    FILE* gba_save_file = fopen(filepath, "w");
+    FILE* gba_save_file = fopen(filepath, "wb");
     if(!gba_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -432,10 +456,15 @@ pksav_error_t pksav_gba_save_save(
     for(uint8_t i = 0; i < 14; ++i) {
         gba_save->unshuffled->sections_arr[i].footer.save_index = save_index;
     }
-    pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
-    pksav_gba_save_slot_t* save_into = gba_save->from_first_slot ? &sections_pair[1]
-                                                                 : &sections_pair[0];
-    gba_save->from_first_slot = !gba_save->from_first_slot;
+
+    pksav_gba_save_slot_t* save_into = NULL;
+    if(!gba_save->small_save) {
+        pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
+        save_into = gba_save->from_first_slot ? &sections_pair[1] : &sections_pair[0];
+        gba_save->from_first_slot = !gba_save->from_first_slot;
+    } else {
+        save_into = (pksav_gba_save_slot_t*)gba_save->raw;
+    }
 
     pksav_set_gba_section_checksums(
         gba_save->unshuffled
@@ -451,7 +480,29 @@ pksav_error_t pksav_gba_save_save(
         gba_save
     );
 
+    // Write to file
+    fwrite(
+        (void*)gba_save->raw,
+        1,
+        (gba_save->small_save ? PKSAV_GBA_SMALL_SAVE_SIZE : PKSAV_GBA_SAVE_SIZE),
+        gba_save_file
+    );
+
     fclose(gba_save_file);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_gba_save_free(
+    pksav_gba_save_t* gba_save
+) {
+    if(!gba_save) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    free(gba_save->pokemon_pc);
+    free(gba_save->unshuffled);
+    free(gba_save->raw);
 
     return PKSAV_ERROR_NONE;
 }

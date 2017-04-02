@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@
 
 #include <pksav/gba/items.h>
 #include <pksav/gba/save_structs.h>
+#include <pksav/gba/pokemon.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -111,9 +112,8 @@ typedef struct {
     /*!
      * @brief The rival's name in FireRed/LeafGreen.
      *
-     * This name should be accessed with ::pksav_text_from_gba or
-     * ::pksav_widetext_from_gba. This name should be modified with
-     * ::pksav_text_to_gba or ::pksav_widetext_to_gba.
+     * This name should be accessed with ::pksav_text_from_gba and modified with
+     * ::pksav_text_to_gba.
      *
      * In either case, the num_chars parameter should be 7.
      *
@@ -253,11 +253,15 @@ extern "C" {
  * \param buffer buffer to check
  * \param buffer_len size of the buffer to check
  * \param gba_game which type of Game Boy Advance game to test for
+ * \param result_out whether or not the buffer is a valid save
+ * \returns ::PKSAV_ERROR_NONE upon success, no matter the result
+ * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API bool pksav_buffer_is_gba_save(
+PKSAV_API pksav_error_t pksav_buffer_is_gba_save(
     const uint8_t* buffer,
     size_t buffer_len,
-    pksav_gba_game_t gba_game
+    pksav_gba_game_t gba_game,
+    bool* result_out
 );
 
 /*!
@@ -265,10 +269,14 @@ PKSAV_API bool pksav_buffer_is_gba_save(
  *
  * \param filepath path of the file to check
  * \param gba_game which type of Game Boy Advance game to test for
+ * \param result_out whether or not the file is a valid save
+ * \returns ::PKSAV_ERROR_NONE upon success, no matter the result
+ * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or result_out is NULL
  */
-PKSAV_API bool pksav_file_is_gba_save(
+PKSAV_API pksav_error_t pksav_file_is_gba_save(
     const char* filepath,
-    pksav_gba_game_t gba_game
+    pksav_gba_game_t gba_game,
+    bool* result_out
 );
 
 /*!
@@ -283,6 +291,7 @@ PKSAV_API bool pksav_file_is_gba_save(
  * \param filepath path of the file to load
  * \param gba_save pointer to save struct to populate
  * \returns ::PKSAV_ERROR_NONE upon completion
+ * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gba_save is NULL
  * \returns ::PKSAV_ERROR_FILE_IO if an error occurs reading the file
  * \returns ::PKSAV_ERROR_INVALID_SAVE if the file is not a valid Game Boy Advance save
  */
@@ -304,6 +313,7 @@ PKSAV_API pksav_error_t pksav_gba_save_load(
  * \param filepath where to save the save file
  * \param gba_save pointer to the save struct to save
  * \returns ::PKSAV_ERROR_NONE upon completion
+ * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gba_save is NULL
  * \returns ::PKSAV_ERROR_FILE_IO if an error occurs writing the file
  */
 PKSAV_API pksav_error_t pksav_gba_save_save(
@@ -320,14 +330,12 @@ PKSAV_API pksav_error_t pksav_gba_save_save(
  * result in undefined behavior.
  *
  * \param gba_save the save struct to free
+ * \returns ::PKSAV_ERROR_NONE upon success
+ * \returns ::PKSAV_ERROR_NULL_POINTER if gba_save is NULL
  */
-static PKSAV_INLINE void pksav_gba_save_free(
+PKSAV_API pksav_error_t pksav_gba_save_free(
     pksav_gba_save_t* gba_save
-) {
-    free(gba_save->pokemon_pc);
-    free(gba_save->unshuffled);
-    free(gba_save->raw);
-}
+);
 
 #ifdef __cplusplus
 }
