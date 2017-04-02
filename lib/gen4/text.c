@@ -206,28 +206,7 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
 
-pksav_error_t pksav_text_from_gen4(
-    const uint16_t* input_buffer,
-    char* output_text,
-    size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_widetext_from_gen4(
-        input_buffer, widetext, num_chars
-    );
-
-    memset(output_text, 0, num_chars);
-    wcstombs(output_text, widetext, num_chars);
-    free(widetext);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_widetext_from_gen4(
+static pksav_error_t _pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -251,28 +230,7 @@ pksav_error_t pksav_widetext_from_gen4(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_to_gen4(
-    const char* input_text,
-    uint16_t* output_buffer,
-    size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
-
-    pksav_widetext_to_gen4(
-        widetext, output_buffer, num_chars
-    );
-
-    free(widetext);
-
-    return PKSAV_ERROR_NONE;
-}
-
-pksav_error_t pksav_widetext_to_gen4(
+static pksav_error_t _pksav_widetext_to_gen4(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
@@ -291,6 +249,48 @@ pksav_error_t pksav_widetext_to_gen4(
             output_buffer[i] = (uint16_t)index;
         }
     }
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_from_gen4(
+    const uint16_t* input_buffer,
+    char* output_text,
+    size_t num_chars
+) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    _pksav_widetext_from_gen4(
+        input_buffer, widetext, num_chars
+    );
+
+    memset(output_text, 0, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
+    free(widetext);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_to_gen4(
+    const char* input_text,
+    uint16_t* output_buffer,
+    size_t num_chars
+) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
+
+    _pksav_widetext_to_gen4(
+        widetext, output_buffer, num_chars
+    );
+
+    free(widetext);
 
     return PKSAV_ERROR_NONE;
 }
