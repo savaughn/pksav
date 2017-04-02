@@ -97,8 +97,35 @@ static void pksav_gba_text_test() {
 #endif
 }
 
+static void pksav_gen4_text_test() {
+#ifdef PKSAV_ENABLE_GEN4
+    pksav_error_t error = PKSAV_ERROR_NONE;
+    uint16_t gen4_buffer[BUFFER_LEN] = {0};
+    char strbuffer[BUFFER_LEN] = {0};
+
+    for(size_t i = 0; strings[i] != NULL; ++i) {
+        error = pksav_text_to_gen4(
+                    strings[i],
+                    gen4_buffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        error = pksav_text_from_gen4(
+                    gen4_buffer,
+                    strbuffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
+    }
+#endif
+}
+
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen1_text_test)
     PKSAV_TEST(pksav_gen2_text_test)
     PKSAV_TEST(pksav_gba_text_test)
+    PKSAV_TEST(pksav_gen4_text_test)
 )
