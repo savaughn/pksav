@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -104,9 +104,9 @@ typedef union {
     };
 } pksav_nds_pokemon_blocks_t;
 
-#define PKSAV_NDS_PARTY_DATA_DECRYPTED_MASK uint32_t(1 << 31)
-#define PKSAV_NDS_PC_DATA_DECRYPTED_MASK    uint32_t(1 << 30)
-#define PKSAV_NDS_IS_EGG_MASK               uint32_t(1 << 29)
+#define PKSAV_NDS_PARTY_DATA_DECRYPTED_MASK ((uint8_t)(1 << 0))
+#define PKSAV_NDS_PC_DATA_DECRYPTED_MASK    ((uint8_t)(1 << 1))
+#define PKSAV_NDS_IS_EGG_MASK               ((uint8_t)(1 << 2))
 
 typedef struct {
     uint32_t personality;
