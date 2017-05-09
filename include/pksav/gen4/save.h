@@ -101,6 +101,10 @@ typedef struct {
     #endif
 } pksav_gen4_save_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 PKSAV_API pksav_error_t pksav_buffer_is_gen4_save(
     const uint8_t* buffer,
     size_t buffer_len,
@@ -127,5 +131,9 @@ PKSAV_API pksav_error_t pksav_gen4_save_save(
 PKSAV_API pksav_error_t pksav_gen4_save_free(
     pksav_gen4_save_t* gen4_save
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKSAV_GEN4_SAVE_H */
