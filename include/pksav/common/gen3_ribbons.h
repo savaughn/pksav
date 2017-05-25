@@ -1,5 +1,5 @@
 /*!
- * @file    pksav/common/gen3_markings.h
+ * @file    pksav/common/gen3_ribbons.h
  * @ingroup PKSav
  * @brief   Native storage for ribbons from Generation III games.
  *

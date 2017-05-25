@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Global Generation IV include file.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -27,6 +27,7 @@
 #include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/item.h>
 #include <pksav/common/nds_pokemon.h>
+#include <pksav/common/nds_ribbons.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/stats.h>
 
