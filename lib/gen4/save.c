@@ -33,7 +33,7 @@ typedef enum {
 static const uint32_t pksav_gen4_block_info[][3] = {
     {0x00000,0x00000,0x00000}, // General block start
     {0x0C100,0x0CF2C,0x0F628}, // General block length
-    {0x0CE0C,0x0CF18,0x0F618}, // General block footer offset
+    {0x0C0EC,0x0CF18,0x0F618}, // General block footer offset
     {0x0C100,0x0CF2C,0x0F700}, // Storage block start
     {0x121E0,0x121E4,0x12310}, // Storage block length
     {0x1E2CC,0x1F0FC,0x21A00}  // Storage block footer offset
