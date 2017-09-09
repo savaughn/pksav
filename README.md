@@ -49,7 +49,6 @@ Component Status
  * Generation I: complete
  * Generation II: complete
  * Game Boy Advance: complete
- * Gamecube: in progress
  * Generation IV: in progress
  * Generation V: in progress
  * Generation VI: in progress
@@ -61,4 +60,4 @@ Platform Status
  * iOS: TBA
  * Android: TBA
 
-README last updated: 2016/03/01
+README last updated: 2017/04/23
