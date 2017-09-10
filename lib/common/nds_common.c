@@ -126,9 +126,8 @@ static const uint8_t nds_decrypt_block_orders[24][4] =
     {3, 2, 1, 0}
 };
 
-void pksav_nds_crypt_pokemon(
-    pksav_nds_pc_pokemon_t* nds_pokemon,
-    bool encrypt
+static void _pksav_nds_apply_lcrng(
+    pksav_nds_pc_pokemon_t* nds_pokemon
 )
 {
     pksav_lcrng32_t lcrng32;
@@ -136,6 +135,17 @@ void pksav_nds_crypt_pokemon(
     for(uint8_t i = 0; i < 64; ++i)
     {
         nds_pokemon->blocks.blocks16[i] ^= pksav_lcrng32_next(&lcrng32);
+    }
+}
+
+void pksav_nds_crypt_pokemon(
+    pksav_nds_pc_pokemon_t* nds_pokemon,
+    bool encrypt
+)
+{
+    if(!encrypt)
+    {
+        _pksav_nds_apply_lcrng(nds_pokemon);
     }
 
     uint32_t index = (((nds_pokemon->personality >> 0xD) & 0x1F) % 24);
@@ -169,4 +179,9 @@ void pksav_nds_crypt_pokemon(
     }
 
     nds_pokemon->blocks = blocks;
+
+    if(encrypt)
+    {
+        _pksav_nds_apply_lcrng(nds_pokemon);
+    }
 }
