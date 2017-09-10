@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -70,7 +70,8 @@ uint16_t pksav_nds_pokemon_get_checksum(
     return ret;
 }
 
-static const uint8_t nds_block_orders[24][4] = {
+static const uint8_t nds_encrypt_block_orders[24][4] =
+{
     {0, 1, 2, 3},
     {0, 1, 3, 2},
     {0, 2, 1, 3},
@@ -97,29 +98,70 @@ static const uint8_t nds_block_orders[24][4] = {
     {3, 2, 1, 0}
 };
 
+static const uint8_t nds_decrypt_block_orders[24][4] =
+{
+    {0, 1, 2, 3},
+    {0, 1, 3, 2},
+    {0, 2, 1, 3},
+    {0, 3, 1, 2},
+    {0, 2, 3, 1},
+    {0, 3, 2, 1},
+    {1, 0, 2, 3},
+    {1, 0, 3, 2},
+    {2, 0, 1, 3},
+    {3, 0, 1, 2},
+    {2, 0, 3, 1},
+    {3, 0, 2, 1},
+    {1, 2, 0, 3},
+    {1, 3, 0, 2},
+    {2, 1, 0, 3},
+    {3, 1, 0, 2},
+    {2, 3, 0, 1},
+    {3, 2, 0, 1},
+    {1, 2, 3, 0},
+    {1, 3, 2, 0},
+    {2, 1, 3, 0},
+    {3, 1, 2, 0},
+    {2, 3, 1, 0},
+    {3, 2, 1, 0}
+};
+
 void pksav_nds_crypt_pokemon(
     pksav_nds_pc_pokemon_t* nds_pokemon,
     bool encrypt
-) {
+)
+{
     pksav_lcrng32_t lcrng32;
     lcrng32.seed = nds_pokemon->checksum;
-    for(uint8_t i = 0; i < 64; ++i) {
+    for(uint8_t i = 0; i < 64; ++i)
+    {
         nds_pokemon->blocks.blocks16[i] ^= pksav_lcrng32_next(&lcrng32);
     }
 
     uint32_t index = (((nds_pokemon->personality >> 0xD) & 0x1F) % 24);
-    uint8_t blockA_index = nds_block_orders[index][0];
-    uint8_t blockB_index = nds_block_orders[index][1];
-    uint8_t blockC_index = nds_block_orders[index][2];
-    uint8_t blockD_index = nds_block_orders[index][3];
+    uint8_t blockA_index = 0;
+    uint8_t blockB_index = 0;
+    uint8_t blockC_index = 0;
+    uint8_t blockD_index = 0;
 
     pksav_nds_pokemon_blocks_t blocks;
-    if(encrypt) {
+    if(encrypt)
+    {
+        blockA_index = nds_encrypt_block_orders[index][0];
+        blockB_index = nds_encrypt_block_orders[index][1];
+        blockC_index = nds_encrypt_block_orders[index][2];
+        blockD_index = nds_encrypt_block_orders[index][3];
         memcpy(&blocks.blocks[blockA_index], &nds_pokemon->blocks.blockA, sizeof(pksav_nds_pokemon_blockA_t));
         memcpy(&blocks.blocks[blockB_index], &nds_pokemon->blocks.blockB, sizeof(pksav_nds_pokemon_blockB_t));
         memcpy(&blocks.blocks[blockC_index], &nds_pokemon->blocks.blockC, sizeof(pksav_nds_pokemon_blockC_t));
         memcpy(&blocks.blocks[blockD_index], &nds_pokemon->blocks.blockD, sizeof(pksav_nds_pokemon_blockD_t));
-    } else {
+    }
+    else
+    {
+        blockA_index = nds_decrypt_block_orders[index][0];
+        blockB_index = nds_decrypt_block_orders[index][1];
+        blockC_index = nds_decrypt_block_orders[index][2];
+        blockD_index = nds_decrypt_block_orders[index][3];
         memcpy(&blocks.blockA, &nds_pokemon->blocks.blocks[blockA_index], sizeof(pksav_nds_pokemon_blockA_t));
         memcpy(&blocks.blockB, &nds_pokemon->blocks.blocks[blockB_index], sizeof(pksav_nds_pokemon_blockB_t));
         memcpy(&blocks.blockC, &nds_pokemon->blocks.blocks[blockC_index], sizeof(pksav_nds_pokemon_blockC_t));
