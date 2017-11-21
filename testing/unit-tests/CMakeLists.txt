@@ -30,9 +30,22 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
     TARGET_LINK_LIBRARIES(${test_name} pksav unity pksav-test-utils)
 
     IF(NOT CMAKE_CROSSCOMPILING)
-        IF(WIN32)
-            SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}")
+        IF(MINGW)
+            SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
+            SET(TEST_LIB_DIR "lib")
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
+            STRING(REPLACE "/" "\\" TEST_LIB_DIR "${TEST_LIB_DIR}")
+            STRING(REPLACE "/" "\\" PKSAV_TEST_SAVES "${PKSAV_TEST_SAVES}")
+            CONFIGURE_FILE(
+                ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.bat.in
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
+            @ONLY)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
+        ELSEIF(WIN32)
+            SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}")
+            SET(TEST_LIB_DIR "lib/${CMAKE_BUILD_TYPE}")
+            STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
+            STRING(REPLACE "/" "\\" TEST_LIB_DIR "${TEST_LIB_DIR}")
             STRING(REPLACE "/" "\\" PKSAV_TEST_SAVES "${PKSAV_TEST_SAVES}")
             CONFIGURE_FILE(
                 ${CMAKE_CURRENT_SOURCE_DIR}/../test_template.bat.in
@@ -60,7 +73,7 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
                 ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
             ENDIF(PKSAV_USED_AS_SUBPROJECT)
 
-        ENDIF(WIN32)
+        ENDIF()
     ENDIF(NOT CMAKE_CROSSCOMPILING)
 ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
