@@ -15,15 +15,38 @@
 
 #pragma pack(push,1)
 
-//! Native storage for a Pokémon trainer's in-game ID.
+//! Native storage for a Pokémon trainer's in-game ID (Generation III+).
 typedef union {
+    //! Convenience struct to allow individual access to secret and public IDs.
     struct {
-        //! Secret ID.
-        uint16_t sid;
-        //! Public ID.
+        /*!
+         * @brief Public ID.
+         *
+         * This is the value shown in-game.
+         *
+         * This value is stored in little-endian and should be accessed and
+         * modified with ::pksav_littleendian16.
+         */
         uint16_t pid;
+        /*!
+         * @brief Secret ID.
+         *
+         * This value is never shown in-game and exists to prevent
+         * ID collision, as many more than 65536 people play these games.
+         *
+         * This value is stored in little-endian and should be accessed and
+         * modified with ::pksav_littleendian16.
+         */
+        uint16_t sid;
     };
-    //! Full ID.
+    /*!
+     * @brief Full ID.
+     *
+     * This value is never shown in-game.
+     *
+     * This value is stored in little-endian and should be accessed and
+     * modified with ::pksav_littleendian32.
+     */
     uint32_t id;
 } pksav_trainer_id_t;
 

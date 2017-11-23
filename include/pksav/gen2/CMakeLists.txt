@@ -6,7 +6,11 @@
 #
 
 SET(pksav_gen2_headers
+    items.h
+    pokemon.h
+    save.h
     text.h
+    time.h
 )
 
 INSTALL(

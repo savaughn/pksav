@@ -67,4 +67,6 @@ typedef intmax_t ssize_t;
 #cmakedefine PKSAV_BIG_ENDIAN    1
 #cmakedefine PKSAV_LITTLE_ENDIAN 1
 
+#cmakedefine HAVE_UNISTD_H 1
+
 #endif /* PKSAV_CONFIG_H */

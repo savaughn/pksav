@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -29,22 +29,19 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )
 
-    INSTALL(
-        FILES ${pksav_headers}
-        DESTINATION ${INCLUDE_DIR}/pksav
-        COMPONENT Headers
-    )
-
     ADD_SUBDIRECTORY(common)
     ADD_SUBDIRECTORY(math)
 
     IF(PKSAV_ENABLE_GEN1)
+        LIST(APPEND pksav_headers gen1.h)
         ADD_SUBDIRECTORY(gen1)
     ENDIF(PKSAV_ENABLE_GEN1)
     IF(PKSAV_ENABLE_GEN2)
+        LIST(APPEND pksav_headers gen2.h)
         ADD_SUBDIRECTORY(gen2)
     ENDIF(PKSAV_ENABLE_GEN2)
     IF(PKSAV_ENABLE_GBA)
+        LIST(APPEND pksav_headers gba.h)
         ADD_SUBDIRECTORY(gba)
     ENDIF(PKSAV_ENABLE_GBA)
     IF(PKSAV_ENABLE_GCN)
@@ -57,6 +54,13 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         ADD_SUBDIRECTORY(gen5)
     ENDIF(PKSAV_ENABLE_GEN5)
     IF(PKSAV_ENABLE_GEN6)
+        LIST(APPEND pksav_headers gen6.h)
         ADD_SUBDIRECTORY(gen6)
     ENDIF(PKSAV_ENABLE_GEN6)
+
+    INSTALL(
+        FILES ${pksav_headers}
+        DESTINATION ${INCLUDE_DIR}/pksav
+        COMPONENT Headers
+    )
 ENDIF(NOT PKSAV_DONT_INSTALL_HEADERS)

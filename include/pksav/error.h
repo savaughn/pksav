@@ -28,7 +28,9 @@ typedef enum {
      */
     PKSAV_ERROR_INVALID_STAT,
     //! The filepath passed in the function is not a valid save file for the given generation.
-    PKSAV_ERROR_INVALID_SAVE
+    PKSAV_ERROR_INVALID_SAVE,
+    //! A null pointer was passed as a parameter.
+    PKSAV_ERROR_NULL_POINTER
 } pksav_error_t;
 
 #ifdef __cplusplus

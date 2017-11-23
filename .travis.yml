@@ -1,0 +1,45 @@
+language: c
+
+os:
+ - linux
+
+matrix:
+  include:
+    # Default/older GCC
+    - compiler: gcc
+    # Newer GCC
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+      env:
+        - NEWCC=gcc-6
+    - compiler: gcc
+      env:
+        - NEWCC=x86_64-w64-mingw32
+    # Default/older Clang
+    - compiler: clang
+    # Newer Clang
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+      env:
+        - NEWCC=clang-4.0
+
+
+sudo: required
+dist: trusty
+
+before_install:
+  - git submodule update --init --recursive
+  - bash testing/travis-scripts/install-deps.sh
+
+script:
+  - bash testing/travis-scripts/build-test.sh

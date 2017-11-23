@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Global include file, includes all PKSav headers.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,18 +29,15 @@
 #include <pksav/common/trainer_id.h>
 
 #if PKSAV_ENABLE_GEN1
-#include <pksav/gen1/items.h>
-#include <pksav/gen1/pokemon.h>
-#include <pksav/gen1/save.h>
-#include <pksav/gen1/text.h>
+#include <pksav/gen1.h>
 #endif /* PKSAV_ENABLE_GEN1 */
 
 #if PKSAV_ENABLE_GEN2
-#include <pksav/gen2/text.h>
+#include <pksav/gen2.h>
 #endif /* PKSAV_ENABLE_GEN2 */
 
 #if PKSAV_ENABLE_GBA
-#include <pksav/gba/text.h>
+#include <pksav/gba.h>
 #endif /* PKSAV_ENABLE_GBA */
 
 #if PKSAV_ENABLE_GCN
@@ -56,16 +53,17 @@
 #endif /* PKSAV_ENABLE_GEN5 */
 
 #if PKSAV_ENABLE_GEN6
-#include <pksav/gen6/hall_of_fame.h>
-#include <pksav/gen6/items.h>
-#include <pksav/gen6/pokemon.h>
-#include <pksav/gen6/text.h>
+#include <pksav/gen6.h>
 #endif /* PKSAV_ENABLE_GEN6 */
 
 #if PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 #endif /* PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2 */
+
+#if PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN
+#include <pksav/common/gen3_ribbons.h>
+#endif /* PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN */
 
 #include <pksav/math/endian.h>
 

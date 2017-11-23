@@ -8,6 +8,7 @@
 #define PKSAV_COMMON_PRNG_H
 
 #include <pksav/config.h>
+#include <pksav/error.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -39,12 +40,20 @@ typedef struct {
     size_t index;
 } pksav_mtrng_t;
 
-PKSAV_API void pksav_mtrng_populate(
+/*!
+ * @brief Populate an MTRNG struct's random numbers.
+ *
+ * \param mtrng MTRNG struct to populate
+ * \returns PKSAV_ERROR_NONE upon success
+ * \returns PKSAV_ERROR_NULL_POINTER
+ */
+PKSAV_API pksav_error_t pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 );
 
-PKSAV_API uint32_t pksav_mtrng_next(
-    pksav_mtrng_t* mtrng
+PKSAV_API pksav_error_t pksav_mtrng_next(
+    pksav_mtrng_t* mtrng,
+    uint32_t* next_out
 );
 
 #ifdef __cplusplus

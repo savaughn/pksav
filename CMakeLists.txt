@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,8 +12,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 PROJECT(pksav C)
 
 SET(PKSAV_VERSION_MAJOR 1)
-SET(PKSAV_VERSION_MINOR 0)
-SET(PKSAV_VERSION_PATCH 0)
+SET(PKSAV_VERSION_MINOR 7)
+SET(PKSAV_VERSION_PATCH 2)
 SET(PKSAV_VERSION "${PKSAV_VERSION_MAJOR}.${PKSAV_VERSION_MINOR}.${PKSAV_VERSION_PATCH}")
 
 SET(PKSAV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -98,7 +98,7 @@ ENDIF(PKSAV_ENABLE_DOCS)
 
 IF(PKSAV_ENABLE_TESTS)
     ENABLE_TESTING()
-    ADD_SUBDIRECTORY(tests)
+    ADD_SUBDIRECTORY(testing)
 ENDIF(PKSAV_ENABLE_TESTS)
 
 ####################################################################

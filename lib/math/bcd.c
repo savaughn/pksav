@@ -15,36 +15,44 @@
 
 /*
  * We know what we're doing in converting the size_t to ssize_t. Subtracting
- * from a size_t equalling 0 with underflow, and we don't want that.
+ * from a size_t equalling 0 will underflow, and we don't want that.
  */
 #ifdef _MSC_VER
 #    pragma warning(disable: 4552) // expected operator with side effect
 #endif
 
-size_t pksav_from_bcd(
+pksav_error_t pksav_from_bcd(
     const uint8_t* buffer,
-    size_t num_bytes
+    size_t num_bytes,
+    uint32_t* result_out
 ) {
-    size_t ret = 0;
-    size_t mult = 100;
+    if(!buffer || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
 
-    ret = (buffer[num_bytes-1] & 0x0F) + ((buffer[num_bytes-1] >> 4) * 10);
+    uint32_t mult = 100;
+
+    (*result_out) = (buffer[num_bytes-1] & 0x0F) + ((buffer[num_bytes-1] >> 4) * 10);
     for(ssize_t i = (ssize_t)(num_bytes-2); i >= 0; i--) {
-        ret  += ((buffer[i] & 0x0F) * mult);
+        (*result_out)  += ((buffer[i] & 0x0F) * mult);
         mult *= 10;
-        ret  += ((buffer[i] >> 4) * mult);
+        (*result_out)  += ((buffer[i] >> 4) * mult);
         mult *= 10;
     }
 
-    return ret;
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_to_bcd(
-    size_t num,
+pksav_error_t pksav_to_bcd(
+    uint32_t num,
     uint8_t* buffer_out
 ) {
+    if(!buffer_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Find the number of needed bytes
-    size_t log10_num = (size_t)log10((double)num);
+    uint32_t log10_num = (uint32_t)log10((double)num);
     size_t num_bytes = (size_t)((log10_num + 1) / 2);
     if(log10_num % 2 == 0) {
         ++num_bytes;
@@ -59,4 +67,6 @@ void pksav_to_bcd(
                                   ((num % (mult*10)) / mult));
         mult *= 100;
     }
+
+    return PKSAV_ERROR_NONE;
 }

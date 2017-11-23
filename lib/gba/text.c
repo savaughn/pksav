@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -41,35 +41,23 @@ static const wchar_t pksav_gba_char_map[] = {
     0x30DF,0x30E0,0x30E1,0x30E2,0x30E4,0x30E6,0x30E8,0x30E9,0x30EA,0x2B06,0x2B07,0x2B05,0x27A1,0x30F2,0x30F3,0x30A1,
     0x30A3,0x30A5,0x30A7,0x30A9,0x30E3,0x30E5,0x30E7,0x30AC,0x30AE,0x30B0,0x30B2,0x30B4,0x30B6,0x30B8,0x30BA,0x30BC,
     0x30BE,0x30C0,0x30C2,0x30C5,0x30C7,0x30C9,0x30D0,0x30D3,0x30D6,0x30D9,0x30DC,0x30D1,0x30D4,0x30D7,0x30DA,0x30DD,
-    0x30C3,0x0030,0x0031,0x0032,0x0033,0x0034,0x0035,0x0036,0x0037,0x0038,0x0039,0x0021,0x003F,0x003E,0x003D,0x30FB,
+    0x30C3,0x0030,0x0031,0x0032,0x0033,0x0034,0x0035,0x0036,0x0037,0x0038,0x0039,0x0021,0x003F,0x002E,0x002D,0x30FB,
     0x2026,0x201C,0x201D,0x2018,0x2019,0x2642,0x2640,0x0024,0x002C,0x00D7,0x002F,0x0041,0x0042,0x0043,0x0044,0x0045,
     0x0046,0x0047,0x0048,0x0049,0x004A,0x004B,0x004C,0x004D,0x004E,0x004F,0x0050,0x0051,0x0052,0x0053,0x0054,0x0055,
     0x0056,0x0057,0x0058,0x0059,0x005A,0x0061,0x0062,0x0063,0x0064,0x0065,0x0066,0x0067,0x0068,0x0069,0x006A,0x006B,
-    0x006C,0x006D,0x006E,0x006F,0x0070,0x0071,0x0072,0x0073,0x0074,0x0075,0x0076,0x0077,0x0078,0x0078,0x007A,0x25B6,
+    0x006C,0x006D,0x006E,0x006F,0x0070,0x0071,0x0072,0x0073,0x0074,0x0075,0x0076,0x0077,0x0078,0x0079,0x007A,0x25B6,
     0x003A,0x00C4,0x00D6,0x00DC,0x00E4,0x00F6,0x00F6,0x2B06,0x2B07,0x2B05,'\0','\0','\0','\0','\n','\0'
 };
 
-void pksav_text_from_gba(
-    const uint8_t* input_buffer,
-    char* output_text,
-    size_t num_chars
-) {
-    memset(output_text, 0, num_chars);
-
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_widetext_from_gba(
-        input_buffer, widetext, num_chars
-    );
-
-    wcstombs(output_text, widetext, num_chars);
-    free(widetext);
-}
-
-void pksav_widetext_from_gba(
+static pksav_error_t _pksav_widetext_from_gba(
     const uint8_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
 ) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_text, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
@@ -79,36 +67,71 @@ void pksav_widetext_from_gba(
             output_text[i] = pksav_gba_char_map[input_buffer[i]];
         }
     }
+
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_text_to_gba(
-    const char* input_text,
-    uint8_t* output_buffer,
-    size_t num_chars
-) {
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
-
-    pksav_widetext_to_gba(
-        widetext, output_buffer, num_chars
-    );
-
-    free(widetext);
-}
-
-void pksav_widetext_to_gba(
+static pksav_error_t _pksav_widetext_to_gba(
     const wchar_t* input_text,
     uint8_t* output_buffer,
     size_t num_chars
 ) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     memset(output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gba_char_map, 255, input_text[i]);
+        ssize_t index = wchar_map_index(pksav_gba_char_map, 256, input_text[i]);
         if(index == -1) {
             break;
         } else {
             output_buffer[i] = (uint8_t)index;
         }
     }
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_from_gba(
+    const uint8_t* input_buffer,
+    char* output_text,
+    size_t num_chars
+) {
+    if(!input_buffer || !output_text) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    _pksav_widetext_from_gba(
+        input_buffer, widetext, num_chars
+    );
+
+    memset(output_text, 0, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
+    free(widetext);
+
+    return PKSAV_ERROR_NONE;
+}
+
+pksav_error_t pksav_text_to_gba(
+    const char* input_text,
+    uint8_t* output_buffer,
+    size_t num_chars
+) {
+    if(!input_text || !output_buffer) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
+
+    _pksav_widetext_to_gba(
+        widetext, output_buffer, num_chars
+    );
+
+    free(widetext);
+
+    return PKSAV_ERROR_NONE;
 }

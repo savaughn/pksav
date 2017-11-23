@@ -14,38 +14,49 @@
 
 /*
  * We know what we're doing in converting the size_t to ssize_t. Subtracting
- * from a size_t equalling 0 with underflow, and we don't want that.
+ * from a size_t equalling 0 will underflow, and we don't want that.
  */
 #ifdef _MSC_VER
 #    pragma warning(disable: 4552) // expected operator with side effect
 #endif
 
-size_t pksav_from_base256(
+pksav_error_t pksav_from_base256(
     const uint8_t* buffer,
-    size_t num_bytes
+    size_t num_bytes,
+    uint32_t* result_out
 ) {
-    size_t ret = 0;
+    if(!buffer || !result_out) {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    *result_out = 0;
     float exp = 0.0;
 
-    for(ssize_t i = (ssize_t)(num_bytes-1); i >= 0; i--) {
-        ret += buffer[i] * (size_t)(pow(256.0f, exp++));
+    for(ssize_t i = (ssize_t)(num_bytes-1); i >= 0; --i) {
+        (*result_out) += buffer[i] * (uint32_t)(pow(256.0f, exp++));
     }
 
-    return ret;
+    return PKSAV_ERROR_NONE;
 }
 
-void pksav_to_base256(
-    size_t num,
-    uint8_t* buffer_out
+pksav_error_t pksav_to_base256(
+    uint32_t num,
+    uint8_t* buffer_out,
+    size_t buffer_size
 ) {
-    size_t num_bytes = (size_t)((log((double)num) / log(256) + 1));
-    memset(buffer_out, 0, num_bytes);
-    float exp = 1.0;
-
-    buffer_out[num_bytes-1] = (uint8_t)(num % 256);
-    for(ssize_t i = (ssize_t)(num_bytes-2); i >= 0; i--) {
-        num -= buffer_out[i+1];
-        buffer_out[i] = (uint8_t)((size_t)(num / pow(256,exp)) % (size_t)(pow(256,exp)));
-        exp++;
+    if(!buffer_out) {
+        return PKSAV_ERROR_NULL_POINTER;
     }
+
+    memset(buffer_out, 0, buffer_size);
+
+    float exp = 1.0f;
+    buffer_out[buffer_size-1] = (uint8_t)(num % 256);
+    for(ssize_t i = (ssize_t)(buffer_size-2); i >= 0; --i) {
+        num -= buffer_out[i+1];
+        buffer_out[i] = (uint8_t)((uint32_t)(num / pow(256,exp)) % (uint32_t)(pow(256,exp)));
+        ++exp;
+    }
+
+    return PKSAV_ERROR_NONE;
 }
