@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "text_common.h"
 #include "xds_common.h"
 
 #include <string.h>
@@ -26,7 +27,7 @@ pksav_error_t _pksav_text_from_xds(
     );
 
     memset(output_text, 0, num_chars);
-    wcstombs(output_text, widetext, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
     free(widetext);
 
     return PKSAV_ERROR_NONE;
@@ -63,8 +64,8 @@ pksav_error_t _pksav_text_to_xds(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    mbstowcs(widetext, input_text, num_chars);
+    wchar_t* widetext = malloc(sizeof(uint16_t)*num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
 
     _pksav_widetext_to_xds(
         widetext, output_buffer, num_chars
@@ -84,7 +85,7 @@ pksav_error_t _pksav_widetext_to_xds(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    memset(output_buffer, PKSAV_XDS_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, 0xFF, sizeof(uint16_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         if(input_text[i] == 0) {

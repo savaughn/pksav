@@ -9,6 +9,9 @@
 
 #include <pksav.h>
 
+#include <stdio.h>
+#include <string.h>
+
 #define BUFFER_LEN 256
 
 // Ugly strings to test
@@ -98,7 +101,7 @@ static void pksav_gba_text_test() {
 }
 
 static void pksav_gen6_text_test() {
-#ifdef PKSAV_ENABLE_gen6
+#ifdef PKSAV_ENABLE_GEN6
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint16_t gen6_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
