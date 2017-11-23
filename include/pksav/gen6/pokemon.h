@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,18 +15,21 @@
 
 #pragma pack(push,1)
 
-typedef struct {
+typedef struct
+{
     uint32_t encryption_key;
     uint16_t sanity_placeholder;
     uint16_t checksum;
 } pksav_gen6_pokemon_info_t;
 
-typedef struct {
+typedef struct
+{
     uint8_t region;
     uint8_t country;
 } pksav_gen6_geolocation_t;
 
-typedef struct {
+typedef struct
+{
     uint16_t species;
     uint16_t held_item;
     pksav_trainer_id_t ot_id;
@@ -54,7 +57,8 @@ typedef struct {
     uint8_t unused_0x3B[5];
 } pksav_gen6_pokemon_blockA_t;
 
-typedef struct {
+typedef struct
+{
     uint16_t nickname[12];
     uint16_t null_terminator;
     uint16_t moves[4];
@@ -65,7 +69,8 @@ typedef struct {
     uint32_t iv_isegg_isnicknamed;
 } pksav_gen6_pokemon_blockB_t;
 
-typedef struct {
+typedef struct
+{
     uint16_t latest_not_ot_name[12];
     uint16_t null_terminator;
     uint8_t not_ot_gender;
@@ -86,7 +91,8 @@ typedef struct {
     uint8_t enjoyment;
 } pksav_gen6_pokemon_blockC_t;
 
-typedef struct {
+typedef struct
+{
     uint16_t otname[12];
     uint16_t null_terminator;
     uint8_t ot_friendship;
@@ -111,12 +117,14 @@ typedef struct {
     uint32_t unused_0xE4;
 } pksav_gen6_pokemon_blockD_t;
 
-typedef union {
+typedef union
+{
     uint8_t blocks8[224];
     uint16_t blocks16[112];
     uint32_t blocks32[56];
     uint8_t blocks[4][56];
-    struct {
+    struct
+    {
         pksav_gen6_pokemon_blockA_t blockA;
         pksav_gen6_pokemon_blockB_t blockB;
         pksav_gen6_pokemon_blockC_t blockC;
@@ -124,13 +132,14 @@ typedef union {
     };
 } pksav_gen6_pokemon_blocks_t;
 
-typedef struct {
+typedef struct
+{
     pksav_gen6_pokemon_info_t info;
     pksav_gen6_pokemon_blocks_t blocks;
 } pksav_gen6_pc_pokemon_t;
 
-typedef struct {
-    pksav_gen6_pc_pokemon_t pc;
+typedef struct
+{
     uint8_t status;
     uint8_t unknown_0xE9;
     uint16_t unused_0xEA;
@@ -146,6 +155,12 @@ typedef struct {
     uint16_t spdef;
     uint16_t unused_0xFE;
     uint32_t unused_0x100;
+} pksav_gen6_pokemon_party_data_t;
+
+typedef struct
+{
+    pksav_gen6_pc_pokemon_t pc;
+    pksav_gen6_pokemon_party_data_t party_data;
 } pksav_gen6_party_pokemon_t;
 
 #pragma pack(pop)
