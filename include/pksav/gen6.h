@@ -14,11 +14,13 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen6/coords.h>
 #include <pksav/gen6/hall_of_fame.h>
 #include <pksav/gen6/items.h>
 #include <pksav/gen6/pokemon.h>
 #include <pksav/gen6/ribbons.h>
 #include <pksav/gen6/text.h>
+#include <pksav/gen6/trainer_card.h>
 
 #include <pksav/common/condition.h>
 #include <pksav/common/pokedex.h>

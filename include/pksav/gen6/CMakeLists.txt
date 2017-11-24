@@ -6,11 +6,13 @@
 #
 
 SET(pksav_gen6_headers
+    coords.h
     hall_of_fame.h
     items.h
     pokemon.h
     ribbons.h
     text.h
+    trainer_card.h
 )
 
 INSTALL(
