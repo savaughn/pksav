@@ -20,7 +20,6 @@ static const char* strings[] = {
 };
 
 static void pksav_gen1_text_test() {
-#ifdef PKSAV_ENABLE_GEN1
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint8_t gen1_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
@@ -42,11 +41,9 @@ static void pksav_gen1_text_test() {
 
         TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
     }
-#endif
 }
 
 static void pksav_gen2_text_test() {
-#ifdef PKSAV_ENABLE_GEN2
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint8_t gen2_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
@@ -68,11 +65,9 @@ static void pksav_gen2_text_test() {
 
         TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
     }
-#endif
 }
 
 static void pksav_gba_text_test() {
-#ifdef PKSAV_ENABLE_GBA
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint8_t gba_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
@@ -94,7 +89,6 @@ static void pksav_gba_text_test() {
 
         TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
     }
-#endif
 }
 
 PKSAV_TEST_MAIN(

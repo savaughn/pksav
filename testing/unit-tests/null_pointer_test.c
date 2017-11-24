@@ -13,7 +13,6 @@
  * pksav/common/datetime.h
  */
 static void pksav_common_datetime_h_test() {
-#if defined(PKSAV_ENABLE_GEN4) || defined(PKSAV_ENABLE_GEN5) || defined(PKSAV_ENABLE_GEN6)
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
@@ -63,7 +62,6 @@ static void pksav_common_datetime_h_test() {
         NULL
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* defined(PKSAV_ENABLE_GEN4) || defined(PKSAV_ENABLE_GEN5) || defined(PKSAV_ENABLE_GEN6) */
 }
 
 /*
@@ -235,7 +233,6 @@ static void pksav_common_stats_h_test() {
  * pksav/gen1/save.h
  */
 static void pksav_gen1_save_h_test() {
-#ifdef PKSAV_ENABLE_GEN1
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -348,14 +345,12 @@ static void pksav_gen1_save_h_test() {
         &dummy_pksav_gen1_save_t
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GEN1 */
 }
 
 /*
  * pksav/gen1/text.h
  */
 static void pksav_gen1_text_h_test() {
-#ifdef PKSAV_ENABLE_GEN1
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -410,14 +405,12 @@ static void pksav_gen1_text_h_test() {
         0
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GEN1 */
 }
 
 /*
  * pksav/gen2/save.h
  */
 static void pksav_gen2_save_h_test() {
-#ifdef PKSAV_ENABLE_GEN2
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -536,14 +529,12 @@ static void pksav_gen2_save_h_test() {
         &dummy_pksav_gen2_save_t
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GEN2 */
 }
 
 /*
  * pksav/gen2/text.h
  */
 static void pksav_gen2_text_h_test() {
-#ifdef PKSAV_ENABLE_GEN2
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -632,14 +623,12 @@ static void pksav_gen2_time_h_test() {
         NULL
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GEN2 */
 }
 
 /*
  * pksav/gba/save.h
  */
 static void pksav_gba_save_h_test() {
-#ifdef PKSAV_ENABLE_GBA
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -752,14 +741,12 @@ static void pksav_gba_save_h_test() {
         NULL
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GBA */
 }
 
 /*
  * pksav/gba/text.h
  */
 static void pksav_gba_text_h_test() {
-#ifdef PKSAV_ENABLE_GBA
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
@@ -814,7 +801,6 @@ static void pksav_gba_text_h_test() {
         0
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GBA */
 }
 
 PKSAV_TEST_MAIN(
