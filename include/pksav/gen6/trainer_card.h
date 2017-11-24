@@ -17,7 +17,7 @@
 
 typedef struct
 {
-    pkmn_trainer_id_t id;
+    pksav_trainer_id_t id;
     uint8_t game;
     uint8_t gender;
     uint8_t multiplayer_sprite;
