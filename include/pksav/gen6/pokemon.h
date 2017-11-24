@@ -13,6 +13,8 @@
 
 #include <stdint.h>
 
+#define PKSAV_GEN6_NUM_PC_BOXES 31
+
 #pragma pack(push,1)
 
 typedef struct
@@ -172,6 +174,25 @@ typedef struct
 {
     pksav_gen6_pc_pokemon_t entries[30];
 } pksav_gen6_pokemon_box_t;
+
+typedef struct
+{
+    pksav_gen6_pokemon_box_t boxes[PKSAV_GEN6_NUM_PC_BOXES];
+} pksav_gen6_pokemon_pc_t;
+
+// TODO: verify
+typedef struct
+{
+    uint16_t name[11];
+    uint8_t unknown[12];
+} pksav_gen6_pokemon_box_name_t;
+
+typedef struct
+{
+    pksav_gen6_pokemon_box_name_t names[PKSAV_GEN6_NUM_PC_BOXES];
+    uint8_t backgrounds[PKSAV_GEN6_NUM_PC_BOXES];
+    uint8_t flags[3][PKSAV_GEN6_NUM_PC_BOXES];
+} pksav_gen6_pokemon_box_info_t;
 
 #pragma pack(pop)
 
