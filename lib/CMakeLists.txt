@@ -72,6 +72,8 @@ ELSE()
     )
 ENDIF()
 
+TARGET_LINK_LIBRARIES(pksav mini-gmp)
+
 IF(UNIX)
     TARGET_LINK_LIBRARIES(pksav m)
 ENDIF()
