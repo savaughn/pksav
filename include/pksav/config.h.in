@@ -56,13 +56,6 @@ typedef intmax_t ssize_t;
 /*
  * Determined at compile-time, do not change!
  */
-#cmakedefine PKSAV_ENABLE_GEN1 1
-#cmakedefine PKSAV_ENABLE_GEN2 1
-#cmakedefine PKSAV_ENABLE_GBA  1
-#cmakedefine PKSAV_ENABLE_GCN  1
-#cmakedefine PKSAV_ENABLE_GEN4 1
-#cmakedefine PKSAV_ENABLE_GEN5 1
-#cmakedefine PKSAV_ENABLE_GEN6 1
 
 #cmakedefine PKSAV_BIG_ENDIAN    1
 #cmakedefine PKSAV_LITTLE_ENDIAN 1

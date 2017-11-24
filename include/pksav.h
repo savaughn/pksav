@@ -18,6 +18,7 @@
 
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/datetime.h>
+#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/nature.h>
@@ -28,43 +29,15 @@
 #include <pksav/common/stats.h>
 #include <pksav/common/trainer_id.h>
 
-#if PKSAV_ENABLE_GEN1
 #include <pksav/gen1.h>
-#endif /* PKSAV_ENABLE_GEN1 */
-
-#if PKSAV_ENABLE_GEN2
 #include <pksav/gen2.h>
-#endif /* PKSAV_ENABLE_GEN2 */
-
-#if PKSAV_ENABLE_GBA
 #include <pksav/gba.h>
-#endif /* PKSAV_ENABLE_GBA */
-
-#if PKSAV_ENABLE_GCN
-#include <pksav/gcn/text.h>
-#endif /* PKSAV_ENABLE_GCN */
-
-#if PKSAV_ENABLE_GEN4
 #include <pksav/gen4/text.h>
-#endif /* PKSAV_ENABLE_GEN4 */
-
-#if PKSAV_ENABLE_GEN5
 #include <pksav/gen5/text.h>
-#endif /* PKSAV_ENABLE_GEN5 */
-
-#if PKSAV_ENABLE_GEN6
 #include <pksav/gen6.h>
-#endif /* PKSAV_ENABLE_GEN6 */
 
-#if PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
-#endif /* PKSAV_ENABLE_GEN1 || PKSAV_ENABLE_GEN2 */
-
-#if PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN
-#include <pksav/common/gen3_ribbons.h>
-#endif /* PKSAV_ENABLE_GBA || PKSAV_ENABLE_GCN */
-
 #include <pksav/math/endian.h>
 
 #endif /* PKSAV_H */

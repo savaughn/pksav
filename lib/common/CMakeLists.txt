@@ -1,38 +1,16 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 SET(pksav_common_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/datetime.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pokedex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/prng.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/sha1.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stats.c
-)
-
-IF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2 OR PKSAV_ENABLE_GBA OR PKSAV_ENABLE_GEN4)
-    LIST(APPEND pksav_common_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/text_common.c
-    )
-ENDIF(PKSAV_ENABLE_GEN1 OR PKSAV_ENABLE_GEN2 OR PKSAV_ENABLE_GBA OR PKSAV_ENABLE_GEN4)
-
-IF(PKSAV_ENABLE_GAMECUBE OR PKSAV_ENABLE_GEN6)
-    LIST(APPEND pksav_common_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/sha1.c
-    )
-ENDIF(PKSAV_ENABLE_GAMECUBE OR PKSAV_ENABLE_GEN6)
-
-IF(PKSAV_ENABLE_GEN4 OR PKSAV_ENABLE_GEN5 OR PKSAV_ENABLE_GEN6)
-    LIST(APPEND pksav_common_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/datetime.c
-    )
-ENDIF(PKSAV_ENABLE_GEN4 OR PKSAV_ENABLE_GEN5 OR PKSAV_ENABLE_GEN6)
-
-IF(PKSAV_ENABLE_GEN5 OR PKSAV_ENABLE_GEN6)
-    LIST(APPEND pksav_common_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/xds_common.c
-    )
-ENDIF(PKSAV_ENABLE_GEN5 OR PKSAV_ENABLE_GEN6)
-
-SET(pksav_common_sources ${pksav_common_sources} PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/text_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/xds_common.c
+PARENT_SCOPE)
