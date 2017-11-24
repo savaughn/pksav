@@ -5,6 +5,22 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Mini-GMP needs to be separate because it's licensed as LGPL.
+ADD_LIBRARY(mini-gmp SHARED
+    mini-gmp.c
+)
+
+INSTALL(
+    TARGETS mini-gmp
+    LIBRARY DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .so
+    ARCHIVE DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .lib
+    RUNTIME DESTINATION ${RUNTIME_DIR} COMPONENT Libraries # .dll
+)
+
 SET(pksav_crypto_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/aes.c
     ${CMAKE_CURRENT_SOURCE_DIR}/sha1.c
