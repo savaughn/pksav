@@ -589,14 +589,12 @@ static void pksav_gen2_text_h_test() {
         0
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-#endif /* PKSAV_ENABLE_GEN2 */
 }
 
 /*
  * pksav/gen2/time.h
  */
 static void pksav_gen2_time_h_test() {
-#ifdef PKSAV_ENABLE_GEN2
     pksav_error_t status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
