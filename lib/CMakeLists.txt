@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -10,27 +10,11 @@ INCLUDE_DIRECTORIES(
     ${PKSAV_BINARY_DIR}/include
 )
 
-#
-# Add component-specific files
-#
-IF(PKSAV_ENABLE_GEN1)
-    ADD_SUBDIRECTORY(gen1)
-ENDIF(PKSAV_ENABLE_GEN1)
-IF(PKSAV_ENABLE_GEN2)
-    ADD_SUBDIRECTORY(gen2)
-ENDIF(PKSAV_ENABLE_GEN2)
-IF(PKSAV_ENABLE_GBA)
-    ADD_SUBDIRECTORY(gba)
-ENDIF(PKSAV_ENABLE_GBA)
-IF(PKSAV_ENABLE_GCN)
-    ADD_SUBDIRECTORY(gcn)
-ENDIF(PKSAV_ENABLE_GCN)
-IF(PKSAV_ENABLE_GEN4)
-    ADD_SUBDIRECTORY(gen4)
-ENDIF(PKSAV_ENABLE_GEN4)
-IF(PKSAV_ENABLE_GEN5)
-    ADD_SUBDIRECTORY(gen5)
-ENDIF(PKSAV_ENABLE_GEN5)
+ADD_SUBDIRECTORY(gen1)
+ADD_SUBDIRECTORY(gen2)
+ADD_SUBDIRECTORY(gba)
+ADD_SUBDIRECTORY(gen4)
+ADD_SUBDIRECTORY(gen5)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
@@ -63,7 +47,7 @@ IF(WIN32)
         ${CMAKE_CURRENT_BINARY_DIR}/pksav.rc
     @ONLY)
     SET(pksav_rc ${CMAKE_CURRENT_BINARY_DIR}/pksav.rc)
-ENDIF(WIN32)
+ENDIF()
 
 IF(PKSAV_STATIC)
     ADD_LIBRARY(pksav STATIC ${pksav_c_sources} ${pksav_rc})
@@ -84,11 +68,11 @@ ELSE()
         ARCHIVE DESTINATION ${LIBRARY_DIR} COMPONENT Libraries # .lib
         RUNTIME DESTINATION ${RUNTIME_DIR} COMPONENT Libraries # .dll
     )
-ENDIF(PKSAV_STATIC)
+ENDIF()
 
 IF(UNIX)
     TARGET_LINK_LIBRARIES(pksav m)
-ENDIF(UNIX)
+ENDIF()
 
 #
 # pkg-config file
@@ -105,4 +89,4 @@ IF(NOT PKSAV_USED_AS_SUBPROJECT)
             DESTINATION ${LIBRARY_DIR}/pkgconfig
         )
     ENDIF(PKG_CONFIG_FOUND)
-ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
+ENDIF()

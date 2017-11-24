@@ -68,18 +68,12 @@ SET(DOCS_DIR share/doc/pksav)
 ####################################################################
 # Components
 ####################################################################
-PKSAV_REGISTER_COMPONENT("Generation I"     PKSAV_ENABLE_GEN1 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation II"    PKSAV_ENABLE_GEN2 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Game Boy Advance" PKSAV_ENABLE_GBA  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Gamecube"         PKSAV_ENABLE_GCN  ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation IV"    PKSAV_ENABLE_GEN4 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation V"     PKSAV_ENABLE_GEN5 ON "" OFF)
-PKSAV_REGISTER_COMPONENT("Generation VI"    PKSAV_ENABLE_GEN6 ON "" OFF)
+PKSAV_REGISTER_COMPONENT("Library" PKSAV_ENABLE_LIBRARY ON "" OFF)
 
 IF(NOT PKSAV_USED_AS_SUBPROJECT)
-    PKSAV_REGISTER_COMPONENT("Applications"          PKSAV_ENABLE_APPS  ON ""              OFF)
-    PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
-    PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON ""              OFF)
+    PKSAV_REGISTER_COMPONENT("Applications"          PKSAV_ENABLE_APPS  ON "PKSAV_ENABLE_LIBRARY" OFF)
+    PKSAV_REGISTER_COMPONENT("Doxygen Documentation" PKSAV_ENABLE_DOCS  ON "PKSAV_ENABLE_LIBRARY;DOXYGEN_FOUND" OFF)
+    PKSAV_REGISTER_COMPONENT("Unit Tests"            PKSAV_ENABLE_TESTS ON "PKSAV_ENABLE_LIBRARY" OFF)
 ENDIF(NOT PKSAV_USED_AS_SUBPROJECT)
 
 ####################################################################
