@@ -163,6 +163,16 @@ typedef struct
     pksav_gen6_pokemon_party_data_t party_data;
 } pksav_gen6_party_pokemon_t;
 
+typedef struct
+{
+    pksav_gen6_party_pokemon_t party[6];
+} pksav_gen6_pokemon_party_t;
+
+typedef struct
+{
+    pksav_gen6_pc_pokemon_t entries[30];
+} pksav_gen6_pokemon_box_t;
+
 #pragma pack(pop)
 
 #endif /* PKSAV_GEN6_POKEMON_H */
