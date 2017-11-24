@@ -17,11 +17,13 @@ ADD_SUBDIRECTORY(gen4)
 ADD_SUBDIRECTORY(gen5)
 
 ADD_SUBDIRECTORY(common)
+ADD_SUBDIRECTORY(crypto)
 ADD_SUBDIRECTORY(math)
 
 SET(pksav_c_sources
     error.c
     ${pksav_common_sources}
+    ${pksav_crypto_sources}
     ${pksav_math_sources}
     ${pksav_gen1_sources}
     ${pksav_gen2_sources}
