@@ -26,7 +26,6 @@ SET(pksav_c_sources
     ${pksav_gen1_sources}
     ${pksav_gen2_sources}
     ${pksav_gba_sources}
-    ${pksav_gcn_sources}
     ${pksav_gen4_sources}
     ${pksav_gen5_sources}
 )
