@@ -23,6 +23,7 @@ INSTALL(
 
 SET(pksav_crypto_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/aes.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/memecrypto.c
     ${CMAKE_CURRENT_SOURCE_DIR}/rsa-gmp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/sha1.c
 PARENT_SCOPE)
