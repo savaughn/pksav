@@ -188,7 +188,7 @@ void pksav_memecrypto_sign(
     );
 
     sha1_begin(sha1);
-    sha1_hash(input_buffer_copy, (buffer_len - 8), sha1);
+    sha1_hash(input_buffer_copy, ((unsigned long)buffer_len - 8), sha1);
     sha1_end(hash, sha1);
     memcpy(
         (input_buffer_copy + buffer_len - 8),

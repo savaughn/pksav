@@ -41,6 +41,14 @@ see https://www.gnu.org/licenses/.  */
    mpn/generic/sbpi1_div_qr.c, mpn/generic/sub_n.c,
    mpn/generic/submul_1.c. */
 
+// Just ignore MSVC warnings to not risk breaking anything.
+#if defined(_MSC_VER)
+#    pragma warning(disable: 4018) // signed/unsigned match
+#    pragma warning(disable: 4146) // unary minus operator applied to unsigned typedef
+#    pragma warning(disable: 4244) // initializing...possible loss of data
+#    pragma warning(disable: 4267) // conversion...possible loss of data
+#endif
+
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
