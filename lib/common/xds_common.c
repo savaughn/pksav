@@ -84,7 +84,7 @@ pksav_error_t _pksav_widetext_to_xds(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    memset(output_buffer, PKSAV_XDS_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, 0xFF, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         if(input_text[i] == 0) {
