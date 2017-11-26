@@ -12,7 +12,7 @@ cd test-env/pksav-analysis-build
 [ $? -ne 0 ] && exit 1
 
 echo Running CppCheck.
-find $REPO_TOPLEVEL/lib -name '*.[ch]' | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
+find $REPO_TOPLEVEL -name '*.[ch]' | grep -v mini-gmp | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
 #[ $? -ne 0 ] && exit 1
 
 echo Building PKSav with Clang-tidy analysis enabled.
