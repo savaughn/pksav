@@ -179,7 +179,7 @@ void pksav_memecrypto_sign(
     uint8_t tmp_buf[PKSAV_MEMECRYPTO_LEN] = {0};
 
     uint8_t hash[0x14] = {0};
-    sha1_ctx sha1[1] = {0};
+    sha1_ctx sha1[1];
 
     memcpy(
         output_buffer,
