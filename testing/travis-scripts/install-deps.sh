@@ -7,4 +7,8 @@
 #
 
 sudo apt-get -y update
-sudo apt-get -y install cmake cppcheck doxygen gcc-mingw-w64-x86-64
+[ $? -ne 0 ] && exit 1
+sudo apt-get -y install cmake cppcheck doxygen
+[ $? -ne 0 ] && exit 1
+
+echo # So we can check the last error code

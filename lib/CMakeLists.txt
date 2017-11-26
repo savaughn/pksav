@@ -5,6 +5,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+INCLUDE(StaticAnalysisTools)
+
 INCLUDE_DIRECTORIES(
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
@@ -76,6 +78,16 @@ TARGET_LINK_LIBRARIES(pksav mini-gmp)
 
 IF(UNIX)
     TARGET_LINK_LIBRARIES(pksav m)
+ENDIF()
+
+#
+# Static Analysis
+#
+IF(PKSAV_USE_CLANGTIDY)
+    SET_TARGET_PROPERTIES(
+        pksav PROPERTIES
+        C_CLANG_TIDY "${CLANG_TIDY_PROPERTY}"
+    )
 ENDIF()
 
 #

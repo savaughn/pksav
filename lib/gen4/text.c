@@ -279,7 +279,7 @@ pksav_error_t pksav_widetext_to_gen4(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    memset(output_buffer, PKSAV_GEN4_TERMINATOR, sizeof(wchar_t)*num_chars);
+    memset(output_buffer, 0xFF, sizeof(wchar_t)*num_chars);
 
     for(size_t i = 0; i < num_chars; ++i) {
         ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
