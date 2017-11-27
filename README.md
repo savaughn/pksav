@@ -27,13 +27,10 @@ repository is automatically tested under the following configurations:
 
  * Compile, unit test:
    * Ubuntu 14.04 (x64)
-     * GCC: 4.8.4, 6.2.0
-     * Clang: 3.5.0, 4.0.0
+     * GCC: 4.8.4, 5.4.1, 6.2.0, 7.2.0
+     * Clang: 3.9.0, 4.0.1, 5.0.0
    * Windows Server 2012 R2 (x86, x64)
      * MSVC 2015 (x86, x64)
- * Cross-compile only:
-   * MinGW-GCC 4.8.2
-   * MSVC 2015 (ARM)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
@@ -49,4 +46,4 @@ Component Status
  * Generation VI: in progress
  * Generation VII: in progress
 
-README last updated: 2017/11/24
+README last updated: 2017/11/26
