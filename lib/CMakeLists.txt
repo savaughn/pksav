@@ -5,11 +5,16 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+# Internal third-party libraries
+
+ADD_SUBDIRECTORY(mini-gmp)
+
 INCLUDE(StaticAnalysisTools)
 
 INCLUDE_DIRECTORIES(
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp
 )
 
 ADD_SUBDIRECTORY(gen1)
