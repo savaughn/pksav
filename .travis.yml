@@ -34,6 +34,15 @@ matrix:
             - gcc-7
       env:
         - CC=gcc-7
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-8
+      env:
+        - CC=gcc-8
     - compiler: clang
       env:
         - CC=clang
