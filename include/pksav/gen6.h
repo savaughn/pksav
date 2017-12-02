@@ -26,6 +26,7 @@
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
 #include <pksav/common/stats.h>
+#include <pksav/common/super_training_medals.h>
 
 #include <pksav/math/endian.h>
 

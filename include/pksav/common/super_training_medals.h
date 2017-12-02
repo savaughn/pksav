@@ -1,0 +1,48 @@
+/*!
+ * @file    pksav/common/super_training_medals.h
+ * @ingroup PKSav
+ * @brief   Native storage for Super Training Medals from Generation VI+ games.
+ *
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+#ifndef PKSAV_COMMON_SUPER_TRAINING_MEDALS_H
+#define PKSAV_COMMON_SUPER_TRAINING_MEDALS_H
+
+typedef enum
+{
+    PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_1                          = 0x00000004,
+    PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_1                             = 0x00000008,
+    PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_1                            = 0x00000010,
+    PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_1                          = 0x00000020,
+    PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_1                          = 0x00000040,
+    PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_1                            = 0x00000080,
+    PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_2                          = 0x00000100,
+    PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_2                             = 0x00000200,
+    PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_2                            = 0x00000400,
+    PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_2                          = 0x00000800,
+    PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_2                          = 0x00001000,
+    PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_2                            = 0x00002000,
+    PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_3                          = 0x00004000,
+    PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_3                             = 0x00008000,
+    PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_3                            = 0x00010000,
+    PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_3                          = 0x00020000,
+    PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_3                          = 0x00040000,
+    PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_3                            = 0x00080000,
+    PKSAV_SUPER_TRAINING_MEDAL_THE_TROUBLES_KEEP_ON_COMING            = 0x00100000,
+    PKSAV_SUPER_TRAINING_MEDAL_THE_LEAF_STONE_CUP_BEGINS              = 0x00200000,
+    PKSAV_SUPER_TRAINING_MEDAL_THE_FIRE_STONE_CUP_BEGINS              = 0x00400000,
+    PKSAV_SUPER_TRAINING_MEDAL_THE_WATER_STONE_CUP_BEGINGS            = 0x00800000,
+    PKSAV_SUPER_TRAINING_MEDAL_FOLLOW_THOSE_FLEEING_GOALS             = 0x01000000,
+    PKSAV_SUPER_TRAINING_MEDAL_WATCH_OUT_THATS_ONE_TRICKY_SECOND_HALF = 0x02000000,
+    PKSAV_SUPER_TRAINING_MEDAL_AN_OPENING_OF_LIGHTNING_QUICK_ATTACKS  = 0x04000000,
+    PKSAV_SUPER_TRAINING_MEDAL_THOSE_LONG_SHOTS_ARE_NO_LONG_SHOTS     = 0x08000000,
+    PKSAV_SUPER_TRAINING_MEDAL_SCATTERBUG_LUGS_BACK                   = 0x10000000,
+    PKSAV_SUPER_TRAINING_MEDAL_A_BARRAGE_OF_BITBOTS                   = 0x20000000,
+    PKSAV_SUPER_TRAINING_MEDAL_DRAG_DOWN_HYDREIGON                    = 0x40000000,
+    PKSAV_SUPER_TRAINING_MEDAL_THE_BATTLE_FOR_THE_BEST                = 0x80000000
+} pksav_super_training_medal_mask_t;
+
+#endif /* PKSAV_COMMON_SUPER_TRAINING_MEDALS_H */
