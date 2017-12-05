@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 static PKSAV_INLINE pksav_error_t pksav_pokerus_get_strain(
-    uint8_t* pokerus_ptr,
+    const uint8_t* pokerus_ptr,
     pksav_pokerus_strain_t* strain_out
 )
 {
@@ -64,7 +64,7 @@ static PKSAV_INLINE pksav_error_t pksav_pokerus_set_strain(
 }
 
 static PKSAV_INLINE pksav_error_t pksav_pokerus_get_duration(
-    uint8_t* pokerus_ptr,
+    const uint8_t* pokerus_ptr,
     uint8_t* duration_out
 )
 {
