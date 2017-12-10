@@ -65,6 +65,7 @@ typedef struct
     uint16_t null_terminator;
     uint16_t moves[4];
     uint8_t move_pps[4];
+    uint8_t move_pp_ups[4];
     uint16_t relearn_moves[4];
     uint8_t secret_super_training_available;
     uint8_t unused_0x73;
