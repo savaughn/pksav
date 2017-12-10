@@ -111,8 +111,66 @@ static void pksav_common_pokedex_h_test() {
 }
 
 /*
- * TODO: pksav/common/pokerus.h
+ * pksav/common/pokerus.h
  */
+static void pksav_common_pokerus_h_test()
+{
+    pksav_error_t status = PKSAV_ERROR_NONE;
+    uint8_t dummy_uint8_t = 0;
+    pksav_pokerus_strain_t dummy_strain = PKSAV_POKERUS_STRAIN_A;
+
+    /*
+     * pksav_pokerus_get_strain
+     */
+
+    status = pksav_pokerus_get_strain(
+                 NULL, // pokerus_ptr
+                 &dummy_strain
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+
+    status = pksav_pokerus_get_strain(
+                 &dummy_uint8_t,
+                 NULL // strain_out
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+
+    /*
+     * pksav_pokerus_set_strain
+     */
+
+    status = pksav_pokerus_set_strain(
+                 NULL, // pokerus_ptr
+                 dummy_strain
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+
+    /*
+     * pksav_pokerus_get_duration
+     */
+
+    status = pksav_pokerus_get_duration(
+                 NULL, // pokerus_ptr
+                 &dummy_uint8_t
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+
+    status = pksav_pokerus_get_duration(
+                 &dummy_uint8_t,
+                 NULL // duration_out
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+
+    /*
+     * pksav_pokerus_set_duration
+     */
+
+    status = pksav_pokerus_set_duration(
+                  NULL, // pokerus_ptr
+                  dummy_uint8_t
+             );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+}
 
 /*
  * pksav/common/prng.h
@@ -804,6 +862,7 @@ static void pksav_gba_text_h_test() {
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_common_datetime_h_test)
     PKSAV_TEST(pksav_common_pokedex_h_test)
+    PKSAV_TEST(pksav_common_pokerus_h_test)
     PKSAV_TEST(pksav_common_prng_h_test)
     PKSAV_TEST(pksav_common_stats_h_test)
     PKSAV_TEST(pksav_gen1_save_h_test)
