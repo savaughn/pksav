@@ -9,6 +9,7 @@ SET(pksav_common_headers
     condition.h
     contest_stats.h
     coordinates.h
+    country.h
     datetime.h
     gen3_ribbons.h
     gen4_encounter_type.h
@@ -19,6 +20,7 @@ SET(pksav_common_headers
     pokedex.h
     pokerus.h
     prng.h
+    region.h
     stats.h
     super_training_medals.h
     trainer_id.h
