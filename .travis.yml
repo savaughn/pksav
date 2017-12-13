@@ -1,13 +1,21 @@
-language: c
-
-os:
- - linux
+language: generic
+os: linux
+dist: trusty
 
 matrix:
   include:
-    # Default/older GCC
     - compiler: gcc
-    # Newer GCC
+      env:
+        - CC=gcc
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+      env:
+        - CC=gcc-5
     - compiler: gcc
       addons:
         apt:
@@ -16,13 +24,19 @@ matrix:
           packages:
             - gcc-6
       env:
-        - NEWCC=gcc-6
+        - CC=gcc-6
     - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-7
       env:
-        - NEWCC=x86_64-w64-mingw32
-    # Default/older Clang
+        - CC=gcc-7
     - compiler: clang
-    # Newer Clang
+      env:
+        - CC=clang
     - compiler: clang
       addons:
         apt:
@@ -31,8 +45,29 @@ matrix:
           packages:
             - clang-4.0
       env:
-        - NEWCC=clang-4.0
-
+        - CC=clang-4.0
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - CC=clang-5.0
+    # Static analysis build
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - clang-tidy-5.0
+      env:
+        - STATIC_ANALYSIS=1
+        - CC=clang-5.0
+        - CLANG_TIDY_EXE=/usr/bin/clang-tidy-5.0
 
 sudo: required
 dist: trusty
@@ -42,4 +77,4 @@ before_install:
   - bash testing/travis-scripts/install-deps.sh
 
 script:
-  - bash testing/travis-scripts/build-test.sh
+  - if [ "$STATIC_ANALYSIS" = "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi

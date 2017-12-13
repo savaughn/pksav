@@ -85,6 +85,7 @@ SET(unit_tests
     gen4_save_test
     math_test
     null_pointer_test
+    pokerus_test
     text_conversion_test
 )
 

@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Functions for getting and setting Pokérus values.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,23 +29,84 @@ typedef enum {
 extern "C" {
 #endif
 
-static PKSAV_INLINE pksav_pokerus_strain_t pksav_pokerus_get_strain(
-    uint8_t* pokerus
-) {
-    return (pksav_pokerus_strain_t)((((*pokerus) & PKSAV_POKERUS_STRAIN_MASK) >> 4) % 4);
+static PKSAV_INLINE pksav_error_t pksav_pokerus_get_strain(
+    const uint8_t* pokerus_ptr,
+    pksav_pokerus_strain_t* strain_out
+)
+{
+    if(!pokerus_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+    if(!strain_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    *strain_out = (pksav_pokerus_strain_t)((((*pokerus_ptr) & PKSAV_POKERUS_STRAIN_MASK) >> 4) % 4);
+
+    return PKSAV_ERROR_NONE;
 }
 
-static PKSAV_INLINE uint8_t get_pokerus_duration(
-    uint8_t* pokerus
-) {
-    return (*pokerus) & PKSAV_POKERUS_DURATION_MASK;
-}
-
-static PKSAV_INLINE void pksav_pokerus_set_strain(
-    uint8_t* pokerus,
+static PKSAV_INLINE pksav_error_t pksav_pokerus_set_strain(
+    uint8_t* pokerus_ptr,
     pksav_pokerus_strain_t strain
-) {
-    *pokerus = (strain << 4) | ((strain % 4) + 1);
+)
+{
+    if(!pokerus_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    *pokerus_ptr = (strain << 4) | ((strain % 4) + 1);
+
+    return PKSAV_ERROR_NONE;
+}
+
+static PKSAV_INLINE pksav_error_t pksav_pokerus_get_duration(
+    const uint8_t* pokerus_ptr,
+    uint8_t* duration_out
+)
+{
+    if(!pokerus_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+    if(!duration_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    *duration_out = ((*pokerus_ptr) & PKSAV_POKERUS_DURATION_MASK);
+
+    return PKSAV_ERROR_NONE;
+}
+
+static PKSAV_INLINE pksav_error_t pksav_pokerus_set_duration(
+    uint8_t* pokerus_ptr,
+    uint8_t duration
+)
+{
+    if(!pokerus_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+    if(duration > 15)
+    {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    *pokerus_ptr &= ~PKSAV_POKERUS_DURATION_MASK;
+    *pokerus_ptr |= duration;
+
+    // Adjust the strain if the duration is incompatible.
+    if(duration >= 12)
+    {
+        *pokerus_ptr &= ~PKSAV_POKERUS_STRAIN_MASK;
+        *pokerus_ptr |= ((duration % 4) << 4);
+    }
+
+    return PKSAV_ERROR_NONE;
 }
 
 #ifdef __cplusplus

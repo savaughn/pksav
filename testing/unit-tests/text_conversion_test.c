@@ -92,7 +92,6 @@ static void pksav_gba_text_test() {
 }
 
 static void pksav_gen4_text_test() {
-#ifdef PKSAV_ENABLE_GEN4
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint16_t gen4_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
@@ -114,7 +113,6 @@ static void pksav_gen4_text_test() {
 
         TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
     }
-#endif
 }
 
 PKSAV_TEST_MAIN(
