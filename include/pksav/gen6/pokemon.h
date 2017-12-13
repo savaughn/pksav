@@ -15,6 +15,15 @@
 
 #define PKSAV_GEN6_NUM_PC_BOXES 31
 
+#define PKSAV_GEN6_POKEMON_ISEGG_MASK            ((uint32_t)(1 << 30))
+#define PKSAV_GEN6_POKEMON_ISNICKNAMED_MASK      ((uint32_t)(1 << 31))
+#define PKSAV_GEN6_POKEMON_FATEFULENCOUNTER_MASK ((uint8_t)(1 << 0))
+#define PKSAV_GEN6_POKEMON_FEMALE_MASK           ((uint8_t)(1 << 1))
+#define PKSAV_GEN6_POKEMON_GENDERLESS_MASK       ((uint8_t)(1 << 2))
+#define PKSAV_GEN6_POKEMON_LEVELMET_MASK         ((uint8_t)(0x7F))
+#define PKSAV_GEN6_POKEMON_OTGENDER_MASK         ((uint8_t)(0x80))
+#define PKSAV_GEN6_POKEMON_OTGENDER_OFFSET       7
+
 #pragma pack(push,1)
 
 typedef struct
