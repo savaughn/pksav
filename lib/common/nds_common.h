@@ -30,8 +30,13 @@ static PKSAV_INLINE void pksav_nds_pokemon_set_checksum(
     nds_pokemon->checksum = pksav_nds_pokemon_get_checksum(nds_pokemon);
 }
 
-void pksav_nds_crypt_pokemon(
+void pksav_nds_crypt_pc_pokemon(
     pksav_nds_pc_pokemon_t* nds_pokemon,
+    bool encrypt
+);
+
+void pksav_nds_crypt_party_pokemon(
+    pksav_nds_party_pokemon_t* nds_pokemon,
     bool encrypt
 );
 

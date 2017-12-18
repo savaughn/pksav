@@ -127,25 +127,33 @@ static const uint8_t nds_decrypt_block_orders[24][4] =
 };
 
 static void _pksav_nds_apply_lcrng(
-    pksav_nds_pc_pokemon_t* nds_pokemon
+    uint16_t* buffer,
+    size_t buffer_len,
+    uint32_t initial_seed
 )
 {
     pksav_lcrng32_t lcrng32;
-    lcrng32.seed = nds_pokemon->checksum;
-    for(uint8_t i = 0; i < 64; ++i)
+    lcrng32.seed = initial_seed;
+    for(size_t i = 0; i < buffer_len; ++i)
     {
-        nds_pokemon->blocks.blocks16[i] ^= pksav_lcrng32_next(&lcrng32);
+        buffer[i] ^= pksav_lcrng32_next(&lcrng32);
     }
 }
 
-void pksav_nds_crypt_pokemon(
+void pksav_nds_crypt_pc_pokemon(
     pksav_nds_pc_pokemon_t* nds_pokemon,
     bool encrypt
 )
 {
     if(!encrypt)
     {
-        _pksav_nds_apply_lcrng(nds_pokemon);
+        _pksav_nds_apply_lcrng(
+            nds_pokemon->blocks.blocks16,
+            sizeof(nds_pokemon->blocks)/2,
+            nds_pokemon->checksum
+        );
+
+        nds_pokemon->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
     }
 
     uint32_t index = (((nds_pokemon->personality >> 0xD) & 0x1F) % 24);
@@ -182,6 +190,39 @@ void pksav_nds_crypt_pokemon(
 
     if(encrypt)
     {
-        _pksav_nds_apply_lcrng(nds_pokemon);
+        _pksav_nds_apply_lcrng(
+            nds_pokemon->blocks.blocks16,
+            sizeof(nds_pokemon->blocks)/2,
+            nds_pokemon->checksum
+        );
+
+        nds_pokemon->isdecrypted_isegg &= ~PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
+    }
+}
+
+void pksav_nds_crypt_party_pokemon(
+    pksav_nds_party_pokemon_t* nds_pokemon,
+    bool encrypt
+)
+{
+    pksav_nds_crypt_pc_pokemon(
+        &nds_pokemon->pc,
+        encrypt
+    );
+
+    // Party data is separately crypted
+    _pksav_nds_apply_lcrng(
+        (uint16_t*)&nds_pokemon->party_data,
+        sizeof(nds_pokemon->party_data)/2,
+        nds_pokemon->pc.personality
+    );
+
+    if(encrypt)
+    {
+        nds_pokemon->pc.isdecrypted_isegg |= PKSAV_NDS_PARTY_DATA_DECRYPTED_MASK;
+    }
+    else
+    {
+        nds_pokemon->pc.isdecrypted_isegg &= ~PKSAV_NDS_PARTY_DATA_DECRYPTED_MASK;
     }
 }

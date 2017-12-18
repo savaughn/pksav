@@ -445,8 +445,8 @@ static void _pksav_gen4_crypt_all_pokemon(
                 &gen4_save->pokemon_party->party[i].pc
             );
         }
-        pksav_nds_crypt_pokemon(
-            &gen4_save->pokemon_party->party[i].pc,
+        pksav_nds_crypt_party_pokemon(
+            &gen4_save->pokemon_party->party[i],
             encrypt
         );
     }
@@ -464,7 +464,7 @@ static void _pksav_gen4_crypt_all_pokemon(
                         &gen4_save->pokemon_pc->hgss.boxes[i].entries[j]
                     );
                 }
-                pksav_nds_crypt_pokemon(
+                pksav_nds_crypt_pc_pokemon(
                     &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
                     encrypt
                 );
@@ -477,7 +477,7 @@ static void _pksav_gen4_crypt_all_pokemon(
                         &gen4_save->pokemon_pc->dppt.boxes[i].entries[j]
                     );
                 }
-                pksav_nds_crypt_pokemon(
+                pksav_nds_crypt_pc_pokemon(
                     &gen4_save->pokemon_pc->dppt.boxes[i].entries[j],
                     encrypt
                 );
