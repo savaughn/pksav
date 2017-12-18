@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -123,10 +123,15 @@ pksav_error_t pksav_file_is_gen4_save(
     bool* result_out
 )
 {
+    if(!filepath || !result_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     FILE* gen4_save = fopen(filepath, "rb");
     if(!gen4_save)
     {
-        return false;
+        return PKSAV_ERROR_FILE_IO;
     }
 
     fseek(gen4_save, 0, SEEK_END);
@@ -135,7 +140,9 @@ pksav_error_t pksav_file_is_gen4_save(
     if(save_size < PKSAV_GEN4_SMALL_SAVE_SIZE)
     {
         fclose(gen4_save);
-        return false;
+        *result_out = false;
+
+        return PKSAV_ERROR_NONE;
     }
 
     uint8_t* gen4_save_data = malloc(save_size);
@@ -197,7 +204,7 @@ static void _pksav_gen4_save_set_block_pointers(
 
     if(!gen4_save->small_save)
     {
-        pksav_gen4_footer_t* general_footer1 = (pksav_gen4_footer_t*)(
+        pksav_gen4_footer_t* general_footer2 = (pksav_gen4_footer_t*)(
                                                    &GEN4_BLOCK_INFO_DATA(
                                                        PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
                                                        gen4_save->gen4_game,
@@ -206,22 +213,22 @@ static void _pksav_gen4_save_set_block_pointers(
                                                );
         if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
         {
-            if(gen4_save->general_footer->hgss.save_index < general_footer1->hgss.save_index)
+            if(gen4_save->general_footer->hgss.save_index < general_footer2->hgss.save_index)
             {
                 gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
-                gen4_save->general_footer = general_footer1;
+                gen4_save->general_footer = general_footer2;
             }
         }
         else
         {
-            if(gen4_save->general_footer->dppt.general_id < general_footer1->dppt.general_id)
+            if(gen4_save->general_footer->dppt.general_id < general_footer2->dppt.general_id)
             {
                 gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
-                gen4_save->general_footer = general_footer1;
+                gen4_save->general_footer = general_footer2;
             }
         }
 
-        pksav_gen4_footer_t* storage_footer1 = (pksav_gen4_footer_t*)(
+        pksav_gen4_footer_t* storage_footer2 = (pksav_gen4_footer_t*)(
                                                    &GEN4_BLOCK_INFO_DATA(
                                                        PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START,
                                                        gen4_save->gen4_game,
@@ -230,18 +237,18 @@ static void _pksav_gen4_save_set_block_pointers(
                                                );
         if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
         {
-            if(gen4_save->storage_footer->hgss.save_index < storage_footer1->hgss.save_index)
+            if(gen4_save->storage_footer->hgss.save_index < storage_footer2->hgss.save_index)
             {
                 gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
-                gen4_save->storage_footer = storage_footer1;
+                gen4_save->storage_footer = storage_footer2;
             }
         }
         else
         {
-            if(gen4_save->storage_footer->dppt.storage_id < storage_footer1->dppt.storage_id)
+            if(gen4_save->storage_footer->dppt.storage_id < storage_footer2->dppt.storage_id)
             {
                 gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
-                gen4_save->storage_footer = storage_footer1;
+                gen4_save->storage_footer = storage_footer2;
             }
         }
     }
@@ -484,6 +491,11 @@ pksav_error_t pksav_gen4_save_load(
     pksav_gen4_save_t* gen4_save
 )
 {
+    if(!filepath || !gen4_save)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Read the file and make sure it's valid
     FILE* gen4_save_file = fopen(filepath, "rb");
     if(!gen4_save_file)
@@ -560,6 +572,11 @@ pksav_error_t pksav_gen4_save_save(
     pksav_gen4_save_t* gen4_save
 )
 {
+    if(!filepath || !gen4_save)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
     // Make sure we can write to this file
     FILE* gen4_save_file = fopen(filepath, "wb");
     if(!gen4_save_file)
@@ -601,5 +618,27 @@ pksav_error_t pksav_gen4_save_free(
     }
 
     free(gen4_save->raw);
+    gen4_save->pokemon_party = NULL;
+    gen4_save->pokemon_pc = NULL;
+    gen4_save->item_bag = NULL;
+    gen4_save->trainer_name = NULL;
+    gen4_save->trainer_id = NULL;
+    gen4_save->trainer_gender = NULL;
+    gen4_save->money = NULL;
+    gen4_save->rival_name = NULL;
+    gen4_save->adventure_started_time = NULL;
+    gen4_save->pokemon_league_champ_time = NULL;
+    gen4_save->total_playtime = NULL;
+    gen4_save->player_coordinates = NULL;
+    gen4_save->hgss_follower_coordinates = NULL;
+    gen4_save->trainer_card_signature = NULL;
+    gen4_save->sinnoh_johto_badges = NULL;
+    gen4_save->hgss_kanto_badges = NULL;
+    gen4_save->general_block = NULL;
+    gen4_save->general_footer = NULL;
+    gen4_save->storage_block = NULL;
+    gen4_save->storage_footer = NULL;
+    gen4_save->raw = NULL;
+
     return PKSAV_ERROR_NONE;
 }
