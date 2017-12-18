@@ -16,12 +16,14 @@
 #define PKSAV_GEN4_SMALL_SAVE_SIZE 0x40000
 #define PKSAV_GEN4_LARGE_SAVE_SIZE 0x80000
 
-typedef enum {
+typedef enum
+{
     PKSAV_GEN4_SAVE_A = 0x00000,
     PKSAV_GEN4_SAVE_B = 0x40000
 } pksav_gen4_save_offset_t;
 
-typedef enum {
+typedef enum
+{
     PKSAV_GEN4_GENERAL_BLOCK_START = 0,
     PKSAV_GEN4_GENERAL_BLOCK_LENGTH,
     PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
@@ -30,7 +32,8 @@ typedef enum {
     PKSAV_GEN4_STORAGE_BLOCK_FOOTER_START
 } pksav_gen4_block_info_field_t;
 
-static const uint32_t pksav_gen4_block_info[][3] = {
+static const uint32_t pksav_gen4_block_info[][3] =
+{
     {0x00000,0x00000,0x00000}, // General block start
     {0x0C100,0x0CF2C,0x0F628}, // General block length
     {0x0C0EC,0x0CF18,0x0F618}, // General block footer offset
@@ -39,7 +42,8 @@ static const uint32_t pksav_gen4_block_info[][3] = {
     {0x1E2CC,0x1F0FC,0x21A00}  // Storage block footer offset
 };
 
-typedef enum {
+typedef enum
+{
     PKSAV_GEN4_ADVENTURE_STARTED_TIME = 0,
     PKSAV_GEN4_POKEMON_LEAGUE_CHAMP_TIME,
     PKSAV_GEN4_TRAINER_NAME,
@@ -63,7 +67,8 @@ typedef enum {
  * TODO: confirm Platinum offsets, probably in similar offsets,
  *       relative to others
  */
-static const uint32_t pksav_gen4_offsets[][3] = {
+static const uint32_t pksav_gen4_offsets[][3] =
+{
     {0x0034,0x0034,0x00034}, // Adventure Started Time
     {0x003C,0x003C,0x0003C}, // Pokémon League Start Time
     {0x0064,0x0068,0x00064}, // Trainer Name
@@ -94,12 +99,15 @@ pksav_error_t pksav_buffer_is_gen4_save(
     size_t buffer_len,
     pksav_gen4_game_t gen4_game,
     bool* result_out
-) {
-    if(!buffer || !result_out) {
+)
+{
+    if(!buffer || !result_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    if(buffer_len < PKSAV_GEN4_SMALL_SAVE_SIZE) {
+    if(buffer_len < PKSAV_GEN4_SMALL_SAVE_SIZE)
+    {
         *result_out = false;
         return PKSAV_ERROR_NONE;
     }
@@ -113,16 +121,19 @@ pksav_error_t pksav_file_is_gen4_save(
     const char* filepath,
     pksav_gen4_game_t gen4_game,
     bool* result_out
-) {
+)
+{
     FILE* gen4_save = fopen(filepath, "rb");
-    if(!gen4_save) {
+    if(!gen4_save)
+    {
         return false;
     }
 
     fseek(gen4_save, 0, SEEK_END);
     size_t save_size = ftell(gen4_save);
 
-    if(save_size < PKSAV_GEN4_SMALL_SAVE_SIZE) {
+    if(save_size < PKSAV_GEN4_SMALL_SAVE_SIZE)
+    {
         fclose(gen4_save);
         return false;
     }
@@ -133,7 +144,8 @@ pksav_error_t pksav_file_is_gen4_save(
     fclose(gen4_save);
 
     bool ret = false;
-    if(num_read == save_size) {
+    if(num_read == save_size)
+    {
         pksav_buffer_is_gen4_save(
             gen4_save_data,
             save_size,
@@ -149,7 +161,8 @@ pksav_error_t pksav_file_is_gen4_save(
 
 static void _pksav_gen4_save_set_block_pointers(
     pksav_gen4_save_t* gen4_save
-) {
+)
+{
     /*
      * By default, set the pointers to the first half of a large file, which
      * works for both kinds. For large saves, check the second half and advance
@@ -182,7 +195,8 @@ static void _pksav_gen4_save_set_block_pointers(
                                     )
                                 );
 
-    if(!gen4_save->small_save) {
+    if(!gen4_save->small_save)
+    {
         pksav_gen4_footer_t* general_footer1 = (pksav_gen4_footer_t*)(
                                                    &GEN4_BLOCK_INFO_DATA(
                                                        PKSAV_GEN4_GENERAL_BLOCK_FOOTER_START,
@@ -190,13 +204,18 @@ static void _pksav_gen4_save_set_block_pointers(
                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
                                                    )
                                                );
-        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-            if(gen4_save->general_footer->hgss.save_index < general_footer1->hgss.save_index) {
+        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+        {
+            if(gen4_save->general_footer->hgss.save_index < general_footer1->hgss.save_index)
+            {
                 gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
                 gen4_save->general_footer = general_footer1;
             }
-        } else {
-            if(gen4_save->general_footer->dppt.general_id < general_footer1->dppt.general_id) {
+        }
+        else
+        {
+            if(gen4_save->general_footer->dppt.general_id < general_footer1->dppt.general_id)
+            {
                 gen4_save->general_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
                 gen4_save->general_footer = general_footer1;
             }
@@ -209,13 +228,18 @@ static void _pksav_gen4_save_set_block_pointers(
                                                        (gen4_save->raw + PKSAV_GEN4_SMALL_SAVE_SIZE)
                                                    )
                                                );
-        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-            if(gen4_save->storage_footer->hgss.save_index < storage_footer1->hgss.save_index) {
+        if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+        {
+            if(gen4_save->storage_footer->hgss.save_index < storage_footer1->hgss.save_index)
+            {
                 gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
                 gen4_save->storage_footer = storage_footer1;
             }
-        } else {
-            if(gen4_save->storage_footer->dppt.storage_id < storage_footer1->dppt.storage_id) {
+        }
+        else
+        {
+            if(gen4_save->storage_footer->dppt.storage_id < storage_footer1->dppt.storage_id)
+            {
                 gen4_save->storage_block += PKSAV_GEN4_SMALL_SAVE_SIZE;
                 gen4_save->storage_footer = storage_footer1;
             }
@@ -225,7 +249,8 @@ static void _pksav_gen4_save_set_block_pointers(
 
 static void _pksav_gen4_save_set_public_pointers(
     pksav_gen4_save_t* gen4_save
-) {
+)
+{
     gen4_save->pokemon_party = (pksav_gen4_pokemon_party_t*)(
                                    &GEN4_OFFSET_DATA(
                                        PKSAV_GEN4_PARTY,
@@ -316,7 +341,8 @@ static void _pksav_gen4_save_set_public_pointers(
                                         )
                                     );
 
-    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+    {
         gen4_save->hgss_follower_coordinates = (pksav_coordinates_t*)(
                                                    &GEN4_OFFSET_DATA(
                                                        PKSAV_GEN4_HGSS_FOLLOWER_COORDINATES,
@@ -324,7 +350,9 @@ static void _pksav_gen4_save_set_public_pointers(
                                                        gen4_save->general_block
                                                    )
                                                );
-    } else {
+    }
+    else
+    {
         gen4_save->hgss_follower_coordinates = NULL;
     }
 
@@ -334,13 +362,16 @@ static void _pksav_gen4_save_set_public_pointers(
                                          gen4_save->general_block
                                      );
 
-    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+    {
         gen4_save->hgss_kanto_badges = &GEN4_OFFSET_DATA(
                                            PKSAV_GEN4_HGSS_KANTO_BADGES,
                                            gen4_save->gen4_game,
                                            gen4_save->general_block
                                        );
-    } else {
+    }
+    else
+    {
         gen4_save->hgss_kanto_badges = NULL;
     }
 
@@ -355,8 +386,10 @@ static void _pksav_gen4_save_set_public_pointers(
 
 static void _pksav_gen4_save_set_block_checksums(
     pksav_gen4_save_t* gen4_save
-) {
-    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
+)
+{
+    if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+    {
         gen4_save->general_footer->hgss.checksum = pksav_nds_block_get_checksum(
                                                        gen4_save->general_block,
                                                        GEN4_BLOCK_INFO(
@@ -371,7 +404,9 @@ static void _pksav_gen4_save_set_block_checksums(
                                                            gen4_save->gen4_game
                                                        )
                                                    );
-    } else {
+    }
+    else
+    {
         gen4_save->general_footer->dppt.checksum = pksav_nds_block_get_checksum(
                                                        gen4_save->general_block,
                                                        GEN4_BLOCK_INFO(
@@ -392,10 +427,13 @@ static void _pksav_gen4_save_set_block_checksums(
 static void _pksav_gen4_crypt_all_pokemon(
     pksav_gen4_save_t* gen4_save,
     bool encrypt
-) {
+)
+{
     // Party
-    for(uint8_t i = 0; i < 6; ++i) {
-        if(encrypt) {
+    for(uint8_t i = 0; i < 6; ++i)
+    {
+        if(encrypt)
+        {
             pksav_nds_pokemon_set_checksum(
                 &gen4_save->pokemon_party->party[i].pc
             );
@@ -407,10 +445,14 @@ static void _pksav_gen4_crypt_all_pokemon(
     }
 
     // PC
-    for(uint8_t i = 0; i < 18; ++i) {
-        for(uint8_t j = 0; j < 30; ++j) {
-            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS) {
-                if(encrypt) {
+    for(uint8_t i = 0; i < 18; ++i)
+    {
+        for(uint8_t j = 0; j < 30; ++j)
+        {
+            if(gen4_save->gen4_game == PKSAV_GEN4_HGSS)
+            {
+                if(encrypt)
+                {
                     pksav_nds_pokemon_set_checksum(
                         &gen4_save->pokemon_pc->hgss.boxes[i].entries[j]
                     );
@@ -419,8 +461,11 @@ static void _pksav_gen4_crypt_all_pokemon(
                     &gen4_save->pokemon_pc->hgss.boxes[i].entries[j],
                     encrypt
                 );
-            } else {
-                if(encrypt) {
+            }
+            else
+            {
+                if(encrypt)
+                {
                     pksav_nds_pokemon_set_checksum(
                         &gen4_save->pokemon_pc->dppt.boxes[i].entries[j]
                     );
@@ -437,21 +482,28 @@ static void _pksav_gen4_crypt_all_pokemon(
 pksav_error_t pksav_gen4_save_load(
     const char* filepath,
     pksav_gen4_save_t* gen4_save
-) {
+)
+{
     // Read the file and make sure it's valid
     FILE* gen4_save_file = fopen(filepath, "rb");
-    if(!gen4_save_file) {
+    if(!gen4_save_file)
+    {
         return PKSAV_ERROR_FILE_IO;
     }
 
     fseek(gen4_save_file, 0, SEEK_END);
     size_t save_size = ftell(gen4_save_file);
 
-    if(save_size >= PKSAV_GEN4_LARGE_SAVE_SIZE) {
+    if(save_size >= PKSAV_GEN4_LARGE_SAVE_SIZE)
+    {
         gen4_save->small_save = false;
-    } else if(save_size >= PKSAV_GEN4_SMALL_SAVE_SIZE) {
+    }
+    else if(save_size >= PKSAV_GEN4_SMALL_SAVE_SIZE)
+    {
         gen4_save->small_save = true;
-    } else {
+    }
+    else
+    {
         fclose(gen4_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
@@ -460,27 +512,31 @@ pksav_error_t pksav_gen4_save_load(
     fseek(gen4_save_file, 0, SEEK_SET);
     size_t num_read = fread((void*)gen4_save->raw, 1, save_size, gen4_save_file);
     fclose(gen4_save_file);
-    if(num_read != save_size) {
+    if(num_read != save_size)
+    {
         free(gen4_save->raw);
         return PKSAV_ERROR_FILE_IO;
     }
 
     // Detect what type of save this is.
     bool found = false;
-    for(pksav_gen4_game_t i = PKSAV_GEN4_DP; i <= PKSAV_GEN4_HGSS; ++i) {
+    for(pksav_gen4_game_t i = PKSAV_GEN4_DP; i <= PKSAV_GEN4_HGSS; ++i)
+    {
         pksav_buffer_is_gen4_save(
             gen4_save->raw,
             save_size,
             i,
             &found
         );
-        if(found) {
+        if(found)
+        {
             gen4_save->gen4_game = i;
             break;
         }
     }
 
-    if(!found) {
+    if(!found)
+    {
         free(gen4_save->raw);
         return PKSAV_ERROR_INVALID_SAVE;
     }
@@ -502,10 +558,12 @@ pksav_error_t pksav_gen4_save_load(
 pksav_error_t pksav_gen4_save_save(
     const char* filepath,
     pksav_gen4_save_t* gen4_save
-) {
+)
+{
     // Make sure we can write to this file
     FILE* gen4_save_file = fopen(filepath, "wb");
-    if(!gen4_save_file) {
+    if(!gen4_save_file)
+    {
         return PKSAV_ERROR_FILE_IO;
     }
 
@@ -535,8 +593,10 @@ pksav_error_t pksav_gen4_save_save(
 
 pksav_error_t pksav_gen4_save_free(
     pksav_gen4_save_t* gen4_save
-) {
-    if(!gen4_save) {
+)
+{
+    if(!gen4_save)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
