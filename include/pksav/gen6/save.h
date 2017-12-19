@@ -20,8 +20,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-// TODO
-#define PKSAV_GEN6_SAVE_SIZE 0
+#define PKSAV_GEN6_SAVE_SIZE 0x100000 // (1 MB)
 
 typedef enum
 {
