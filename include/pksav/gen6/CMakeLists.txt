@@ -6,12 +6,18 @@
 #
 
 SET(pksav_gen6_headers
+    battle_maison_data.h
     coords.h
+    daycare_data.h
     hall_of_fame.h
     items.h
+    picture_data.h
     pokemon.h
+    pokepuff_inventory.h
     ribbons.h
     save.h
+    select_bound_items.h
+    super_training_data.h
     text.h
     trainer_card.h
 )

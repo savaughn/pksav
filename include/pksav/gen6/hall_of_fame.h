@@ -21,12 +21,15 @@
 
 #pragma pack(push,1)
 
-typedef struct {
+typedef struct
+{
     uint16_t species;
     uint16_t held_item;
     uint16_t moves[4];
+    uint32_t encryption_key;
     pksav_trainer_id_t trainer_id;
-    uint32_t flags;
+    uint16_t flags;
+    uint8_t unused[2];
     uint16_t nickname[11];
     uint16_t otname[11];
 } pksav_gen6_hall_of_fame_pokemon_t;
@@ -42,10 +45,17 @@ typedef struct {
 #define PKSAV_GEN6_HALL_OF_FAME_ENTRY_DAY_MASK   0x3C000000
 #define PKSAV_GEN6_HALL_OF_FAME_ENTRY_DAY_OFFSET 26
 
-typedef struct {
-    uint32_t entry_info;
+typedef struct
+{
     pksav_gen6_hall_of_fame_pokemon_t party[6];
+    uint32_t entry_info;
 } pksav_gen6_hall_of_fame_entry_t;
+
+typedef struct
+{
+    pksav_gen6_hall_of_fame_entry_t first_entry;
+    pksav_gen6_hall_of_fame_entry_t most_recent_entries[15];
+} pksav_gen6_hall_of_fame_t;
 
 #pragma pack(pop)
 
