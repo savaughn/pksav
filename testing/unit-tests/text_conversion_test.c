@@ -94,13 +94,14 @@ static void pksav_gba_text_test() {
     }
 }
 
-static void pksav_gen6_text_test() {
-#ifdef PKSAV_ENABLE_GEN6
+static void pksav_gen6_text_test()
+{
     pksav_error_t error = PKSAV_ERROR_NONE;
     uint16_t gen6_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
 
-    for(size_t i = 0; strings[i] != NULL; ++i) {
+    for(size_t i = 0; strings[i] != NULL; ++i)
+    {
         error = pksav_text_to_gen6(
                     strings[i],
                     gen6_buffer,
@@ -117,9 +118,7 @@ static void pksav_gen6_text_test() {
 
         TEST_ASSERT_EQUAL_STRING(strings[i], strbuffer);
     }
-#endif
 }
-
 
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen1_text_test)
