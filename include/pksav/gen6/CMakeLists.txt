@@ -11,6 +11,7 @@ SET(pksav_gen6_headers
     items.h
     pokemon.h
     ribbons.h
+    save.h
     text.h
     trainer_card.h
 )

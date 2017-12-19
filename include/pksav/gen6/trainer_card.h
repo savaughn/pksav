@@ -17,11 +17,17 @@
 
 typedef struct
 {
+    uint16_t saying[12];
+    uint16_t null_terminator;
+} pksav_gen6_saying_t;
+
+typedef struct
+{
     pksav_trainer_id_t id;
     uint8_t game;
     uint8_t gender;
     uint8_t multiplayer_sprite;
-    uint8_t gamesync_id[16]; // What is this?
+    uint8_t gamesync_id[16];
 
     uint8_t subregion;
     uint8_t country;
@@ -36,7 +42,9 @@ typedef struct
     uint16_t nickname[12];
     uint16_t nickname_null_terminator;
 
-    // TODO: sayings
+    pksav_gen6_saying_t sayings[5];
+
+    uint8_t unknown2[36];
 } pksav_gen6_trainer_card_t;
 
 #pragma pack(pop)

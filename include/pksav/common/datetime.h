@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +16,8 @@
 #pragma pack(push,1)
 
 //! Representation of a date in Generation IV+.
-typedef struct {
+typedef struct
+{
     //! Year (since 2000).
     uint8_t year;
     //! Month (1-12).
@@ -24,6 +25,13 @@ typedef struct {
     //! Day (1-31).
     uint8_t day;
 } pksav_date_t;
+
+typedef struct
+{
+    uint16_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
+} pksav_time_t;
 
 #pragma pack(pop)
 

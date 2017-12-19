@@ -19,6 +19,7 @@
 #include <pksav/gen6/items.h>
 #include <pksav/gen6/pokemon.h>
 #include <pksav/gen6/ribbons.h>
+#include <pksav/gen6/save.h>
 #include <pksav/gen6/text.h>
 #include <pksav/gen6/trainer_card.h>
 
