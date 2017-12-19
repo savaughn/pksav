@@ -20,7 +20,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define PKSAV_GEN6_SAVE_SIZE 0x100000 // (1 MB)
+#define PKSAV_GEN6_XY_SAVE_SIZE   0x65600
+#define PKSAV_GEN6_ORAS_SAVE_SIZE 0x76000
 
 typedef enum
 {
@@ -35,8 +36,6 @@ typedef struct
     pksav_gen6_pokemon_party_t* pokemon_party;
     pksav_gen6_pokemon_pc_t* pokemon_pc;
     pksav_gen6_bag_t* item_bag;
-
-    uint32_t* money;
 
     // Do not edit these
 #ifndef __DOXYGEN__
