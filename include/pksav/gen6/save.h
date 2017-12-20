@@ -33,8 +33,10 @@ typedef struct
 {
     pksav_gen6_trainer_card_t* trainer_card;
 
-    pksav_gen6_pokemon_party_t* pokemon_party;
     pksav_gen6_pokemon_pc_t* pokemon_pc;
+    pksav_gen6_pokemon_box_info_t* pokemon_box_info;
+
+    pksav_gen6_pokemon_party_t* pokemon_party;
     pksav_gen6_bag_t* item_bag;
 
     // Do not edit these

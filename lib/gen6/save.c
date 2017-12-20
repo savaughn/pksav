@@ -184,6 +184,12 @@ static void _pksav_gen6_set_pointers(
 {
     assert(gen6_save_out);
 
+    gen6_save_out->pokemon_box_info = (pksav_gen6_pokemon_box_info_t*)(
+                                          PKSAV_GEN6_OFFSET_PTR(
+                                              gen6_save_out,
+                                              PKSAV_GEN6_POKEMON_BOX_INFO
+                                          )
+                                      );
     gen6_save_out->trainer_card = (pksav_gen6_trainer_card_t*)(
                                       PKSAV_GEN6_OFFSET_PTR(
                                           gen6_save_out,
