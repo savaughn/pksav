@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Global Generation I include file.
  *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,6 +18,7 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
+#include <pksav/gen1/time.h>
 
 #include <pksav/common/condition.h>
 #include <pksav/common/pokedex.h>
