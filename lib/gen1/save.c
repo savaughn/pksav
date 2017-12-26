@@ -14,6 +14,7 @@
 #define PKSAV_GEN1_SAVE_SIZE 0x8000
 
 // Offsets in a Generation I save
+// TODO: hall of fame
 typedef enum {
     PKSAV_GEN1_PLAYER_NAME             = 0x2598,
     PKSAV_GEN1_POKEDEX_OWNED           = 0x25A3,

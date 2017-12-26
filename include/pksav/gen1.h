@@ -14,6 +14,8 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen1/badges.h>
+#include <pksav/gen1/hall_of_fame.h>
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>

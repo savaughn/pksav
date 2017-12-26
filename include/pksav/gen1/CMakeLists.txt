@@ -7,6 +7,7 @@
 
 SET(pksav_gen1_headers
     badges.h
+    hall_of_fame.h
     items.h
     pokemon.h
     save.h

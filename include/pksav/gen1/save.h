@@ -14,6 +14,7 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen1/hall_of_fame.h>
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/time.h>
@@ -156,6 +157,12 @@ typedef struct {
      * In Pokémon Red/Blue, this field is unused and is set to 0.
      */
     uint8_t* pikachu_friendship;
+
+    // TODO: verify, original research based on disassembly
+
+    pksav_gen1_hall_of_fame_t* hall_of_fame;
+
+    // end TODO
 
     /*!
      * @brief Whether or not this save file corresponds to a Pokémon Yellow game.
