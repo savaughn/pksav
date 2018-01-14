@@ -101,7 +101,7 @@ static const uint16_t pksav_gba_section1_offsets[][4] = {
     {0x0490,0x0490,0x0290}, // Money
     {0x0494,0x0494,0x0294}, // Casino Coins
     {0x0498,0x0498,0x0298}, // Item Storage
-    {0x0938,0x0988,0x05F8}  // Pokédex Seen B
+    {0x0938,0x0988,0x0788}  // Pokédex Seen B
 };
 
 typedef enum {
