@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -295,6 +295,8 @@ pksav_error_t pksav_gen2_save_load(
     gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
     gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
     gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
+    gen2_save->pokedex_seen = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEDEX_SEEN);
+    gen2_save->pokedex_owned = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEDEX_OWNED);
     gen2_save->daylight_savings = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS);
     gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);
     gen2_save->money = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_MONEY);
@@ -358,6 +360,8 @@ pksav_error_t pksav_gen2_save_free(
     gen2_save->pokemon_box_names = NULL;
     gen2_save->item_bag = NULL;
     gen2_save->item_pc = NULL;
+    gen2_save->pokedex_seen = NULL;
+    gen2_save->pokedex_owned = NULL;
     gen2_save->trainer_name = NULL;
     gen2_save->trainer_id = NULL;
     gen2_save->trainer_gender = NULL;

@@ -3,7 +3,7 @@
  * @ingroup PKSav
  * @brief   Functions for interacting with Generation II save files.
  *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -80,6 +80,21 @@ typedef struct {
 
     //! A pointer to the trainer's item PC.
     pksav_gen2_item_pc_t* item_pc;
+
+    /*!
+     * @brief A pointer to the list of Pokémon seen by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* pokedex_seen;
+    /*!
+     * @brief A pointer to the list of Pokémon owned by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* pokedex_owned;
 
     /*!
      * @brief A pointer to the trainer's name.
