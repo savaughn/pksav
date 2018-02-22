@@ -90,7 +90,7 @@ pksav_error_t pksav_file_is_gen1_save(
         return PKSAV_ERROR_NONE;
     }
 
-    uint8_t* gen1_save_data = malloc(PKSAV_GEN1_SAVE_SIZE);
+    uint8_t* gen1_save_data = calloc(PKSAV_GEN1_SAVE_SIZE, 1);
     fseek(gen1_save, 0, SEEK_SET);
     size_t num_read = fread((void*)gen1_save_data, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save);
     fclose(gen1_save);
@@ -134,7 +134,7 @@ pksav_error_t pksav_gen1_save_load(
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
-    gen1_save->raw = malloc(PKSAV_GEN1_SAVE_SIZE);
+    gen1_save->raw = calloc(PKSAV_GEN1_SAVE_SIZE, 1);
     fseek(gen1_save_file, 0, SEEK_SET);
     size_t num_read = fread((void*)gen1_save->raw, 1, PKSAV_GEN1_SAVE_SIZE, gen1_save_file);
     fclose(gen1_save_file);

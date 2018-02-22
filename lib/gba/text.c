@@ -103,7 +103,7 @@ pksav_error_t pksav_text_from_gba(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
     _pksav_widetext_from_gba(
         input_buffer, widetext, num_chars
     );
@@ -124,7 +124,7 @@ pksav_error_t pksav_text_to_gba(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
     pksav_mbstowcs(widetext, input_text, num_chars);
 
     _pksav_widetext_to_gba(

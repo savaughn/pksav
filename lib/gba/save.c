@@ -201,7 +201,7 @@ pksav_error_t pksav_file_is_gba_save(
         return false;
     }
 
-    uint8_t* gba_save_data = malloc(filesize);
+    uint8_t* gba_save_data = calloc(filesize, 1);
     fseek(gba_save, 0, SEEK_SET);
     size_t num_read = fread((void*)gba_save_data, 1, filesize, gba_save);
     fclose(gba_save);
@@ -376,7 +376,7 @@ pksav_error_t pksav_gba_save_load(
         return PKSAV_ERROR_INVALID_SAVE;
     }
 
-    gba_save->raw = malloc(filesize);
+    gba_save->raw = calloc(filesize, 1);
     fseek(gba_save_file, 0, SEEK_SET);
     size_t num_read = fread((void*)gba_save->raw, 1, filesize, gba_save_file);
     fclose(gba_save_file);
@@ -407,8 +407,8 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Allocate memory as needed and set pointers
-    gba_save->unshuffled = malloc(sizeof(pksav_gba_save_slot_t));
-    gba_save->pokemon_pc = malloc(sizeof(pksav_gba_pokemon_pc_t));
+    gba_save->unshuffled = calloc(sizeof(pksav_gba_save_slot_t), 1);
+    gba_save->pokemon_pc = calloc(sizeof(pksav_gba_pokemon_pc_t), 1);
     _pksav_gba_save_set_pointers(
         gba_save
     );

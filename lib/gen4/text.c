@@ -215,7 +215,7 @@ pksav_error_t pksav_text_from_gen4(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
     pksav_widetext_from_gen4(
         input_buffer, widetext, num_chars
     );
@@ -258,7 +258,7 @@ pksav_error_t pksav_text_to_gen4(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
     mbstowcs(widetext, input_text, num_chars);
 
     pksav_widetext_to_gen4(

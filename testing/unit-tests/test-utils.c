@@ -77,8 +77,8 @@ int do_files_differ(
     }
 
     if(file1size == file2size) {
-        uint8_t* buffer1 = malloc(file1size);
-        uint8_t* buffer2 = malloc(file2size);
+        uint8_t* buffer1 = calloc(file1size, 1);
+        uint8_t* buffer2 = calloc(file2size, 1);
 
         if(read_file_into_buffer(filename1, buffer1, file1size)) {
             free(buffer1);
