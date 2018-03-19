@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -153,6 +153,16 @@ pksav_error_t pksav_buffer_is_gba_save(
         save_slot = &sections_pair[0];
     } else {
         save_slot = &sections_pair[1];
+    }
+
+    // Make sure the section IDs are valid to avoid a crash.
+    for(size_t section_index = 0; section_index < 14; ++section_index)
+    {
+        if(save_slot->sections_arr[section_index].footer.section_id > 13)
+        {
+            *result_out = false;
+            return PKSAV_ERROR_NONE;
+        }
     }
 
     pksav_gba_save_slot_t unshuffled;
