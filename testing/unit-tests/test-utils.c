@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,16 +18,61 @@
 #    include <unistd.h>
 #endif
 
+int randomize_buffer(
+    uint8_t* buffer,
+    size_t buffer_len
+)
+{
+    if(!buffer || (buffer_len == 0))
+    {
+        return -1;
+    }
+
+    // Do this in as few runs as possible.
+    if((buffer_len % 4) == 0)
+    {
+        int* int_buffer = (int*)buffer;
+        for(size_t int_buffer_index = 0;
+            int_buffer_index < (buffer_len / 4);
+            ++int_buffer_index)
+        {
+            int_buffer[int_buffer_index] = rand();
+        }
+    }
+    else if((buffer_len % 2) == 0)
+    {
+        uint16_t* uint16_buffer = (uint16_t*)buffer;
+        for(size_t uint16_buffer_index = 0;
+            uint16_buffer_index < (buffer_len / 2);
+            ++uint16_buffer_index)
+        {
+            uint16_buffer[uint16_buffer_index] = (uint16_t)(rand() % 0xFFFF);
+        }
+    }
+    else
+    {
+        for(size_t buffer_index = 0; buffer_index < buffer_len; ++buffer_index)
+        {
+            buffer[buffer_index] = (uint8_t)(rand() % 0xFF);
+        }
+    }
+
+    return 0;
+}
+
 int get_filesize(
     const char* filename,
     size_t* result_out
-) {
-    if(!filename || !result_out) {
+)
+{
+    if(!filename || !result_out)
+    {
         return -1;
     }
 
     FILE* file = fopen(filename, "r");
-    if(!file) {
+    if(!file)
+    {
         return -1;
     }
 
@@ -42,18 +87,22 @@ int read_file_into_buffer(
     const char* filename,
     uint8_t* buffer,
     size_t buffer_len
-) {
-    if(!filename || !buffer) {
+)
+{
+    if(!filename || !buffer)
+    {
         return -1;
     }
 
     FILE* file = fopen(filename, "rb");
-    if(!file) {
+    if(!file)
+    {
         return -1;
     }
     PKSAV_UNUSED(size_t num_read) = fread((void*)buffer, 1, buffer_len, file);
 
-    if(fclose(file)) {
+    if(fclose(file))
+    {
         return -1;
     }
 
@@ -64,28 +113,34 @@ int do_files_differ(
     const char* filename1,
     const char* filename2,
     bool* result_out
-) {
-    if(!filename1 || !filename2 || !result_out) {
+)
+{
+    if(!filename1 || !filename2 || !result_out)
+    {
         return -1;
     }
 
     size_t file1size = 0;
     size_t file2size = 0;
 
-    if(get_filesize(filename1, &file1size) || get_filesize(filename2, &file2size)) {
+    if(get_filesize(filename1, &file1size) || get_filesize(filename2, &file2size))
+    {
         return -1;
     }
 
-    if(file1size == file2size) {
+    if(file1size == file2size)
+    {
         uint8_t* buffer1 = calloc(file1size, 1);
         uint8_t* buffer2 = calloc(file2size, 1);
 
-        if(read_file_into_buffer(filename1, buffer1, file1size)) {
+        if(read_file_into_buffer(filename1, buffer1, file1size))
+        {
             free(buffer1);
             free(buffer2);
             return -1;
         }
-        if(read_file_into_buffer(filename2, buffer2, file2size)) {
+        if(read_file_into_buffer(filename2, buffer2, file2size))
+        {
             free(buffer1);
             free(buffer2);
             return -1;
@@ -95,7 +150,9 @@ int do_files_differ(
         free(buffer1);
         free(buffer2);
         return 0;
-    } else {
+    }
+    else
+    {
         *result_out = true;
         return 0;
     }
@@ -104,7 +161,8 @@ int do_files_differ(
     return -1;
 }
 
-int get_pid() {
+int get_pid()
+{
 #ifdef PKSAV_PLATFORM_WIN32
     return (int)GetCurrentProcessId();
 #else
@@ -113,7 +171,8 @@ int get_pid() {
 }
 
 // Direct port of boost::archive::tmpdir()
-const char* get_tmp_dir() {
+const char* get_tmp_dir()
+{
     const char* ret = NULL;
 
     ret = getenv("TMP");
@@ -137,8 +196,10 @@ const char* get_tmp_dir() {
 
 int delete_file(
     const char* filepath
-) {
-    if(!filepath) {
+)
+{
+    if(!filepath)
+    {
         return -1;
     }
 

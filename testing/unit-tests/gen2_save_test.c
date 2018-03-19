@@ -17,11 +17,40 @@
 // TODO: replace when size is moved to header
 #define GEN2_SAVE_SIZE 0x8000
 
+/*
+ * We don't care about the result of the function itself. As the buffer
+ * is randomized, it will likely be false. This function is to make sure
+ * running it on invalid input doesn't crash.
+ */
+static void pksav_buffer_is_gen2_save_on_random_buffer_test()
+{
+    uint8_t buffer[GEN2_SAVE_SIZE] = {0};
+    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    {
+        randomize_buffer(buffer, sizeof(buffer));
+
+        bool is_buffer_gen2_save = false;
+        (void)pksav_buffer_is_gen2_save(
+                  buffer,
+                  sizeof(buffer),
+                  false, // crystal
+                  &is_buffer_gen2_save
+              );
+        (void)pksav_buffer_is_gen2_save(
+                  buffer,
+                  sizeof(buffer),
+                  true, // crystal
+                  &is_buffer_gen2_save
+              );
+    }
+}
+
 static void pksav_buffer_is_gen2_save_test(
     const char* subdir,
     const char* save_name,
     bool crystal
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(subdir);
     TEST_ASSERT_NOT_NULL(save_name);
 
@@ -40,7 +69,8 @@ static void pksav_buffer_is_gen2_save_test(
         pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
-    if(read_file_into_buffer(filepath, save_buffer, GEN2_SAVE_SIZE)) {
+    if(read_file_into_buffer(filepath, save_buffer, GEN2_SAVE_SIZE))
+    {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
     }
 
@@ -59,7 +89,8 @@ static void pksav_file_is_gen2_save_test(
     const char* subdir,
     const char* save_name,
     bool crystal
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(subdir);
     TEST_ASSERT_NOT_NULL(save_name);
 
@@ -67,7 +98,8 @@ static void pksav_file_is_gen2_save_test(
     pksav_error_t error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
-    if(!pksav_test_saves) {
+    if(!pksav_test_saves)
+    {
         TEST_FAIL_MESSAGE("Failed to get test save directory.");
     }
 
@@ -91,7 +123,8 @@ static void gen2_save_load_and_save_match_test(
     const char* subdir,
     const char* save_name,
     bool crystal
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(subdir);
     TEST_ASSERT_NOT_NULL(save_name);
 
@@ -101,7 +134,8 @@ static void gen2_save_load_and_save_match_test(
     pksav_error_t error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
-    if(!pksav_test_saves) {
+    if(!pksav_test_saves)
+    {
         TEST_FAIL_MESSAGE("Failed to get test save directory.");
     }
 
@@ -145,7 +179,8 @@ static void gen2_save_load_and_save_match_test(
         memcmp(gen2_save.pokemon_party, tmp_save.pokemon_party, sizeof(*gen2_save.pokemon_party))
     );
     TEST_ASSERT_EQUAL(*gen2_save.current_pokemon_box_num, *tmp_save.current_pokemon_box_num);
-    for(int i = 0; i < 14; ++i) {
+    for(int i = 0; i < 14; ++i)
+    {
         TEST_ASSERT_EQUAL(0,
             memcmp(gen2_save.pokemon_boxes[i], tmp_save.pokemon_boxes[i], sizeof(*gen2_save.pokemon_boxes[i]))
         );
@@ -183,36 +218,45 @@ static void gen2_save_load_and_save_match_test(
     error = pksav_gen2_save_free(&gen2_save);
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-    if(delete_file(tmp_save_filepath)) {
+    if(delete_file(tmp_save_filepath))
+    {
         TEST_FAIL_MESSAGE("Failed to clean up temp file.");
     }
 }
 
-static void pksav_buffer_is_gold_save_test() {
+static void pksav_buffer_is_gold_save_test()
+{
     pksav_buffer_is_gen2_save_test("gold_silver", "pokemon_gold.sav", false);
 }
 
-static void pksav_file_is_gold_save_test() {
+static void pksav_file_is_gold_save_test()
+{
     pksav_file_is_gen2_save_test("gold_silver", "pokemon_gold.sav", false);
 }
 
-static void gold_save_load_and_save_match_test() {
+static void gold_save_load_and_save_match_test()
+{
     gen2_save_load_and_save_match_test("gold_silver", "pokemon_gold.sav", false);
 }
 
-static void pksav_buffer_is_crystal_save_test() {
+static void pksav_buffer_is_crystal_save_test()
+{
     pksav_buffer_is_gen2_save_test("crystal", "pokemon_crystal.sav", true);
 }
 
-static void pksav_file_is_crystal_save_test() {
+static void pksav_file_is_crystal_save_test()
+{
     pksav_file_is_gen2_save_test("crystal", "pokemon_crystal.sav", true);
 }
 
-static void crystal_save_load_and_save_match_test() {
+static void crystal_save_load_and_save_match_test()
+{
     gen2_save_load_and_save_match_test("crystal", "pokemon_crystal.sav", true);
 }
 
 PKSAV_TEST_MAIN(
+    PKSAV_TEST(pksav_buffer_is_gen2_save_on_random_buffer_test)
+
     PKSAV_TEST(pksav_buffer_is_gold_save_test)
     PKSAV_TEST(pksav_file_is_gold_save_test)
     PKSAV_TEST(gold_save_load_and_save_match_test)

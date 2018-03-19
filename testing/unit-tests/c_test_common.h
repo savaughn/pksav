@@ -9,6 +9,9 @@
 
 #include <Unity/unity.h>
 
+#include <stdlib.h>
+#include <time.h>
+
 #define PKSAV_TEST(test_func) \
 { \
     Unity.CurrentTestName = #test_func; \
@@ -20,9 +23,11 @@
 }
 
 #define PKSAV_TEST_MAIN(...) \
-    int main(int argc, char** argv) { \
+    int main(int argc, char** argv) \
+    { \
         (void)argc; \
         (void)argv; \
+        srand(time(0)); \
         UnityBegin(__FILE__); \
         __VA_ARGS__; \
         return (UnityEnd()); \
