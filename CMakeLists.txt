@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -13,7 +13,7 @@ PROJECT(pksav C)
 
 SET(PKSAV_VERSION_MAJOR 1)
 SET(PKSAV_VERSION_MINOR 7)
-SET(PKSAV_VERSION_PATCH 4)
+SET(PKSAV_VERSION_PATCH 5)
 SET(PKSAV_VERSION "${PKSAV_VERSION_MAJOR}.${PKSAV_VERSION_MINOR}.${PKSAV_VERSION_PATCH}")
 
 SET(PKSAV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
