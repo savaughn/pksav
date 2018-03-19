@@ -27,7 +27,7 @@
     { \
         (void)argc; \
         (void)argv; \
-        srand(time((time_t*)NULL)); \
+        srand((unsigned int)time(NULL)); \
         UnityBegin(__FILE__); \
         __VA_ARGS__; \
         return (UnityEnd()); \
