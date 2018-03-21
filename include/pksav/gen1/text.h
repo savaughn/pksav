@@ -1,9 +1,5 @@
 /*!
- * @file    pksav/gen1/text.h
- * @ingroup PKSav
- * @brief   Conversions between C strings and the string format used in Generation I games.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)

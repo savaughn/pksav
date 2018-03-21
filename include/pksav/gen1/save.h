@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen1/save.h
- * @ingroup PKSav
- * @brief   Functions for interacting with Generation I save files.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -38,7 +34,8 @@
  * that stores this bitmap. Use these enum values on this byte to access and
  * set whether or not the player has this badge.
  */
-typedef enum {
+typedef enum
+{
     //! Earth Badge (Giovanni, Badge #8)
     PKSAV_GEN1_EARTH_BADGE    = 0x01,
     //! Volcano Badge (Blaine, Badge #7)
@@ -60,7 +57,8 @@ typedef enum {
 #pragma pack(push,1)
 
 //! Native representation of how much time has passed in a Generation I game.
-typedef struct {
+typedef struct
+{
     /*!
      * @brief The number of hours (stored in little-endian).
      *
@@ -89,7 +87,8 @@ typedef struct {
  * Once you are finished using the struct, pass it into ::pksav_gen1_save_free to
  * free the memory allocated by ::pksav_gen1_save_load.
  */
-typedef struct {
+typedef struct
+{
     //! A pointer to the trainer's Pokémon party.
     pksav_gen1_pokemon_party_t* pokemon_party;
 

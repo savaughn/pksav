@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen1/items.h
- * @ingroup PKSav
- * @brief   Native formats for item storage in Generation I games.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +12,8 @@
 #pragma pack(push,1)
 
 //! Native representation of an item slot in Generation I.
-typedef struct {
+typedef struct
+{
     //! Item index.
     uint8_t index;
     //! Item count (0-99).
@@ -31,7 +28,8 @@ typedef struct {
  * ignore any later items, and if it is too large, whatever happens to be in
  * memory will be parsed as items, leading to undefined behavior when used.
  */
-typedef struct {
+typedef struct
+{
     //! How many unique items are in the bag (0-20).
     uint8_t count;
     //! Item slots.
@@ -48,7 +46,8 @@ typedef struct {
  * ignore any later items, and if it is too large, whatever happens to be in
  * memory will be parsed as items, leading to undefined behavior when used.
  */
-typedef struct {
+typedef struct
+{
     //! How many unique items are in the PC (0-50).
     uint8_t count;
     //! Item slots.
