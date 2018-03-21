@@ -118,7 +118,7 @@ static void gen1_save_load_and_save_match_test(
 
     static char original_filepath[256];
     static char tmp_save_filepath[256];
-    pksav_gen1_save_t gen1_save;
+    struct pksav_gen1_save gen1_save;
     pksav_error_t error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");

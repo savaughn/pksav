@@ -57,7 +57,7 @@ typedef enum
 #pragma pack(push,1)
 
 //! Native representation of how much time has passed in a Generation I game.
-typedef struct
+struct pksav_gen1_time
 {
     /*!
      * @brief The number of hours (stored in little-endian).
@@ -69,7 +69,7 @@ typedef struct
     uint8_t minutes;
     //! The number of second (0-59).
     uint8_t seconds;
-} pksav_gen1_time_t;
+};
 
 #pragma pack(pop)
 
@@ -87,10 +87,10 @@ typedef struct
  * Once you are finished using the struct, pass it into ::pksav_gen1_save_free to
  * free the memory allocated by ::pksav_gen1_save_load.
  */
-typedef struct
+struct pksav_gen1_save
 {
     //! A pointer to the trainer's Pokémon party.
-    pksav_gen1_pokemon_party_t* pokemon_party;
+    struct pksav_gen1_pokemon_party* pokemon_party;
 
     /*!
      * @brief The number of the current Pokémon box (0-11).
@@ -109,7 +109,7 @@ typedef struct
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    pksav_gen1_pokemon_box_t* current_pokemon_box;
+    struct pksav_gen1_pokemon_box* current_pokemon_box;
 
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
@@ -117,12 +117,12 @@ typedef struct
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    pksav_gen1_pokemon_box_t* pokemon_boxes[12];
+    struct pksav_gen1_pokemon_box* pokemon_boxes[12];
 
     //! A pointer to the trainer's item bag.
-    pksav_gen1_item_bag_t* item_bag;
+    struct pksav_gen1_item_bag* item_bag;
     //! A pointer to the trainer's item PC.
-    pksav_gen1_item_pc_t* item_pc;
+    struct pksav_gen1_item_pc* item_pc;
 
     /*!
      * @brief A pointer to the list of Pokémon seen by the trainer.
@@ -140,7 +140,8 @@ typedef struct
     uint8_t* pokedex_owned;
 
     //! A pointer to the amount of time this save file has been played.
-    pksav_gen1_time_t* time_played;
+    struct pksav_gen1_time* time_played;
+
     /*!
      * @brief A pointer to the trainer's ID (stored in big-endian).
      *
@@ -217,7 +218,7 @@ typedef struct
      * point to any areas of interest.
      */
     uint8_t* raw;
-} pksav_gen1_save_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -269,7 +270,7 @@ PKSAV_API pksav_error_t pksav_file_is_gen1_save(
  */
 PKSAV_API pksav_error_t pksav_gen1_save_load(
     const char* filepath,
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 );
 
 /*!
@@ -285,18 +286,18 @@ PKSAV_API pksav_error_t pksav_gen1_save_load(
  */
 PKSAV_API pksav_error_t pksav_gen1_save_save(
     const char* filepath,
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 );
 
 /*!
- * @brief Frees memory allocated for a pksav_gen1_save_t.
+ * @brief Frees memory allocated for a struct pksav_gen1_save.
  *
  * \param gen1_save save whose memory should be freed
  * \returns ::PKSAV_ERROR_NONE upon success
  * \returns ::PKSAV_ERROR_NULL_POINTER if gen1_save is NULL
  */
 PKSAV_API pksav_error_t pksav_gen1_save_free(
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 );
 
 #ifdef __cplusplus

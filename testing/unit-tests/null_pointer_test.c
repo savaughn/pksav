@@ -296,7 +296,7 @@ static void pksav_gen1_save_h_test() {
     uint8_t dummy_uint8_t = 0;
     bool dummy_bool = false;
     char dummy_char = 0;
-    pksav_gen1_save_t dummy_pksav_gen1_save_t;
+    struct pksav_gen1_save dummy_pksav_gen1_save_t;
     dummy_pksav_gen1_save_t.raw = NULL;
 
     /*

@@ -30,7 +30,7 @@
  *
  * This enum applies to the indices of the pksav_gen1_pc_pokemon_t.types field.
  */
-typedef enum
+enum pksav_gen1_type
 {
     //! Normal.
     PKSAV_GEN1_TYPE_NORMAL   = 0x00,
@@ -62,7 +62,7 @@ typedef enum
     PKSAV_GEN1_TYPE_ICE      = 0x19,
     //! Dragon.
     PKSAV_GEN1_TYPE_DRAGON   = 0x1A
-} pksav_gen1_type_t;
+};
 
 #pragma pack(push,1)
 
@@ -72,7 +72,7 @@ typedef enum
  * This data is available both when the Pokémon is in the trainer's party or in the
  * PC.
  */
-typedef struct
+struct pksav_gen1_pc_pokemon
 {
     //! Species index.
     uint8_t species;
@@ -176,7 +176,7 @@ typedef struct
      * PP Ups applied to the move.
      */
     uint8_t move_pps[4];
-} pksav_gen1_pc_pokemon_t;
+};
 
 /*!
  * @brief Data generated when a Pokémon is added to a trainer's party in Generation I.
@@ -184,7 +184,7 @@ typedef struct
  * All of this information is generated from values stored in
  * pksav_gen1_pc_pokemon_t.
  */
-typedef struct
+struct pksav_gen1_pokemon_party_data
 {
     /*!
      * @brief The Pokémon's level.
@@ -237,17 +237,17 @@ typedef struct
      * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spcl;
-} pksav_gen1_pokemon_party_data_t;
+};
 
 //! Native format for a Pokémon in the trainer's party in Generation I.
-typedef struct
+struct pksav_gen1_party_pokemon
 {
     /*!
      * @brief PC data.
      *
      * This data is accessible whether the Pokémon is in the PC or party.
      */
-    pksav_gen1_pc_pokemon_t pc;
+    struct pksav_gen1_pc_pokemon pc;
 
     /*!
      * @brief Party data.
@@ -256,11 +256,11 @@ typedef struct
      * all of it can be generated from the PC data, it is not stored until
      * it needs to be used.
      */
-    pksav_gen1_pokemon_party_data_t party_data;
+    struct pksav_gen1_pokemon_party_data party_data;
 } pksav_gen1_party_pokemon_t;
 
 //! Native format for a trainer's Pokémon party in Generation I.
-typedef struct
+struct pksav_gen1_pokemon_party
 {
     //! The actual number of Pokémon in the party (0-6).
     uint8_t count;
@@ -274,7 +274,7 @@ typedef struct
      */
     uint8_t species[7];
     //! The actual Pokémon in the party.
-    pksav_gen1_party_pokemon_t party[6];
+    struct pksav_gen1_party_pokemon party[6];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
@@ -292,7 +292,7 @@ typedef struct
 } pksav_gen1_pokemon_party_t;
 
 //! Native format for a Pokémon PC box in Generation I.
-typedef struct
+struct pksav_gen1_pokemon_box
 {
     //! The actual number of Pokémon in the box (0-20).
     uint8_t count;
@@ -306,7 +306,7 @@ typedef struct
      */
     uint8_t species[21];
     //! The actual Pokémon in the box.
-    pksav_gen1_pc_pokemon_t entries[20];
+    struct pksav_gen1_pc_pokemon entries[20];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
@@ -321,7 +321,7 @@ typedef struct
      * with a num_chars value of 10).
      */
     uint8_t nicknames[20][11];
-} pksav_gen1_pokemon_box_t;
+};
 
 #pragma pack(pop)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
 #define PKSAV_GEN1_SAVE_SIZE 0x8000
 
 // Offsets in a Generation I save
-typedef enum {
+enum pksav_gen1_save_offset {
     PKSAV_GEN1_PLAYER_NAME             = 0x2598,
     PKSAV_GEN1_POKEDEX_OWNED           = 0x25A3,
     PKSAV_GEN1_POKEDEX_SEEN            = 0x25B6,
@@ -34,7 +34,7 @@ typedef enum {
     PKSAV_GEN1_CHECKSUM                = 0x3523,
     PKSAV_GEN1_POKEMON_PC_FIRST_HALF   = 0x4000,
     PKSAV_GEN1_POKEMON_PC_SECOND_HALF  = 0x6000
-} pksav_gen1_save_offset_t;
+};
 
 static uint8_t _pksav_get_gen1_save_checksum(
     const uint8_t* data
@@ -115,7 +115,7 @@ pksav_error_t pksav_file_is_gen1_save(
 
 pksav_error_t pksav_gen1_save_load(
     const char* filepath,
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 ) {
     if(!filepath || !gen1_save) {
         return PKSAV_ERROR_NULL_POINTER;
@@ -163,25 +163,25 @@ pksav_error_t pksav_gen1_save_load(
     gen1_save->yellow = (gen1_save->raw[PKSAV_GEN1_PIKACHU_FRIENDSHIP] > 0);
 
     // Set pointers
-    gen1_save->pokemon_party = (pksav_gen1_pokemon_party_t*)&gen1_save->raw[PKSAV_GEN1_POKEMON_PARTY];
+    gen1_save->pokemon_party = (struct pksav_gen1_pokemon_party*)&gen1_save->raw[PKSAV_GEN1_POKEMON_PARTY];
 
     gen1_save->current_pokemon_box_num = &gen1_save->raw[PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM];
-    gen1_save->current_pokemon_box = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[PKSAV_GEN1_CURRENT_POKEMON_BOX];
+    gen1_save->current_pokemon_box = (struct pksav_gen1_pokemon_box*)&gen1_save->raw[PKSAV_GEN1_CURRENT_POKEMON_BOX];
 
     for(uint8_t i = 0; i < 6; ++i) {
-        uint16_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF + (sizeof(pksav_gen1_pokemon_box_t)*i);
-        gen1_save->pokemon_boxes[i] = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[offset];
+        uint16_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF + (sizeof(struct pksav_gen1_pokemon_box)*i);
+        gen1_save->pokemon_boxes[i] = (struct pksav_gen1_pokemon_box*)&gen1_save->raw[offset];
     }
     for(uint8_t i = 6; i < 12; ++i) {
-        uint16_t offset = PKSAV_GEN1_POKEMON_PC_SECOND_HALF + (sizeof(pksav_gen1_pokemon_box_t)*(i-6));
-        gen1_save->pokemon_boxes[i] = (pksav_gen1_pokemon_box_t*)&gen1_save->raw[offset];
+        uint16_t offset = PKSAV_GEN1_POKEMON_PC_SECOND_HALF + (sizeof(struct pksav_gen1_pokemon_box)*(i-6));
+        gen1_save->pokemon_boxes[i] = (struct pksav_gen1_pokemon_box*)&gen1_save->raw[offset];
     }
 
     gen1_save->pokedex_seen = &gen1_save->raw[PKSAV_GEN1_POKEDEX_SEEN];
     gen1_save->pokedex_owned = &gen1_save->raw[PKSAV_GEN1_POKEDEX_OWNED];
-    gen1_save->item_bag = (pksav_gen1_item_bag_t*)&gen1_save->raw[PKSAV_GEN1_ITEM_BAG];
-    gen1_save->item_pc = (pksav_gen1_item_pc_t*)&gen1_save->raw[PKSAV_GEN1_ITEM_PC];
-    gen1_save->time_played = (pksav_gen1_time_t*)&gen1_save->raw[PKSAV_GEN1_TIME_PLAYED];
+    gen1_save->item_bag = (struct pksav_gen1_item_bag*)&gen1_save->raw[PKSAV_GEN1_ITEM_BAG];
+    gen1_save->item_pc = (struct pksav_gen1_item_pc*)&gen1_save->raw[PKSAV_GEN1_ITEM_PC];
+    gen1_save->time_played = (struct pksav_gen1_time*)&gen1_save->raw[PKSAV_GEN1_TIME_PLAYED];
     gen1_save->money = &gen1_save->raw[PKSAV_GEN1_MONEY];
     gen1_save->casino_coins = &gen1_save->raw[PKSAV_GEN1_CASINO_COINS];
     gen1_save->trainer_id = (uint16_t*)&gen1_save->raw[PKSAV_GEN1_PLAYER_ID];
@@ -195,7 +195,7 @@ pksav_error_t pksav_gen1_save_load(
 
 pksav_error_t pksav_gen1_save_save(
     const char* filepath,
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 ) {
     if(!filepath || !gen1_save) {
         return PKSAV_ERROR_NULL_POINTER;
@@ -218,7 +218,7 @@ pksav_error_t pksav_gen1_save_save(
 }
 
 pksav_error_t pksav_gen1_save_free(
-    pksav_gen1_save_t* gen1_save
+    struct pksav_gen1_save* gen1_save
 ) {
     if(!gen1_save || !gen1_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
