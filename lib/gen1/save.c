@@ -79,7 +79,7 @@ pksav_error_t pksav_file_is_gen1_save(
     FILE* gen1_save = fopen(filepath, "rb");
     if(!gen1_save) {
         *result_out = false;
-        return PKSAV_ERROR_NONE;
+        return PKSAV_ERROR_FILE_IO;
     }
 
     fseek(gen1_save, 0, SEEK_END);

@@ -180,14 +180,16 @@ pksav_error_t pksav_file_is_gen2_save(
 
     FILE* gen2_save = fopen(filepath, "rb");
     if(!gen2_save) {
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_FILE_IO;
     }
 
     fseek(gen2_save, 0, SEEK_END);
 
     if(ftell(gen2_save) < PKSAV_GEN2_SAVE_SIZE) {
         fclose(gen2_save);
-        return false;
+        *result_out = false;
+        return PKSAV_ERROR_NONE;
     }
 
     uint8_t* gen2_save_data = calloc(PKSAV_GEN2_SAVE_SIZE, 1);
@@ -329,7 +331,7 @@ pksav_error_t pksav_gen2_save_save(
 
     // Set checksum
     _pksav_gen2_set_save_checksums(
-        gen2_save->gen2_game,
+        (gen2_save->gen2_game == PKSAV_GEN2_CRYSTAL),
         gen2_save->raw
     );
 
