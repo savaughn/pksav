@@ -12,10 +12,17 @@
 
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/time.h>
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+enum pksav_gen1_save_type
+{
+    PKSAV_GEN1_RED_BLUE,
+    PKSAV_GEN1_YELLOW
+};
 
 /*!
  * @brief Mask for getting the current Pokémon box number.
@@ -34,7 +41,7 @@
  * that stores this bitmap. Use these enum values on this byte to access and
  * set whether or not the player has this badge.
  */
-typedef enum
+enum pksav_gen1_badge_mask
 {
     //! Earth Badge (Giovanni, Badge #8)
     PKSAV_GEN1_EARTH_BADGE    = 0x01,
@@ -52,26 +59,108 @@ typedef enum
     PKSAV_GEN1_CASCADE_BADGE  = 0x40,
     //! Boulder Badge (Brock, Badge #1)
     PKSAV_GEN1_BOULDER_BADGE  = 0x80
-} pksav_gen1_badge_t;
-
-#pragma pack(push,1)
-
-//! Native representation of how much time has passed in a Generation I game.
-struct pksav_gen1_time
-{
-    /*!
-     * @brief The number of hours (stored in little-endian).
-     *
-     * This value should be accessed and set with ::pksav_littleendian16.
-     */
-    uint16_t hours;
-    //! The number of minutes (0-59).
-    uint8_t minutes;
-    //! The number of second (0-59).
-    uint8_t seconds;
 };
 
-#pragma pack(pop)
+struct pksav_gen1_pokedex_lists
+{
+    /*!
+     * @brief A pointer to the list of Pokémon seen by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* seen_ptr;
+
+    /*!
+     * @brief A pointer to the list of Pokémon owned by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* owned_ptr;
+};
+
+struct pksav_gen1_pokemon_pc
+{
+    /*!
+     * @brief Pointers to the trainer's Pokémon boxes.
+     *
+     * The boxes are not stored contiguously in the save file, so these pointers
+     * point to their actual positions in the file.
+     */
+    struct pksav_gen1_pokemon_box* pokemon_box_ptrs[12];
+
+    /*!
+     * @brief The number of the current Pokémon box (0-11).
+     *
+     * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
+     * deposited and withdrawn from.
+     *
+     * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
+     * this value.
+     */
+    uint8_t* current_pokemon_box_num_ptr;
+
+    /*!
+     * @brief A pointer to the current Pokémon box.
+     *
+     * Pokémon are only deposited or withdrawn from this box, and its data is
+     * switched out when the current box is changed.
+     */
+    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr;
+};
+
+struct pksav_gen1_item_storage
+{
+    //! A pointer to the trainer's item bag.
+    struct pksav_gen1_item_bag* item_bag_ptr;
+
+    //! A pointer to the trainer's item PC.
+    struct pksav_gen1_item_pc* item_pc_ptr;
+};
+
+struct pksav_gen1_trainer_info
+{
+    /*!
+     * @brief A pointer to the trainer's ID (stored in big-endian).
+     *
+     * This value should be accessed and modified with ::pksav_bigendian16.
+     */
+    uint16_t* trainer_id_ptr;
+
+    /*!
+     * @brief A pointer to the trainer's name.
+     *
+     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
+     * value of 7.
+     *
+     * This value should be set with ::pksav_text_to_gen1 with a num_chars
+     * value of 7.
+     */
+    uint8_t* trainer_name_ptr;
+
+    /*!
+     * @brief A pointer to how much money the trainer has (stored in BCD).
+     *
+     * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
+     * of 3. It should be set with ::pksav_to_bcd, with a maximum value of 999999.
+     */
+    uint8_t* money_ptr;
+
+    /*!
+     * @brief A pointer to the list of badges the trainer has earned.
+     *
+     * This value should be manipulated with the bitmasks given in the
+     * ::pksav_gen1_badge_t enum.
+     */
+    uint8_t* badges_ptr;
+};
+
+struct pksav_gen1_save_internal
+{
+    uint8_t* raw;
+    uint8_t* checksum_ptr;
+};
 
 /*!
  * @brief The primary PKSav struct for interacting with Generation I save files.
@@ -89,91 +178,26 @@ struct pksav_gen1_time
  */
 struct pksav_gen1_save
 {
-    //! A pointer to the trainer's Pokémon party.
-    struct pksav_gen1_pokemon_party* pokemon_party;
+    enum pksav_gen1_save_type save_type;
 
-    /*!
-     * @brief The number of the current Pokémon box (0-11).
-     *
-     * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
-     * deposited and withdrawn from.
-     *
-     * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
-     * this value.
-     */
-    uint8_t* current_pokemon_box_num;
+    struct pksav_gen1_item_storage item_storage;
 
-    /*!
-     * @brief A pointer to the current Pokémon box.
-     *
-     * Pokémon are only deposited or withdrawn from this box, and its data is
-     * switched out when the current box is changed.
-     */
-    struct pksav_gen1_pokemon_box* current_pokemon_box;
+    struct pksav_gen1_pokemon_pc pokemon_pc;
 
-    /*!
-     * @brief Pointers to the trainer's Pokémon boxes.
-     *
-     * The boxes are not stored contiguously in the save file, so these pointers
-     * point to their actual positions in the file.
-     */
-    struct pksav_gen1_pokemon_box* pokemon_boxes[12];
+    struct pksav_gen1_pokedex_lists pokedex_lists;
 
-    //! A pointer to the trainer's item bag.
-    struct pksav_gen1_item_bag* item_bag;
-    //! A pointer to the trainer's item PC.
-    struct pksav_gen1_item_pc* item_pc;
-
-    /*!
-     * @brief A pointer to the list of Pokémon seen by the trainer.
-     *
-     * This list should be accessed with ::pksav_get_pokedex_bit and set with
-     * ::pksav_set_pokedex_bit.
-     */
-    uint8_t* pokedex_seen;
-    /*!
-     * @brief A pointer to the list of Pokémon owned by the trainer.
-     *
-     * This list should be accessed with ::pksav_get_pokedex_bit and set with
-     * ::pksav_set_pokedex_bit.
-     */
-    uint8_t* pokedex_owned;
+    struct pksav_gen1_trainer_info trainer_info;
 
     //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen1_time* time_played;
+    struct pksav_gen1_time* time_played_ptr;
 
-    /*!
-     * @brief A pointer to the trainer's ID (stored in big-endian).
-     *
-     * This value should be accessed and modified with ::pksav_bigendian16.
-     */
-    uint16_t* trainer_id;
-
-    /*!
-     * @brief A pointer to how much money the trainer has (stored in BCD).
-     *
-     * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
-     * of 3. It should be set with ::pksav_to_bcd, with a maximum value of 999999.
-     */
-    uint8_t* money;
     /*!
      * @brief A pointer to how many casino coins the trainer has (stored in BCD).
      *
      * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
      * of 2. It should be set with ::pksav_to_bcd, with a maximum value of 999.
      */
-    uint8_t* casino_coins;
-
-    /*!
-     * @brief A pointer to the trainer's name.
-     *
-     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
-     * value of 7.
-     *
-     * This value should be set with ::pksav_text_to_gen1 with a num_chars
-     * value of 7.
-     */
-    uint8_t* trainer_name;
+    uint8_t* casino_coins_ptr;
     /*!
      * @brief A pointer to the rival's name.
      *
@@ -183,41 +207,19 @@ struct pksav_gen1_save
      * This value should be set with ::pksav_text_to_gen1 with a num_chars
      * value of 7.
      */
-    uint8_t* rival_name;
-
-    /*!
-     * @brief A pointer to the list of badges the trainer has earned.
-     *
-     * This value should be manipulated with the bitmasks given in the
-     * ::pksav_gen1_badge_t enum.
-     */
-    uint8_t* badges;
+    uint8_t* rival_name_ptr;
 
     /*!
      * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
      *
      * In Pokémon Red/Blue, this field is unused and is set to 0.
      */
-    uint8_t* pikachu_friendship;
+    uint8_t* pikachu_friendship_ptr;
 
-    /*!
-     * @brief Whether or not this save file corresponds to a Pokémon Yellow game.
-     *
-     * This is determined by ::pksav_gen1_save_load by examining the Pikachu friendship
-     * value. As this value is always 0 in Pokémon Red/Blue, the save file is determined
-     * to be from Pokémon Yellow if this value is non-zero. This is reliable most of the
-     * time, but technically, if the trainer's Pikachu despises him enough for this value
-     * to be 0, this save file will be considered to be from Pokémon Red/Blue.
-     */
-    bool yellow;
+    // TODO: implement
+    uint8_t* options_ptr;
 
-    /*!
-     * @brief The raw binary data for the save file.
-     *
-     * You should never need to edit this field, as the pointers described above should
-     * point to any areas of interest.
-     */
-    uint8_t* raw;
+    struct pksav_gen1_save_internal _internal;
 };
 
 #ifdef __cplusplus
