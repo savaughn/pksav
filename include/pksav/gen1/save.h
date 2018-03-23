@@ -18,8 +18,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define PKSAV_GEN1_SAVE_SIZE 0x8000
+
 enum pksav_gen1_save_type
 {
+    PKSAV_GEN1_NONE,
     PKSAV_GEN1_RED_BLUE,
     PKSAV_GEN1_YELLOW
 };
@@ -156,9 +159,38 @@ struct pksav_gen1_trainer_info
     uint8_t* badges_ptr;
 };
 
+struct pksav_gen1_misc_fields
+{
+    /*!
+     * @brief A pointer to the rival's name.
+     *
+     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
+     * value of 7.
+     *
+     * This value should be set with ::pksav_text_to_gen1 with a num_chars
+     * value of 7.
+     */
+    uint8_t* rival_name_ptr;
+
+    /*!
+     * @brief A pointer to how many casino coins the trainer has (stored in BCD).
+     *
+     * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
+     * of 2. It should be set with ::pksav_to_bcd, with a maximum value of 999.
+     */
+    uint8_t* casino_coins_ptr;
+
+    /*!
+     * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
+     *
+     * In Pokémon Red/Blue, this field is unused and is set to 0.
+     */
+    uint8_t* pikachu_friendship_ptr;
+};
+
 struct pksav_gen1_save_internal
 {
-    uint8_t* raw;
+    uint8_t* raw_save_ptr;
     uint8_t* checksum_ptr;
 };
 
@@ -188,33 +220,10 @@ struct pksav_gen1_save
 
     struct pksav_gen1_trainer_info trainer_info;
 
+    struct pksav_gen1_misc_fields misc_fields;
+
     //! A pointer to the amount of time this save file has been played.
     struct pksav_gen1_time* time_played_ptr;
-
-    /*!
-     * @brief A pointer to how many casino coins the trainer has (stored in BCD).
-     *
-     * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
-     * of 2. It should be set with ::pksav_to_bcd, with a maximum value of 999.
-     */
-    uint8_t* casino_coins_ptr;
-    /*!
-     * @brief A pointer to the rival's name.
-     *
-     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
-     * value of 7.
-     *
-     * This value should be set with ::pksav_text_to_gen1 with a num_chars
-     * value of 7.
-     */
-    uint8_t* rival_name_ptr;
-
-    /*!
-     * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
-     *
-     * In Pokémon Red/Blue, this field is unused and is set to 0.
-     */
-    uint8_t* pikachu_friendship_ptr;
 
     // TODO: implement
     uint8_t* options_ptr;
@@ -226,81 +235,32 @@ struct pksav_gen1_save
 extern "C" {
 #endif
 
-/*!
- * @brief Determines whether the given buffer is from a valid Generation I save file.
- *
- * This is determining by checking the data's checksum.
- *
- * \param buffer buffer to be checked
- * \param buffer_len length of the buffer passed in
- * \param result_out whether or not the given buffer has a valid Generation I save file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
- */
-PKSAV_API pksav_error_t pksav_buffer_is_gen1_save(
+PKSAV_API enum pksav_error pksav_gen1_is_buffer_valid_save(
     const uint8_t* buffer,
     size_t buffer_len,
     bool* result_out
 );
 
-/*!
- * @brief Determines whether the file at the given path is a valid Generation I save file.
- *
- * This is determined simply by checking the file's checksum.
- *
- * \param filepath path to the file to be checked
- * \param result_out whether or not the given buffer has a valid Generation I save file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
- */
-PKSAV_API pksav_error_t pksav_file_is_gen1_save(
+PKSAV_API enum pksav_error pksav_gen1_is_file_valid_save(
     const char* filepath,
     bool* result_out
 );
 
-/*!
- * @brief Loads the save file at the given path into the given PKSav struct.
- *
- * Upon a failure state, the given pksav_gen1_save_t will be left in an undefined state.
- *
- * \param filepath path to the file to be loaded
- * \param gen1_save PKSav struct in which to load file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen1_save is NULL
- * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs reading the file
- * \returns ::PKSAV_ERROR_INVALID_SAVE if the given file is not a valid Generation I save file
- */
-PKSAV_API pksav_error_t pksav_gen1_save_load(
+PKSAV_API enum pksav_error pksav_gen1_load_save(
     const char* filepath,
-    struct pksav_gen1_save* gen1_save
+    struct pksav_gen1_save* gen1_save_out
 );
 
-/*!
- * @brief Saves a Generation I save file to the given path.
- *
- * Upon a failure state, the save file is not guaranteed to have been properly written.
- *
- * \param filepath where the save file should be written
- * \param gen1_save the same to be written
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen1_save is NULL
- * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs writing the file
- */
-PKSAV_API pksav_error_t pksav_gen1_save_save(
+PKSAV_API enum pksav_error pksav_gen1_save_save(
     const char* filepath,
-    struct pksav_gen1_save* gen1_save
+    struct pksav_gen1_save* gen1_save_ptr
 );
 
-/*!
- * @brief Frees memory allocated for a struct pksav_gen1_save.
- *
- * \param gen1_save save whose memory should be freed
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if gen1_save is NULL
- */
-PKSAV_API pksav_error_t pksav_gen1_save_free(
-    struct pksav_gen1_save* gen1_save
+PKSAV_API enum pksav_error pksav_gen1_free_save(
+    struct pksav_gen1_save* gen1_save_ptr
 );
+
+// TODO: set current box num
 
 #ifdef __cplusplus
 }

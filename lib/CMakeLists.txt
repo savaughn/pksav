@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 INCLUDE(StaticAnalysisTools)
 
 INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
 )
@@ -20,6 +21,7 @@ ADD_SUBDIRECTORY(gen5)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(math)
+ADD_SUBDIRECTORY(util)
 
 SET(pksav_c_sources
     error.c
@@ -31,6 +33,7 @@ SET(pksav_c_sources
     ${pksav_gcn_sources}
     ${pksav_gen4_sources}
     ${pksav_gen5_sources}
+    ${pksav_util_sources}
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pksav_c_sources}

@@ -13,7 +13,7 @@
 
 #include <pksav/config.h>
 
-typedef enum {
+enum pksav_error {
     //! Function completed with no error
     PKSAV_ERROR_NONE = 0,
     //! A problem occurred reading/writing a save file
@@ -31,7 +31,10 @@ typedef enum {
     PKSAV_ERROR_INVALID_SAVE,
     //! A null pointer was passed as a parameter.
     PKSAV_ERROR_NULL_POINTER
-} pksav_error_t;
+};
+
+// TODO: remove
+typedef enum pksav_error pksav_error_t;
 
 #ifdef __cplusplus
 extern "C" {
