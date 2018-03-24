@@ -19,12 +19,13 @@
 #include <stdlib.h>
 
 #define PKSAV_GEN1_SAVE_SIZE 0x8000
+#define PKSAV_GEN1_NUM_POKEMON_BOXES 12
 
 enum pksav_gen1_save_type
 {
-    PKSAV_GEN1_NONE,
-    PKSAV_GEN1_RED_BLUE,
-    PKSAV_GEN1_YELLOW
+    PKSAV_GEN1_SAVE_TYPE_NONE,
+    PKSAV_GEN1_SAVE_TYPE_RED_BLUE,
+    PKSAV_GEN1_SAVE_TYPE_YELLOW
 };
 
 /*!
@@ -91,7 +92,7 @@ struct pksav_gen1_pokemon_pc
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    struct pksav_gen1_pokemon_box* pokemon_box_ptrs[12];
+    struct pksav_gen1_pokemon_box* pokemon_box_ptrs[PKSAV_GEN1_NUM_POKEMON_BOXES];
 
     /*!
      * @brief The number of the current Pokémon box (0-11).
@@ -260,7 +261,10 @@ PKSAV_API enum pksav_error pksav_gen1_free_save(
     struct pksav_gen1_save* gen1_save_ptr
 );
 
-// TODO: set current box num
+PKSAV_API enum pksav_error pksav_gen1_pokemon_pc_set_current_box(
+    struct pksav_gen1_pokemon_pc* gen1_pokemon_pc_ptr,
+    uint8_t new_current_box_num
+);
 
 #ifdef __cplusplus
 }

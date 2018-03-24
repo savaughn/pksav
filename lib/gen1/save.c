@@ -185,7 +185,7 @@ static void _pksav_gen1_set_save_pointers(
     misc_fields_ptr->rival_name_ptr   = &raw_save_ptr[PKSAV_GEN1_RIVAL_NAME];
     misc_fields_ptr->casino_coins_ptr = &raw_save_ptr[PKSAV_GEN1_CASINO_COINS];
 
-    if(gen1_save_ptr->save_type == PKSAV_GEN1_YELLOW)
+    if(gen1_save_ptr->save_type == PKSAV_GEN1_SAVE_TYPE_YELLOW)
     {
         misc_fields_ptr->pikachu_friendship_ptr = &raw_save_ptr[PKSAV_GEN1_PIKACHU_FRIENDSHIP];
     }
@@ -249,11 +249,11 @@ enum pksav_error pksav_gen1_load_save(
              */
             if(file_buffer[PKSAV_GEN1_PIKACHU_FRIENDSHIP] > 0)
             {
-                gen1_save_out->save_type = PKSAV_GEN1_YELLOW;
+                gen1_save_out->save_type = PKSAV_GEN1_SAVE_TYPE_YELLOW;
             }
             else
             {
-                gen1_save_out->save_type = PKSAV_GEN1_RED_BLUE;
+                gen1_save_out->save_type = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
             }
 
             _pksav_gen1_set_save_pointers(gen1_save_out);
@@ -296,7 +296,7 @@ enum pksav_error pksav_gen1_free_save(
 {
     if(!gen1_save_ptr)
     {
-        return PKSAV_ERROR_FILE_IO;
+        return PKSAV_ERROR_NULL_POINTER;
     }
 
     free(gen1_save_ptr->_internal.raw_save_ptr);
@@ -308,6 +308,31 @@ enum pksav_error pksav_gen1_free_save(
         0,
         sizeof(*gen1_save_ptr)
     );
+
+    return PKSAV_ERROR_NONE;
+}
+
+enum pksav_error pksav_gen1_pokemon_pc_set_current_box(
+    struct pksav_gen1_pokemon_pc* gen1_pokemon_pc_ptr,
+    uint8_t new_current_box_num
+)
+{
+    if(!gen1_pokemon_pc_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+    if(new_current_box_num >= PKSAV_GEN1_NUM_POKEMON_BOXES)
+    {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    uint8_t* current_pokemon_box_num_ptr = gen1_pokemon_pc_ptr->current_pokemon_box_num_ptr;
+    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr = gen1_pokemon_pc_ptr->current_pokemon_box_ptr;
+    struct pksav_gen1_pokemon_box** pokemon_box_ptrs = gen1_pokemon_pc_ptr->pokemon_box_ptrs;
+
+    *pokemon_box_ptrs[*current_pokemon_box_num_ptr] = *current_pokemon_box_ptr;
+    *current_pokemon_box_num_ptr = (new_current_box_num+1);
+    *current_pokemon_box_ptr = *pokemon_box_ptrs[*current_pokemon_box_num_ptr];
 
     return PKSAV_ERROR_NONE;
 }
