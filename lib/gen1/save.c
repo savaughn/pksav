@@ -321,14 +321,14 @@ enum pksav_error pksav_gen1_free_save(
 
 enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
     struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
-    uint8_t new_current_box_num
+    uint8_t new_current_pokemon_box_num
 )
 {
     if(!gen1_pokemon_storage_ptr)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
-    if(new_current_box_num >= PKSAV_GEN1_NUM_POKEMON_BOXES)
+    if(new_current_pokemon_box_num >= PKSAV_GEN1_NUM_POKEMON_BOXES)
     {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
@@ -337,9 +337,15 @@ enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
     struct pksav_gen1_pokemon_box* current_pokemon_box_ptr = gen1_pokemon_storage_ptr->current_pokemon_box_ptr;
     struct pksav_gen1_pokemon_box** pokemon_box_ptrs = gen1_pokemon_storage_ptr->pokemon_box_ptrs;
 
-    *pokemon_box_ptrs[*current_pokemon_box_num_ptr] = *current_pokemon_box_ptr;
-    *current_pokemon_box_num_ptr = new_current_box_num;
-    *current_pokemon_box_ptr = *pokemon_box_ptrs[*current_pokemon_box_num_ptr];
+    uint8_t current_pokemon_box_num = *current_pokemon_box_num_ptr
+                                    & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
+
+    *pokemon_box_ptrs[current_pokemon_box_num] = *current_pokemon_box_ptr;
+
+    *current_pokemon_box_num_ptr &= ~PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
+    *current_pokemon_box_num_ptr |= new_current_pokemon_box_num;
+
+    *current_pokemon_box_ptr = *pokemon_box_ptrs[new_current_pokemon_box_num];
 
     return PKSAV_ERROR_NONE;
 }

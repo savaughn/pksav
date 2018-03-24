@@ -307,6 +307,9 @@ static void gen1_save_test(
 
     // Validate fields. No pointers should be NULL (except the Pikachu friendship
     // pointer for Red/Blue), and some fields have a specific set of valid values.
+    TEST_ASSERT_NOT_NULL(gen1_save._internal.raw_save_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save._internal.checksum_ptr);
+
     TEST_ASSERT_NOT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save.save_type);
     TEST_ASSERT_NOT_NULL(gen1_save.time_played_ptr);
     TEST_ASSERT_NOT_NULL(gen1_save.options_ptr);
@@ -362,9 +365,6 @@ static void gen1_save_test(
         TEST_ASSERT_NOT_NULL(gen1_save.misc_fields.pikachu_friendship_ptr);
     }
 
-    TEST_ASSERT_NOT_NULL(gen1_save._internal.raw_save_ptr);
-    TEST_ASSERT_NOT_NULL(gen1_save._internal.checksum_ptr);
-
     // Make sure loading and saving are perfectly symmetrical.
     error = pksav_gen1_save_save(
                 tmp_save_filepath,
@@ -387,6 +387,25 @@ static void gen1_save_test(
         TEST_FAIL_MESSAGE("Failed to clean up temp file.");
     }
     TEST_ASSERT_FALSE(files_differ);
+
+    // Make sure setting the current box works as expected.
+    for(uint8_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
+    {
+        error = pksav_gen1_pokemon_storage_set_current_box(
+                    &gen1_save.pokemon_storage,
+                    box_index
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        uint8_t current_pokemon_box_num = *gen1_save.pokemon_storage.current_pokemon_box_num_ptr;
+        current_pokemon_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
+        TEST_ASSERT_EQUAL(box_index, current_pokemon_box_num);
+        TEST_ASSERT_EQUAL_MEMORY(
+            gen1_save.pokemon_storage.pokemon_box_ptrs[box_index],
+            gen1_save.pokemon_storage.current_pokemon_box_ptr,
+            sizeof(struct pksav_gen1_pokemon_box)
+        );
+    }
 
     // Free the save and make sure all fields are set to NULL or default.
     error = pksav_gen1_free_save(&gen1_save);

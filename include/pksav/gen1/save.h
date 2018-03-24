@@ -239,7 +239,7 @@ PKSAV_API enum pksav_error pksav_gen1_free_save(
 
 PKSAV_API enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
     struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
-    uint8_t new_current_box_num
+    uint8_t new_current_pokemon_box_num
 );
 
 #ifdef __cplusplus
