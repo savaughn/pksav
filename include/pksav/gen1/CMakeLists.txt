@@ -6,6 +6,7 @@
 #
 
 SET(pksav_gen1_headers
+    badges.h
     items.h
     pokemon.h
     save.h
