@@ -21,7 +21,8 @@
 
 #define PKSAV_GEN2_DATA(save,offset) save->raw[pksav_gen2_offsets[offset][save->gen2_game]]
 
-typedef enum {
+enum pksav_gen2_field
+{
     PKSAV_GEN2_PLAYER_ID = 0,
     PKSAV_GEN2_PLAYER_NAME,
     PKSAV_GEN2_RIVAL_NAME,
@@ -42,9 +43,10 @@ typedef enum {
     PKSAV_GEN2_POKEMON_PC_SECOND_HALF,
     PKSAV_GEN2_CHECKSUM1,
     PKSAV_GEN2_CHECKSUM2
-} pksav_gen2_field_t;
+};
 
-static const uint16_t pksav_gen2_offsets[21][2] = {
+static const uint16_t pksav_gen2_offsets[21][2] =
+{
     {0x2009,0x2009}, // Player ID
     {0x200B,0x200B}, // Player name
     {0x2021,0x2021}, // Rival name
@@ -67,16 +69,18 @@ static const uint16_t pksav_gen2_offsets[21][2] = {
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
-typedef struct {
+struct pksav_gen2_checksums
+{
     uint16_t first;
     uint16_t second;
-} pksav_gen2_checksums_t;
+};
 
 static void _pksav_gen2_get_save_checksums(
     bool crystal,
     const uint8_t* data,
-    pksav_gen2_checksums_t* checksums_out
-) {
+    struct pksav_gen2_checksums* checksums_out
+)
+{
     checksums_out->first  = 0;
     checksums_out->second = 0;
 
@@ -112,7 +116,7 @@ static void _pksav_gen2_get_save_checksums(
     checksums_out->second = pksav_littleendian16(checksums_out->second);
 }
 
-static void _pksav_gen2_set_save_checksums(
+/*static void _pksav_gen2_set_save_checksums(
     bool crystal,
     uint8_t* data
 ) {
@@ -121,14 +125,14 @@ static void _pksav_gen2_set_save_checksums(
     uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
                                        : PKSAV_GS_CHECKSUM2;
 
-    pksav_gen2_checksums_t checksums;
+    struct pksav_gen2_checksums checksums;
     _pksav_gen2_get_save_checksums(crystal, data, &checksums);
 
     *((uint16_t*)&data[checksum1_index]) = pksav_littleendian16(checksums.first);
     *((uint16_t*)&data[checksum2_index]) = pksav_littleendian16(checksums.second);
-}
+}*/
 
-pksav_error_t pksav_buffer_is_gen2_save(
+enum pksav_error pksav_buffer_is_gen2_save(
     const uint8_t* buffer,
     size_t buffer_len,
     bool crystal,
@@ -148,7 +152,7 @@ pksav_error_t pksav_buffer_is_gen2_save(
     uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
                                        : PKSAV_GS_CHECKSUM2;
 
-    pksav_gen2_checksums_t checksums;
+    struct pksav_gen2_checksums checksums;
     _pksav_gen2_get_save_checksums(crystal, buffer, &checksums);
 
     uint16_t actual_checksum1 = pksav_littleendian16(
@@ -169,7 +173,7 @@ pksav_error_t pksav_buffer_is_gen2_save(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_file_is_gen2_save(
+enum pksav_error pksav_file_is_gen2_save(
     const char* filepath,
     bool crystal,
     bool* result_out
@@ -196,7 +200,7 @@ pksav_error_t pksav_file_is_gen2_save(
     fclose(gen2_save);
 
     bool ret = false;
-    pksav_error_t error_code = PKSAV_ERROR_NONE;
+    enum pksav_error error_code = PKSAV_ERROR_NONE;
     if(num_read == PKSAV_GEN2_SAVE_SIZE) {
         error_code = pksav_buffer_is_gen2_save(
                          gen2_save_data,
@@ -215,16 +219,16 @@ pksav_error_t pksav_file_is_gen2_save(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_gen2_save_load(
+enum pksav_error pksav_gen2_save_load(
     const char* filepath,
-    pksav_gen2_save_t* gen2_save
+    struct pksav_gen2_save* gen2_save
 ) {
     if(!filepath || !gen2_save) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     // Read the file and make sure it's valid
-    FILE* gen2_save_file = fopen(filepath, "rb");
+    /*FILE* gen2_save_file = fopen(filepath, "rb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -244,7 +248,7 @@ pksav_error_t pksav_gen2_save_load(
         return PKSAV_ERROR_FILE_IO;
     }
 
-    pksav_error_t error_code = PKSAV_ERROR_NONE;
+    enum pksav_error error_code = PKSAV_ERROR_NONE;
     bool is_valid = false;
 
     error_code = pksav_buffer_is_gen2_save(
@@ -279,26 +283,26 @@ pksav_error_t pksav_gen2_save_load(
     }
 
     // Set pointers
-    gen2_save->pokemon_party = (pksav_gen2_pokemon_party_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
+    gen2_save->pokemon_party = (struct pksav_gen2_pokemon_party*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEMON_PARTY);
     gen2_save->current_pokemon_box_num = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM);
-    gen2_save->current_pokemon_box = (pksav_gen2_pokemon_box_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
+    gen2_save->current_pokemon_box = (struct pksav_gen2_pokemon_box*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_CURRENT_POKEMON_BOX);
 
     for(uint8_t i = 0; i < 7; ++i) {
-        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*i);
-        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+        uint16_t offset = struct pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF][0] + (sizeof(pksav_gen2_pokemon_box)*i);
+        gen2_save->pokemon_boxes[i] = (struct pksav_gen2_pokemon_box*)&gen2_save->raw[offset];
     }
     for(uint8_t i = 7; i < 14; ++i) {
-        uint16_t offset = pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][0] + (sizeof(pksav_gen2_pokemon_box_t)*(i-7));
-        gen2_save->pokemon_boxes[i] = (pksav_gen2_pokemon_box_t*)&gen2_save->raw[offset];
+        uint16_t offset = struct pksav_gen2_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF][0] + (sizeof(pksav_gen2_pokemon_box)*(i-7));
+        gen2_save->pokemon_boxes[i] = (struct pksav_gen2_pokemon_box*)&gen2_save->raw[offset];
     }
 
-    gen2_save->pokemon_box_names = (pksav_gen2_pokemon_box_names_t*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
-    gen2_save->item_bag = (pksav_gen2_item_bag_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
-    gen2_save->item_pc = (pksav_gen2_item_pc_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
+    gen2_save->pokemon_box_names = (struct pksav_gen2_pokemon_box_names*)&PKSAV_GEN2_DATA(gen2_save, PKSAV_GEN2_PC_BOX_NAMES);
+    gen2_save->item_bag = (struct pksav_gen2_item_bag*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_BAG);
+    gen2_save->item_pc = (struct pksav_gen2_item_pc*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_ITEM_PC);
     gen2_save->pokedex_seen = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEDEX_SEEN);
     gen2_save->pokedex_owned = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_POKEDEX_OWNED);
     gen2_save->daylight_savings = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_DAYLIGHT_SAVINGS);
-    gen2_save->time_played = (pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_TIME_PLAYED);
+    gen2_save->time_played = (struct pksav_gen2_time_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2IME_PLAYED);
     gen2_save->money = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_MONEY);
     gen2_save->trainer_id = (uint16_t*)&PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_ID);
     gen2_save->trainer_name = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_NAME);
@@ -308,21 +312,21 @@ pksav_error_t pksav_gen2_save_load(
         gen2_save->trainer_gender = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER);
     } else {
         gen2_save->trainer_gender = NULL;
-    }
+    }*/
 
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_gen2_save_save(
+enum pksav_error pksav_gen2_save_save(
     const char* filepath,
-    pksav_gen2_save_t* gen2_save
+    struct pksav_gen2_save* gen2_save
 ) {
     if(!filepath || !gen2_save) {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     // Make sure we can write to this file
-    FILE* gen2_save_file = fopen(filepath, "wb");
+    /*FILE* gen2_save_file = fopen(filepath, "wb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -335,18 +339,18 @@ pksav_error_t pksav_gen2_save_save(
 
     // Write to file
     fwrite((void*)gen2_save->raw, 1, PKSAV_GEN2_SAVE_SIZE, gen2_save_file);
-    fclose(gen2_save_file);
+    fclose(gen2_save_file);*/
 
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_gen2_save_free(
-    pksav_gen2_save_t* gen2_save
+enum pksav_error pksav_gen2_save_free(
+    struct pksav_gen2_save* gen2_save
 ) {
     if(!gen2_save || !gen2_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
-
+/*
     // Free dynamically allocated memory
     free(gen2_save->raw);
 
@@ -369,7 +373,7 @@ pksav_error_t pksav_gen2_save_free(
     gen2_save->rival_name = NULL;
     gen2_save->daylight_savings = NULL;
     gen2_save->time_played = NULL;
-    gen2_save->raw = NULL;
+    gen2_save->raw = NULL;*/
 
     return PKSAV_ERROR_NONE;
 }

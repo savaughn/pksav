@@ -25,15 +25,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef enum {
+enum pksav_gen2_gender
+{
     PKSAV_GEN2_MALE = 0,
     PKSAV_GEN2_FEMALE
-} pksav_gen2_gender_t;
+};
 
-typedef enum {
+enum pksav_gen2_game
+{
     PKSAV_GEN2_GS = 0,
     PKSAV_GEN2_CRYSTAL
-} pksav_gen2_game_t;
+};
 
 /*!
  * @brief The primary PKSav struct for interacting with Generation II save files.
@@ -49,9 +51,10 @@ typedef enum {
  * Once you are finished using the struct, pass it into ::pksav_gen2_save_free to
  * free the memory allocated by ::pksav_gen2_save_load.
  */
-typedef struct {
+struct pksav_gen2_save
+{
     //! A pointer to the trainer's Pokémon party.
-    pksav_gen2_pokemon_party_t* pokemon_party;
+    struct pksav_gen2_pokemon_party* pokemon_party;
 
     /*!
      * @brief The number of the current Pokémon box (0-13).
@@ -67,19 +70,19 @@ typedef struct {
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    pksav_gen2_pokemon_box_t* current_pokemon_box;
+    struct pksav_gen2_pokemon_box* current_pokemon_box;
 
     //! A pointer to the Pokémon PC.
-    pksav_gen2_pokemon_box_t* pokemon_boxes[14];
+    struct pksav_gen2_pokemon_box* pokemon_boxes[14];
 
     //! A pointer to the Pokémon PC's box names.
-    pksav_gen2_pokemon_box_names_t* pokemon_box_names;
+    struct pksav_gen2_pokemon_box_names* pokemon_box_names;
 
     //! A pointer to the trainer's item bag.
-    pksav_gen2_item_bag_t* item_bag;
+    struct pksav_gen2_item_bag* item_bag;
 
     //! A pointer to the trainer's item PC.
-    pksav_gen2_item_pc_t* item_pc;
+    struct pksav_gen2_item_pc* item_pc;
 
     /*!
      * @brief A pointer to the list of Pokémon seen by the trainer.
@@ -102,7 +105,7 @@ typedef struct {
      * This value should be accessed with ::pksav_text_from_gen2 with a num_chars
      * value of 7.
      *
-     * This value should be set with ::pksav_text_to_gen2, with a num_chars
+     * This value should be set with ::struct pksav_texto_gen2, with a num_chars
      * num_chars value of 7.
      */
     uint8_t* trainer_name;
@@ -138,7 +141,7 @@ typedef struct {
      * This value should be accessed with ::pksav_text_from_gen2, with a num_chars
      * value of 7.
      *
-     * This value should be set with ::pksav_text_to_gen2 with a num_chars
+     * This value should be set with ::struct pksav_texto_gen2 with a num_chars
      * value of 7.
      */
     uint8_t* rival_name;
@@ -151,15 +154,15 @@ typedef struct {
     uint8_t* daylight_savings;
 
     //! A pointer to the amount of time this save file has been played.
-    pksav_gen2_time_t* time_played;
+    struct pksav_gen2_time* time_played;
 
     //! Which Generation II save group this struct corresponds to.
-    pksav_gen2_game_t gen2_game;
+    enum pksav_gen2_game gen2_game;
 
     #ifndef __DOXYGEN__
     uint8_t* raw;
     #endif
-} pksav_gen2_save_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -178,7 +181,7 @@ extern "C" {
  * \returns ::PKSAV_ERROR_NONE upon success
  * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API pksav_error_t pksav_buffer_is_gen2_save(
+PKSAV_API enum pksav_error pksav_buffer_is_gen2_save(
     const uint8_t* buffer,
     size_t buffer_len,
     bool crystal,
@@ -197,7 +200,7 @@ PKSAV_API pksav_error_t pksav_buffer_is_gen2_save(
  * \returns ::PKSAV_ERROR_NONE upon success
  * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API pksav_error_t pksav_file_is_gen2_save(
+PKSAV_API enum pksav_error pksav_file_is_gen2_save(
     const char* filepath,
     bool crystal,
     bool* result_out
@@ -206,7 +209,7 @@ PKSAV_API pksav_error_t pksav_file_is_gen2_save(
 /*!
  * @brief Loads the save file at the given path into the given PKSav struct.
  *
- * Upon a failure state, the given pksav_gen2_save_t will be left in an undefined state.
+ * Upon a failure state, the given struct pksav_gen2_save will be left in an undefined state.
  *
  * \param filepath path to the file to be loaded
  * \param gen2_save PKSav struct in which to load file
@@ -215,9 +218,9 @@ PKSAV_API pksav_error_t pksav_file_is_gen2_save(
  * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs reading the file
  * \returns ::PKSAV_ERROR_INVALID_SAVE if the given file is not a valid Generation II save file
  */
-PKSAV_API pksav_error_t pksav_gen2_save_load(
+PKSAV_API enum pksav_error pksav_gen2_save_load(
     const char* filepath,
-    pksav_gen2_save_t* gen2_save
+    struct pksav_gen2_save* gen2_save
 );
 
 /*!
@@ -231,13 +234,13 @@ PKSAV_API pksav_error_t pksav_gen2_save_load(
  * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen2_save is NULL
  * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs writing the file
  */
-PKSAV_API pksav_error_t pksav_gen2_save_save(
+PKSAV_API enum pksav_error pksav_gen2_save_save(
     const char* filepath,
-    pksav_gen2_save_t* gen2_save
+    struct pksav_gen2_save* gen2_save
 );
 
 /*!
- * @brief Frees memory allocated for a pksav_gen2_save_t.
+ * @brief Frees memory allocated for a struct pksav_gen2_save.
  *
  * After this function is called, all pointer members of the given save file will
  * be set to NULL.
@@ -246,8 +249,8 @@ PKSAV_API pksav_error_t pksav_gen2_save_save(
  * \returns ::PKSAV_ERROR_NONE upon success
  * \returns ::PKSAV_ERROR_NULL_POINTER if gen2_save is NULL
  */
-PKSAV_API pksav_error_t pksav_gen2_save_free(
-    pksav_gen2_save_t* gen2_save
+PKSAV_API enum pksav_error pksav_gen2_save_free(
+    struct pksav_gen2_save* gen2_save
 );
 
 #ifdef __cplusplus
