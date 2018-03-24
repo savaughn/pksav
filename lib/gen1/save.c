@@ -127,7 +127,7 @@ static void _pksav_gen1_set_save_pointers(
 )
 {
     assert(gen1_save_ptr != NULL);
-    assert(gen1_save_ptr->_internal.raw_save_ptr = NULL);
+    assert(gen1_save_ptr->_internal.raw_save_ptr != NULL);
 
     uint8_t* raw_save_ptr = gen1_save_ptr->_internal.raw_save_ptr;
 
@@ -141,29 +141,36 @@ static void _pksav_gen1_set_save_pointers(
                                         &raw_save_ptr[PKSAV_GEN1_ITEM_PC]
                                     );
 
-    // Pokémon PC
-    struct pksav_gen1_pokemon_pc* pokemon_pc_ptr = &gen1_save_ptr->pokemon_pc;
+    // Pokémon storage
+    struct pksav_gen1_pokemon_storage* pokemon_storage_ptr = &gen1_save_ptr->pokemon_storage;
+
+    pokemon_storage_ptr->pokemon_party_ptr = (struct pksav_gen1_pokemon_party*)(
+                                                 &raw_save_ptr[PKSAV_GEN1_POKEMON_PARTY]
+                                             );
 
     for(size_t box_index = 0; box_index < 6; ++box_index)
     {
         size_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF +
                         (sizeof(struct pksav_gen1_pokemon_box) * box_index);
 
-        pokemon_pc_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
-                                                          &raw_save_ptr[offset]
-                                                      );
+        pokemon_storage_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
+                                                               &raw_save_ptr[offset]
+                                                           );
     }
     for(size_t box_index = 6; box_index < 12; ++box_index)
     {
         size_t offset = PKSAV_GEN1_POKEMON_PC_SECOND_HALF +
                         (sizeof(struct pksav_gen1_pokemon_box) * (box_index - 6));
 
-        pokemon_pc_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
-                                                          &raw_save_ptr[offset]
-                                                      );
+        pokemon_storage_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
+                                                               &raw_save_ptr[offset]
+                                                           );
     }
 
-    pokemon_pc_ptr->current_pokemon_box_num_ptr = &raw_save_ptr[PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM];
+    pokemon_storage_ptr->current_pokemon_box_num_ptr = &raw_save_ptr[PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM];
+    pokemon_storage_ptr->current_pokemon_box_ptr = (struct pksav_gen1_pokemon_box*)(
+                                                       &raw_save_ptr[PKSAV_GEN1_CURRENT_POKEMON_BOX]
+                                                   );
 
     // Pokédex lists
     struct pksav_gen1_pokedex_lists* pokedex_lists_ptr = &gen1_save_ptr->pokedex_lists;
@@ -312,12 +319,12 @@ enum pksav_error pksav_gen1_free_save(
     return PKSAV_ERROR_NONE;
 }
 
-enum pksav_error pksav_gen1_pokemon_pc_set_current_box(
-    struct pksav_gen1_pokemon_pc* gen1_pokemon_pc_ptr,
+enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
+    struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
     uint8_t new_current_box_num
 )
 {
-    if(!gen1_pokemon_pc_ptr)
+    if(!gen1_pokemon_storage_ptr)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -326,12 +333,12 @@ enum pksav_error pksav_gen1_pokemon_pc_set_current_box(
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
-    uint8_t* current_pokemon_box_num_ptr = gen1_pokemon_pc_ptr->current_pokemon_box_num_ptr;
-    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr = gen1_pokemon_pc_ptr->current_pokemon_box_ptr;
-    struct pksav_gen1_pokemon_box** pokemon_box_ptrs = gen1_pokemon_pc_ptr->pokemon_box_ptrs;
+    uint8_t* current_pokemon_box_num_ptr = gen1_pokemon_storage_ptr->current_pokemon_box_num_ptr;
+    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr = gen1_pokemon_storage_ptr->current_pokemon_box_ptr;
+    struct pksav_gen1_pokemon_box** pokemon_box_ptrs = gen1_pokemon_storage_ptr->pokemon_box_ptrs;
 
     *pokemon_box_ptrs[*current_pokemon_box_num_ptr] = *current_pokemon_box_ptr;
-    *current_pokemon_box_num_ptr = (new_current_box_num+1);
+    *current_pokemon_box_num_ptr = new_current_box_num;
     *current_pokemon_box_ptr = *pokemon_box_ptrs[*current_pokemon_box_num_ptr];
 
     return PKSAV_ERROR_NONE;

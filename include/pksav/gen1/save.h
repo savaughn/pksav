@@ -58,8 +58,10 @@ struct pksav_gen1_pokedex_lists
     uint8_t* owned_ptr;
 };
 
-struct pksav_gen1_pokemon_pc
+struct pksav_gen1_pokemon_storage
 {
+    struct pksav_gen1_pokemon_party* pokemon_party_ptr;
+
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
      *
@@ -187,21 +189,21 @@ struct pksav_gen1_save
 {
     enum pksav_gen1_save_type save_type;
 
+    //! A pointer to the amount of time this save file has been played.
+    struct pksav_gen1_time* time_played_ptr;
+
+    // TODO: add enums
+    uint8_t* options_ptr;
+
     struct pksav_gen1_item_storage item_storage;
 
-    struct pksav_gen1_pokemon_pc pokemon_pc;
+    struct pksav_gen1_pokemon_storage pokemon_storage;
 
     struct pksav_gen1_pokedex_lists pokedex_lists;
 
     struct pksav_gen1_trainer_info trainer_info;
 
     struct pksav_gen1_misc_fields misc_fields;
-
-    //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen1_time* time_played_ptr;
-
-    // TODO: implement
-    uint8_t* options_ptr;
 
     struct pksav_gen1_save_internal _internal;
 };
@@ -235,8 +237,8 @@ PKSAV_API enum pksav_error pksav_gen1_free_save(
     struct pksav_gen1_save* gen1_save_ptr
 );
 
-PKSAV_API enum pksav_error pksav_gen1_pokemon_pc_set_current_box(
-    struct pksav_gen1_pokemon_pc* gen1_pokemon_pc_ptr,
+PKSAV_API enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
+    struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
     uint8_t new_current_box_num
 );
 

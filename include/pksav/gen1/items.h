@@ -11,6 +11,9 @@
 
 #pragma pack(push,1)
 
+#define PKSAV_GEN1_ITEM_BAG_SIZE 20
+#define PKSAV_GEN1_ITEM_PC_SIZE  50
+
 //! Native representation of an item slot in Generation I.
 struct pksav_gen1_item
 {
@@ -33,7 +36,7 @@ struct pksav_gen1_item_bag
     //! How many unique items are in the bag (0-20).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen1_item items[20];
+    struct pksav_gen1_item items[PKSAV_GEN1_ITEM_BAG_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -51,7 +54,7 @@ struct pksav_gen1_item_pc
     //! How many unique items are in the PC (0-50).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen1_item items[50];
+    struct pksav_gen1_item items[PKSAV_GEN1_ITEM_PC_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };

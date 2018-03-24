@@ -9,6 +9,9 @@
 
 #include <stdint.h>
 
+#define PKSAV_GEN1_BOX_NUM_POKEMON 20
+#define PKSAV_GEN1_PARTY_NUM_POKEMON 6
+
 /*!
  * @brief The mask for a move's PP in the PP field.
  *
@@ -272,23 +275,23 @@ struct pksav_gen1_pokemon_party
      *
      * The final index of this field should always be set to 0xFF.
      */
-    uint8_t species[7];
+    uint8_t species[PKSAV_GEN1_PARTY_NUM_POKEMON+1];
     //! The actual Pokémon in the party.
-    struct pksav_gen1_party_pokemon party[6];
+    struct pksav_gen1_party_pokemon party[PKSAV_GEN1_PARTY_NUM_POKEMON];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[6][11];
+    uint8_t otnames[PKSAV_GEN1_PARTY_NUM_POKEMON][11];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t nicknames[6][11];
+    uint8_t nicknames[PKSAV_GEN1_PARTY_NUM_POKEMON][11];
 } pksav_gen1_pokemon_party_t;
 
 //! Native format for a Pokémon PC box in Generation I.
@@ -302,25 +305,26 @@ struct pksav_gen1_pokemon_box
      * When the box is viewed in-game, it is this value that determines
      * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
-     * The final index of this field should always be set to 0xFF.
+     * The first index after the last Pokémon in the box should always be
+     * set to 0xFF.
      */
-    uint8_t species[21];
+    uint8_t species[PKSAV_GEN1_BOX_NUM_POKEMON+1];
     //! The actual Pokémon in the box.
-    struct pksav_gen1_pc_pokemon entries[20];
+    struct pksav_gen1_pc_pokemon entries[PKSAV_GEN1_BOX_NUM_POKEMON];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[20][11];
+    uint8_t otnames[PKSAV_GEN1_BOX_NUM_POKEMON][11];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10).
      */
-    uint8_t nicknames[20][11];
+    uint8_t nicknames[PKSAV_GEN1_BOX_NUM_POKEMON][11];
 };
 
 #pragma pack(pop)
