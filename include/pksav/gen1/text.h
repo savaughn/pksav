@@ -31,7 +31,7 @@ extern "C" {
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API pksav_error_t pksav_text_from_gen1(
+PKSAV_API enum pksav_error pksav_gen1_import_text(
     const uint8_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -51,7 +51,7 @@ PKSAV_API pksav_error_t pksav_text_from_gen1(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API pksav_error_t pksav_text_to_gen1(
+PKSAV_API enum pksav_error pksav_gen1_export_text(
     const char* input_text,
     uint8_t* output_buffer,
     size_t num_chars

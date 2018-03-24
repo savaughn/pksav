@@ -296,61 +296,8 @@ static void pksav_gen1_save_h_test() {
 /*
  * pksav/gen1/text.h
  */
-static void pksav_gen1_text_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
-
-    uint8_t dummy_uint8_t = 0;
-    char dummy_char = 0;
-
-    /*
-     * pksav_text_from_gen1
-     */
-
-    status = pksav_text_from_gen1(
-        NULL,
-        &dummy_char,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_from_gen1(
-        &dummy_uint8_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_from_gen1(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_text_to_gen1
-     */
-
-    status = pksav_text_to_gen1(
-        NULL,
-        &dummy_uint8_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_to_gen1(
-        &dummy_char,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_to_gen1(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+static void pksav_gen1_text_h_test()
+{
 }
 
 /*
