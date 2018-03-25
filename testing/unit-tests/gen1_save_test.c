@@ -30,10 +30,10 @@ static const struct pksav_gen1_save EMPTY_GEN1_SAVE =
 
     .pokemon_storage =
     {
-        .pokemon_party_ptr = NULL,
-        .pokemon_box_ptrs = {NULL},
-        .current_pokemon_box_num_ptr = NULL,
-        .current_pokemon_box_ptr = NULL
+        .party_ptr = NULL,
+        .box_ptrs = {NULL},
+        .current_box_num_ptr = NULL,
+        .current_box_ptr = NULL
     },
 
     .pokedex_lists =
@@ -44,8 +44,8 @@ static const struct pksav_gen1_save EMPTY_GEN1_SAVE =
 
     .trainer_info =
     {
-        .trainer_id_ptr = NULL,
-        .trainer_name_ptr = NULL,
+        .id_ptr = NULL,
+        .name_ptr = NULL,
         .money_ptr = NULL,
         .badges_ptr = NULL
     },
@@ -220,25 +220,25 @@ static void validate_gen1_item_pc(
 }
 
 static void validate_gen1_pokemon_party(
-    const struct pksav_gen1_pokemon_party* pokemon_party_ptr
+    const struct pksav_gen1_pokemon_party* party_ptr
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_party_ptr);
-    TEST_ASSERT_TRUE(pokemon_party_ptr->count <= PKSAV_GEN1_PARTY_NUM_POKEMON);
+    TEST_ASSERT_NOT_NULL(party_ptr);
+    TEST_ASSERT_TRUE(party_ptr->count <= PKSAV_GEN1_PARTY_NUM_POKEMON);
 
-    if(pokemon_party_ptr->count < PKSAV_GEN1_PARTY_NUM_POKEMON)
+    if(party_ptr->count < PKSAV_GEN1_PARTY_NUM_POKEMON)
     {
-        TEST_ASSERT_EQUAL(0xFF, pokemon_party_ptr->species[pokemon_party_ptr->count]);
+        TEST_ASSERT_EQUAL(0xFF, party_ptr->species[party_ptr->count]);
     }
 
-    for(size_t party_index = 0; party_index < pokemon_party_ptr->count; ++party_index)
+    for(size_t party_index = 0; party_index < party_ptr->count; ++party_index)
     {
         validate_gen1_string(
-            pokemon_party_ptr->otnames[party_index],
+            party_ptr->otnames[party_index],
             10
         );
         validate_gen1_string(
-            pokemon_party_ptr->nicknames[party_index],
+            party_ptr->nicknames[party_index],
             10
         );
     }
@@ -316,28 +316,28 @@ static void gen1_save_test(
 
     validate_gen1_item_bag(gen1_save.item_storage.item_bag_ptr);
     validate_gen1_item_pc(gen1_save.item_storage.item_pc_ptr);
-    validate_gen1_pokemon_party(gen1_save.pokemon_storage.pokemon_party_ptr);
+    validate_gen1_pokemon_party(gen1_save.pokemon_storage.party_ptr);
 
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
         validate_gen1_pokemon_box(
-            gen1_save.pokemon_storage.pokemon_box_ptrs[box_index]
+            gen1_save.pokemon_storage.box_ptrs[box_index]
         );
     }
 
-    TEST_ASSERT_NOT_NULL(gen1_save.pokemon_storage.current_pokemon_box_num_ptr);
-    uint8_t current_pokemon_box_num = (*gen1_save.pokemon_storage.current_pokemon_box_num_ptr
-                                    & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK);
-    TEST_ASSERT_TRUE(current_pokemon_box_num <= PKSAV_GEN1_NUM_POKEMON_BOXES);
+    TEST_ASSERT_NOT_NULL(gen1_save.pokemon_storage.current_box_num_ptr);
+    uint8_t current_box_num = (*gen1_save.pokemon_storage.current_box_num_ptr
+                                    & PKSAV_GEN1_current_box_NUM_MASK);
+    TEST_ASSERT_TRUE(current_box_num <= PKSAV_GEN1_NUM_POKEMON_BOXES);
 
-    validate_gen1_pokemon_box(gen1_save.pokemon_storage.current_pokemon_box_ptr);
+    validate_gen1_pokemon_box(gen1_save.pokemon_storage.current_box_ptr);
 
     TEST_ASSERT_NOT_NULL(gen1_save.pokedex_lists.seen_ptr);
     TEST_ASSERT_NOT_NULL(gen1_save.pokedex_lists.owned_ptr);
 
-    TEST_ASSERT_NOT_NULL(gen1_save.trainer_info.trainer_id_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save.trainer_info.id_ptr);
     validate_gen1_string(
-        gen1_save.trainer_info.trainer_name_ptr,
+        gen1_save.trainer_info.name_ptr,
         7
     );
     validate_bcd(
@@ -397,12 +397,12 @@ static void gen1_save_test(
                 );
         TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-        uint8_t current_pokemon_box_num = *gen1_save.pokemon_storage.current_pokemon_box_num_ptr;
-        current_pokemon_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
-        TEST_ASSERT_EQUAL(box_index, current_pokemon_box_num);
+        uint8_t current_box_num = *gen1_save.pokemon_storage.current_box_num_ptr;
+        current_box_num &= PKSAV_GEN1_current_box_NUM_MASK;
+        TEST_ASSERT_EQUAL(box_index, current_box_num);
         TEST_ASSERT_EQUAL_MEMORY(
-            gen1_save.pokemon_storage.pokemon_box_ptrs[box_index],
-            gen1_save.pokemon_storage.current_pokemon_box_ptr,
+            gen1_save.pokemon_storage.box_ptrs[box_index],
+            gen1_save.pokemon_storage.current_box_ptr,
             sizeof(struct pksav_gen1_pokemon_box)
         );
     }
@@ -418,19 +418,19 @@ static void gen1_save_test(
     TEST_ASSERT_NULL(gen1_save.item_storage.item_bag_ptr);
     TEST_ASSERT_NULL(gen1_save.item_storage.item_pc_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.pokemon_party_ptr);
+    TEST_ASSERT_NULL(gen1_save.pokemon_storage.party_ptr);
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
-        TEST_ASSERT_NULL(gen1_save.pokemon_storage.pokemon_box_ptrs[box_index]);
+        TEST_ASSERT_NULL(gen1_save.pokemon_storage.box_ptrs[box_index]);
     }
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_pokemon_box_num_ptr);
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_pokemon_box_ptr);
+    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_box_num_ptr);
+    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_box_ptr);
 
     TEST_ASSERT_NULL(gen1_save.pokedex_lists.seen_ptr);
     TEST_ASSERT_NULL(gen1_save.pokedex_lists.owned_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.trainer_info.trainer_id_ptr);
-    TEST_ASSERT_NULL(gen1_save.trainer_info.trainer_name_ptr);
+    TEST_ASSERT_NULL(gen1_save.trainer_info.id_ptr);
+    TEST_ASSERT_NULL(gen1_save.trainer_info.name_ptr);
     TEST_ASSERT_NULL(gen1_save.trainer_info.money_ptr);
     TEST_ASSERT_NULL(gen1_save.trainer_info.badges_ptr);
 

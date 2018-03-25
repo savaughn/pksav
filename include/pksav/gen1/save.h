@@ -35,9 +35,9 @@ enum pksav_gen1_save_type
  * In the field for storing the current Pokémon box number, the relevant
  * value is only stored in the lower four bytes.
  *
- * This is used with the pksav_gen1_save_t.current_pokemon_box_num field.
+ * This is used with the pksav_gen1_save_t.current_box_num field.
  */
-#define PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK ((uint8_t)0x0F)
+#define PKSAV_GEN1_current_box_NUM_MASK ((uint8_t)0x0F)
 
 struct pksav_gen1_pokedex_lists
 {
@@ -60,7 +60,7 @@ struct pksav_gen1_pokedex_lists
 
 struct pksav_gen1_pokemon_storage
 {
-    struct pksav_gen1_pokemon_party* pokemon_party_ptr;
+    struct pksav_gen1_pokemon_party* party_ptr;
 
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
@@ -68,7 +68,7 @@ struct pksav_gen1_pokemon_storage
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    struct pksav_gen1_pokemon_box* pokemon_box_ptrs[PKSAV_GEN1_NUM_POKEMON_BOXES];
+    struct pksav_gen1_pokemon_box* box_ptrs[PKSAV_GEN1_NUM_POKEMON_BOXES];
 
     /*!
      * @brief The number of the current Pokémon box (0-11).
@@ -76,10 +76,10 @@ struct pksav_gen1_pokemon_storage
      * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
      * deposited and withdrawn from.
      *
-     * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
+     * The ::PKSAV_GEN1_current_box_NUM_MASK should be used to access or set
      * this value.
      */
-    uint8_t* current_pokemon_box_num_ptr;
+    uint8_t* current_box_num_ptr;
 
     /*!
      * @brief A pointer to the current Pokémon box.
@@ -87,7 +87,7 @@ struct pksav_gen1_pokemon_storage
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr;
+    struct pksav_gen1_pokemon_box* current_box_ptr;
 };
 
 struct pksav_gen1_item_storage
@@ -106,7 +106,7 @@ struct pksav_gen1_trainer_info
      *
      * This value should be accessed and modified with ::pksav_bigendian16.
      */
-    uint16_t* trainer_id_ptr;
+    uint16_t* id_ptr;
 
     /*!
      * @brief A pointer to the trainer's name.
@@ -117,7 +117,7 @@ struct pksav_gen1_trainer_info
      * This value should be set with ::pksav_text_to_gen1 with a num_chars
      * value of 7.
      */
-    uint8_t* trainer_name_ptr;
+    uint8_t* name_ptr;
 
     /*!
      * @brief A pointer to how much money the trainer has (stored in BCD).
@@ -239,7 +239,7 @@ PKSAV_API enum pksav_error pksav_gen1_free_save(
 
 PKSAV_API enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
     struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
-    uint8_t new_current_pokemon_box_num
+    uint8_t new_current_box_num
 );
 
 #ifdef __cplusplus

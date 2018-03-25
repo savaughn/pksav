@@ -27,11 +27,11 @@ enum pksav_gen1_save_offset
     PKSAV_GEN1_TRAINER_ID              = 0x2605,
     PKSAV_GEN1_PIKACHU_FRIENDSHIP      = 0x271C,
     PKSAV_GEN1_ITEM_PC                 = 0x27E6,
-    PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM = 0x284C,
+    PKSAV_GEN1_current_box_NUM = 0x284C,
     PKSAV_GEN1_CASINO_COINS            = 0x2850,
     PKSAV_GEN1_TIME_PLAYED             = 0x2CED,
     PKSAV_GEN1_POKEMON_PARTY           = 0x2F2C,
-    PKSAV_GEN1_CURRENT_POKEMON_BOX     = 0x30C0,
+    PKSAV_GEN1_current_box     = 0x30C0,
     PKSAV_GEN1_CHECKSUM                = 0x3523,
     PKSAV_GEN1_POKEMON_PC_FIRST_HALF   = 0x4000,
     PKSAV_GEN1_POKEMON_PC_SECOND_HALF  = 0x6000
@@ -144,16 +144,16 @@ static void _pksav_gen1_set_save_pointers(
     // Pokémon storage
     struct pksav_gen1_pokemon_storage* pokemon_storage_ptr = &gen1_save_ptr->pokemon_storage;
 
-    pokemon_storage_ptr->pokemon_party_ptr = (struct pksav_gen1_pokemon_party*)(
-                                                 &raw_save_ptr[PKSAV_GEN1_POKEMON_PARTY]
-                                             );
+    pokemon_storage_ptr->party_ptr = (struct pksav_gen1_pokemon_party*)(
+                                         &raw_save_ptr[PKSAV_GEN1_POKEMON_PARTY]
+                                     );
 
     for(size_t box_index = 0; box_index < 6; ++box_index)
     {
         size_t offset = PKSAV_GEN1_POKEMON_PC_FIRST_HALF +
                         (sizeof(struct pksav_gen1_pokemon_box) * box_index);
 
-        pokemon_storage_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
+        pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
                                                                &raw_save_ptr[offset]
                                                            );
     }
@@ -162,14 +162,14 @@ static void _pksav_gen1_set_save_pointers(
         size_t offset = PKSAV_GEN1_POKEMON_PC_SECOND_HALF +
                         (sizeof(struct pksav_gen1_pokemon_box) * (box_index - 6));
 
-        pokemon_storage_ptr->pokemon_box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
+        pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen1_pokemon_box*)(
                                                                &raw_save_ptr[offset]
                                                            );
     }
 
-    pokemon_storage_ptr->current_pokemon_box_num_ptr = &raw_save_ptr[PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM];
-    pokemon_storage_ptr->current_pokemon_box_ptr = (struct pksav_gen1_pokemon_box*)(
-                                                       &raw_save_ptr[PKSAV_GEN1_CURRENT_POKEMON_BOX]
+    pokemon_storage_ptr->current_box_num_ptr = &raw_save_ptr[PKSAV_GEN1_current_box_NUM];
+    pokemon_storage_ptr->current_box_ptr = (struct pksav_gen1_pokemon_box*)(
+                                                       &raw_save_ptr[PKSAV_GEN1_current_box]
                                                    );
 
     // Pokédex lists
@@ -181,10 +181,10 @@ static void _pksav_gen1_set_save_pointers(
     // Trainer info
     struct pksav_gen1_trainer_info* trainer_info_ptr = &gen1_save_ptr->trainer_info;
 
-    trainer_info_ptr->trainer_id_ptr   = (uint16_t*)&raw_save_ptr[PKSAV_GEN1_TRAINER_ID];
-    trainer_info_ptr->trainer_name_ptr = &raw_save_ptr[PKSAV_GEN1_TRAINER_NAME];
-    trainer_info_ptr->money_ptr        = &raw_save_ptr[PKSAV_GEN1_MONEY];
-    trainer_info_ptr->badges_ptr       = &raw_save_ptr[PKSAV_GEN1_BADGES];
+    trainer_info_ptr->id_ptr     = (uint16_t*)&raw_save_ptr[PKSAV_GEN1_TRAINER_ID];
+    trainer_info_ptr->name_ptr   = &raw_save_ptr[PKSAV_GEN1_TRAINER_NAME];
+    trainer_info_ptr->money_ptr  = &raw_save_ptr[PKSAV_GEN1_MONEY];
+    trainer_info_ptr->badges_ptr = &raw_save_ptr[PKSAV_GEN1_BADGES];
 
     // Misc
     struct pksav_gen1_misc_fields* misc_fields_ptr = &gen1_save_ptr->misc_fields;
@@ -321,31 +321,31 @@ enum pksav_error pksav_gen1_free_save(
 
 enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
     struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
-    uint8_t new_current_pokemon_box_num
+    uint8_t new_current_box_num
 )
 {
     if(!gen1_pokemon_storage_ptr)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
-    if(new_current_pokemon_box_num >= PKSAV_GEN1_NUM_POKEMON_BOXES)
+    if(new_current_box_num >= PKSAV_GEN1_NUM_POKEMON_BOXES)
     {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
-    uint8_t* current_pokemon_box_num_ptr = gen1_pokemon_storage_ptr->current_pokemon_box_num_ptr;
-    struct pksav_gen1_pokemon_box* current_pokemon_box_ptr = gen1_pokemon_storage_ptr->current_pokemon_box_ptr;
-    struct pksav_gen1_pokemon_box** pokemon_box_ptrs = gen1_pokemon_storage_ptr->pokemon_box_ptrs;
+    uint8_t* current_box_num_ptr = gen1_pokemon_storage_ptr->current_box_num_ptr;
+    struct pksav_gen1_pokemon_box* current_box_ptr = gen1_pokemon_storage_ptr->current_box_ptr;
+    struct pksav_gen1_pokemon_box** box_ptrs = gen1_pokemon_storage_ptr->box_ptrs;
 
-    uint8_t current_pokemon_box_num = *current_pokemon_box_num_ptr
-                                    & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
+    uint8_t current_box_num = *current_box_num_ptr
+                            & PKSAV_GEN1_current_box_NUM_MASK;
 
-    *pokemon_box_ptrs[current_pokemon_box_num] = *current_pokemon_box_ptr;
+    *box_ptrs[current_box_num] = *current_box_ptr;
 
-    *current_pokemon_box_num_ptr &= ~PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
-    *current_pokemon_box_num_ptr |= new_current_pokemon_box_num;
+    *current_box_num_ptr &= ~PKSAV_GEN1_current_box_NUM_MASK;
+    *current_box_num_ptr |= new_current_box_num;
 
-    *current_pokemon_box_ptr = *pokemon_box_ptrs[new_current_pokemon_box_num];
+    *current_box_ptr = *box_ptrs[new_current_box_num];
 
     return PKSAV_ERROR_NONE;
 }
