@@ -30,6 +30,12 @@ enum pksav_gen2_save_type
     PKSAV_GEN2_SAVE_TYPE_CRYSTAL
 };
 
+enum pksav_gen2_gender
+{
+    PKSAV_GEN2_GENDER_MALE,
+    PKSAV_GEN2_GENDER_FEMALE
+};
+
 struct pksav_gen2_save_time
 {
     //! A pointer to the amount of time this save file has been played.
@@ -122,7 +128,6 @@ struct pksav_gen2_trainer_info
 
     uint8_t* gender_ptr;
 
-    // TODO: enum
     uint8_t* palette_ptr;
 
     /*!
