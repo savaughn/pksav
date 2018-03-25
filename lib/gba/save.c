@@ -200,7 +200,7 @@ pksav_error_t pksav_file_is_gba_save(
     FILE* gba_save = fopen(filepath, "rb");
     if(!gba_save) {
         *result_out = false;
-        return PKSAV_ERROR_NONE;
+        return PKSAV_ERROR_FILE_IO;
     }
 
     fseek(gba_save, 0, SEEK_END);

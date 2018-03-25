@@ -31,6 +31,8 @@ repository is automatically tested under the following configurations:
      * Clang: 3.9.0, 4.0.1, 5.0.0
    * Windows Server 2012 R2 (x86, x64)
      * MSVC 2015 (x86, x64)
+   * Windows Server 2016 (x86, x64)
+     * MSVC 2017 (x86, x64)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
@@ -46,4 +48,4 @@ Component Status
  * Generation VI: in progress
  * Generation VII: in progress
 
-README last updated: 2017/11/26
+README last updated: 2018/03/25
