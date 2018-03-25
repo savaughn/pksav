@@ -1,7 +1,5 @@
 environment:
   matrix:
-    - GENERATOR_NAME: "Visual Studio 12 2013"
-    - GENERATOR_NAME: "Visual Studio 12 2013 Win64"
     - GENERATOR_NAME: "Visual Studio 14 2015"
     - GENERATOR_NAME: "Visual Studio 14 2015 Win64"
 
