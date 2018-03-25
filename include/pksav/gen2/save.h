@@ -1,8 +1,4 @@
 /*!
- * @file    pksav/gen2/save.h
- * @ingroup PKSav
- * @brief   Functions for interacting with Generation II save files.
- *
  * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
@@ -16,53 +12,65 @@
 
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/pokemon.h>
-#include <pksav/gen2/text.h>
 #include <pksav/gen2/time.h>
-
-#include <pksav/math/bcd.h>
-#include <pksav/math/endian.h>
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
-enum pksav_gen2_gender
+#define PKSAV_GEN2_SAVE_SIZE 0x8000
+#define PKSAV_GEN2_NUM_POKEMON_BOXES 14
+
+enum pksav_gen2_save_type
 {
-    PKSAV_GEN2_MALE = 0,
-    PKSAV_GEN2_FEMALE
+    PKSAV_GEN2_SAVE_TYPE_NONE,
+    PKSAV_GEN2_SAVE_TYPE_GS,
+    PKSAV_GEN2_SAVE_TYPE_CRYSTAL
 };
 
-enum pksav_gen2_game
+struct pksav_gen2_pokedex_lists
 {
-    PKSAV_GEN2_GS = 0,
-    PKSAV_GEN2_CRYSTAL
-};
-
-/*!
- * @brief The primary PKSav struct for interacting with Generation II save files.
- *
- * After passing the struct into ::pksav_gen2_save_load, it will hold the binary
- * data for the save file and provide pointers to all relevant offsets within the
- * file. Accessing these pointers before calling ::pksav_gen2_save_load will result
- * in undefined behavior.
- *
- * To save the save file's data to another location, pass the struct into
- * ::pksav_gen2_save_save, along with a filepath.
- *
- * Once you are finished using the struct, pass it into ::pksav_gen2_save_free to
- * free the memory allocated by ::pksav_gen2_save_load.
- */
-struct pksav_gen2_save
-{
-    //! A pointer to the trainer's Pokémon party.
-    struct pksav_gen2_pokemon_party* pokemon_party;
+    /*!
+     * @brief A pointer to the list of Pokémon seen by the trainer.
+     *
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
+     */
+    uint8_t* seen_ptr;
 
     /*!
-     * @brief The number of the current Pokémon box (0-13).
+     * @brief A pointer to the list of Pokémon owned by the trainer.
      *
-     * There are 14 Pokémon boxes, and this value (0-based) shows which one will be
-     * deposited and withdrawn from.
+     * This list should be accessed with ::pksav_get_pokedex_bit and set with
+     * ::pksav_set_pokedex_bit.
      */
-    uint8_t* current_pokemon_box_num;
+    uint8_t* owned_ptr;
+};
+
+struct pksav_gen2_pokemon_storage
+{
+    struct pksav_gen2_pokemon_party* pokemon_party_ptr;
+
+    /*!
+     * @brief Pointers to the trainer's Pokémon boxes.
+     *
+     * The boxes are not stored contiguously in the save file, so these pointers
+     * point to their actual positions in the file.
+     */
+    struct pksav_gen2_pokemon_box* pokemon_box_ptrs[PKSAV_GEN2_NUM_POKEMON_BOXES];
+
+    struct pksav_gen2_pokemon_box_names* box_names_ptr;
+
+    /*!
+     * @brief The number of the current Pokémon box (0-11).
+     *
+     * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
+     * deposited and withdrawn from.
+     *
+     * The ::PKSAV_GEN2_current_box_NUM_MASK should be used to access or set
+     * this value.
+     */
+    uint8_t* current_box_num_ptr;
 
     /*!
      * @brief A pointer to the current Pokémon box.
@@ -70,34 +78,26 @@ struct pksav_gen2_save
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    struct pksav_gen2_pokemon_box* current_pokemon_box;
+    struct pksav_gen2_pokemon_box* current_box_ptr;
+};
 
-    //! A pointer to the Pokémon PC.
-    struct pksav_gen2_pokemon_box* pokemon_boxes[14];
-
-    //! A pointer to the Pokémon PC's box names.
-    struct pksav_gen2_pokemon_box_names* pokemon_box_names;
-
+struct pksav_gen2_item_storage
+{
     //! A pointer to the trainer's item bag.
-    struct pksav_gen2_item_bag* item_bag;
+    struct pksav_gen2_item_bag* item_bag_ptr;
 
     //! A pointer to the trainer's item PC.
-    struct pksav_gen2_item_pc* item_pc;
+    struct pksav_gen2_item_pc* item_pc_ptr;
+};
 
+struct pksav_gen2_trainer_info
+{
     /*!
-     * @brief A pointer to the list of Pokémon seen by the trainer.
+     * @brief A pointer to the trainer's ID (stored in big-endian).
      *
-     * This list should be accessed with ::pksav_get_pokedex_bit and set with
-     * ::pksav_set_pokedex_bit.
+     * This value should be accessed and modified with ::pksav_bigendian16.
      */
-    uint8_t* pokedex_seen;
-    /*!
-     * @brief A pointer to the list of Pokémon owned by the trainer.
-     *
-     * This list should be accessed with ::pksav_get_pokedex_bit and set with
-     * ::pksav_set_pokedex_bit.
-     */
-    uint8_t* pokedex_owned;
+    uint16_t* id_ptr;
 
     /*!
      * @brief A pointer to the trainer's name.
@@ -105,27 +105,14 @@ struct pksav_gen2_save
      * This value should be accessed with ::pksav_text_from_gen2 with a num_chars
      * value of 7.
      *
-     * This value should be set with ::struct pksav_texto_gen2, with a num_chars
-     * num_chars value of 7.
+     * This value should be set with ::pksav_text_to_gen2 with a num_chars
+     * value of 7.
      */
-    uint8_t* trainer_name;
+    uint8_t* name_ptr;
 
-    /*!
-     * @brief A pointer to the trainer's ID (stored in big-endian).
-     *
-     * This value should be accessed and modified with ::pksav_bigendian16.
-     */
-    uint16_t* trainer_id;
+    uint8_t* gender_ptr;
 
-    /*!
-     * @brief A pointer to the trainer's gender.
-     *
-     * As Crystal was the first game in the franchise to introduce a female player
-     * character, this value is set to NULL for Gold and Silver saves.
-     *
-     * For Crystal saves, valid values are ::PKSAV_GEN2_MALE or ::PKSAV_GEN2_FEMALE.
-     */
-    uint8_t* trainer_gender;
+    uint8_t* palette_ptr;
 
     /*!
      * @brief A pointer to how much money the trainer has (stored in BCD).
@@ -133,125 +120,50 @@ struct pksav_gen2_save
      * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
      * of 3. It should be set with ::pksav_to_bcd, with a maximum value of 999999.
      */
-    uint8_t* money;
+    uint8_t* money_ptr;
 
     /*!
-     * @brief A pointer to the trainer's name.
+     * @brief A pointer to the list of Johto badges the trainer has earned.
      *
-     * This value should be accessed with ::pksav_text_from_gen2, with a num_chars
-     * value of 7.
-     *
-     * This value should be set with ::struct pksav_texto_gen2 with a num_chars
-     * value of 7.
+     * This value should be manipulated with the bitmasks given in the
+     * ::pksav_gen2_johto_badge_t enum.
      */
-    uint8_t* rival_name;
+    uint8_t* johto_badges_ptr;
 
     /*!
-     * @brief Whether daylight savings time is set.
+     * @brief A pointer to the list of Kanto badges the trainer has earned.
      *
-     * Valid values are 0 or 1.
+     * This value should be manipulated with the bitmasks given in the
+     * ::pksav_gen2_kanto_badge_t enum.
      */
-    uint8_t* daylight_savings;
+    uint8_t* kanto_badges_ptr;
+};
 
-    //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen2_time* time_played;
+struct pksav_gen2_misc_fields
+{
+    /*!
+     * @brief A pointer to the rival's name.
+     *
+     * This value should be accessed with ::pksav_text_from_gen1 with a num_chars
+     * value of 7.
+     *
+     * This value should be set with ::pksav_text_to_gen1 with a num_chars
+     * value of 7.
+     */
+    uint8_t* rival_name_ptr;
+};
 
-    //! Which Generation II save group this struct corresponds to.
-    enum pksav_gen2_game gen2_game;
+struct pksav_gen2_save_internal
+{
+    uint8_t* raw_save_ptr;
 
-    #ifndef __DOXYGEN__
-    uint8_t* raw;
-    #endif
+    uint8_t* checksum1_ptr;
+    uint8_t* checksum2_ptr;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/*!
- * @brief Determines whether the given buffer is from a valid Generation II save file.
- *
- * This is determining by checking the data's size and checksums. The data checked differs
- * between Gold/Silver and Crystal.
- *
- * \param buffer buffer to be checked
- * \param buffer_len length of the buffer passed in
- * \param crystal Whether to check Crystal's checksum locations
- * \param result_out whether or not the given buffer has a valid Generation II save file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
- */
-PKSAV_API enum pksav_error pksav_buffer_is_gen2_save(
-    const uint8_t* buffer,
-    size_t buffer_len,
-    bool crystal,
-    bool* result_out
-);
-
-/*!
- * @brief Determines whether the file at the given path is a valid Generation I save file.
- *
- * This is determined by checking the file's size and checksum. The data checked differs
- * between Gold/Silver and Crystal.
- *
- * \param filepath path to the file to be checked
- * \param crystal Whether to check Crystal's checksum locations
- * \param result_out whether or not the given buffer has a valid Generation I save file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
- */
-PKSAV_API enum pksav_error pksav_file_is_gen2_save(
-    const char* filepath,
-    bool crystal,
-    bool* result_out
-);
-
-/*!
- * @brief Loads the save file at the given path into the given PKSav struct.
- *
- * Upon a failure state, the given struct pksav_gen2_save will be left in an undefined state.
- *
- * \param filepath path to the file to be loaded
- * \param gen2_save PKSav struct in which to load file
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen2_save is NULL
- * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs reading the file
- * \returns ::PKSAV_ERROR_INVALID_SAVE if the given file is not a valid Generation II save file
- */
-PKSAV_API enum pksav_error pksav_gen2_save_load(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save
-);
-
-/*!
- * @brief Saves a Generation II save file to the given path.
- *
- * Upon a failure state, the save file is not guaranteed to have been properly written.
- *
- * \param filepath where the save file should be written
- * \param gen2_save the same to be written
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if filepath or gen2_save is NULL
- * \returns ::PKSAV_ERROR_FILE_IO if a problem occurs writing the file
- */
-PKSAV_API enum pksav_error pksav_gen2_save_save(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save
-);
-
-/*!
- * @brief Frees memory allocated for a struct pksav_gen2_save.
- *
- * After this function is called, all pointer members of the given save file will
- * be set to NULL.
- *
- * \param gen2_save save whose memory should be freed
- * \returns ::PKSAV_ERROR_NONE upon success
- * \returns ::PKSAV_ERROR_NULL_POINTER if gen2_save is NULL
- */
-PKSAV_API enum pksav_error pksav_gen2_save_free(
-    struct pksav_gen2_save* gen2_save
-);
 
 #ifdef __cplusplus
 }

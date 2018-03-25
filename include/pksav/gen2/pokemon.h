@@ -371,7 +371,6 @@ struct pksav_gen2_pokemon_box
 };
 
 //! List of Pokémon box names in Generation II.
-//! TODO: move into save substruct
 struct pksav_gen2_pokemon_box_names
 {
     /*!

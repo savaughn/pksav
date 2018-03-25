@@ -7,6 +7,8 @@
 
 #include <pksav/gen2/save.h>
 
+#include <pksav/math/endian.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
@@ -75,7 +77,7 @@ struct pksav_gen2_checksums
     uint16_t second;
 };
 
-static void _pksav_gen2_get_save_checksums(
+/*static void _pksav_gen2_get_save_checksums(
     bool crystal,
     const uint8_t* data,
     struct pksav_gen2_checksums* checksums_out
@@ -114,7 +116,7 @@ static void _pksav_gen2_get_save_checksums(
 
     checksums_out->first  = pksav_littleendian16(checksums_out->first);
     checksums_out->second = pksav_littleendian16(checksums_out->second);
-}
+}*/
 
 /*static void _pksav_gen2_set_save_checksums(
     bool crystal,
@@ -132,7 +134,7 @@ static void _pksav_gen2_get_save_checksums(
     *((uint16_t*)&data[checksum2_index]) = pksav_littleendian16(checksums.second);
 }*/
 
-enum pksav_error pksav_buffer_is_gen2_save(
+/*enum pksav_error pksav_buffer_is_gen2_save(
     const uint8_t* buffer,
     size_t buffer_len,
     bool crystal,
@@ -162,18 +164,18 @@ enum pksav_error pksav_buffer_is_gen2_save(
                                     *((uint16_t*)&buffer[checksum2_index])
                                 );
 
-    /*
+     *
      * From what I've seen, valid Crystal saves don't always have both
      * checksums set correctly.
-     */
+     *
     *result_out = crystal ? (checksums.first == actual_checksum1 ||
                              checksums.second == actual_checksum2)
                           : (checksums.first == actual_checksum1 &&
                              checksums.second == actual_checksum2);
     return PKSAV_ERROR_NONE;
-}
+}*/
 
-enum pksav_error pksav_file_is_gen2_save(
+/*enum pksav_error pksav_file_is_gen2_save(
     const char* filepath,
     bool crystal,
     bool* result_out
@@ -217,9 +219,9 @@ enum pksav_error pksav_file_is_gen2_save(
     *result_out = ret;
     free(gen2_save_data);
     return PKSAV_ERROR_NONE;
-}
+}*/
 
-enum pksav_error pksav_gen2_save_load(
+/*enum pksav_error pksav_gen2_save_load(
     const char* filepath,
     struct pksav_gen2_save* gen2_save
 ) {
@@ -228,7 +230,7 @@ enum pksav_error pksav_gen2_save_load(
     }
 
     // Read the file and make sure it's valid
-    /*FILE* gen2_save_file = fopen(filepath, "rb");
+    FILE* gen2_save_file = fopen(filepath, "rb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -312,12 +314,12 @@ enum pksav_error pksav_gen2_save_load(
         gen2_save->trainer_gender = &PKSAV_GEN2_DATA(gen2_save,PKSAV_GEN2_PLAYER_GENDER);
     } else {
         gen2_save->trainer_gender = NULL;
-    }*/
+    }
 
     return PKSAV_ERROR_NONE;
-}
+}*/
 
-enum pksav_error pksav_gen2_save_save(
+/*enum pksav_error pksav_gen2_save_save(
     const char* filepath,
     struct pksav_gen2_save* gen2_save
 ) {
@@ -326,7 +328,7 @@ enum pksav_error pksav_gen2_save_save(
     }
 
     // Make sure we can write to this file
-    /*FILE* gen2_save_file = fopen(filepath, "wb");
+    FILE* gen2_save_file = fopen(filepath, "wb");
     if(!gen2_save_file) {
         return PKSAV_ERROR_FILE_IO;
     }
@@ -339,18 +341,18 @@ enum pksav_error pksav_gen2_save_save(
 
     // Write to file
     fwrite((void*)gen2_save->raw, 1, PKSAV_GEN2_SAVE_SIZE, gen2_save_file);
-    fclose(gen2_save_file);*/
+    fclose(gen2_save_file);
 
     return PKSAV_ERROR_NONE;
-}
+}*/
 
-enum pksav_error pksav_gen2_save_free(
+/*enum pksav_error pksav_gen2_save_free(
     struct pksav_gen2_save* gen2_save
 ) {
     if(!gen2_save || !gen2_save->raw) {
         return PKSAV_ERROR_NULL_POINTER;
     }
-/*
+
     // Free dynamically allocated memory
     free(gen2_save->raw);
 
@@ -373,7 +375,7 @@ enum pksav_error pksav_gen2_save_free(
     gen2_save->rival_name = NULL;
     gen2_save->daylight_savings = NULL;
     gen2_save->time_played = NULL;
-    gen2_save->raw = NULL;*/
+    gen2_save->raw = NULL;
 
     return PKSAV_ERROR_NONE;
-}
+}*/
