@@ -18,42 +18,42 @@
 
 static const struct pksav_gen1_save EMPTY_GEN1_SAVE =
 {
-    .save_type = PKSAV_GEN1_SAVE_TYPE_NONE,
+    .save_type       = PKSAV_GEN1_SAVE_TYPE_NONE,
     .time_played_ptr = NULL,
-    .options_ptr = NULL,
+    .options_ptr     = NULL,
 
     .item_storage =
     {
         .item_bag_ptr = NULL,
-        .item_pc_ptr = NULL
+        .item_pc_ptr  = NULL
     },
 
     .pokemon_storage =
     {
-        .party_ptr = NULL,
-        .box_ptrs = {NULL},
+        .party_ptr           = NULL,
+        .box_ptrs            = {NULL},
         .current_box_num_ptr = NULL,
-        .current_box_ptr = NULL
+        .current_box_ptr     = NULL
     },
 
     .pokedex_lists =
     {
-        .seen_ptr = NULL,
+        .seen_ptr  = NULL,
         .owned_ptr = NULL
     },
 
     .trainer_info =
     {
-        .id_ptr = NULL,
-        .name_ptr = NULL,
-        .money_ptr = NULL,
+        .id_ptr     = NULL,
+        .name_ptr   = NULL,
+        .money_ptr  = NULL,
         .badges_ptr = NULL
     },
 
     .misc_fields =
     {
-        .rival_name_ptr = NULL,
-        .casino_coins_ptr = NULL,
+        .rival_name_ptr         = NULL,
+        .casino_coins_ptr       = NULL,
         .pikachu_friendship_ptr = NULL
     },
 

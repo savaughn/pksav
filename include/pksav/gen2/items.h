@@ -11,6 +11,13 @@
 
 #pragma pack(push,1)
 
+#define PKSAV_GEN2_TM_COUNT 50
+#define PKSAV_GEN2_HM_COUNT 7
+#define PKSAV_GEN2_ITEM_POCKET_SIZE 20
+#define PKSAV_GEN2_KEY_ITEM_POCKET_SIZE 26
+#define PKSAV_GEN2_BALL_POCKET_SIZE 12
+#define PKSAV_GEN2_ITEM_PC_SIZE 50
+
 //! Native representation of an item slot in Generation II.
 struct pksav_gen2_item
 {
@@ -35,7 +42,7 @@ struct pksav_gen2_tmhm_pocket
      * Each index corresponds to the TM of that same number (offset by one), so
      * for example, tm_count[35] contains the number of TM36 held in the bag.
      */
-    uint8_t tm_count[50];
+    uint8_t tm_count[PKSAV_GEN2_TM_COUNT];
     /*!
      * @brief Number of each HM.
      *
@@ -44,7 +51,7 @@ struct pksav_gen2_tmhm_pocket
      *
      * For HMs, this value should only be 0-1.
      */
-    uint8_t hm_count[7];
+    uint8_t hm_count[PKSAV_GEN2_HM_COUNT];
 };
 
 /*!
@@ -60,7 +67,7 @@ struct pksav_gen2_item_pocket
     //! How many unique items are in the bag (0-20).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[20];
+    struct pksav_gen2_item items[PKSAV_GEN2_ITEM_POCKET_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -80,7 +87,7 @@ struct pksav_gen2_key_item_pocket
     //! How many unique items are in the bag (0-26).
     uint8_t count;
     //! Item slots.
-    uint8_t item_indices[26];
+    uint8_t item_indices[PKSAV_GEN2_KEY_ITEM_POCKET_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -98,7 +105,7 @@ struct pksav_gen2_ball_pocket
     //! How many unique items are in the bag (0-12).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[12];
+    struct pksav_gen2_item items[PKSAV_GEN2_BALL_POCKET_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -133,7 +140,7 @@ struct pksav_gen2_item_pc
     //! How many unique items are in the PC (0-50).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[50];
+    struct pksav_gen2_item items[PKSAV_GEN2_ITEM_PC_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };

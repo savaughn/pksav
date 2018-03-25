@@ -352,7 +352,7 @@ static void _pksav_gen2_set_save_pointers(
                                          &file_buffer[offsets[PKSAV_GEN2_POKEMON_PARTY]]
                                      );
 
-    for(size_t box_index = 0; box_index < 6; ++box_index)
+    for(size_t box_index = 0; box_index < 7; ++box_index)
     {
         size_t offset = offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF] +
                         (sizeof(struct pksav_gen2_pokemon_box) * box_index);
@@ -361,10 +361,10 @@ static void _pksav_gen2_set_save_pointers(
                                                        &file_buffer[offset]
                                                    );
     }
-    for(size_t box_index = 6; box_index < 12; ++box_index)
+    for(size_t box_index = 7; box_index < 14; ++box_index)
     {
         size_t offset = offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF] +
-                        (sizeof(struct pksav_gen2_pokemon_box) * (box_index - 6));
+                        (sizeof(struct pksav_gen2_pokemon_box) * (box_index - 7));
 
         pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen2_pokemon_box*)(
                                                        &file_buffer[offset]
@@ -389,7 +389,14 @@ static void _pksav_gen2_set_save_pointers(
 
     trainer_info_ptr->id_ptr           = (uint16_t*)&file_buffer[offsets[PKSAV_GEN2_PLAYER_ID]];
     trainer_info_ptr->name_ptr         = &file_buffer[offsets[PKSAV_GEN2_PLAYER_NAME]];
-    trainer_info_ptr->gender_ptr       = &file_buffer[offsets[PKSAV_GEN2_PLAYER_GENDER]];
+    if(gen2_save_ptr->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
+    {
+        trainer_info_ptr->gender_ptr = &file_buffer[offsets[PKSAV_GEN2_PLAYER_GENDER]];
+    }
+    else
+    {
+        trainer_info_ptr->gender_ptr = NULL;
+    }
     trainer_info_ptr->palette_ptr      = &file_buffer[offsets[PKSAV_GEN2_PLAYER_PALETTE]];
     trainer_info_ptr->money_ptr        = &file_buffer[offsets[PKSAV_GEN2_MONEY]];
     trainer_info_ptr->johto_badges_ptr = &file_buffer[offsets[PKSAV_GEN2_JOHTO_BADGES]];
