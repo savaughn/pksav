@@ -206,15 +206,15 @@ struct pksav_gen1_save
 extern "C" {
 #endif
 
-PKSAV_API enum pksav_error pksav_gen1_is_buffer_valid_save(
+PKSAV_API enum pksav_error pksav_gen1_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
-    bool* result_out
+    enum pksav_gen1_save_type* save_type_out
 );
 
-PKSAV_API enum pksav_error pksav_gen1_is_file_valid_save(
+PKSAV_API enum pksav_error pksav_gen1_get_file_save_type(
     const char* filepath,
-    bool* result_out
+    enum pksav_gen1_save_type* save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gen1_load_save(

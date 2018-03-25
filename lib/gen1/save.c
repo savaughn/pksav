@@ -60,45 +60,60 @@ static uint8_t _pksav_gen1_get_save_checksum(
     return checksum;
 }
 
-enum pksav_error pksav_gen1_is_buffer_valid_save(
+enum pksav_error pksav_gen1_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
-    bool* result_out
+    enum pksav_gen1_save_type* save_type_out
 )
 {
-    if(!buffer || !buffer_len || !result_out)
+    if(!buffer || !save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    if(buffer_len < PKSAV_GEN1_SAVE_SIZE)
-    {
-        *result_out = false;
-    }
-    else
+    *save_type_out = PKSAV_GEN1_SAVE_TYPE_NONE;
+
+    if(buffer_len >= PKSAV_GEN1_SAVE_SIZE)
     {
         uint8_t buffer_checksum = buffer[PKSAV_GEN1_CHECKSUM];
         uint8_t calculated_checksum = _pksav_gen1_get_save_checksum(buffer);
-        *result_out = (buffer_checksum == calculated_checksum);
+        if(buffer_checksum == calculated_checksum)
+        {
+            /*
+             * Check if this save is for the Yellow version. The only way to
+             * check this is to check the Pikachu Friendship field, which
+             * isn't used in Red/Blue. This is usually fine but will fail if
+             * the trainer's Pikachu despises the trainer enough to have a
+             * friendship value of 0, which is unlikely but technically
+             * possible.
+             */
+            if(buffer[PKSAV_GEN1_PIKACHU_FRIENDSHIP] > 0)
+            {
+                *save_type_out = PKSAV_GEN1_SAVE_TYPE_YELLOW;
+            }
+            else
+            {
+                *save_type_out = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
+            }
+        }
     }
 
     return error;
 }
 
-enum pksav_error pksav_gen1_is_file_valid_save(
+enum pksav_error pksav_gen1_get_file_save_type(
     const char* filepath,
-    bool* result_out
+    enum pksav_gen1_save_type* save_type_out
 )
 {
-    if(!filepath || !result_out)
+    if(!filepath || !save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
-    bool is_valid_save = false;
 
     uint8_t* file_buffer = NULL;
     size_t buffer_len = 0;
@@ -111,17 +126,18 @@ enum pksav_error pksav_gen1_is_file_valid_save(
     {
         assert(file_buffer != NULL);
 
-        error = pksav_gen1_is_buffer_valid_save(
+        enum pksav_gen1_save_type save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
+        error = pksav_gen1_get_buffer_save_type(
                     file_buffer,
                     buffer_len,
-                    &is_valid_save
+                    &save_type
                 );
         free(file_buffer);
 
         // Only return a result upon success.
         if(!error)
         {
-            *result_out = is_valid_save;
+            *save_type_out = save_type;
         }
     }
 
@@ -242,31 +258,15 @@ enum pksav_error pksav_gen1_load_save(
     {
         assert(file_buffer != NULL);
 
-        bool is_valid_save = false;
-        error = pksav_gen1_is_buffer_valid_save(
+        enum pksav_gen1_save_type save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
+        error = pksav_gen1_get_buffer_save_type(
                     file_buffer,
                     buffer_len,
-                    &is_valid_save
+                    &save_type
                 );
-        if(!error)
+        if(!error && (save_type != PKSAV_GEN1_SAVE_TYPE_NONE))
         {
-            /*
-             * Check if this save is for the Yellow version. The only way to
-             * check this is to check the Pikachu Friendship field, which
-             * isn't used in Red/Blue. This is usually fine but will fail if
-             * the trainer's Pikachu despises the trainer enough to have a
-             * friendship value of 0, which is unlikely but technically
-             * possible.
-             */
-            if(file_buffer[PKSAV_GEN1_PIKACHU_FRIENDSHIP] > 0)
-            {
-                gen1_save_out->save_type = PKSAV_GEN1_SAVE_TYPE_YELLOW;
-            }
-            else
-            {
-                gen1_save_out->save_type = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
-            }
-
+            gen1_save_out->save_type = save_type;
             _pksav_gen1_set_save_pointers(
                 gen1_save_out,
                 file_buffer
