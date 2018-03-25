@@ -5,10 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "util/fs.h"
+
 #include <pksav/gen2/save.h>
 
 #include <pksav/math/endian.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
@@ -19,9 +22,15 @@
 #define PKSAV_CRYSTAL_CHECKSUM1 0x2D02
 #define PKSAV_CRYSTAL_CHECKSUM2 0x1F0D
 
-#define PKSAV_GEN2_SAVE_SIZE 0x8000
-
 #define PKSAV_GEN2_DATA(save,offset) save->raw[pksav_gen2_offsets[offset][save->gen2_game]]
+
+struct pksav_gen2_save_internal
+{
+    uint8_t* raw_save_ptr;
+
+    uint8_t* checksum1_ptr;
+    uint8_t* checksum2_ptr;
+};
 
 enum pksav_gen2_field
 {
@@ -71,155 +80,186 @@ static const uint16_t pksav_gen2_offsets[21][2] =
     {0x7E6D,0x1F0D}  // Checksum 2
 };
 
-struct pksav_gen2_checksums
-{
-    uint16_t first;
-    uint16_t second;
-};
-
-/*static void _pksav_gen2_get_save_checksums(
-    bool crystal,
-    const uint8_t* data,
-    struct pksav_gen2_checksums* checksums_out
+static void _pksav_gen2_get_save_checksums(
+    enum pksav_gen2_save_type save_type,
+    const uint8_t* buffer,
+    uint16_t* checksum1_out,
+    uint16_t* checksum2_out
 )
 {
-    checksums_out->first  = 0;
-    checksums_out->second = 0;
+    assert(buffer != NULL);
+    assert(checksum1_out != NULL);
+    assert(checksum2_out != NULL);
 
-    if(crystal) {
-        // Checksum 1
-        for(uint16_t i = 0x2009; i <= 0x2B82; ++i) {
-            checksums_out->first += data[i];
-        }
+    *checksum1_out = 0;
+    *checksum2_out = 0;
 
-        // Checksum 2
-        for(uint16_t i = 0x1209; i <= 0x1D82; ++i) {
-            checksums_out->second += data[i];
-        }
-    } else {
-        // Checksum 1
-        for(uint16_t i = 0x2009; i <= 0x2D68; ++i) {
-            checksums_out->first += data[i];
-        }
+    switch(save_type)
+    {
+        case PKSAV_GEN2_SAVE_TYPE_GS:
+            for(size_t buffer_index = 0x2009; buffer_index <= 0x2D68; ++buffer_index)
+            {
+                *checksum1_out += buffer[buffer_index];
+            }
 
-        // Checksum 2
-        for(uint16_t i = 0x0C6B; i <= 0x17EC; ++i) {
-            checksums_out->second += data[i];
-        }
-        for(uint16_t i = 0x3D96; i <= 0x3F3F; ++i) {
-            checksums_out->second += data[i];
-        }
-        for(uint16_t i = 0x7E39; i <= 0x7E6C; ++i) {
-            checksums_out->second += data[i];
-        }
+            for(size_t buffer_index = 0x0C6B; buffer_index <= 0x17EC; ++buffer_index)
+            {
+                *checksum2_out += buffer[buffer_index];
+            }
+            for(size_t buffer_index = 0x3D96; buffer_index <= 0x3F3F; ++buffer_index)
+            {
+                *checksum2_out += buffer[buffer_index];
+            }
+            for(size_t buffer_index = 0x7E39; buffer_index <= 0x7E6C; ++buffer_index)
+            {
+                *checksum2_out += buffer[buffer_index];
+            }
+            break;
+
+        case PKSAV_GEN2_SAVE_TYPE_CRYSTAL:
+            for(size_t buffer_index = 0x2009; buffer_index <= 0x2B82; ++buffer_index)
+            {
+                *checksum1_out += buffer[buffer_index];
+            }
+
+            for(size_t buffer_index = 0x1209; buffer_index <= 0x1D82; ++buffer_index)
+            {
+                *checksum2_out += buffer[buffer_index];
+            }
+            break;
+
+        default:
+            assert(false);
     }
 
-    checksums_out->first  = pksav_littleendian16(checksums_out->first);
-    checksums_out->second = pksav_littleendian16(checksums_out->second);
-}*/
+    *checksum1_out = pksav_littleendian16(*checksum1_out);
+    *checksum2_out = pksav_littleendian16(*checksum2_out);
+}
 
-/*static void _pksav_gen2_set_save_checksums(
-    bool crystal,
-    uint8_t* data
-) {
-    uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
-                                       : PKSAV_GS_CHECKSUM1;
-    uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
-                                       : PKSAV_GS_CHECKSUM2;
-
-    struct pksav_gen2_checksums checksums;
-    _pksav_gen2_get_save_checksums(crystal, data, &checksums);
-
-    *((uint16_t*)&data[checksum1_index]) = pksav_littleendian16(checksums.first);
-    *((uint16_t*)&data[checksum2_index]) = pksav_littleendian16(checksums.second);
-}*/
-
-/*enum pksav_error pksav_buffer_is_gen2_save(
+enum pksav_error pksav_gen2_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
-    bool crystal,
-    bool* result_out
-) {
-    if(!buffer || !result_out) {
+    enum pksav_gen2_save_type* save_type_out
+)
+{
+    if(!buffer || !save_type_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    if(buffer_len < PKSAV_GEN2_SAVE_SIZE) {
-        *result_out = false;
-        return PKSAV_ERROR_NONE;
-    }
+    enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint16_t checksum1_index = crystal ? PKSAV_CRYSTAL_CHECKSUM1
-                                       : PKSAV_GS_CHECKSUM1;
-    uint16_t checksum2_index = crystal ? PKSAV_CRYSTAL_CHECKSUM2
-                                       : PKSAV_GS_CHECKSUM2;
+    *save_type_out = PKSAV_GEN2_SAVE_TYPE_NONE;
+    if(buffer_len >= PKSAV_GEN2_SAVE_SIZE)
+    {
+        bool is_type_found = false;
+        for(enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_GS;
+            (save_type <= PKSAV_GEN2_SAVE_TYPE_CRYSTAL) && !is_type_found;
+            ++save_type)
+        {
+            uint16_t buffer_checksum1 = 0;
+            uint16_t buffer_checksum2 = 0;
+            _pksav_gen2_get_save_checksums(
+                save_type,
+                buffer,
+                &buffer_checksum1,
+                &buffer_checksum2
+            );
 
-    struct pksav_gen2_checksums checksums;
-    _pksav_gen2_get_save_checksums(crystal, buffer, &checksums);
+            size_t checksum1_index = 0;
+            size_t checksum2_index = 0;
+            switch(save_type)
+            {
+                case PKSAV_GEN2_SAVE_TYPE_GS:
+                    checksum1_index = PKSAV_GS_CHECKSUM1;
+                    checksum2_index = PKSAV_GS_CHECKSUM2;
+                    break;
 
-    uint16_t actual_checksum1 = pksav_littleendian16(
-                                    *((uint16_t*)&buffer[checksum1_index])
-                                );
-    uint16_t actual_checksum2 = pksav_littleendian16(
-                                    *((uint16_t*)&buffer[checksum2_index])
-                                );
+                case PKSAV_GEN2_SAVE_TYPE_CRYSTAL:
+                    checksum1_index = PKSAV_CRYSTAL_CHECKSUM1;
+                    checksum2_index = PKSAV_CRYSTAL_CHECKSUM2;
+                    break;
 
-     *
-     * From what I've seen, valid Crystal saves don't always have both
-     * checksums set correctly.
-     *
-    *result_out = crystal ? (checksums.first == actual_checksum1 ||
-                             checksums.second == actual_checksum2)
-                          : (checksums.first == actual_checksum1 &&
-                             checksums.second == actual_checksum2);
-    return PKSAV_ERROR_NONE;
-}*/
+                default:
+                    assert(false);
+            }
 
-/*enum pksav_error pksav_file_is_gen2_save(
-    const char* filepath,
-    bool crystal,
-    bool* result_out
-) {
-    if(!filepath || !result_out) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
+            const uint16_t* checksum1_ptr = (const uint16_t*)&buffer[checksum1_index];
+            const uint16_t* checksum2_ptr = (const uint16_t*)&buffer[checksum2_index];
 
-    FILE* gen2_save = fopen(filepath, "rb");
-    if(!gen2_save) {
-        return false;
-    }
+            uint16_t checksum1 = pksav_littleendian16(*checksum1_ptr);
+            uint16_t checksum2 = pksav_littleendian16(*checksum2_ptr);
 
-    fseek(gen2_save, 0, SEEK_END);
+            switch(save_type)
+            {
+                case PKSAV_GEN2_SAVE_TYPE_GS:
+                    is_type_found = (checksum1 == buffer_checksum1) &&
+                                    (checksum2 == buffer_checksum2);
+                    break;
 
-    if(ftell(gen2_save) < PKSAV_GEN2_SAVE_SIZE) {
-        fclose(gen2_save);
-        return false;
-    }
+                /*
+                 * From what I've seen, valid Crystal saves don't always have both
+                 * checksums set correctly.
+                 */
+                case PKSAV_GEN2_SAVE_TYPE_CRYSTAL:
+                    is_type_found = (checksum1 == buffer_checksum1) ||
+                                    (checksum2 == buffer_checksum2);
+                    break;
 
-    uint8_t* gen2_save_data = calloc(PKSAV_GEN2_SAVE_SIZE, 1);
-    fseek(gen2_save, 0, SEEK_SET);
-    size_t num_read = fread((void*)gen2_save_data, 1, PKSAV_GEN2_SAVE_SIZE, gen2_save);
-    fclose(gen2_save);
+                default:
+                    assert(false);
+            }
 
-    bool ret = false;
-    enum pksav_error error_code = PKSAV_ERROR_NONE;
-    if(num_read == PKSAV_GEN2_SAVE_SIZE) {
-        error_code = pksav_buffer_is_gen2_save(
-                         gen2_save_data,
-                         PKSAV_GEN2_SAVE_SIZE,
-                         crystal,
-                         &ret
-                     );
-        if(error_code) {
-            free(gen2_save_data);
-            return error_code;
+            if(is_type_found)
+            {
+                *save_type_out = save_type;
+            }
         }
     }
 
-    *result_out = ret;
-    free(gen2_save_data);
-    return PKSAV_ERROR_NONE;
-}*/
+    return error;
+}
+
+enum pksav_error pksav_gen2_get_file_save_type(
+    const char* filepath,
+    enum pksav_gen2_save_type* save_type_out
+)
+{
+    if(!filepath || !save_type_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    uint8_t* file_buffer = NULL;
+    size_t buffer_len = 0;
+    error = pksav_fs_read_file_to_buffer(
+                filepath,
+                &file_buffer,
+                &buffer_len
+            );
+    if(!error)
+    {
+        assert(file_buffer != NULL);
+
+        enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
+        error = pksav_gen2_get_buffer_save_type(
+                    file_buffer,
+                    buffer_len,
+                    &save_type
+                );
+        free(file_buffer);
+
+        // Only return a result upon success.
+        if(!error)
+        {
+            *save_type_out = save_type;
+        }
+    }
+
+    return error;
+}
 
 /*enum pksav_error pksav_gen2_save_load(
     const char* filepath,

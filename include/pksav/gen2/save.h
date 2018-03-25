@@ -67,7 +67,7 @@ struct pksav_gen2_pokemon_storage
      * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
      * deposited and withdrawn from.
      *
-     * The ::PKSAV_GEN2_current_box_NUM_MASK should be used to access or set
+     * The ::PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
      * this value.
      */
     uint8_t* current_box_num_ptr;
@@ -153,17 +153,54 @@ struct pksav_gen2_misc_fields
     uint8_t* rival_name_ptr;
 };
 
-struct pksav_gen2_save_internal
+/*!
+ * @brief The primary PKSav struct for interacting with Generation II save files.
+ *
+ * After passing the struct into ::pksav_gen2_save_load, it will hold the binary
+ * data for the save file and provide pointers to all relevant offsets within the
+ * file. Accessing these pointers before calling ::pksav_gen2_save_load will result
+ * in undefined behavior.
+ *
+ * To save the save file's data to another location, pass the struct into
+ * ::pksav_gen2_save_save, along with a filepath.
+ *
+ * Once you are finished using the struct, pass it into ::pksav_gen2_save_free to
+ * free the memory allocated by ::pksav_gen2_save_load.
+ */
+struct pksav_gen2_save
 {
-    uint8_t* raw_save_ptr;
+    enum pksav_gen2_save_type save_type;
 
-    uint8_t* checksum1_ptr;
-    uint8_t* checksum2_ptr;
+    //! A pointer to the amount of time this save file has been played.
+    struct pksav_gen2_time* time_played_ptr;
+
+    struct pksav_gen2_item_storage item_storage;
+
+    struct pksav_gen2_pokemon_storage pokemon_storage;
+
+    struct pksav_gen2_pokedex_lists pokedex_lists;
+
+    struct pksav_gen2_trainer_info trainer_info;
+
+    struct pksav_gen2_misc_fields misc_fields;
+
+    void* internal_ptr;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+PKSAV_API enum pksav_error pksav_gen2_get_buffer_save_type(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    enum pksav_gen2_save_type* save_type_out
+);
+
+PKSAV_API enum pksav_error pksav_gen2_get_file_save_type(
+    const char* filepath,
+    enum pksav_gen2_save_type* save_type_out
+);
 
 #ifdef __cplusplus
 }
