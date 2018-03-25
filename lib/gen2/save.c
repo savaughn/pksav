@@ -371,6 +371,9 @@ static void _pksav_gen2_set_save_pointers(
                                                    );
     }
 
+    pokemon_storage_ptr->box_names_ptr = (struct pksav_gen2_pokemon_box_names*)(
+                                             &file_buffer[offsets[PKSAV_GEN2_PC_BOX_NAMES]]
+                                         );
     pokemon_storage_ptr->current_box_num_ptr = &file_buffer[
                                                    offsets[PKSAV_GEN2_CURRENT_BOX_NUM]
                                                ];

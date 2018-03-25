@@ -18,6 +18,8 @@
 #define PKSAV_GEN2_BOX_NUM_POKEMON 20
 #define PKSAV_GEN2_PARTY_NUM_POKEMON 6
 
+// TODO: buffer sizes
+
 /*!
  * @brief The mask for a move's PP in the PP field.
  *

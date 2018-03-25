@@ -21,6 +21,8 @@
 #define PKSAV_GEN2_SAVE_SIZE 0x8000
 #define PKSAV_GEN2_NUM_POKEMON_BOXES 14
 
+// TODO: name buffer sizes
+
 enum pksav_gen2_save_type
 {
     PKSAV_GEN2_SAVE_TYPE_NONE,
@@ -120,6 +122,7 @@ struct pksav_gen2_trainer_info
 
     uint8_t* gender_ptr;
 
+    // TODO: enum
     uint8_t* palette_ptr;
 
     /*!
