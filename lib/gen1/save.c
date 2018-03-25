@@ -22,7 +22,7 @@ struct pksav_gen1_save_internal
 // Offsets in a Generation I save
 enum pksav_gen1_save_offset
 {
-    PKSAV_GEN1_TRAINER_NAME           = 0x2598,
+    PKSAV_GEN1_PLAYER_NAME           = 0x2598,
     PKSAV_GEN1_POKEDEX_OWNED          = 0x25A3,
     PKSAV_GEN1_POKEDEX_SEEN           = 0x25B6,
     PKSAV_GEN1_ITEM_BAG               = 0x25C9,
@@ -30,7 +30,7 @@ enum pksav_gen1_save_offset
     PKSAV_GEN1_RIVAL_NAME             = 0x25F6,
     PKSAV_GEN1_OPTIONS                = 0x2601,
     PKSAV_GEN1_BADGES                 = 0x2602,
-    PKSAV_GEN1_TRAINER_ID             = 0x2605,
+    PKSAV_GEN1_PLAYER_ID             = 0x2605,
     PKSAV_GEN1_PIKACHU_FRIENDSHIP     = 0x271C,
     PKSAV_GEN1_ITEM_PC                = 0x27E6,
     PKSAV_GEN1_CURRENT_BOX_NUM        = 0x284C,
@@ -202,8 +202,8 @@ static void _pksav_gen1_set_save_pointers(
     // Trainer info
     struct pksav_gen1_trainer_info* trainer_info_ptr = &gen1_save_ptr->trainer_info;
 
-    trainer_info_ptr->id_ptr     = (uint16_t*)&file_buffer[PKSAV_GEN1_TRAINER_ID];
-    trainer_info_ptr->name_ptr   = &file_buffer[PKSAV_GEN1_TRAINER_NAME];
+    trainer_info_ptr->id_ptr     = (uint16_t*)&file_buffer[PKSAV_GEN1_PLAYER_ID];
+    trainer_info_ptr->name_ptr   = &file_buffer[PKSAV_GEN1_PLAYER_NAME];
     trainer_info_ptr->money_ptr  = &file_buffer[PKSAV_GEN1_MONEY];
     trainer_info_ptr->badges_ptr = &file_buffer[PKSAV_GEN1_BADGES];
 

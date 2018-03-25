@@ -28,6 +28,14 @@ enum pksav_gen2_save_type
     PKSAV_GEN2_SAVE_TYPE_CRYSTAL
 };
 
+struct pksav_gen2_save_time
+{
+    //! A pointer to the amount of time this save file has been played.
+    struct pksav_gen2_time* time_played_ptr;
+
+    uint8_t* daylight_savings_ptr;
+};
+
 struct pksav_gen2_pokedex_lists
 {
     /*!
@@ -49,7 +57,7 @@ struct pksav_gen2_pokedex_lists
 
 struct pksav_gen2_pokemon_storage
 {
-    struct pksav_gen2_pokemon_party* pokemon_party_ptr;
+    struct pksav_gen2_pokemon_party* party_ptr;
 
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
@@ -57,7 +65,7 @@ struct pksav_gen2_pokemon_storage
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    struct pksav_gen2_pokemon_box* pokemon_box_ptrs[PKSAV_GEN2_NUM_POKEMON_BOXES];
+    struct pksav_gen2_pokemon_box* box_ptrs[PKSAV_GEN2_NUM_POKEMON_BOXES];
 
     struct pksav_gen2_pokemon_box_names* box_names_ptr;
 
@@ -171,8 +179,7 @@ struct pksav_gen2_save
 {
     enum pksav_gen2_save_type save_type;
 
-    //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen2_time* time_played_ptr;
+    struct pksav_gen2_save_time save_time;
 
     struct pksav_gen2_item_storage item_storage;
 
@@ -200,6 +207,25 @@ PKSAV_API enum pksav_error pksav_gen2_get_buffer_save_type(
 PKSAV_API enum pksav_error pksav_gen2_get_file_save_type(
     const char* filepath,
     enum pksav_gen2_save_type* save_type_out
+);
+
+PKSAV_API enum pksav_error pksav_gen2_load_save(
+    const char* filepath,
+    struct pksav_gen2_save* gen2_save_out
+);
+
+PKSAV_API enum pksav_error pksav_gen2_save_save(
+    const char* filepath,
+    struct pksav_gen2_save* gen2_save_ptr
+);
+
+PKSAV_API enum pksav_error pksav_gen2_free_save(
+    struct pksav_gen2_save* gen2_save_ptr
+);
+
+PKSAV_API enum pksav_error pksav_gen2_pokemon_storage_set_current_box(
+    struct pksav_gen2_pokemon_storage* gen2_pokemon_storage_ptr,
+    uint8_t new_current_box_num
 );
 
 #ifdef __cplusplus
