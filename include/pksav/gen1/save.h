@@ -37,7 +37,7 @@ enum pksav_gen1_save_type
  *
  * This is used with the pksav_gen1_save_t.current_box_num field.
  */
-#define PKSAV_GEN1_current_box_NUM_MASK ((uint8_t)0x0F)
+#define PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK ((uint8_t)0x0F)
 
 struct pksav_gen1_pokedex_lists
 {
@@ -76,7 +76,7 @@ struct pksav_gen1_pokemon_storage
      * There are 12 Pokémon boxes, and this value (0-based) shows which one will be
      * deposited and withdrawn from.
      *
-     * The ::PKSAV_GEN1_current_box_NUM_MASK should be used to access or set
+     * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
      * this value.
      */
     uint8_t* current_box_num_ptr;
@@ -165,12 +165,6 @@ struct pksav_gen1_misc_fields
     uint8_t* pikachu_friendship_ptr;
 };
 
-struct pksav_gen1_save_internal
-{
-    uint8_t* raw_save_ptr;
-    uint8_t* checksum_ptr;
-};
-
 /*!
  * @brief The primary PKSav struct for interacting with Generation I save files.
  *
@@ -205,7 +199,7 @@ struct pksav_gen1_save
 
     struct pksav_gen1_misc_fields misc_fields;
 
-    struct pksav_gen1_save_internal _internal;
+    void* internal_ptr;
 };
 
 #ifdef __cplusplus
