@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,8 @@
 #include <pksav/common/trainer_id.h>
 
 #include <stdint.h>
+
+// TODO: wallpaper enum
 
 /*!
  * @brief The mask for determining if a Pokémon is an egg.
@@ -228,7 +230,8 @@
  * @brief Internal representation of Pokémon statistics that increase
  *        with growth in a Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_growth_block
+{
     /*!
      * @brief The Pokémon's species index.
      *
@@ -270,13 +273,14 @@ typedef struct {
     uint8_t friendship;
     //! Unknown.
     uint16_t unknown_0xA;
-} pksav_gba_pokemon_growth_t;
+};
 
 /*!
  * @brief Internal representation of a Pokémon's moves and current PP in a
  *        Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_attacks_block
+{
     /*!
      * @brief Indices of the Pokémon's moves.
      *
@@ -292,13 +296,14 @@ typedef struct {
      * The maximum value for each slot is dependent on the move.
      */
     uint8_t move_pps[4];
-} pksav_gba_pokemon_attacks_t;
+};
 
 /*!
  * @brief Internal representation of a Pokémon's EVs and contest stats
  *        in a Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_effort_block
+{
     //! A Pokémon's HP EV.
     uint8_t ev_hp;
     //! A Pokémon's Attack EV.
@@ -313,13 +318,14 @@ typedef struct {
     uint8_t ev_spdef;
     //! A Pokémon's contest stats.
     pksav_contest_stats_t contest_stats;
-} pksav_gba_pokemon_effort_t;
+};
 
 /*!
  * @brief Internal representation of Pokémon information that doesn't fit in
  *        other structs.
  */
-typedef struct {
+struct pksav_gba_pokemon_misc_block
+{
     /*!
      * @brief The Pokémon's Pokérus strain and duration.
      *
@@ -379,7 +385,7 @@ typedef struct {
      *  * 31: needs to be set to 1 for a Mew or Deoxys to be obedient
      */
     uint32_t ribbons_obedience;
-} pksav_gba_pokemon_misc_t;
+};
 
 /*!
  * @brief The grouping of all Game Boy Advance Pokémon blocks.
@@ -387,7 +393,8 @@ typedef struct {
  * This union allows the data to be parsed in multiple ways, which is useful for
  * unshuffling and decryption.
  */
-typedef union {
+union pksav_gba_pokemon_blocks
+{
     //! Parse the blocks byte-by-byte.
     uint8_t blocks8[48];
     //! Parse the blocks in two-byte chunks.
@@ -404,21 +411,22 @@ typedef union {
      */
     struct {
         //! Growth-related information.
-        pksav_gba_pokemon_growth_t growth;
+        struct pksav_gba_pokemon_growth_block growth;
         //! Attacks and PP.
-        pksav_gba_pokemon_attacks_t attacks;
+        struct pksav_gba_pokemon_attacks_block attacks;
         //! EVs.
-        pksav_gba_pokemon_effort_t effort;
+        struct pksav_gba_pokemon_effort_block effort;
         //! Misc information.
-        pksav_gba_pokemon_misc_t misc;
+        struct pksav_gba_pokemon_misc_block misc;
     };
-} pksav_gba_pokemon_blocks_t;
+};
 
 /*!
  * @brief The internal representation of Pokémon information that's shown in both
  *        the party and PC.
  */
-typedef struct {
+struct pksav_gba_pc_pokemon
+{
     /*!
      * @brief The Pokémon's personality value, used to determine other values.
      *
@@ -470,10 +478,11 @@ typedef struct {
     //! Unknown.
     uint16_t unknown_0x1E;
     //! Pokémon blocks.
-    pksav_gba_pokemon_blocks_t blocks;
-} pksav_gba_pc_pokemon_t;
+    union pksav_gba_pokemon_blocks blocks;
+};
 
-typedef struct {
+struct pksav_gba_pokemon_party_data
+{
     uint32_t condition;
     uint8_t level;
     uint8_t pokerus_time;
@@ -484,28 +493,32 @@ typedef struct {
     uint16_t spd;
     uint16_t spatk;
     uint16_t spdef;
-} pksav_gba_pokemon_party_data_t;
+};
 
-typedef struct {
-    pksav_gba_pc_pokemon_t pc;
-    pksav_gba_pokemon_party_data_t party_data;
-} pksav_gba_party_pokemon_t;
+struct pksav_gba_party_pokemon
+{
+    struct pksav_gba_pc_pokemon pc;
+    struct pksav_gba_pokemon_party_data party_data;
+};
 
-typedef struct {
+struct pksav_gba_pokemon_party
+{
     uint32_t count;
-    pksav_gba_party_pokemon_t party[6];
-} pksav_gba_pokemon_party_t;
+    struct pksav_gba_party_pokemon party[6];
+};
 
-typedef struct {
-    pksav_gba_pc_pokemon_t entries[30];
-} pksav_gba_pokemon_box_t;
+struct pksav_gba_pokemon_box
+{
+    struct pksav_gba_pc_pokemon entries[30];
+};
 
-typedef struct {
+struct pksav_gba_pokemon_pc
+{
     uint32_t current_box;
-    pksav_gba_pokemon_box_t boxes[14];
+    struct pksav_gba_pokemon_box boxes[14];
     uint8_t box_names[14][9];
     uint8_t wallpapers[14];
-} pksav_gba_pokemon_pc_t;
+};
 
 #pragma pack(pop)
 

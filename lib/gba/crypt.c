@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,8 @@
 
 #include <string.h>
 
-static const uint8_t gba_block_orders[24][4] = {
+static const uint8_t gba_block_orders[24][4] =
+{
     /* A  E  G  M */
     /* GAEM */ {1, 2, 0, 3},
     /* GAME */ {1, 3, 0, 2},
@@ -38,7 +39,7 @@ static const uint8_t gba_block_orders[24][4] = {
 };
 
 void pksav_gba_crypt_pokemon(
-    pksav_gba_pc_pokemon_t* gba_pokemon,
+    struct pksav_gba_pc_pokemon* gba_pokemon,
     bool encrypt
 ) {
     uint32_t security_key = gba_pokemon->ot_id.id ^ gba_pokemon->personality;
@@ -52,44 +53,43 @@ void pksav_gba_crypt_pokemon(
     int growth_index  = gba_block_orders[index][2];
     int misc_index    = gba_block_orders[index][3];
 
-    pksav_gba_pokemon_blocks_t blocks;
+    union pksav_gba_pokemon_blocks blocks;
     if(encrypt) {
-        memcpy(&blocks.blocks[growth_index],  &gba_pokemon->blocks.growth,  sizeof(pksav_gba_pokemon_growth_t));
-        memcpy(&blocks.blocks[attacks_index], &gba_pokemon->blocks.attacks, sizeof(pksav_gba_pokemon_attacks_t));
-        memcpy(&blocks.blocks[effort_index],  &gba_pokemon->blocks.effort,  sizeof(pksav_gba_pokemon_effort_t));
-        memcpy(&blocks.blocks[misc_index],    &gba_pokemon->blocks.misc,    sizeof(pksav_gba_pokemon_misc_t));
+        memcpy(&blocks.blocks[growth_index],  &gba_pokemon->blocks.growth,  sizeof(struct pksav_gba_pokemon_growth_block));
+        memcpy(&blocks.blocks[attacks_index], &gba_pokemon->blocks.attacks, sizeof(struct pksav_gba_pokemon_attacks_block));
+        memcpy(&blocks.blocks[effort_index],  &gba_pokemon->blocks.effort,  sizeof(struct pksav_gba_pokemon_effort_block));
+        memcpy(&blocks.blocks[misc_index],    &gba_pokemon->blocks.misc,    sizeof(struct pksav_gba_pokemon_misc_block));
     } else {
-        memcpy(&blocks.growth,  &gba_pokemon->blocks.blocks[growth_index],  sizeof(pksav_gba_pokemon_growth_t));
-        memcpy(&blocks.attacks, &gba_pokemon->blocks.blocks[attacks_index], sizeof(pksav_gba_pokemon_attacks_t));
-        memcpy(&blocks.effort,  &gba_pokemon->blocks.blocks[effort_index],  sizeof(pksav_gba_pokemon_effort_t));
-        memcpy(&blocks.misc,    &gba_pokemon->blocks.blocks[misc_index],    sizeof(pksav_gba_pokemon_misc_t));
+        memcpy(&blocks.growth,  &gba_pokemon->blocks.blocks[growth_index],  sizeof(struct pksav_gba_pokemon_growth_block));
+        memcpy(&blocks.attacks, &gba_pokemon->blocks.blocks[attacks_index], sizeof(struct pksav_gba_pokemon_attacks_block));
+        memcpy(&blocks.effort,  &gba_pokemon->blocks.blocks[effort_index],  sizeof(struct pksav_gba_pokemon_effort_block));
+        memcpy(&blocks.misc,    &gba_pokemon->blocks.blocks[misc_index],    sizeof(struct pksav_gba_pokemon_misc_block));
     }
 
     gba_pokemon->blocks = blocks;
 }
 
 void pksav_gba_save_crypt_items(
-    pksav_gba_item_storage_t* item_storage,
+    union pksav_gba_item_bag* item_storage,
     uint32_t security_key,
     pksav_gba_game_t gba_game
 ) {
-    pksav_item_t* items = (pksav_item_t*)item_storage;
+    struct pksav_item* items = (struct pksav_item*)item_storage;
     uint8_t num_items = 0;
     switch(gba_game) {
         case PKSAV_GBA_RS:
-            num_items = sizeof(pksav_rs_item_storage_t) / sizeof(pksav_item_t);
+            num_items = sizeof(struct pksav_gba_rs_item_bag) / sizeof(struct pksav_item);
             break;
 
         case PKSAV_GBA_EMERALD:
-            num_items = sizeof(pksav_emerald_item_storage_t) / sizeof(pksav_item_t);
+            num_items = sizeof(struct pksav_gba_emerald_item_bag) / sizeof(struct pksav_item);
             break;
 
         default:
-            num_items = sizeof(pksav_frlg_item_storage_t) / sizeof(pksav_item_t);
+            num_items = sizeof(struct pksav_gba_frlg_item_bag) / sizeof(struct pksav_item);
             break;
     }
-    // Skip Item PC, which has 50 items in all games
-    for(uint8_t i = 50; i < num_items; ++i) {
+    for(uint8_t i = 0; i < num_items; ++i) {
         items[i].count ^= (uint16_t)(security_key & 0xFFFF);
     }
 }

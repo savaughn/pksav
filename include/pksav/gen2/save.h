@@ -97,6 +97,7 @@ struct pksav_gen2_pokemon_storage
     struct pksav_gen2_pokemon_box* current_box_ptr;
 };
 
+// TODO: these are contiguous, just make a single struct
 struct pksav_gen2_item_storage
 {
     //! A pointer to the trainer's item bag.

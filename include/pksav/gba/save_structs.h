@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -23,7 +23,8 @@
  * user, as the functions defined in <pksav/gba/save.h> take care
  * of all internal storage details.
  */
-typedef struct {
+struct pksav_gba_section_footer
+{
     /*!
      * @brief Which save section this section corresponds to.
      *
@@ -49,14 +50,15 @@ typedef struct {
      * slot. PKSav emulates this behavior.
      */
     uint32_t save_index;
-} pksav_gba_section_footer_t;
+};
 
 /*!
  * @brief Representation of a Game Boy Advance save section.
  *
  * Each section is 3968 bytes, and each save slot is made of 14 of these sections.
  */
-typedef struct {
+struct pksav_gba_save_section
+{
     //! A convenience union allowing the data to be accessed 1 byte or 4 bytes at a time.
     union {
         //! Access the data one byte at a time.
@@ -73,11 +75,12 @@ typedef struct {
      */
     uint8_t padding[116];
     //! The section's footer.
-    pksav_gba_section_footer_t footer;
-} pksav_gba_save_section_t;
+    struct pksav_gba_section_footer footer;
+};
 
 //! The representation of time in a Game Boy Advance game.
-typedef struct {
+struct pksav_gba_time
+{
     //! Hours (0-99).
     uint16_t hours;
     //! Minutes (0-59).
@@ -86,12 +89,13 @@ typedef struct {
     uint8_t seconds;
     //! Frames per second (0-59).
     uint8_t frames;
-} pksav_gba_time_t;
+};
 
 /*!
  * @brief The representation of trainer info in Game Boy Advance games.
  */
-typedef struct {
+struct pksav_gba_trainer_info
+{
     /*!
      * @brief The player's name.
      *
@@ -110,8 +114,8 @@ typedef struct {
     //! Trainer ID.
     pksav_trainer_id_t trainer_id;
     //! How long this save in the given slot has been played.
-    pksav_gba_time_t time_played;
-} pksav_gba_trainer_info_t;
+    struct pksav_gba_time time_played;
+};
 
 /*!
  * @brief The internal storage of a save slot in a Game Boy Advance save file.
@@ -123,47 +127,48 @@ typedef struct {
  *
  * PKSav stores this as a union, allowing the data to be accessed in various ways.
  */
-typedef union {
+union pksav_gba_save_slot
+{
     //! Access individual bytes in the save slot.
-    uint8_t data[sizeof(pksav_gba_save_section_t)*14];
+    uint8_t data[sizeof(struct pksav_gba_save_section)*14];
     //! Access sections as an array.
-    pksav_gba_save_section_t sections_arr[14];
+    struct pksav_gba_save_section sections_arr[14];
     struct {
         //! Section 0 (trainer info).
         union {
             //! Access the data as a normal section.
-            pksav_gba_save_section_t section0;
+            struct pksav_gba_save_section section0;
             //! Access the data as a trainer info struct.
-            pksav_gba_trainer_info_t trainer_info;
+            struct pksav_gba_trainer_info trainer_info;
         };
         //! Section 1 (team/items).
-        pksav_gba_save_section_t section1;
+        struct pksav_gba_save_section section1;
         //! Section 2.
-        pksav_gba_save_section_t section2;
+        struct pksav_gba_save_section section2;
         //! Section 3.
-        pksav_gba_save_section_t section3;
+        struct pksav_gba_save_section section3;
         //! Section 4 (rival info).
-        pksav_gba_save_section_t section4;
+        struct pksav_gba_save_section section4;
         //! Section 5.
-        pksav_gba_save_section_t section5;
+        struct pksav_gba_save_section section5;
         //! Section 6.
-        pksav_gba_save_section_t section6;
+        struct pksav_gba_save_section section6;
         //! Section 7.
-        pksav_gba_save_section_t section7;
+        struct pksav_gba_save_section section7;
         //! Section 8.
-        pksav_gba_save_section_t section8;
+        struct pksav_gba_save_section section8;
         //! Section 9.
-        pksav_gba_save_section_t section9;
+        struct pksav_gba_save_section section9;
         //! Section 10.
-        pksav_gba_save_section_t section10;
+        struct pksav_gba_save_section section10;
         //! Section 11.
-        pksav_gba_save_section_t section11;
+        struct pksav_gba_save_section section11;
         //! Section 12.
-        pksav_gba_save_section_t section12;
+        struct pksav_gba_save_section section12;
         //! Section 13.
-        pksav_gba_save_section_t section13;
+        struct pksav_gba_save_section section13;
     };
-} pksav_gba_save_slot_t;
+};
 
 #pragma pack(pop)
 

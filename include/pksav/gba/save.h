@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -107,7 +107,7 @@ static const uint16_t pksav_gba_section_sizes[14] = {
  */
 typedef struct {
     //! Information on the player character.
-    pksav_gba_trainer_info_t* trainer_info;
+    struct pksav_gba_trainer_info* trainer_info;
 
     /*!
      * @brief The rival's name in FireRed/LeafGreen.
@@ -122,13 +122,13 @@ typedef struct {
     uint8_t* rival_name;
 
     //! The trainer's Pokémon party.
-    pksav_gba_pokemon_party_t* pokemon_party;
+    struct pksav_gba_pokemon_party* pokemon_party;
 
     //! The trainer's Pokémon PC.
-    pksav_gba_pokemon_pc_t* pokemon_pc;
+    struct pksav_gba_pokemon_pc* pokemon_pc;
 
     //! The trainer's item bag and PC.
-    pksav_gba_item_storage_t* item_storage;
+    union pksav_gba_item_bag* item_storage;
 
     //! The trainer's money (valid values 0-999999).
     uint32_t* money;
@@ -238,7 +238,7 @@ typedef struct {
     uint8_t shuffled_section_nums[14];
     bool small_save;
     bool from_first_slot;
-    pksav_gba_save_slot_t* unshuffled;
+    union pksav_gba_save_slot* unshuffled;
     uint8_t* raw;
 #endif
 } pksav_gba_save_t;

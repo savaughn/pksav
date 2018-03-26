@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,8 +15,8 @@
 #include <pksav/gba/save.h>
 
 static PKSAV_INLINE void pksav_gba_save_unshuffle_sections(
-    const pksav_gba_save_slot_t* save_slot_in,
-    pksav_gba_save_slot_t* save_slot_out,
+    const union pksav_gba_save_slot* save_slot_in,
+    union pksav_gba_save_slot* save_slot_out,
     uint8_t section_nums[14]
 ) {
     for(uint8_t i = 0; i < 14; ++i) {
@@ -29,8 +29,8 @@ static PKSAV_INLINE void pksav_gba_save_unshuffle_sections(
 }
 
 static PKSAV_INLINE void pksav_gba_save_shuffle_sections(
-    const pksav_gba_save_slot_t* save_slot_in,
-    pksav_gba_save_slot_t* save_slot_out,
+    const union pksav_gba_save_slot* save_slot_in,
+    union pksav_gba_save_slot* save_slot_out,
     const uint8_t section_nums[14]
 ) {
     for(uint8_t i = 0; i < 14; ++i) {
@@ -39,13 +39,13 @@ static PKSAV_INLINE void pksav_gba_save_shuffle_sections(
 }
 
 void pksav_gba_save_load_pokemon_pc(
-    const pksav_gba_save_slot_t* gba_save_slot,
-    pksav_gba_pokemon_pc_t* pokemon_pc_out
+    const union pksav_gba_save_slot* gba_save_slot,
+    struct pksav_gba_pokemon_pc* pokemon_pc_out
 );
 
 void pksav_gba_save_save_pokemon_pc(
-    pksav_gba_pokemon_pc_t* pokemon_pc,
-    pksav_gba_save_slot_t* gba_save_slot_out
+    struct pksav_gba_pokemon_pc* pokemon_pc,
+    union pksav_gba_save_slot* gba_save_slot_out
 );
 
 #endif /* PKSAV_GBA_SHUFFLE_H */

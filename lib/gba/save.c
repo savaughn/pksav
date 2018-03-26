@@ -77,7 +77,7 @@ typedef enum {
     PKSAV_GBA_GAME_CODE,
     PKSAV_GBA_SECURITY_KEY1,
     PKSAV_GBA_SECURITY_KEY2
-} pksav_gba_section0_field_t;
+} pksav_gba_section0_field;
 
 static const uint16_t pksav_gba_section0_offsets[][4] = {
     {0x0019,0x0019,0x001B}, // National Pokédex A
@@ -94,7 +94,7 @@ typedef enum {
     PKSAV_GBA_CASINO_COINS,
     PKSAV_GBA_ITEM_STORAGE,
     PKSAV_GBA_POKEDEX_SEEN_B
-} pksav_gba_section1_field_t;
+} pksav_gba_section1_field;
 
 static const uint16_t pksav_gba_section1_offsets[][4] = {
     {0x0234,0x0234,0x0034}, // Pokémon Party
@@ -107,7 +107,7 @@ static const uint16_t pksav_gba_section1_offsets[][4] = {
 typedef enum {
     PKSAV_GBA_NAT_POKEDEX_B = 0,
     PKSAV_GBA_NAT_POKEDEX_C
-} pksav_gba_section2_field_t;
+} pksav_gba_section2_field;
 
 static const uint16_t pksav_gba_section2_offsets[][4] = {
     {0x03A6,0x0402,0x0068}, // National Pokédex B
@@ -117,7 +117,7 @@ static const uint16_t pksav_gba_section2_offsets[][4] = {
 typedef enum {
     PKSAV_GBA_POKEDEX_SEEN_C = 0,
     PKSAV_GBA_FRLG_RIVAL_NAME
-} pksav_gba_section4_field_t;
+} pksav_gba_section4_field;
 
 static const uint16_t pksav_gba_section4_offsets[][4] = {
     {0x0C0C,0x0CA4,0x0B98}, // Pokédex Seen C
@@ -145,8 +145,8 @@ pksav_error_t pksav_buffer_is_gba_save(
      * Once the proper save slot has been found, it needs to be unshuffled. Sadly, that
      * means more memory allocation.
      */
-    const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)buffer;
-    const pksav_gba_save_slot_t* save_slot;
+    const union pksav_gba_save_slot* sections_pair = (const union pksav_gba_save_slot*)buffer;
+    const union pksav_gba_save_slot* save_slot;
     if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
         save_slot = sections_pair;
     } else if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
@@ -165,7 +165,7 @@ pksav_error_t pksav_buffer_is_gba_save(
         }
     }
 
-    pksav_gba_save_slot_t unshuffled;
+    union pksav_gba_save_slot unshuffled;
     uint8_t section_nums[14];
     pksav_gba_save_unshuffle_sections(
         save_slot,
@@ -236,8 +236,8 @@ static void _pksav_gba_save_set_pointers(
     pksav_gba_save_t* gba_save
 ) {
     // Find the most recent save slot
-    const pksav_gba_save_slot_t* sections_pair = (const pksav_gba_save_slot_t*)gba_save->raw;
-    const pksav_gba_save_slot_t* most_recent;
+    const union pksav_gba_save_slot* sections_pair = (const union pksav_gba_save_slot*)gba_save->raw;
+    const union pksav_gba_save_slot* most_recent;
 
     if(gba_save->small_save) {
         most_recent = sections_pair;
@@ -268,7 +268,7 @@ static void _pksav_gba_save_set_pointers(
     } else {
         gba_save->rival_name = NULL;
     }
-    gba_save->pokemon_party = (pksav_gba_pokemon_party_t*)&SECTION1_DATA8(
+    gba_save->pokemon_party = (struct pksav_gba_pokemon_party*)&SECTION1_DATA8(
                                                               gba_save->unshuffled,
                                                               gba_save->gba_game,
                                                               PKSAV_GBA_POKEMON_PARTY
@@ -285,7 +285,7 @@ static void _pksav_gba_save_set_pointers(
         gba_save->pokemon_pc
     );
 
-    gba_save->item_storage = (pksav_gba_item_storage_t*)&SECTION1_DATA8(
+    gba_save->item_storage = (union pksav_gba_item_bag*)&SECTION1_DATA8(
                                                             gba_save->unshuffled,
                                                             gba_save->gba_game,
                                                             PKSAV_GBA_ITEM_STORAGE
@@ -417,8 +417,8 @@ pksav_error_t pksav_gba_save_load(
     }
 
     // Allocate memory as needed and set pointers
-    gba_save->unshuffled = calloc(sizeof(pksav_gba_save_slot_t), 1);
-    gba_save->pokemon_pc = calloc(sizeof(pksav_gba_pokemon_pc_t), 1);
+    gba_save->unshuffled = calloc(sizeof(union pksav_gba_save_slot), 1);
+    gba_save->pokemon_pc = calloc(sizeof(struct pksav_gba_pokemon_pc), 1);
     _pksav_gba_save_set_pointers(
         gba_save
     );
@@ -467,13 +467,13 @@ pksav_error_t pksav_gba_save_save(
         gba_save->unshuffled->sections_arr[i].footer.save_index = save_index;
     }
 
-    pksav_gba_save_slot_t* save_into = NULL;
+    union pksav_gba_save_slot* save_into = NULL;
     if(!gba_save->small_save) {
-        pksav_gba_save_slot_t* sections_pair = (pksav_gba_save_slot_t*)gba_save->raw;
+        union pksav_gba_save_slot* sections_pair = (union pksav_gba_save_slot*)gba_save->raw;
         save_into = gba_save->from_first_slot ? &sections_pair[1] : &sections_pair[0];
         gba_save->from_first_slot = !gba_save->from_first_slot;
     } else {
-        save_into = (pksav_gba_save_slot_t*)gba_save->raw;
+        save_into = (union pksav_gba_save_slot*)gba_save->raw;
     }
 
     pksav_set_gba_section_checksums(

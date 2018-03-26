@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,8 +12,8 @@
 #include <string.h>
 
 void pksav_gba_save_load_pokemon_pc(
-    const pksav_gba_save_slot_t* gba_save_slot,
-    pksav_gba_pokemon_pc_t* pokemon_pc_out
+    const union pksav_gba_save_slot* gba_save_slot,
+    struct pksav_gba_pokemon_pc* pokemon_pc_out
 ) {
     // Copy data from sections into contiguous data structure
     uint8_t* dst_ptr = (uint8_t*)pokemon_pc_out;
@@ -34,8 +34,8 @@ void pksav_gba_save_load_pokemon_pc(
 }
 
 void pksav_gba_save_save_pokemon_pc(
-    pksav_gba_pokemon_pc_t* pokemon_pc,
-    pksav_gba_save_slot_t* gba_save_slot_out
+    struct pksav_gba_pokemon_pc* pokemon_pc,
+    union pksav_gba_save_slot* gba_save_slot_out
 ) {
     // Set Pokémon checksum and encrypt
     for(uint8_t i = 0; i < 14; ++i) {

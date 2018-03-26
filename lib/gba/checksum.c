@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,11 +8,11 @@
 #include "checksum.h"
 
 uint16_t pksav_get_gba_pokemon_checksum(
-    const pksav_gba_pc_pokemon_t* gba_pokemon
+    const struct pksav_gba_pc_pokemon* gba_pokemon
 ) {
     uint16_t ret = 0;
 
-    for(uint8_t i = 0; i < (sizeof(pksav_gba_pokemon_blocks_t)/2); i++) {
+    for(uint8_t i = 0; i < (sizeof(union pksav_gba_pokemon_blocks)/2); i++) {
         ret += gba_pokemon->blocks.blocks16[i];
     }
 
@@ -20,7 +20,7 @@ uint16_t pksav_get_gba_pokemon_checksum(
 }
 
 uint16_t pksav_get_gba_section_checksum(
-    const pksav_gba_save_section_t* section,
+    const struct pksav_gba_save_section* section,
     uint8_t section_num
 ) {
     uint32_t checksum = 0;
