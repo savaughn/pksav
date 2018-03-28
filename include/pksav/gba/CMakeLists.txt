@@ -7,8 +7,10 @@
 
 SET(pksav_gba_headers
     items.h
+    pokedex.h
     pokemon.h
     save.h
+    save_type.h
     text.h
     time.h
     trainer_info.h

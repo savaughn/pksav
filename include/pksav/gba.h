@@ -11,8 +11,10 @@
 #include <pksav/error.h>
 
 #include <pksav/gba/items.h>
+#include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
+#include <pksav/gba/save_type.h>
 #include <pksav/gba/text.h>
 #include <pksav/gba/time.h>
 #include <pksav/gba/trainer_info.h>

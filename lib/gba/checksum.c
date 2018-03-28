@@ -37,6 +37,7 @@ uint16_t pksav_gba_get_section_checksum(
 )
 {
     assert(section_ptr != NULL);
+    assert(section_num < PKSAV_GBA_NUM_SAVE_SECTIONS);
 
     uint32_t checksum = 0;
     uint16_t* checksum_ptr = (uint16_t*)&checksum;

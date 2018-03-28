@@ -5,14 +5,15 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-// TODO: all internal includes stem from lib
 #include "gba/crypt.h"
 #include "gba/save_internal.h"
+
+#include <pksav/gba/save_type.h>
 
 #include <assert.h>
 #include <string.h>
 
-static const uint8_t GBA_BLOCK_ORDERS[24][4] =
+static const size_t GBA_BLOCK_ORDERS[24][4] =
 {
     /* A  E  G  M */
     /* GAEM */ {1, 2, 0, 3},
@@ -53,7 +54,10 @@ void pksav_gba_crypt_pokemon(
 
     uint32_t security_key = gba_pokemon_ptr->ot_id.id
                           ^ gba_pokemon_ptr->personality;
-    for(size_t index = 0; index < 12; ++index)
+
+    for(size_t index = 0;
+        index < (PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4);
+        ++index)
     {
         gba_pokemon_internal_blocks_ptr->blocks32[index] ^= security_key;
     }

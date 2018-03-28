@@ -20,12 +20,15 @@
  * This union allows the data to be parsed in multiple ways, which is useful for
  * unshuffling and decryption.
  */
+
+#define PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES 48
+
 union pksav_gba_pokemon_blocks_internal
 {
-    uint8_t blocks[4][12];
-    uint8_t blocks8[48];
-    uint16_t blocks16[24];
-    uint32_t blocks32[12];
+    uint8_t blocks8[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES];
+    uint16_t blocks16[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/2];
+    uint32_t blocks32[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4];
+    uint8_t blocks[4][PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4];
     struct pksav_gba_pokemon_blocks by_name;
 };
 
@@ -73,17 +76,20 @@ struct pksav_gba_section_footer
  *
  * Each section is 3968 bytes, and each save slot is made of 14 of these sections.
  */
+
+#define PKSAV_GBA_SAVE_SECTION_SIZE_BYTES 3968
+
 struct pksav_gba_save_section
 {
     // A convenience union allowing the data to be accessed 1 byte or 4 bytes at a time.
     union
     {
         // Access the data one byte at a time.
-        uint8_t data8[3968];
+        uint8_t data8[PKSAV_GBA_SAVE_SECTION_SIZE_BYTES];
         // Access the data in 2-byte chunks.
-        uint16_t data16[1984];
+        uint16_t data16[PKSAV_GBA_SAVE_SECTION_SIZE_BYTES/2];
         // Access the data in 4-byte chunks.
-        uint32_t data32[992];
+        uint32_t data32[PKSAV_GBA_SAVE_SECTION_SIZE_BYTES/4];
     };
     /*
      * Padding to make the size of the struct a power of 2.

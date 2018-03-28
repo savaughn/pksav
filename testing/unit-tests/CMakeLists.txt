@@ -77,6 +77,8 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
     ENDIF(NOT CMAKE_CROSSCOMPILING)
 ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
+# TODO: make C++ copy of null_pointer_test to test linkage
+
 SET(unit_tests
     byteswap_test
     gen1_save_test
