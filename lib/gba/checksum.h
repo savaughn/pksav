@@ -8,36 +8,36 @@
 #ifndef PKSAV_GBA_CHECKSUM_H
 #define PKSAV_GBA_CHECKSUM_H
 
+#include "gba/save_internal.h"
+
 #include <pksav/config.h>
 
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
 
+#include <assert.h>
 #include <stdint.h>
 
-uint16_t pksav_get_gba_pokemon_checksum(
-    const struct pksav_gba_pc_pokemon* gba_pokemon
+uint16_t pksav_gba_get_pokemon_checksum(
+    const struct pksav_gba_pc_pokemon* gba_pokemon_ptr
 );
 
-static PKSAV_INLINE void pksav_set_gba_pokemon_checksum(
-    struct pksav_gba_pc_pokemon* gba_pokemon
-) {
-    gba_pokemon->checksum = pksav_get_gba_pokemon_checksum(gba_pokemon);
+static inline void pksav_gba_set_pokemon_checksum(
+    struct pksav_gba_pc_pokemon* gba_pokemon_ptr
+)
+{
+    assert(gba_pokemon_ptr != NULL);
+
+    gba_pokemon_ptr->checksum = pksav_gba_get_pokemon_checksum(gba_pokemon_ptr);
 }
 
-uint16_t pksav_get_gba_section_checksum(
-    const struct pksav_gba_save_section* section,
-    uint8_t section_num
+uint16_t pksav_gba_get_section_checksum(
+    const struct pksav_gba_save_section* section_ptr,
+    size_t section_num
 );
 
-static PKSAV_INLINE void pksav_set_gba_section_checksums(
-    union pksav_gba_save_slot* sections
-) {
-    for(uint8_t i = 0; i < 14; ++i) {
-        sections->sections_arr[i].footer.checksum = pksav_get_gba_section_checksum(
-                                                        &sections->sections_arr[i], i
-                                                    );
-    }
-}
+void pksav_gba_set_section_checksums(
+    union pksav_gba_save_slot* sections_ptr
+);
 
 #endif /* PKSAV_GBA_CHECKSUM_H */

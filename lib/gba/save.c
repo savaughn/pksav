@@ -19,6 +19,8 @@
 
 #include <stdio.h>
 
+/*
+
 #define SECURITY_KEY1(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY1][game]/4]
 #define SECURITY_KEY2(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY2][game]/4]
 #define SAVE_INDEX(sections)         pksav_littleendian32((sections)->section0.footer.save_index)
@@ -56,9 +58,9 @@
 #define SECTION4_DATA32(sections,game,offset) \
     (sections)->section4.data32[pksav_gba_section4_offsets[offset][game]/4]
 
-/*
+*
  * Offsets
- */
+ *
 
 #define PKSAV_GBA_SMALL_SAVE_SIZE 0x10000
 #define PKSAV_GBA_SAVE_SIZE       0x20000
@@ -92,7 +94,8 @@ typedef enum {
     PKSAV_GBA_POKEMON_PARTY = 0,
     PKSAV_GBA_MONEY,
     PKSAV_GBA_CASINO_COINS,
-    PKSAV_GBA_ITEM_STORAGE,
+    PKSAV_GBA_ITEM_PC,
+    PKSAV_GBA_ITEM_BAG,
     PKSAV_GBA_POKEDEX_SEEN_B
 } pksav_gba_section1_field;
 
@@ -100,7 +103,8 @@ static const uint16_t pksav_gba_section1_offsets[][4] = {
     {0x0234,0x0234,0x0034}, // Pokémon Party
     {0x0490,0x0490,0x0290}, // Money
     {0x0494,0x0494,0x0294}, // Casino Coins
-    {0x0498,0x0498,0x0298}, // Item Storage
+    {0x0498,0x0498,0x0298}, // Item PC
+    {0x0560,0x0560,0x0310}, // Item Storage
     {0x0938,0x0988,0x0788}  // Pokédex Seen B
 };
 
@@ -139,12 +143,12 @@ pksav_error_t pksav_buffer_is_gba_save(
         return PKSAV_ERROR_NONE;
     }
 
-    /*
+    *
      * If the save is not a small save, we need to find the most recent save slot first.
      *
      * Once the proper save slot has been found, it needs to be unshuffled. Sadly, that
      * means more memory allocation.
-     */
+     *
     const union pksav_gba_save_slot* sections_pair = (const union pksav_gba_save_slot*)buffer;
     const union pksav_gba_save_slot* save_slot;
     if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
@@ -288,7 +292,7 @@ static void _pksav_gba_save_set_pointers(
     gba_save->item_storage = (union pksav_gba_item_bag*)&SECTION1_DATA8(
                                                             gba_save->unshuffled,
                                                             gba_save->gba_game,
-                                                            PKSAV_GBA_ITEM_STORAGE
+                                                            PKSAV_GBA_ITEM_PC
                                                         );
     pksav_gba_save_crypt_items(
         gba_save->item_storage,
@@ -476,7 +480,7 @@ pksav_error_t pksav_gba_save_save(
         save_into = (union pksav_gba_save_slot*)gba_save->raw;
     }
 
-    pksav_set_gba_section_checksums(
+    pksav_gba_set_section_checksums(
         gba_save->unshuffled
     );
     pksav_gba_save_shuffle_sections(
@@ -516,3 +520,4 @@ pksav_error_t pksav_gba_save_free(
 
     return PKSAV_ERROR_NONE;
 }
+*/

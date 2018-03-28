@@ -14,6 +14,9 @@
 
 #include <stdint.h>
 
+#define PKSAV_GBA_BOX_NUM_POKEMON 30
+#define PKSAV_GBA_PARTY_NUM_POKEMON 6
+
 // TODO: wallpaper enum
 
 /*!
@@ -389,36 +392,17 @@ struct pksav_gba_pokemon_misc_block
 
 /*!
  * @brief The grouping of all Game Boy Advance Pokémon blocks.
- *
- * This union allows the data to be parsed in multiple ways, which is useful for
- * unshuffling and decryption.
  */
-union pksav_gba_pokemon_blocks
+struct pksav_gba_pokemon_blocks
 {
-    //! Parse the blocks byte-by-byte.
-    uint8_t blocks8[48];
-    //! Parse the blocks in two-byte chunks.
-    uint16_t blocks16[24];
-    //! Parse the blocks in four-byte chunks.
-    uint32_t blocks32[12];
-    //! Parse individual blocks byte-by-byte.
-    uint8_t blocks[4][12];
-    /*!
-     * @brief Parse the blocks in a consistent order once unshuffled.
-     *
-     * This order is completely arbitrary and is only laid out this way for
-     * a convenient interface.
-     */
-    struct {
-        //! Growth-related information.
-        struct pksav_gba_pokemon_growth_block growth;
-        //! Attacks and PP.
-        struct pksav_gba_pokemon_attacks_block attacks;
-        //! EVs.
-        struct pksav_gba_pokemon_effort_block effort;
-        //! Misc information.
-        struct pksav_gba_pokemon_misc_block misc;
-    };
+    //! Growth-related information.
+    struct pksav_gba_pokemon_growth_block growth;
+    //! Attacks and PP.
+    struct pksav_gba_pokemon_attacks_block attacks;
+    //! EVs.
+    struct pksav_gba_pokemon_effort_block effort;
+    //! Misc information.
+    struct pksav_gba_pokemon_misc_block misc;
 };
 
 /*!
@@ -435,7 +419,7 @@ struct pksav_gba_pc_pokemon
      */
     uint32_t personality;
     //! This Pokémon's original trainer's ID.
-    pksav_trainer_id_t ot_id;
+    union pksav_trainer_id ot_id;
     /*!
      * @brief This Pokémon's nickname.
      *
@@ -478,7 +462,7 @@ struct pksav_gba_pc_pokemon
     //! Unknown.
     uint16_t unknown_0x1E;
     //! Pokémon blocks.
-    union pksav_gba_pokemon_blocks blocks;
+    struct pksav_gba_pokemon_blocks blocks;
 };
 
 struct pksav_gba_pokemon_party_data

@@ -5,11 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "crypt.h"
+// TODO: all internal includes stem from lib
+#include "gba/crypt.h"
+#include "gba/save_internal.h"
 
+#include <assert.h>
 #include <string.h>
 
-static const uint8_t gba_block_orders[24][4] =
+static const uint8_t GBA_BLOCK_ORDERS[24][4] =
 {
     /* A  E  G  M */
     /* GAEM */ {1, 2, 0, 3},
@@ -39,49 +42,98 @@ static const uint8_t gba_block_orders[24][4] =
 };
 
 void pksav_gba_crypt_pokemon(
-    struct pksav_gba_pc_pokemon* gba_pokemon,
-    bool encrypt
-) {
-    uint32_t security_key = gba_pokemon->ot_id.id ^ gba_pokemon->personality;
-    for(uint8_t i = 0; i < 12; ++i) {
-        gba_pokemon->blocks.blocks32[i] ^= security_key;
+    struct pksav_gba_pc_pokemon* gba_pokemon_ptr,
+    bool should_encrypt
+)
+{
+    assert(gba_pokemon_ptr != NULL);
+
+    union pksav_gba_pokemon_blocks_internal* gba_pokemon_internal_blocks_ptr =
+        (union pksav_gba_pokemon_blocks_internal*)&gba_pokemon_ptr->blocks;
+
+    uint32_t security_key = gba_pokemon_ptr->ot_id.id
+                          ^ gba_pokemon_ptr->personality;
+    for(size_t index = 0; index < 12; ++index)
+    {
+        gba_pokemon_internal_blocks_ptr->blocks32[index] ^= security_key;
     }
 
-    int index = gba_pokemon->personality % 24;
-    int attacks_index = gba_block_orders[index][0];
-    int effort_index  = gba_block_orders[index][1];
-    int growth_index  = gba_block_orders[index][2];
-    int misc_index    = gba_block_orders[index][3];
+    size_t index         = gba_pokemon_ptr->personality % 24;
+    size_t attacks_index = GBA_BLOCK_ORDERS[index][0];
+    size_t effort_index  = GBA_BLOCK_ORDERS[index][1];
+    size_t growth_index  = GBA_BLOCK_ORDERS[index][2];
+    size_t misc_index    = GBA_BLOCK_ORDERS[index][3];
 
-    union pksav_gba_pokemon_blocks blocks;
-    if(encrypt) {
-        memcpy(&blocks.blocks[growth_index],  &gba_pokemon->blocks.growth,  sizeof(struct pksav_gba_pokemon_growth_block));
-        memcpy(&blocks.blocks[attacks_index], &gba_pokemon->blocks.attacks, sizeof(struct pksav_gba_pokemon_attacks_block));
-        memcpy(&blocks.blocks[effort_index],  &gba_pokemon->blocks.effort,  sizeof(struct pksav_gba_pokemon_effort_block));
-        memcpy(&blocks.blocks[misc_index],    &gba_pokemon->blocks.misc,    sizeof(struct pksav_gba_pokemon_misc_block));
-    } else {
-        memcpy(&blocks.growth,  &gba_pokemon->blocks.blocks[growth_index],  sizeof(struct pksav_gba_pokemon_growth_block));
-        memcpy(&blocks.attacks, &gba_pokemon->blocks.blocks[attacks_index], sizeof(struct pksav_gba_pokemon_attacks_block));
-        memcpy(&blocks.effort,  &gba_pokemon->blocks.blocks[effort_index],  sizeof(struct pksav_gba_pokemon_effort_block));
-        memcpy(&blocks.misc,    &gba_pokemon->blocks.blocks[misc_index],    sizeof(struct pksav_gba_pokemon_misc_block));
+    union pksav_gba_pokemon_blocks_internal new_blocks_internal;
+    if(should_encrypt)
+    {
+        memcpy(
+            &new_blocks_internal.blocks[growth_index],
+            &gba_pokemon_ptr->blocks.growth,
+            sizeof(struct pksav_gba_pokemon_growth_block)
+        );
+        memcpy(
+            &new_blocks_internal.blocks[attacks_index],
+            &gba_pokemon_ptr->blocks.attacks,
+            sizeof(struct pksav_gba_pokemon_attacks_block)
+        );
+        memcpy(
+            &new_blocks_internal.blocks[effort_index],
+            &gba_pokemon_ptr->blocks.effort,
+            sizeof(struct pksav_gba_pokemon_effort_block)
+        );
+        memcpy(
+            &new_blocks_internal.blocks[misc_index],
+            &gba_pokemon_ptr->blocks.misc,
+            sizeof(struct pksav_gba_pokemon_misc_block)
+        );
+    }
+    else
+    {
+        memcpy(
+            &new_blocks_internal.by_name.growth,
+            &gba_pokemon_internal_blocks_ptr->blocks[growth_index],
+            sizeof(struct pksav_gba_pokemon_growth_block)
+        );
+        memcpy(
+            &new_blocks_internal.by_name.attacks,
+            &gba_pokemon_internal_blocks_ptr->blocks[attacks_index],
+            sizeof(struct pksav_gba_pokemon_attacks_block)
+        );
+        memcpy(
+            &new_blocks_internal.by_name.effort,
+            &gba_pokemon_internal_blocks_ptr->blocks[effort_index],
+            sizeof(struct pksav_gba_pokemon_effort_block)
+        );
+        memcpy(
+            &new_blocks_internal.by_name.misc,
+            &gba_pokemon_internal_blocks_ptr->blocks[misc_index],
+            sizeof(struct pksav_gba_pokemon_misc_block)
+        );
     }
 
-    gba_pokemon->blocks = blocks;
+    gba_pokemon_ptr->blocks = new_blocks_internal.by_name;
 }
 
 void pksav_gba_save_crypt_items(
-    union pksav_gba_item_bag* item_storage,
+    union pksav_gba_item_bag* gba_item_bag_ptr,
     uint32_t security_key,
-    pksav_gba_game_t gba_game
-) {
-    struct pksav_item* items = (struct pksav_item*)item_storage;
-    uint8_t num_items = 0;
-    switch(gba_game) {
-        case PKSAV_GBA_RS:
+    enum pksav_gba_save_type save_type
+)
+{
+    assert(gba_item_bag_ptr != NULL);
+    assert(save_type >= PKSAV_GBA_SAVE_TYPE_RS);
+    assert(save_type <= PKSAV_GBA_SAVE_TYPE_FRLG);
+
+    struct pksav_item* items_ptr = (struct pksav_item*)gba_item_bag_ptr;
+    size_t num_items = 0;
+    switch(save_type)
+    {
+        case PKSAV_GBA_SAVE_TYPE_RS:
             num_items = sizeof(struct pksav_gba_rs_item_bag) / sizeof(struct pksav_item);
             break;
 
-        case PKSAV_GBA_EMERALD:
+        case PKSAV_GBA_SAVE_TYPE_EMERALD:
             num_items = sizeof(struct pksav_gba_emerald_item_bag) / sizeof(struct pksav_item);
             break;
 
@@ -89,7 +141,8 @@ void pksav_gba_save_crypt_items(
             num_items = sizeof(struct pksav_gba_frlg_item_bag) / sizeof(struct pksav_item);
             break;
     }
-    for(uint8_t i = 0; i < num_items; ++i) {
-        items[i].count ^= (uint16_t)(security_key & 0xFFFF);
+    for(size_t item_index = 0; item_index < num_items; ++item_index)
+    {
+        items_ptr[item_index].count ^= (uint16_t)(security_key & 0xFFFF);
     }
 }

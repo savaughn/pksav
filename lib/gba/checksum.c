@@ -7,28 +7,64 @@
 
 #include "checksum.h"
 
-uint16_t pksav_get_gba_pokemon_checksum(
-    const struct pksav_gba_pc_pokemon* gba_pokemon
-) {
-    uint16_t ret = 0;
+#include "save_internal.h"
 
-    for(uint8_t i = 0; i < (sizeof(union pksav_gba_pokemon_blocks)/2); i++) {
-        ret += gba_pokemon->blocks.blocks16[i];
+#include <assert.h>
+
+uint16_t pksav_gba_get_pokemon_checksum(
+    const struct pksav_gba_pc_pokemon* gba_pokemon_ptr
+)
+{
+    assert(gba_pokemon_ptr != NULL);
+
+    union pksav_gba_pokemon_blocks_internal* gba_pokemon_internal_blocks_ptr =
+        (union pksav_gba_pokemon_blocks_internal*)&gba_pokemon_ptr->blocks;
+
+    uint16_t ret = 0;
+    for(size_t index = 0;
+        index < (sizeof(union pksav_gba_pokemon_blocks_internal)/2);
+        ++index)
+    {
+        ret += gba_pokemon_internal_blocks_ptr->blocks16[index];
     }
 
     return ret;
 }
 
-uint16_t pksav_get_gba_section_checksum(
-    const struct pksav_gba_save_section* section,
-    uint8_t section_num
-) {
+uint16_t pksav_gba_get_section_checksum(
+    const struct pksav_gba_save_section* section_ptr,
+    size_t section_num
+)
+{
+    assert(section_ptr != NULL);
+
     uint32_t checksum = 0;
     uint16_t* checksum_ptr = (uint16_t*)&checksum;
 
-    for(int i = 0; i < (pksav_gba_section_sizes[section_num]/4); i++) {
-        checksum += section->data32[i];
+    for(size_t index = 0;
+        index < (pksav_gba_section_sizes[section_num]/4);
+        ++index)
+    {
+        checksum += section_ptr->data32[index];
     }
 
     return (checksum_ptr[0] + checksum_ptr[1]);
+}
+
+void pksav_gba_set_section_checksums(
+    union pksav_gba_save_slot* sections_ptr
+)
+{
+    assert(sections_ptr != NULL);
+
+    for(size_t section_index = 0;
+        section_index < 14;
+        ++section_index)
+    {
+        sections_ptr->sections_arr[section_index].footer.checksum =
+            pksav_gba_get_section_checksum(
+                &sections_ptr->sections_arr[section_index],
+                section_index
+            );
+    }
 }

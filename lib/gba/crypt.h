@@ -16,14 +16,14 @@
 #include <stdint.h>
 
 void pksav_gba_crypt_pokemon(
-    struct pksav_gba_pc_pokemon* gba_pokemon,
-    bool encrypt
+    struct pksav_gba_pc_pokemon* gba_pokemon_ptr,
+    bool should_encrypt
 );
 
 void pksav_gba_save_crypt_items(
-    union pksav_gba_item_bag* gba_item_storage,
+    union pksav_gba_item_bag* gba_item_bag_ptr,
     uint32_t security_key,
-    pksav_gba_game_t gba_game
+    enum pksav_gba_save_type save_type
 );
 
 #endif /* PKSAV_GBA_CRYPT_H */

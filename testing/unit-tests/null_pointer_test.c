@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -349,119 +349,8 @@ static void pksav_gen2_time_h_test() {
 /*
  * pksav/gba/save.h
  */
-static void pksav_gba_save_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
-
-    uint8_t dummy_uint8_t = 0;
-    bool dummy_bool = false;
-    pksav_gba_save_t dummy_pksav_gba_save_t;
-    char dummy_char = 0;
-
-    /*
-     * pksav_buffer_is_gba_save
-     */
-
-    status = pksav_buffer_is_gba_save(
-        NULL,
-        0,
-        PKSAV_GBA_RS,
-        &dummy_bool
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_buffer_is_gba_save(
-        &dummy_uint8_t,
-        0,
-        PKSAV_GBA_RS,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_buffer_is_gba_save(
-        NULL,
-        0,
-        PKSAV_GBA_RS,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_file_is_gba_save
-     */
-
-    status = pksav_file_is_gba_save(
-        NULL,
-        PKSAV_GBA_RS,
-        &dummy_bool
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_file_is_gba_save(
-        &dummy_char,
-        PKSAV_GBA_RS,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_file_is_gba_save(
-        NULL,
-        PKSAV_GBA_RS,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_gba_save_load
-     */
-
-    status = pksav_gba_save_load(
-        NULL,
-        &dummy_pksav_gba_save_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_gba_save_load(
-        &dummy_char,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_gba_save_load(
-        NULL,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_gba_save_save
-     */
-
-    status = pksav_gba_save_save(
-        NULL,
-        &dummy_pksav_gba_save_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_gba_save_save(
-        &dummy_char,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_gba_save_save(
-        NULL,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_gba_save_free
-     */
-
-    status = pksav_gba_save_free(
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+static void pksav_gba_save_h_test()
+{
 }
 
 /*

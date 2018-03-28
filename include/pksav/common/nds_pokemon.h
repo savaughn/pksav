@@ -29,7 +29,7 @@
 typedef struct {
     uint16_t species;
     uint16_t held_item;
-    pksav_trainer_id_t ot_id;
+    union pksav_trainer_id ot_id;
     uint32_t exp;
     uint8_t friendship;
     uint8_t ability;

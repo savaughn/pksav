@@ -1,9 +1,5 @@
 /*!
- * @file    pksav/common/trainer_id.h
- * @ingroup PKSav
- * @brief   Native storage for a Pokémon trainer's in-game ID.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,9 +12,11 @@
 #pragma pack(push,1)
 
 //! Native storage for a Pokémon trainer's in-game ID (Generation III+).
-typedef union {
+union pksav_trainer_id
+{
     //! Convenience struct to allow individual access to secret and public IDs.
-    struct {
+    struct
+    {
         /*!
          * @brief Public ID.
          *
@@ -48,7 +46,7 @@ typedef union {
      * modified with ::pksav_littleendian32.
      */
     uint32_t id;
-} pksav_trainer_id_t;
+};
 
 #pragma pack(pop)
 
