@@ -219,7 +219,7 @@ PKSAV_API enum pksav_error pksav_gen1_get_file_save_type(
     enum pksav_gen1_save_type* save_type_out
 );
 
-PKSAV_API enum pksav_error pksav_gen1_load_save(
+PKSAV_API enum pksav_error pksav_gen1_load_save_from_file(
     const char* filepath,
     struct pksav_gen1_save* gen1_save_out
 );

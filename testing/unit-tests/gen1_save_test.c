@@ -301,7 +301,7 @@ static void gen1_save_test(
         get_tmp_dir(), FS_SEPARATOR, get_pid(), save_name
     );
 
-    error = pksav_gen1_load_save(
+    error = pksav_gen1_load_save_from_file(
                 original_filepath,
                 &gen1_save
             );

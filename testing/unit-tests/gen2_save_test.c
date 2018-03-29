@@ -452,7 +452,7 @@ static void gen2_save_test(
         get_tmp_dir(), FS_SEPARATOR, get_pid(), save_name
     );
 
-    error = pksav_gen2_load_save(
+    error = pksav_gen2_load_save_from_file(
                 original_filepath,
                 &gen2_save
             );
@@ -528,7 +528,7 @@ static void gen2_save_test(
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
     struct pksav_gen2_save tmp_gen2_save = EMPTY_GEN2_SAVE;
-    error = pksav_gen2_load_save(
+    error = pksav_gen2_load_save_from_file(
                 tmp_save_filepath,
                 &tmp_gen2_save
             );

@@ -234,7 +234,7 @@ static void _pksav_gen1_set_save_pointers(
     internal_ptr->checksum_ptr = &file_buffer[PKSAV_GEN1_CHECKSUM];
 }
 
-enum pksav_error pksav_gen1_load_save(
+enum pksav_error pksav_gen1_load_save_from_file(
     const char* filepath,
     struct pksav_gen1_save* gen1_save_out
 )

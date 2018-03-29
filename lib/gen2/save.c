@@ -411,7 +411,7 @@ static void _pksav_gen2_set_save_pointers(
     misc_fields_ptr->rival_name_ptr = &file_buffer[offsets[PKSAV_GEN2_RIVAL_NAME]];
 }
 
-enum pksav_error pksav_gen2_load_save(
+enum pksav_error pksav_gen2_load_save_from_file(
     const char* filepath,
     struct pksav_gen2_save* gen2_save_out
 )
