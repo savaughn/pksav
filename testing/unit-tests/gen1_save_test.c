@@ -272,104 +272,86 @@ static void validate_gen1_pokemon_box(
 }
 
 static void gen1_save_test(
-    const char* subdir,
+    struct pksav_gen1_save* gen1_save_ptr,
+    const char* original_filepath,
     const char* save_name
 )
 {
-    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr);
     TEST_ASSERT_NOT_NULL(save_name);
 
-    char original_filepath[256] = {0};
     char tmp_save_filepath[256] = {0};
-    struct pksav_gen1_save gen1_save = EMPTY_GEN1_SAVE;
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
-    if(!pksav_test_saves)
-    {
-        TEST_FAIL_MESSAGE("Failed to get test save directory.");
-    }
-
-    snprintf(
-        original_filepath, sizeof(original_filepath),
-        "%s%s%s%s%s",
-        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
-    );
     snprintf(
         tmp_save_filepath, sizeof(tmp_save_filepath),
         "%s%spksav_%d_%s",
         get_tmp_dir(), FS_SEPARATOR, get_pid(), save_name
     );
 
-    error = pksav_gen1_load_save_from_file(
-                original_filepath,
-                &gen1_save
-            );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-
     // Validate fields. No pointers should be NULL (except the Pikachu friendship
     // pointer for Red/Blue), and some fields have a specific set of valid values.
-    TEST_ASSERT_NOT_NULL(gen1_save.internal_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->internal_ptr);
 
-    TEST_ASSERT_NOT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save.save_type);
-    TEST_ASSERT_NOT_NULL(gen1_save.time_played_ptr);
-    TEST_ASSERT_NOT_NULL(gen1_save.options_ptr);
+    TEST_ASSERT_NOT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save_ptr->save_type);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->time_played_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->options_ptr);
 
-    validate_gen1_item_bag(gen1_save.item_storage.item_bag_ptr);
-    validate_gen1_item_pc(gen1_save.item_storage.item_pc_ptr);
-    validate_gen1_pokemon_party(gen1_save.pokemon_storage.party_ptr);
+    validate_gen1_item_bag(gen1_save_ptr->item_storage.item_bag_ptr);
+    validate_gen1_item_pc(gen1_save_ptr->item_storage.item_pc_ptr);
+    validate_gen1_pokemon_party(gen1_save_ptr->pokemon_storage.party_ptr);
 
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
         validate_gen1_pokemon_box(
-            gen1_save.pokemon_storage.box_ptrs[box_index]
+            gen1_save_ptr->pokemon_storage.box_ptrs[box_index]
         );
     }
 
-    TEST_ASSERT_NOT_NULL(gen1_save.pokemon_storage.current_box_num_ptr);
-    uint8_t current_box_num = (*gen1_save.pokemon_storage.current_box_num_ptr
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokemon_storage.current_box_num_ptr);
+    uint8_t current_box_num = (*gen1_save_ptr->pokemon_storage.current_box_num_ptr
                             & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK);
     TEST_ASSERT_TRUE(current_box_num <= PKSAV_GEN1_NUM_POKEMON_BOXES);
 
-    validate_gen1_pokemon_box(gen1_save.pokemon_storage.current_box_ptr);
+    validate_gen1_pokemon_box(gen1_save_ptr->pokemon_storage.current_box_ptr);
 
-    TEST_ASSERT_NOT_NULL(gen1_save.pokedex_lists.seen_ptr);
-    TEST_ASSERT_NOT_NULL(gen1_save.pokedex_lists.owned_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokedex_lists.seen_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokedex_lists.owned_ptr);
 
-    TEST_ASSERT_NOT_NULL(gen1_save.trainer_info.id_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->trainer_info.id_ptr);
     validate_gen1_string(
-        gen1_save.trainer_info.name_ptr,
+        gen1_save_ptr->trainer_info.name_ptr,
         7
     );
     validate_bcd(
-        gen1_save.trainer_info.money_ptr,
+        gen1_save_ptr->trainer_info.money_ptr,
         3,
         999999
     );
-    TEST_ASSERT_NOT_NULL(gen1_save.trainer_info.badges_ptr);
+    TEST_ASSERT_NOT_NULL(gen1_save_ptr->trainer_info.badges_ptr);
 
     validate_gen1_string(
-        gen1_save.misc_fields.rival_name_ptr,
+        gen1_save_ptr->misc_fields.rival_name_ptr,
         7
     );
     validate_bcd(
-        gen1_save.misc_fields.casino_coins_ptr,
+        gen1_save_ptr->misc_fields.casino_coins_ptr,
         2,
         9999
     );
-    if(gen1_save.save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
+    if(gen1_save_ptr->save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
     {
-        TEST_ASSERT_NULL(gen1_save.misc_fields.pikachu_friendship_ptr);
+        TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
     }
     else
     {
-        TEST_ASSERT_NOT_NULL(gen1_save.misc_fields.pikachu_friendship_ptr);
+        TEST_ASSERT_NOT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
     }
 
     // Make sure loading and saving are perfectly symmetrical.
     error = pksav_gen1_save_save(
                 tmp_save_filepath,
-                &gen1_save
+                gen1_save_ptr
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
@@ -393,53 +375,140 @@ static void gen1_save_test(
     for(uint8_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
         error = pksav_gen1_pokemon_storage_set_current_box(
-                    &gen1_save.pokemon_storage,
+                    &gen1_save_ptr->pokemon_storage,
                     box_index
                 );
         TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-        uint8_t current_box_num = *gen1_save.pokemon_storage.current_box_num_ptr;
+        uint8_t current_box_num = *gen1_save_ptr->pokemon_storage.current_box_num_ptr;
         current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
         TEST_ASSERT_EQUAL(box_index, current_box_num);
         TEST_ASSERT_EQUAL_MEMORY(
-            gen1_save.pokemon_storage.box_ptrs[box_index],
-            gen1_save.pokemon_storage.current_box_ptr,
+            gen1_save_ptr->pokemon_storage.box_ptrs[box_index],
+            gen1_save_ptr->pokemon_storage.current_box_ptr,
             sizeof(struct pksav_gen1_pokemon_box)
         );
     }
 
     // Free the save and make sure all fields are set to NULL or default.
-    error = pksav_gen1_free_save(&gen1_save);
+    error = pksav_gen1_free_save(gen1_save_ptr);
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
-    TEST_ASSERT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save.save_type);
-    TEST_ASSERT_NULL(gen1_save.time_played_ptr);
-    TEST_ASSERT_NULL(gen1_save.options_ptr);
+    TEST_ASSERT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save_ptr->save_type);
+    TEST_ASSERT_NULL(gen1_save_ptr->time_played_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->options_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.item_storage.item_bag_ptr);
-    TEST_ASSERT_NULL(gen1_save.item_storage.item_pc_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->item_storage.item_bag_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->item_storage.item_pc_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.party_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.party_ptr);
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
-        TEST_ASSERT_NULL(gen1_save.pokemon_storage.box_ptrs[box_index]);
+        TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.box_ptrs[box_index]);
     }
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_box_num_ptr);
-    TEST_ASSERT_NULL(gen1_save.pokemon_storage.current_box_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.current_box_num_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.current_box_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.pokedex_lists.seen_ptr);
-    TEST_ASSERT_NULL(gen1_save.pokedex_lists.owned_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->pokedex_lists.seen_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->pokedex_lists.owned_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.trainer_info.id_ptr);
-    TEST_ASSERT_NULL(gen1_save.trainer_info.name_ptr);
-    TEST_ASSERT_NULL(gen1_save.trainer_info.money_ptr);
-    TEST_ASSERT_NULL(gen1_save.trainer_info.badges_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.id_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.name_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.money_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.badges_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.misc_fields.rival_name_ptr);
-    TEST_ASSERT_NULL(gen1_save.misc_fields.casino_coins_ptr);
-    TEST_ASSERT_NULL(gen1_save.misc_fields.pikachu_friendship_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.rival_name_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.casino_coins_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
 
-    TEST_ASSERT_NULL(gen1_save.internal_ptr);
+    TEST_ASSERT_NULL(gen1_save_ptr->internal_ptr);
+}
+
+static void gen1_save_from_buffer_test(
+    const char* subdir,
+    const char* save_name
+)
+{
+    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(save_name);
+
+    char original_filepath[256] = {0};
+    struct pksav_gen1_save gen1_save = EMPTY_GEN1_SAVE;
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(!pksav_test_saves)
+    {
+        TEST_FAIL_MESSAGE("Failed to get test save directory.");
+    }
+
+    snprintf(
+        original_filepath, sizeof(original_filepath),
+        "%s%s%s%s%s",
+        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
+    );
+
+    uint8_t save_buffer[PKSAV_GEN1_SAVE_SIZE] = {0};
+    if(read_file_into_buffer(
+           original_filepath,
+           save_buffer,
+           sizeof(save_buffer))
+    )
+    {
+        TEST_FAIL_MESSAGE("Failed to read save into buffer.");
+    }
+
+    error = pksav_gen1_load_save_from_buffer(
+                save_buffer,
+                sizeof(save_buffer),
+                &gen1_save
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+    // This test will free the save.
+    gen1_save_test(
+        &gen1_save,
+        original_filepath,
+        save_name
+    );
+}
+
+static void gen1_save_from_file_test(
+    const char* subdir,
+    const char* save_name
+)
+{
+    TEST_ASSERT_NOT_NULL(subdir);
+    TEST_ASSERT_NOT_NULL(save_name);
+
+    char original_filepath[256] = {0};
+    struct pksav_gen1_save gen1_save = EMPTY_GEN1_SAVE;
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
+    if(!pksav_test_saves)
+    {
+        TEST_FAIL_MESSAGE("Failed to get test save directory.");
+    }
+
+    snprintf(
+        original_filepath, sizeof(original_filepath),
+        "%s%s%s%s%s",
+        pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
+    );
+
+    error = pksav_gen1_load_save_from_file(
+                original_filepath,
+                &gen1_save
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+    // This test will free the save.
+    gen1_save_test(
+        &gen1_save,
+        original_filepath,
+        save_name
+    );
 }
 
 static void pksav_buffer_is_red_save_test()
@@ -460,9 +529,14 @@ static void pksav_file_is_red_save_test()
     );
 }
 
-static void red_save_test()
+static void red_save_from_buffer_test()
 {
-    gen1_save_test("red_blue", "pokemon_red.sav");
+    gen1_save_from_buffer_test("red_blue", "pokemon_red.sav");
+}
+
+static void red_save_from_file_test()
+{
+    gen1_save_from_file_test("red_blue", "pokemon_red.sav");
 }
 
 static void pksav_buffer_is_yellow_save_test()
@@ -483,9 +557,14 @@ static void pksav_file_is_yellow_save_test()
     );
 }
 
-static void yellow_save_test()
+static void yellow_save_from_buffer_test()
 {
-    gen1_save_test("yellow", "pokemon_yellow.sav");
+    gen1_save_from_buffer_test("yellow", "pokemon_yellow.sav");
+}
+
+static void yellow_save_from_file_test()
+{
+    gen1_save_from_file_test("yellow", "pokemon_yellow.sav");
 }
 
 PKSAV_TEST_MAIN(
@@ -493,9 +572,11 @@ PKSAV_TEST_MAIN(
 
     PKSAV_TEST(pksav_buffer_is_red_save_test)
     PKSAV_TEST(pksav_file_is_red_save_test)
-    PKSAV_TEST(red_save_test)
+    PKSAV_TEST(red_save_from_buffer_test)
+    PKSAV_TEST(red_save_from_file_test)
 
     PKSAV_TEST(pksav_buffer_is_yellow_save_test)
     PKSAV_TEST(pksav_file_is_yellow_save_test)
-    PKSAV_TEST(yellow_save_test)
+    PKSAV_TEST(yellow_save_from_buffer_test)
+    PKSAV_TEST(yellow_save_from_file_test)
 )

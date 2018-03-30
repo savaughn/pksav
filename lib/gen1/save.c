@@ -10,6 +10,7 @@
 #include <pksav/gen1/save.h>
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -17,12 +18,14 @@ struct pksav_gen1_save_internal
 {
     uint8_t* raw_save_ptr;
     uint8_t* checksum_ptr;
+
+    bool is_buffer_ours;
 };
 
 // Offsets in a Generation I save
 enum pksav_gen1_save_offset
 {
-    PKSAV_GEN1_PLAYER_NAME           = 0x2598,
+    PKSAV_GEN1_PLAYER_NAME            = 0x2598,
     PKSAV_GEN1_POKEDEX_OWNED          = 0x25A3,
     PKSAV_GEN1_POKEDEX_SEEN           = 0x25B6,
     PKSAV_GEN1_ITEM_BAG               = 0x25C9,
@@ -30,7 +33,7 @@ enum pksav_gen1_save_offset
     PKSAV_GEN1_RIVAL_NAME             = 0x25F6,
     PKSAV_GEN1_OPTIONS                = 0x2601,
     PKSAV_GEN1_BADGES                 = 0x2602,
-    PKSAV_GEN1_PLAYER_ID             = 0x2605,
+    PKSAV_GEN1_PLAYER_ID              = 0x2605,
     PKSAV_GEN1_PIKACHU_FRIENDSHIP     = 0x271C,
     PKSAV_GEN1_ITEM_PC                = 0x27E6,
     PKSAV_GEN1_CURRENT_BOX_NUM        = 0x284C,
@@ -234,6 +237,59 @@ static void _pksav_gen1_set_save_pointers(
     internal_ptr->checksum_ptr = &file_buffer[PKSAV_GEN1_CHECKSUM];
 }
 
+static enum pksav_error _pksav_gen1_load_save_from_buffer(
+    uint8_t* buffer,
+    size_t buffer_len,
+    bool is_buffer_ours,
+    struct pksav_gen1_save* gen1_save_out
+)
+{
+    assert(gen1_save_out != NULL);
+    assert(buffer != NULL);
+
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    enum pksav_gen1_save_type save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
+    error = pksav_gen1_get_buffer_save_type(
+                buffer,
+                buffer_len,
+                &save_type
+            );
+    if(!error && (save_type != PKSAV_GEN1_SAVE_TYPE_NONE))
+    {
+        gen1_save_out->save_type = save_type;
+        _pksav_gen1_set_save_pointers(
+            gen1_save_out,
+            buffer
+        );
+
+        // Internal
+        struct pksav_gen1_save_internal* internal_ptr = gen1_save_out->internal_ptr;
+        internal_ptr->is_buffer_ours = is_buffer_ours;
+    }
+
+    return error;
+}
+
+enum pksav_error pksav_gen1_load_save_from_buffer(
+    uint8_t* buffer,
+    size_t buffer_len,
+    struct pksav_gen1_save* gen1_save_out
+)
+{
+    if(!buffer || !gen1_save_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    return _pksav_gen1_load_save_from_buffer(
+               buffer,
+               buffer_len,
+               false, // is_buffer_ours
+               gen1_save_out
+           );
+}
+
 enum pksav_error pksav_gen1_load_save_from_file(
     const char* filepath,
     struct pksav_gen1_save* gen1_save_out
@@ -246,35 +302,27 @@ enum pksav_error pksav_gen1_load_save_from_file(
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t* file_buffer = NULL;
+    uint8_t* buffer = NULL;
     size_t buffer_len = 0;
     error = pksav_fs_read_file_to_buffer(
                 filepath,
-                &file_buffer,
+                &buffer,
                 &buffer_len
             );
 
     if(!error)
     {
-        assert(file_buffer != NULL);
-
-        enum pksav_gen1_save_type save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
-        error = pksav_gen1_get_buffer_save_type(
-                    file_buffer,
+        error = _pksav_gen1_load_save_from_buffer(
+                    buffer,
                     buffer_len,
-                    &save_type
+                    true, // is_buffer_ours
+                    gen1_save_out
                 );
-        if(!error && (save_type != PKSAV_GEN1_SAVE_TYPE_NONE))
+        if(error)
         {
-            gen1_save_out->save_type = save_type;
-            _pksav_gen1_set_save_pointers(
-                gen1_save_out,
-                file_buffer
-            );
-        }
-        else
-        {
-            free(file_buffer);
+            // We made this buffer, so it's on us to free it if there's
+            // an error.
+            free(buffer);
         }
     }
 
@@ -318,7 +366,10 @@ enum pksav_error pksav_gen1_free_save(
     }
 
     struct pksav_gen1_save_internal* internal_ptr = gen1_save_ptr->internal_ptr;
-    free(internal_ptr->raw_save_ptr);
+    if(internal_ptr->is_buffer_ours)
+    {
+        free(internal_ptr->raw_save_ptr);
+    }
     free(internal_ptr);
 
     // Everything else is a pointer or an enum with a default value of 0,
