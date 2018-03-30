@@ -273,6 +273,7 @@ static void validate_gen1_pokemon_box(
 
 static void gen1_save_test(
     struct pksav_gen1_save* gen1_save_ptr,
+    enum pksav_gen1_save_type expected_save_type,
     const char* original_filepath,
     const char* save_name
 )
@@ -293,7 +294,7 @@ static void gen1_save_test(
     // pointer for Red/Blue), and some fields have a specific set of valid values.
     TEST_ASSERT_NOT_NULL(gen1_save_ptr->internal_ptr);
 
-    TEST_ASSERT_NOT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save_ptr->save_type);
+    TEST_ASSERT_EQUAL(expected_save_type, gen1_save_ptr->save_type);
     TEST_ASSERT_NOT_NULL(gen1_save_ptr->time_played_ptr);
     TEST_ASSERT_NOT_NULL(gen1_save_ptr->options_ptr);
 
@@ -426,7 +427,8 @@ static void gen1_save_test(
 
 static void gen1_save_from_buffer_test(
     const char* subdir,
-    const char* save_name
+    const char* save_name,
+    enum pksav_gen1_save_type expected_save_type
 )
 {
     TEST_ASSERT_NOT_NULL(subdir);
@@ -468,6 +470,7 @@ static void gen1_save_from_buffer_test(
     // This test will free the save.
     gen1_save_test(
         &gen1_save,
+        expected_save_type,
         original_filepath,
         save_name
     );
@@ -475,7 +478,8 @@ static void gen1_save_from_buffer_test(
 
 static void gen1_save_from_file_test(
     const char* subdir,
-    const char* save_name
+    const char* save_name,
+    enum pksav_gen1_save_type expected_save_type
 )
 {
     TEST_ASSERT_NOT_NULL(subdir);
@@ -506,6 +510,7 @@ static void gen1_save_from_file_test(
     // This test will free the save.
     gen1_save_test(
         &gen1_save,
+        expected_save_type,
         original_filepath,
         save_name
     );
@@ -531,12 +536,20 @@ static void pksav_file_is_red_save_test()
 
 static void red_save_from_buffer_test()
 {
-    gen1_save_from_buffer_test("red_blue", "pokemon_red.sav");
+    gen1_save_from_buffer_test(
+        "red_blue",
+        "pokemon_red.sav",
+        PKSAV_GEN1_SAVE_TYPE_RED_BLUE
+    );
 }
 
 static void red_save_from_file_test()
 {
-    gen1_save_from_file_test("red_blue", "pokemon_red.sav");
+    gen1_save_from_file_test(
+        "red_blue",
+        "pokemon_red.sav",
+        PKSAV_GEN1_SAVE_TYPE_RED_BLUE
+    );
 }
 
 static void pksav_buffer_is_yellow_save_test()
@@ -559,12 +572,20 @@ static void pksav_file_is_yellow_save_test()
 
 static void yellow_save_from_buffer_test()
 {
-    gen1_save_from_buffer_test("yellow", "pokemon_yellow.sav");
+    gen1_save_from_buffer_test(
+        "yellow",
+        "pokemon_yellow.sav",
+        PKSAV_GEN1_SAVE_TYPE_YELLOW
+    );
 }
 
 static void yellow_save_from_file_test()
 {
-    gen1_save_from_file_test("yellow", "pokemon_yellow.sav");
+    gen1_save_from_file_test(
+        "yellow",
+        "pokemon_yellow.sav",
+        PKSAV_GEN1_SAVE_TYPE_YELLOW
+    );
 }
 
 PKSAV_TEST_MAIN(

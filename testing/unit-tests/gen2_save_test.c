@@ -423,6 +423,7 @@ static void compare_gen2_saves(
 
 static void gen2_save_test(
     struct pksav_gen2_save* gen2_save_ptr,
+    enum pksav_gen2_save_type expected_save_type,
     const char* original_filepath,
     const char* save_name
 )
@@ -444,6 +445,7 @@ static void gen2_save_test(
     // pointer for Gold/Silver), and some fields have a specific set of valid values.
     TEST_ASSERT_NOT_NULL(gen2_save_ptr->internal_ptr);
 
+    TEST_ASSERT_EQUAL(expected_save_type, gen2_save_ptr->save_type);
     TEST_ASSERT_NOT_NULL(gen2_save_ptr->save_time.time_played_ptr);
     TEST_ASSERT_NOT_NULL(gen2_save_ptr->save_time.daylight_savings_ptr);
 
@@ -584,7 +586,8 @@ static void gen2_save_test(
 
 static void gen2_save_from_buffer_test(
     const char* subdir,
-    const char* save_name
+    const char* save_name,
+    enum pksav_gen2_save_type expected_save_type
 )
 {
     TEST_ASSERT_NOT_NULL(subdir);
@@ -626,6 +629,7 @@ static void gen2_save_from_buffer_test(
     // This test will free the save.
     gen2_save_test(
         &gen2_save,
+        expected_save_type,
         original_filepath,
         save_name
     );
@@ -633,7 +637,8 @@ static void gen2_save_from_buffer_test(
 
 static void gen2_save_from_file_test(
     const char* subdir,
-    const char* save_name
+    const char* save_name,
+    enum pksav_gen2_save_type expected_save_type
 )
 {
     TEST_ASSERT_NOT_NULL(subdir);
@@ -664,6 +669,7 @@ static void gen2_save_from_file_test(
     // This test will free the save.
     gen2_save_test(
         &gen2_save,
+        expected_save_type,
         original_filepath,
         save_name
     );
@@ -691,7 +697,8 @@ static void gold_save_from_buffer_test()
 {
     gen2_save_from_buffer_test(
         "gold_silver",
-        "pokemon_gold.sav"
+        "pokemon_gold.sav",
+        PKSAV_GEN2_SAVE_TYPE_GS
     );
 }
 
@@ -699,7 +706,8 @@ static void gold_save_from_file_test()
 {
     gen2_save_from_file_test(
         "gold_silver",
-        "pokemon_gold.sav"
+        "pokemon_gold.sav",
+        PKSAV_GEN2_SAVE_TYPE_GS
     );
 }
 
@@ -725,7 +733,8 @@ static void crystal_save_from_buffer_test()
 {
     gen2_save_from_buffer_test(
         "crystal",
-        "pokemon_crystal.sav"
+        "pokemon_crystal.sav",
+        PKSAV_GEN2_SAVE_TYPE_CRYSTAL
     );
 }
 
@@ -733,7 +742,8 @@ static void crystal_save_from_file_test()
 {
     gen2_save_from_file_test(
         "crystal",
-        "pokemon_crystal.sav"
+        "pokemon_crystal.sav",
+        PKSAV_GEN2_SAVE_TYPE_CRYSTAL
     );
 }
 
