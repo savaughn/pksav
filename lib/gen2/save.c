@@ -28,6 +28,8 @@ struct pksav_gen2_save_internal
 
     uint16_t* checksum1_ptr;
     uint16_t* checksum2_ptr;
+
+    bool is_buffer_ours;
 };
 
 enum pksav_gen2_field
@@ -411,6 +413,59 @@ static void _pksav_gen2_set_save_pointers(
     misc_fields_ptr->rival_name_ptr = &file_buffer[offsets[PKSAV_GEN2_RIVAL_NAME]];
 }
 
+static enum pksav_error _pksav_gen2_load_save_from_buffer(
+    uint8_t* buffer,
+    size_t buffer_len,
+    bool is_buffer_ours,
+    struct pksav_gen2_save* gen2_save_out
+)
+{
+    assert(gen2_save_out != NULL);
+    assert(buffer != NULL);
+
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
+    error = pksav_gen2_get_buffer_save_type(
+                buffer,
+                buffer_len,
+                &save_type
+            );
+    if(!error && (save_type != PKSAV_GEN2_SAVE_TYPE_NONE))
+    {
+        gen2_save_out->save_type = save_type;
+        _pksav_gen2_set_save_pointers(
+            gen2_save_out,
+            buffer
+        );
+
+        // Internal
+        struct pksav_gen2_save_internal* internal_ptr = gen2_save_out->internal_ptr;
+        internal_ptr->is_buffer_ours = is_buffer_ours;
+    }
+
+    return error;
+}
+
+enum pksav_error pksav_gen2_load_save_from_buffer(
+    uint8_t* buffer,
+    size_t buffer_len,
+    struct pksav_gen2_save* gen2_save_out
+)
+{
+    if(!buffer || !gen2_save_out)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+
+    return _pksav_gen2_load_save_from_buffer(
+               buffer,
+               buffer_len,
+               false, // is_buffer_ours
+               gen2_save_out
+           );
+}
+
 enum pksav_error pksav_gen2_load_save_from_file(
     const char* filepath,
     struct pksav_gen2_save* gen2_save_out
@@ -433,24 +488,16 @@ enum pksav_error pksav_gen2_load_save_from_file(
 
     if(!error)
     {
-        assert(file_buffer != NULL);
-
-        enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
-        error = pksav_gen2_get_buffer_save_type(
+        error = _pksav_gen2_load_save_from_buffer(
                     file_buffer,
                     buffer_len,
-                    &save_type
+                    true, // is_buffer_ours
+                    gen2_save_out
                 );
-        if(!error && (save_type != PKSAV_GEN2_SAVE_TYPE_NONE))
+        if(error)
         {
-            gen2_save_out->save_type = save_type;
-            _pksav_gen2_set_save_pointers(
-                gen2_save_out,
-                file_buffer
-            );
-        }
-        else
-        {
+            // We made this buffer, so it's on us to free it if there's
+            // an error.
             free(file_buffer);
         }
     }
@@ -497,7 +544,10 @@ enum pksav_error pksav_gen2_free_save(
     }
 
     struct pksav_gen2_save_internal* internal_ptr = gen2_save_ptr->internal_ptr;
-    free(internal_ptr->raw_save_ptr);
+    if(internal_ptr->is_buffer_ours)
+    {
+        free(internal_ptr->raw_save_ptr);
+    }
     free(internal_ptr);
 
     // Everything else is a pointer or an enum with a default value of 0,
