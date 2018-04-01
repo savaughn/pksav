@@ -293,18 +293,18 @@ enum pksav_error pksav_gen2_get_file_save_type(
 
 static void _pksav_gen2_set_save_pointers(
     struct pksav_gen2_save* gen2_save_ptr,
-    uint8_t* file_buffer
+    uint8_t* buffer
 )
 {
     assert(gen2_save_ptr != NULL);
-    assert(file_buffer != NULL);
+    assert(buffer != NULL);
 
     const size_t* offsets = NULL;
 
     // Internal
     gen2_save_ptr->internal_ptr = calloc(sizeof(struct pksav_gen2_save_internal), 1);
     struct pksav_gen2_save_internal* internal_ptr = gen2_save_ptr->internal_ptr;
-    internal_ptr->raw_save_ptr = file_buffer;
+    internal_ptr->raw_save_ptr = buffer;
     switch(gen2_save_ptr->save_type)
     {
         case PKSAV_GEN2_SAVE_TYPE_GS:
@@ -321,11 +321,11 @@ static void _pksav_gen2_set_save_pointers(
 
     assert(offsets != NULL);
 
-    internal_ptr->checksum1_ptr = (uint16_t*)&file_buffer[
+    internal_ptr->checksum1_ptr = (uint16_t*)&buffer[
                                                  offsets[PKSAV_GEN2_CHECKSUM1]
                                              ];
 
-    internal_ptr->checksum2_ptr = (uint16_t*)&file_buffer[
+    internal_ptr->checksum2_ptr = (uint16_t*)&buffer[
                                                  offsets[PKSAV_GEN2_CHECKSUM2]
                                              ];
 
@@ -333,25 +333,25 @@ static void _pksav_gen2_set_save_pointers(
     struct pksav_gen2_save_time* save_time_ptr = &gen2_save_ptr->save_time;
 
     save_time_ptr->time_played_ptr = (struct pksav_gen2_time*)(
-                                         &file_buffer[offsets[PKSAV_GEN2_TIME_PLAYED]]
+                                         &buffer[offsets[PKSAV_GEN2_TIME_PLAYED]]
                                      );
-    save_time_ptr->daylight_savings_ptr = &file_buffer[offsets[PKSAV_GEN2_DAYLIGHT_SAVINGS]];
+    save_time_ptr->daylight_savings_ptr = &buffer[offsets[PKSAV_GEN2_DAYLIGHT_SAVINGS]];
 
     // Item storage
     struct pksav_gen2_item_storage* item_storage_ptr = &gen2_save_ptr->item_storage;
 
     item_storage_ptr->item_bag_ptr = (struct pksav_gen2_item_bag*)(
-                                         &file_buffer[offsets[PKSAV_GEN2_ITEM_BAG]]
+                                         &buffer[offsets[PKSAV_GEN2_ITEM_BAG]]
                                      );
     item_storage_ptr->item_pc_ptr = (struct pksav_gen2_item_pc*)(
-                                        &file_buffer[offsets[PKSAV_GEN2_ITEM_PC]]
+                                        &buffer[offsets[PKSAV_GEN2_ITEM_PC]]
                                     );
 
     // Pokémon storage
     struct pksav_gen2_pokemon_storage* pokemon_storage_ptr = &gen2_save_ptr->pokemon_storage;
 
     pokemon_storage_ptr->party_ptr = (struct pksav_gen2_pokemon_party*)(
-                                         &file_buffer[offsets[PKSAV_GEN2_POKEMON_PARTY]]
+                                         &buffer[offsets[PKSAV_GEN2_POKEMON_PARTY]]
                                      );
 
     for(size_t box_index = 0; box_index < 7; ++box_index)
@@ -360,7 +360,7 @@ static void _pksav_gen2_set_save_pointers(
                         (sizeof(struct pksav_gen2_pokemon_box) * box_index);
 
         pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen2_pokemon_box*)(
-                                                       &file_buffer[offset]
+                                                       &buffer[offset]
                                                    );
     }
     for(size_t box_index = 7; box_index < 14; ++box_index)
@@ -369,48 +369,48 @@ static void _pksav_gen2_set_save_pointers(
                         (sizeof(struct pksav_gen2_pokemon_box) * (box_index - 7));
 
         pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen2_pokemon_box*)(
-                                                       &file_buffer[offset]
+                                                       &buffer[offset]
                                                    );
     }
 
     pokemon_storage_ptr->box_names_ptr = (struct pksav_gen2_pokemon_box_names*)(
-                                             &file_buffer[offsets[PKSAV_GEN2_PC_BOX_NAMES]]
+                                             &buffer[offsets[PKSAV_GEN2_PC_BOX_NAMES]]
                                          );
-    pokemon_storage_ptr->current_box_num_ptr = &file_buffer[
+    pokemon_storage_ptr->current_box_num_ptr = &buffer[
                                                    offsets[PKSAV_GEN2_CURRENT_BOX_NUM]
                                                ];
     pokemon_storage_ptr->current_box_ptr = (struct pksav_gen2_pokemon_box*)(
-                                               &file_buffer[offsets[PKSAV_GEN2_CURRENT_BOX]]
+                                               &buffer[offsets[PKSAV_GEN2_CURRENT_BOX]]
                                            );
 
     // Pokédex lists
     struct pksav_gen2_pokedex_lists* pokedex_lists_ptr = &gen2_save_ptr->pokedex_lists;
 
-    pokedex_lists_ptr->seen_ptr  = &file_buffer[PKSAV_GEN2_POKEDEX_SEEN];
-    pokedex_lists_ptr->owned_ptr = &file_buffer[PKSAV_GEN2_POKEDEX_OWNED];
+    pokedex_lists_ptr->seen_ptr  = &buffer[PKSAV_GEN2_POKEDEX_SEEN];
+    pokedex_lists_ptr->owned_ptr = &buffer[PKSAV_GEN2_POKEDEX_OWNED];
 
     // Trainer info
     struct pksav_gen2_trainer_info* trainer_info_ptr = &gen2_save_ptr->trainer_info;
 
-    trainer_info_ptr->id_ptr           = (uint16_t*)&file_buffer[offsets[PKSAV_GEN2_PLAYER_ID]];
-    trainer_info_ptr->name_ptr         = &file_buffer[offsets[PKSAV_GEN2_PLAYER_NAME]];
+    trainer_info_ptr->id_ptr           = (uint16_t*)&buffer[offsets[PKSAV_GEN2_PLAYER_ID]];
+    trainer_info_ptr->name_ptr         = &buffer[offsets[PKSAV_GEN2_PLAYER_NAME]];
     if(gen2_save_ptr->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
     {
-        trainer_info_ptr->gender_ptr = &file_buffer[offsets[PKSAV_GEN2_PLAYER_GENDER]];
+        trainer_info_ptr->gender_ptr = &buffer[offsets[PKSAV_GEN2_PLAYER_GENDER]];
     }
     else
     {
         trainer_info_ptr->gender_ptr = NULL;
     }
-    trainer_info_ptr->palette_ptr      = &file_buffer[offsets[PKSAV_GEN2_PLAYER_PALETTE]];
-    trainer_info_ptr->money_ptr        = &file_buffer[offsets[PKSAV_GEN2_MONEY]];
-    trainer_info_ptr->johto_badges_ptr = &file_buffer[offsets[PKSAV_GEN2_JOHTO_BADGES]];
-    trainer_info_ptr->kanto_badges_ptr = &file_buffer[offsets[PKSAV_GEN2_KANTO_BADGES]];
+    trainer_info_ptr->palette_ptr      = &buffer[offsets[PKSAV_GEN2_PLAYER_PALETTE]];
+    trainer_info_ptr->money_ptr        = &buffer[offsets[PKSAV_GEN2_MONEY]];
+    trainer_info_ptr->johto_badges_ptr = &buffer[offsets[PKSAV_GEN2_JOHTO_BADGES]];
+    trainer_info_ptr->kanto_badges_ptr = &buffer[offsets[PKSAV_GEN2_KANTO_BADGES]];
 
     // Misc
     struct pksav_gen2_misc_fields* misc_fields_ptr = &gen2_save_ptr->misc_fields;
 
-    misc_fields_ptr->rival_name_ptr = &file_buffer[offsets[PKSAV_GEN2_RIVAL_NAME]];
+    misc_fields_ptr->rival_name_ptr = &buffer[offsets[PKSAV_GEN2_RIVAL_NAME]];
 }
 
 static enum pksav_error _pksav_gen2_load_save_from_buffer(

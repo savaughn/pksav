@@ -20,6 +20,17 @@
 
 #include <pksav/math/endian.h>
 
+struct pksav_gba_save_internal
+{
+    uint8_t* raw_save_ptr;
+
+    union pksav_gba_save_slot unshuffled_save_slot;
+    bool is_small_save;
+    uint8_t shuffled_section_nums[PKSAV_GBA_NUM_SAVE_SECTIONS];
+
+    bool is_buffer_ours;
+};
+
 /*
  * Each footer has a field that must equal this value to be considered valid.
  */
@@ -93,6 +104,45 @@ static const size_t pksav_gba_section4_offsets[][3] =
     {0x0000,0x0000,0x0BCC}  // Rival Name (FR/LG only)
 };
 
+static union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
+    uint8_t* buffer,
+    size_t buffer_len
+)
+{
+    assert(buffer != NULL);
+
+    union pksav_gba_save_slot* active_save_slot_ptr = NULL;
+
+    if(buffer_len >= PKSAV_GBA_SMALL_SAVE_SIZE)
+    {
+        union pksav_gba_save_slot* save_slots = (union pksav_gba_save_slot*)buffer;
+        if(buffer_len < PKSAV_GBA_LARGE_SAVE_SIZE)
+        {
+            active_save_slot_ptr = &save_slots[0];
+        }
+        else
+        {
+            uint32_t save_index1 = pksav_littleendian32(
+                                       save_slots[0].section0.footer.save_index
+                                   );
+            uint32_t save_index2 = pksav_littleendian32(
+                                       save_slots[1].section0.footer.save_index
+                                   );
+
+            if(save_index1 > save_index2)
+            {
+                active_save_slot_ptr = &save_slots[0];
+            }
+            else
+            {
+                active_save_slot_ptr = &save_slots[1];
+            }
+        }
+    }
+
+    return active_save_slot_ptr;
+}
+
 enum pksav_error pksav_gba_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
@@ -107,41 +157,17 @@ enum pksav_error pksav_gba_get_buffer_save_type(
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     *save_type_out = PKSAV_GBA_SAVE_TYPE_NONE;
-    if(buffer_len >= PKSAV_GBA_SMALL_SAVE_SIZE)
+    const union pksav_gba_save_slot* save_slot_ptr = _pksav_gba_get_active_save_slot_ptr(
+                                                          (uint8_t*)buffer,
+                                                          buffer_len
+                                                     );
+    if(save_slot_ptr != NULL)
     {
-        /*
-         * If the save is not a small save, we need to find the most recent save slot first.
-         *
-         * Once the proper save slot has been found, it needs to be unshuffled. Sadly, that
-         * means more memory allocation.
-         */
-        const union pksav_gba_save_slot* save_slots = (const union pksav_gba_save_slot*)buffer;
-        const union pksav_gba_save_slot* save_slot_ptr = NULL;
-        if(buffer_len < PKSAV_GBA_LARGE_SAVE_SIZE)
-        {
-            save_slot_ptr = &save_slots[0];
-        }
-        else
-        {
-            uint32_t save_index1 = pksav_littleendian32(
-                                       save_slots[0].section0.footer.save_index
-                                   );
-            uint32_t save_index2 = pksav_littleendian32(
-                                       save_slots[1].section0.footer.save_index
-                                   );
+        // At this point, we know the buffer is large enough to be a save, so
+        // now to validate the sections.
 
-            if(save_index1 > save_index2)
-            {
-                save_slot_ptr = &save_slots[0];
-            }
-            else
-            {
-                save_slot_ptr = &save_slots[1];
-            }
-        }
-        assert(save_slot_ptr != NULL);
-
-        // Make sure the section IDs are valid to avoid a crash.
+        // Make sure the section IDs are valid before using them as array
+        // indices to avoid a crash.
         bool is_save_valid = true;
 
         for(size_t section_index = 0;
@@ -278,152 +304,48 @@ enum pksav_error pksav_gba_get_file_save_type(
     return error;
 }
 
-/*
+static void _pksav_gba_set_save_pointers(
+    struct pksav_gba_save* gba_save_ptr,
+    uint8_t* buffer,
+    size_t buffer_len
+)
+{
+    assert(gba_save_ptr != NULL);
+    assert(buffer != NULL);
 
-#define SECURITY_KEY1(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY1][game]/4]
-#define SECURITY_KEY2(sections,game) (sections)->section0.data32[pksav_gba_section0_offsets[PKSAV_GBA_SECURITY_KEY2][game]/4]
-#define SAVE_INDEX(sections)         pksav_littleendian32((sections)->section0.footer.save_index)
+    // At this point, we should know the save is valid, so we should be able
+    // to get valid sections.
+    union pksav_gba_save_slot* save_slot_ptr = _pksav_gba_get_active_save_slot_ptr(
+                                                    buffer,
+                                                    buffer_len
+                                               );
+    assert(save_slot_ptr != NULL);
 
-#define SECTION0_DATA8(sections,game,offset) \
-    (sections)->section0.data8[pksav_gba_section0_offsets[offset][game]]
+    // Internal
+    gba_save_ptr->internal_ptr = calloc(sizeof(struct pksav_gba_save_internal), 1);
+    struct pksav_gba_save_internal* internal_ptr = gba_save_ptr->internal_ptr;
+    internal_ptr->raw_save_ptr = buffer;
 
-#define SECTION0_DATA16(sections,game,offset) \
-    (sections)->section0.data16[pksav_gba_section0_offsets[offset][game]/2]
-
-#define SECTION0_DATA32(sections,game,offset) \
-    (sections)->section0.data32[pksav_gba_section0_offsets[offset][game]/4]
-
-#define SECTION1_DATA8(sections,game,offset) \
-    (sections)->section1.data8[pksav_gba_section1_offsets[offset][game]]
-
-#define SECTION1_DATA16(sections,game,offset) \
-    (sections)->section1.data16[pksav_gba_section1_offsets[offset][game]/2]
-
-#define SECTION1_DATA32(sections,game,offset) \
-    (sections)->section1.data32[pksav_gba_section1_offsets[offset][game]/4]
-
-#define SECTION2_DATA8(sections,game,offset) \
-    (sections)->section2.data8[pksav_gba_section2_offsets[offset][game]]
-
-#define SECTION2_DATA16(sections,game,offset) \
-    (sections)->section2.data16[pksav_gba_section2_offsets[offset][game]/2]
-
-#define SECTION2_DATA32(sections,game,offset) \
-    (sections)->section2.data32[pksav_gba_section2_offsets[offset][game]/4]
-
-#define SECTION4_DATA8(sections,game,offset) \
-    (sections)->section4.data8[pksav_gba_section4_offsets[offset][game]]
-
-#define SECTION4_DATA32(sections,game,offset) \
-    (sections)->section4.data32[pksav_gba_section4_offsets[offset][game]/4]
-};
-pksav_error_t pksav_buffer_is_gba_save(
-    const uint8_t* buffer,
-    size_t buffer_len,
-    pksav_gba_game_t gba_game,
-    bool* result_out
-) {
-    if(!buffer || !result_out) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    if(buffer_len < PKSAV_GBA_SMALL_SAVE_SIZE) {
-        *result_out = false;
-        return PKSAV_ERROR_NONE;
-    }
-
-    *
-     * If the save is not a small save, we need to find the most recent save slot first.
-     *
-     * Once the proper save slot has been found, it needs to be unshuffled. Sadly, that
-     * means more memory allocation.
-     *
-    const union pksav_gba_save_slot* sections_pair = (const union pksav_gba_save_slot*)buffer;
-    const union pksav_gba_save_slot* save_slot;
-    if(buffer_len < PKSAV_GBA_SAVE_SIZE) {
-        save_slot = sections_pair;
-    } else if(SAVE_INDEX(&sections_pair[0]) > SAVE_INDEX(&sections_pair[1])) {
-        save_slot = &sections_pair[0];
-    } else {
-        save_slot = &sections_pair[1];
-    }
-
-    // Make sure the section IDs are valid to avoid a crash.
-    for(size_t section_index = 0; section_index < 14; ++section_index)
-    {
-        if(save_slot->sections_arr[section_index].footer.section_id > 13)
-        {
-            *result_out = false;
-            return PKSAV_ERROR_NONE;
-        }
-    }
-
-    union pksav_gba_save_slot unshuffled;
-    uint8_t section_nums[14];
     pksav_gba_save_unshuffle_sections(
-        save_slot,
-        &unshuffled,
-        section_nums
+        save_slot_ptr,
+        &internal_ptr->unshuffled_save_slot,
+        internal_ptr->shuffled_section_nums
     );
 
-    uint32_t game_code = pksav_littleendian32(SECTION0_DATA32((&unshuffled), gba_game, PKSAV_GBA_GAME_CODE));
-    uint32_t security_key1 = pksav_littleendian32(SECURITY_KEY1((&unshuffled), gba_game));
-    uint32_t security_key2 = pksav_littleendian32(SECURITY_KEY2((&unshuffled), gba_game));
+    struct pksav_gba_save_section* section0_ptr = &internal_ptr->unshuffled_save_slot.section0;
+    struct pksav_gba_trainer_info_internal* trainer_info_ptr =
+        (struct pksav_gba_trainer_info_internal*)section0_ptr;
 
-    if(gba_game == PKSAV_GBA_RS) {
-        *result_out = (game_code == 0) && (security_key1 == security_key2);
-    } else if(gba_game == PKSAV_GBA_FRLG) {
-        *result_out = (game_code == 1) && (security_key1 == security_key2);
-    } else {
-        *result_out = (security_key1 == security_key2);
-    }
+    struct pksav_gba_save_section* section1_ptr = &internal_ptr->unshuffled_save_slot.section1;
+    struct pksav_gba_save_section* section2_ptr = &internal_ptr->unshuffled_save_slot.section2;
+    struct pksav_gba_save_section* section4_ptr = &internal_ptr->unshuffled_save_slot.section4;
 
-    return PKSAV_ERROR_NONE;
+    // Time played
+
+    // Pokémon storage
 }
 
-pksav_error_t pksav_file_is_gba_save(
-    const char* filepath,
-    pksav_gba_game_t gba_game,
-    bool* result_out
-) {
-    if(!filepath || !result_out) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    FILE* gba_save = fopen(filepath, "rb");
-    if(!gba_save) {
-        *result_out = false;
-        return PKSAV_ERROR_FILE_IO;
-    }
-
-    fseek(gba_save, 0, SEEK_END);
-    size_t filesize = ftell(gba_save);
-
-    if(filesize < PKSAV_GBA_SMALL_SAVE_SIZE) {
-        fclose(gba_save);
-        return false;
-    }
-
-    uint8_t* gba_save_data = calloc(filesize, 1);
-    fseek(gba_save, 0, SEEK_SET);
-    size_t num_read = fread((void*)gba_save_data, 1, filesize, gba_save);
-    fclose(gba_save);
-
-    bool ret = false;
-    if(num_read == filesize) {
-        pksav_buffer_is_gba_save(
-            gba_save_data,
-            filesize,
-            gba_game,
-            &ret
-        );
-    }
-
-    free(gba_save_data);
-    *result_out = ret;
-    return PKSAV_ERROR_NONE;
-}
-
+/*
 // Assumes all dynamically allocated memory has already been allocated
 static void _pksav_gba_save_set_pointers(
     pksav_gba_save_t* gba_save
