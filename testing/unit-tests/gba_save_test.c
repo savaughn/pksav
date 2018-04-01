@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../../lib/gba/save_internal.h"
+
 #include "c_test_common.h"
 #include "test-utils.h"
 
@@ -74,7 +76,7 @@ static void pksav_gba_get_buffer_save_type_on_random_buffer_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t buffer[PKSAV_GBA_LARGE_SAVE_SIZE] = {0};
+    uint8_t buffer[PKSAV_GBA_SAVE_SIZE] = {0};
     for(size_t run_index = 0; run_index < 1000; ++run_index)
     {
         randomize_buffer(buffer, sizeof(buffer));
@@ -101,7 +103,6 @@ static void pksav_gba_get_buffer_save_type_test(
     TEST_ASSERT_TRUE(expected_save_type <= PKSAV_GBA_SAVE_TYPE_FRLG);
 
     char filepath[256] = {0};
-    uint8_t save_buffer[PKSAV_GBA_LARGE_SAVE_SIZE];
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
@@ -121,8 +122,9 @@ static void pksav_gba_get_buffer_save_type_test(
     {
         TEST_FAIL_MESSAGE("Failed to get save file size.");
     }
-    TEST_ASSERT_TRUE(filesize >= PKSAV_GBA_SMALL_SAVE_SIZE);
+    TEST_ASSERT_TRUE(filesize >= PKSAV_GBA_SAVE_SIZE);
 
+    uint8_t* save_buffer = calloc(filesize, 1);
     if(read_file_into_buffer(filepath, save_buffer, filesize))
     {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
@@ -131,11 +133,13 @@ static void pksav_gba_get_buffer_save_type_test(
     enum pksav_gba_save_type save_type = PKSAV_GBA_SAVE_TYPE_NONE;
     error = pksav_gba_get_buffer_save_type(
                 save_buffer,
-                PKSAV_GBA_LARGE_SAVE_SIZE,
+                filesize,
                 &save_type
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
+
+    free(save_buffer);
 }
 
 static void pksav_gba_get_file_save_type_test(

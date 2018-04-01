@@ -20,12 +20,13 @@
 
 #include <pksav/math/endian.h>
 
+#include <stdio.h>
+
 struct pksav_gba_save_internal
 {
     uint8_t* raw_save_ptr;
 
     union pksav_gba_save_slot unshuffled_save_slot;
-    bool is_small_save;
     uint8_t shuffled_section_nums[PKSAV_GBA_NUM_SAVE_SECTIONS];
 
     bool is_buffer_ours;
@@ -110,33 +111,27 @@ static union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
 )
 {
     assert(buffer != NULL);
+    (void)buffer_len;
 
     union pksav_gba_save_slot* active_save_slot_ptr = NULL;
 
-    if(buffer_len >= PKSAV_GBA_SMALL_SAVE_SIZE)
+    if(buffer_len >= PKSAV_GBA_SAVE_SIZE)
     {
         union pksav_gba_save_slot* save_slots = (union pksav_gba_save_slot*)buffer;
-        if(buffer_len < PKSAV_GBA_LARGE_SAVE_SIZE)
+        uint32_t save_index1 = pksav_littleendian32(
+                                   save_slots[0].section0.footer.save_index
+                               );
+        uint32_t save_index2 = pksav_littleendian32(
+                                   save_slots[1].section0.footer.save_index
+                               );
+
+        if(save_index1 > save_index2)
         {
             active_save_slot_ptr = &save_slots[0];
         }
         else
         {
-            uint32_t save_index1 = pksav_littleendian32(
-                                       save_slots[0].section0.footer.save_index
-                                   );
-            uint32_t save_index2 = pksav_littleendian32(
-                                       save_slots[1].section0.footer.save_index
-                                   );
-
-            if(save_index1 > save_index2)
-            {
-                active_save_slot_ptr = &save_slots[0];
-            }
-            else
-            {
-                active_save_slot_ptr = &save_slots[1];
-            }
+            active_save_slot_ptr = &save_slots[1];
         }
     }
 
@@ -303,7 +298,7 @@ enum pksav_error pksav_gba_get_file_save_type(
 
     return error;
 }
-
+/*
 static void _pksav_gba_set_save_pointers(
     struct pksav_gba_save* gba_save_ptr,
     uint8_t* buffer,
@@ -344,6 +339,7 @@ static void _pksav_gba_set_save_pointers(
 
     // Pokémon storage
 }
+*/
 
 /*
 // Assumes all dynamically allocated memory has already been allocated
@@ -496,7 +492,7 @@ pksav_error_t pksav_gba_save_load(
     fseek(gba_save_file, 0, SEEK_END);
     size_t filesize = ftell(gba_save_file);
 
-    if(filesize < PKSAV_GBA_SMALL_SAVE_SIZE) {
+    if(filesize < PKSAV_GBA_SAVE_SIZE) {
         fclose(gba_save_file);
         return PKSAV_ERROR_INVALID_SAVE;
     }
@@ -609,7 +605,7 @@ pksav_error_t pksav_gba_save_save(
     fwrite(
         (void*)gba_save->raw,
         1,
-        (gba_save->small_save ? PKSAV_GBA_SMALL_SAVE_SIZE : PKSAV_GBA_SAVE_SIZE),
+        (gba_save->small_save ? PKSAV_GBA_SAVE_SIZE : PKSAV_GBA_SAVE_SIZE),
         gba_save_file
     );
 
