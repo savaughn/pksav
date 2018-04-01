@@ -22,6 +22,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define PKSAV_GBA_SAVE_SLOT_SIZE  0x10000
+#define PKSAV_GBA_SMALL_SAVE_SIZE PKSAV_GBA_SAVE_SLOT_SIZE
+#define PKSAV_GBA_LARGE_SAVE_SIZE (PKSAV_GBA_SAVE_SLOT_SIZE * 2)
+
 #define PKSAV_GBA_NUM_POKEMON_BOXES 14
 
 struct pksav_gba_pokemon_storage
@@ -85,6 +89,17 @@ struct pksav_gba_save
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+PKSAV_API enum pksav_error pksav_gba_get_buffer_save_type(
+    const uint8_t* buffer,
+    size_t buffer_len,
+    enum pksav_gba_save_type* save_type_out
+);
+
+PKSAV_API enum pksav_error pksav_gba_get_file_save_type(
+    const char* filepath,
+    enum pksav_gba_save_type* save_type_out
+);
 
 #ifdef __cplusplus
 }
