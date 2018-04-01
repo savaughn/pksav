@@ -14,6 +14,20 @@
 
 #pragma pack(push,1)
 
+// If it weren't for the padding, this could be user-facing...
+struct pksav_gba_trainer_info_internal
+{
+    uint8_t name[7];
+    //! Padding. No relevant data is stored here.
+    uint8_t padding1;
+    //! Trainer gender (0: male, 1: female).
+    uint8_t gender;
+    //! Padding. No relevant data is stored here.
+    uint8_t padding2;
+    //! Trainer ID.
+    union pksav_trainer_id trainer_id;
+};
+
 #define PKSAV_GBA_NUM_SAVE_SECTIONS 14
 
 /*!
@@ -125,7 +139,7 @@ union pksav_gba_save_slot
             // Access the data as a normal section.
             struct pksav_gba_save_section section0;
             // Access the data as a trainer info struct.
-            struct pksav_gba_trainer_info trainer_info;
+            struct pksav_gba_trainer_info_internal trainer_info;
         };
         // Section 1 (team/items).
         struct pksav_gba_save_section section1;

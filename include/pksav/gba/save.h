@@ -10,12 +10,13 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/common/trainer_id.h>
+
 #include <pksav/gba/items.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save_type.h>
 #include <pksav/gba/time.h>
-#include <pksav/gba/trainer_info.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -37,13 +38,29 @@ struct pksav_gba_item_storage
     struct pksav_gba_item_pc* item_pc_ptr;
 };
 
+struct pksav_gba_trainer_info
+{
+    union pksav_trainer_id* id_ptr;
+
+    /*!
+     * @brief A pointer to the trainer's name.
+     *
+     * This value should be accessed with ::pksav_text_from_gba with a num_chars
+     * value of 7.
+     *
+     * This value should be set with ::pksav_text_to_gba with a num_chars
+     * value of 7.
+     */
+    uint8_t* name_ptr;
+
+    uint8_t* gender_ptr;
+
+    uint32_t* money_ptr;
+};
+
 struct pksav_gba_misc_fields
 {
     uint8_t* rival_name_ptr;
-
-    uint32_t* money_ptr;
-
-    uint16_t* casino_coins_ptr;
 };
 
 struct pksav_gba_save

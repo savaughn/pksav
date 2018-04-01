@@ -13,7 +13,6 @@ SET(pksav_gba_headers
     save_type.h
     text.h
     time.h
-    trainer_info.h
 )
 
 INSTALL(

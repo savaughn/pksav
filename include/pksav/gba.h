@@ -17,7 +17,6 @@
 #include <pksav/gba/save_type.h>
 #include <pksav/gba/text.h>
 #include <pksav/gba/time.h>
-#include <pksav/gba/trainer_info.h>
 
 #include <pksav/common/condition.h>
 #include <pksav/common/contest_stats.h>
