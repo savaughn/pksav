@@ -16,6 +16,10 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+ * Testing TODO: make sure saving alternates between slots
+ */
+
 #define STRBUFFER_LEN 64
 /*
 static const struct pksav_gen2_save EMPTY_GEN2_SAVE =

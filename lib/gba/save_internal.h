@@ -8,6 +8,7 @@
 #define PKSAV_GBA_SAVE_INTERNAL_H
 
 #include <pksav/gba/save.h>
+#include <pksav/gba/time.h>
 #include <pksav/common/trainer_id.h>
 
 #include <stdint.h>
@@ -25,7 +26,9 @@ struct pksav_gba_trainer_info_internal
     //! Padding. No relevant data is stored here.
     uint8_t padding2;
     //! Trainer ID.
-    union pksav_trainer_id trainer_id;
+    union pksav_trainer_id id;
+    //! How long this save in the given slot has been played.
+    struct pksav_gba_time time_played;
 };
 
 #define PKSAV_GBA_NUM_SAVE_SECTIONS 14

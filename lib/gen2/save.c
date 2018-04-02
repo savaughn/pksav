@@ -433,15 +433,22 @@ static enum pksav_error _pksav_gen2_load_save_from_buffer(
             );
     if(!error && (save_type != PKSAV_GEN2_SAVE_TYPE_NONE))
     {
-        gen2_save_out->save_type = save_type;
-        _pksav_gen2_set_save_pointers(
-            gen2_save_out,
-            buffer
-        );
+        if(save_type != PKSAV_GEN2_SAVE_TYPE_NONE)
+        {
+            gen2_save_out->save_type = save_type;
+            _pksav_gen2_set_save_pointers(
+                gen2_save_out,
+                buffer
+            );
 
-        // Internal
-        struct pksav_gen2_save_internal* internal_ptr = gen2_save_out->internal_ptr;
-        internal_ptr->is_buffer_ours = is_buffer_ours;
+            // Internal
+            struct pksav_gen2_save_internal* internal_ptr = gen2_save_out->internal_ptr;
+            internal_ptr->is_buffer_ours = is_buffer_ours;
+        }
+        else
+        {
+            error = PKSAV_ERROR_INVALID_SAVE;
+        }
     }
 
     return error;

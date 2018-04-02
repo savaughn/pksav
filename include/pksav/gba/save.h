@@ -35,9 +35,9 @@ struct pksav_gba_pokemon_storage
 
 struct pksav_gba_item_storage
 {
-    union pksav_gba_item_bag* item_bag_ptr;
+    union pksav_gba_item_bag* bag_ptr;
 
-    struct pksav_gba_item_pc* item_pc_ptr;
+    struct pksav_gba_item_pc* pc_ptr;
 };
 
 struct pksav_gba_trainer_info
@@ -63,11 +63,15 @@ struct pksav_gba_trainer_info
 struct pksav_gba_misc_fields
 {
     uint8_t* rival_name_ptr;
+
+    uint16_t* casino_coins_ptr;
 };
 
 struct pksav_gba_save
 {
     enum pksav_gba_save_type save_type;
+
+    // TODO: options
 
     struct pksav_gba_time* time_played_ptr;
 
@@ -77,7 +81,7 @@ struct pksav_gba_save
 
     struct pksav_gba_pokedex pokedex;
 
-    struct pksav_gba_trainer_info* trainer_info_ptr;
+    struct pksav_gba_trainer_info trainer_info;
 
     struct pksav_gba_misc_fields misc_fields;
 
@@ -97,6 +101,26 @@ PKSAV_API enum pksav_error pksav_gba_get_buffer_save_type(
 PKSAV_API enum pksav_error pksav_gba_get_file_save_type(
     const char* filepath,
     enum pksav_gba_save_type* save_type_out
+);
+
+PKSAV_API enum pksav_error pksav_gba_load_save_from_buffer(
+    uint8_t* buffer,
+    size_t buffer_len,
+    struct pksav_gba_save* gba_save_out
+);
+
+PKSAV_API enum pksav_error pksav_gba_load_save_from_file(
+    const char* filepath,
+    struct pksav_gba_save* gba_save_out
+);
+
+PKSAV_API enum pksav_error pksav_gba_save_save(
+    const char* filepath,
+    struct pksav_gba_save* gba_save_ptr
+);
+
+PKSAV_API enum pksav_error pksav_gba_free_save(
+    struct pksav_gba_save* gba_save_ptr
 );
 
 #ifdef __cplusplus
