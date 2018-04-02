@@ -531,7 +531,7 @@ static void gen2_save_test(
     }
 
     // Make sure setting the current box works as expected.
-    for(size_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
+    for(uint8_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
     {
         error = pksav_gen2_pokemon_storage_set_current_box(
                     &gen2_save_ptr->pokemon_storage,
