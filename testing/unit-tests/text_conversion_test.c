@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -101,8 +101,62 @@ static void pksav_gba_text_test()
     }
 }
 
+static void pksav_gen4_text_test()
+{
+    enum pksav_error error = PKSAV_ERROR_NONE;
+    uint16_t gen4_buffer[BUFFER_LEN] = {0};
+    char strbuffer[BUFFER_LEN] = {0};
+
+    for(size_t string_index = 0; strings[string_index] != NULL; ++string_index)
+    {
+        error = pksav_gen4_export_text(
+                    strings[string_index],
+                    gen4_buffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        error = pksav_gen4_import_text(
+                    gen4_buffer,
+                    strbuffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
+    }
+}
+
+static void pksav_gen5_text_test()
+{
+    enum pksav_error error = PKSAV_ERROR_NONE;
+    uint16_t gen5_buffer[BUFFER_LEN] = {0};
+    char strbuffer[BUFFER_LEN] = {0};
+
+    for(size_t string_index = 0; strings[string_index] != NULL; ++string_index)
+    {
+        error = pksav_gen5_export_text(
+                    strings[string_index],
+                    gen5_buffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        error = pksav_gen5_import_text(
+                    gen5_buffer,
+                    strbuffer,
+                    BUFFER_LEN
+                );
+        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
+    }
+}
+
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen1_text_test)
     PKSAV_TEST(pksav_gen2_text_test)
     PKSAV_TEST(pksav_gba_text_test)
+    PKSAV_TEST(pksav_gen4_text_test)
+    PKSAV_TEST(pksav_gen5_text_test)
 )

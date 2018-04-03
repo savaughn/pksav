@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,9 @@
 
 #include <pksav/gen4/text.h>
 
+#include <assert.h>
 #include <string.h>
+#include <wchar.h>
 
 #define PKSAV_GEN4_TERMINATOR 0xFFFF
 
@@ -18,7 +20,8 @@
  *
  * Source: https://github.com/Chase-san/PokeLib/blob/master/lib/PokeText.cpp
  */
-static const wchar_t pksav_gen4_char_map1[] = { //0x0000,
+static const wchar_t PKSAV_GEN4_CHAR_MAP1[] = // 0x0000,
+{
     0x0000,0x3000,0x3041,0x3042,0x3043,0x3044,0x3045,0x3046,0x3047,0x3048,0x3049,0x304A,0x304B,0x304C,0x304D,0x304E,
     0x304F,0x3050,0x3051,0x3052,0x3053,0x3054,0x3055,0x3056,0x3057,0x3058,0x3059,0x305A,0x305B,0x305C,0x305D,0x305E,
     0x305F,0x3060,0x3061,0x3062,0x3063,0x3064,0x3065,0x3066,0x3067,0x3068,0x3069,0x306A,0x306B,0x306C,0x306D,0x306E,
@@ -33,7 +36,7 @@ static const wchar_t pksav_gen4_char_map1[] = { //0x0000,
     0xFF25,0xFF26,0xFF27,0xFF28,0xFF29,0xFF2A,0xFF2B,0xFF2C,0xFF2D,0xFF2E,0xFF2F,0xFF30,0xFF31,0xFF32,0xFF33,0xFF34,
     0xFF35,0xFF36,0xFF37,0xFF38,0xFF39,0xFF3A,0xFF41,0xFF42,0xFF43,0xFF44,0xFF45,0xFF46,0xFF47,0xFF48,0xFF49,0xFF4A,
     0xFF4B,0xFF4C,0xFF4D,0xFF4E,0xFF4F,0xFF50,0xFF51,0xFF52,0xFF53,0xFF54,0xFF55,0xFF56,0xFF57,0xFF58,0xFF59,0xFF5A,
-    0x0000, //Missing ###
+    0x0000, // Missing ###
     0xFF01,0xFF1F,0x3001,0x3002,0x22EF,0x30FB,0xFF0F,0x300C,0x300D,0x300E,0x300F,0xFF08,0xFF09,0x329A,0x329B,0xFF0B,
     0xFF0D,0x2297,0x2298,0xFF1D,0xFF5A,0xFF1A,0xFF1B,0xFF0E,0xFF0C,0x2664,0x2667,0x2661,0x2662,0x2606,0x25CE,0x25CB,
     0x25A1,0x25B3,0x25C7,0xFF20,0x266B,0xFF05,0x263C,0x2614,0x2630,0x2744,0x260B,0x2654,0x2655,0x260A,0x2934,0x2935,
@@ -52,8 +55,10 @@ static const wchar_t pksav_gen4_char_map1[] = { //0x0000,
     0x266A,0x0025,0x2600,0x2601,0x2602,0x2603,0x263A,0x265A,0x265B,0x2639,0x2197,0x2198,0x263D,0x0020,0x2074,0x20A7,
     0x20A6,0x00B0,0x005F,0xFF3F,
 };
+static const size_t PKSAV_GEN4_CHAR_MAP1_SIZE = sizeof(PKSAV_GEN4_CHAR_MAP1)/sizeof(wchar_t);
 
-static const wchar_t pksav_gen4_char_map2[] = {
+static const wchar_t PKSAV_GEN4_CHAR_MAP2[] =
+{
     0xAC00,0xAC01,0xAC04,0xAC07,0xAC08,0xAC09,0xAC0A,0xAC10,0xAC11,0xAC12,0xAC13,0xAC14,0xAC15,0xAC16,0xAC17,0xAC19,
     0xAC1A,0xAC1B,0xAC1C,0xAC1D,0xAC20,0xAC24,0xAC2C,0xAC2D,0xAC2F,0xAC30,0xAC31,0xAC38,0xAC39,0xAC3C,0xAC40,0xAC4B,
     0xAC4D,0xAC54,0xAC58,0xAC5C,0xAC70,0xAC71,0xAC74,0xAC77,0xAC78,0xAC7A,0xAC80,0xAC81,0xAC83,0xAC84,0xAC85,0xAC86,
@@ -205,90 +210,121 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0x1112,0x1161,0x1162,0x1163,0x1164,0x1165,0x1166,0x1167,0x1168,0x1169,0x116D,0x116E,0x1172,0x1173,0x1175,0xB894,
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
+static const size_t PKSAV_GEN4_CHAR_MAP2_SIZE = sizeof(PKSAV_GEN4_CHAR_MAP2)/sizeof(wchar_t);
 
-enum pksav_error pksav_text_from_gen4(
+static enum pksav_error _pksav_gen4_import_widetext(
+    const uint16_t* input_buffer,
+    wchar_t* output_widetext,
+    size_t num_chars
+)
+{
+    assert(input_buffer != NULL);
+    assert(output_widetext != NULL);
+
+    memset(output_widetext, 0, sizeof(wchar_t)*num_chars);
+
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        if(input_buffer[char_index] == PKSAV_GEN4_TERMINATOR)
+        {
+            break;
+        }
+        else if(input_buffer[char_index] < 0x400)
+        {
+            output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP1[input_buffer[char_index]];
+        }
+        else
+        {
+            output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP2[input_buffer[char_index]];
+        }
+    }
+
+    return PKSAV_ERROR_NONE;
+}
+
+static enum pksav_error _pksav_gen4_export_widetext(
+    const wchar_t* input_widetext,
+    uint16_t* output_buffer,
+    size_t num_chars
+)
+{
+    assert(input_widetext != NULL);
+    assert(output_buffer != NULL);
+
+    memset(output_buffer, 0xFF, sizeof(uint16_t)*num_chars);
+
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        ssize_t index = wchar_map_index(
+                            PKSAV_GEN4_CHAR_MAP1,
+                            PKSAV_GEN4_CHAR_MAP1_SIZE,
+                            input_widetext[char_index]
+                        );
+        if(index == -1)
+        {
+            index = wchar_map_index(
+                        PKSAV_GEN4_CHAR_MAP2,
+                        PKSAV_GEN4_CHAR_MAP2_SIZE,
+                        input_widetext[char_index]
+                    );
+            if(index == -1)
+            {
+                break;
+            }
+            else
+            {
+                output_buffer[char_index] = (uint16_t)index;
+            }
+        } else {
+            output_buffer[char_index] = (uint16_t)index;
+        }
+    }
+
+    return PKSAV_ERROR_NONE;
+}
+
+enum pksav_error pksav_gen4_import_text(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
+)
+{
+    if(!input_buffer || !output_text)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    pksav_widetext_from_gen4(
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    _pksav_gen4_import_widetext(
         input_buffer, widetext, num_chars
     );
 
     memset(output_text, 0, num_chars);
-    wcstombs(output_text, widetext, num_chars);
+    pksav_wcstombs(output_text, widetext, num_chars);
     free(widetext);
 
     return PKSAV_ERROR_NONE;
 }
 
-enum pksav_error pksav_widetext_from_gen4(
-    const uint16_t* input_buffer,
-    wchar_t* output_text,
-    size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] < 0x400) {
-            output_text[i] = pksav_gen4_char_map1[input_buffer[i]];
-        } else {
-            output_text[i] = pksav_gen4_char_map2[input_buffer[i]];
-        }
-    }
-
-    return PKSAV_ERROR_NONE;
-}
-
-enum pksav_error pksav_text_to_gen4(
+enum pksav_error pksav_gen4_export_text(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
+)
+{
+    if(!input_text || !output_buffer)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    mbstowcs(widetext, input_text, num_chars);
+    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_mbstowcs(widetext, input_text, num_chars);
 
-    pksav_widetext_to_gen4(
+    _pksav_gen4_export_widetext(
         widetext, output_buffer, num_chars
     );
 
     free(widetext);
-
-    return PKSAV_ERROR_NONE;
-}
-
-enum pksav_error pksav_widetext_to_gen4(
-    const wchar_t* input_text,
-    uint16_t* output_buffer,
-    size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
-
-    memset(output_buffer, 0xFF, sizeof(wchar_t)*num_chars);
-
-    for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gen4_char_map2, 485, input_text[i]);
-        if(index == -1) {
-            break;
-        } else {
-            output_buffer[i] = (uint16_t)index;
-        }
-    }
 
     return PKSAV_ERROR_NONE;
 }
