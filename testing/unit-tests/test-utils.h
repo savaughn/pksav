@@ -25,17 +25,6 @@ int randomize_buffer(
     size_t buffer_len
 );
 
-int get_filesize(
-    const char* filename,
-    size_t* result_out
-);
-
-int read_file_into_buffer(
-    const char* filename,
-    uint8_t* buffer,
-    size_t buffer_len
-);
-
 int do_files_differ(
     const char* filename1,
     const char* filename2,

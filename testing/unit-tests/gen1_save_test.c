@@ -8,6 +8,8 @@
 #include "c_test_common.h"
 #include "test-utils.h"
 
+#include "util/fs.h"
+
 #include <pksav/config.h>
 #include <pksav/gen1.h>
 
@@ -96,7 +98,6 @@ static void pksav_gen1_get_buffer_save_type_test(
     TEST_ASSERT_TRUE(expected_save_type <= PKSAV_GEN1_SAVE_TYPE_YELLOW);
 
     char filepath[256] = {0};
-    uint8_t save_buffer[PKSAV_GEN1_SAVE_SIZE];
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
@@ -111,10 +112,13 @@ static void pksav_gen1_get_buffer_save_type_test(
         pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
-    if(read_file_into_buffer(filepath, save_buffer, PKSAV_GEN1_SAVE_SIZE))
+    uint8_t* save_buffer = NULL;
+    size_t save_size = 0;
+    if(pksav_fs_read_file_to_buffer(filepath, &save_buffer, &save_size))
     {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
     }
+    TEST_ASSERT_TRUE(save_size >= PKSAV_GEN1_SAVE_SIZE);
 
     enum pksav_gen1_save_type save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
     error = pksav_gen1_get_buffer_save_type(
@@ -450,19 +454,17 @@ static void gen1_save_from_buffer_test(
         pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
-    uint8_t save_buffer[PKSAV_GEN1_SAVE_SIZE] = {0};
-    if(read_file_into_buffer(
-           original_filepath,
-           save_buffer,
-           sizeof(save_buffer))
-    )
+    uint8_t* save_buffer = NULL;
+    size_t save_size = 0;
+    if(pksav_fs_read_file_to_buffer(original_filepath, &save_buffer, &save_size))
     {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
     }
+    TEST_ASSERT_TRUE(save_size >= PKSAV_GEN1_SAVE_SIZE);
 
     error = pksav_gen1_load_save_from_buffer(
                 save_buffer,
-                sizeof(save_buffer),
+                save_size,
                 &gen1_save
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
@@ -474,6 +476,8 @@ static void gen1_save_from_buffer_test(
         original_filepath,
         save_name
     );
+
+    free(save_buffer);
 }
 
 static void gen1_save_from_file_test(

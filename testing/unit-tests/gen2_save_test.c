@@ -8,6 +8,8 @@
 #include "c_test_common.h"
 #include "test-utils.h"
 
+#include "util/fs.h"
+
 #include <pksav/config.h>
 #include <pksav/gen2/save.h>
 #include <pksav/gen2/text.h>
@@ -103,7 +105,6 @@ static void pksav_gen2_get_buffer_save_type_test(
     TEST_ASSERT_TRUE(expected_save_type <= PKSAV_GEN2_SAVE_TYPE_CRYSTAL);
 
     char filepath[256] = {0};
-    uint8_t save_buffer[PKSAV_GEN2_SAVE_SIZE];
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     char* pksav_test_saves = getenv("PKSAV_TEST_SAVES");
@@ -118,10 +119,13 @@ static void pksav_gen2_get_buffer_save_type_test(
         pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
-    if(read_file_into_buffer(filepath, save_buffer, PKSAV_GEN2_SAVE_SIZE))
+    uint8_t* save_buffer = NULL;
+    size_t save_size = 0;
+    if(pksav_fs_read_file_to_buffer(filepath, &save_buffer, &save_size))
     {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
     }
+    TEST_ASSERT_TRUE(save_size >= PKSAV_GEN2_SAVE_SIZE);
 
     enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
     error = pksav_gen2_get_buffer_save_type(
@@ -131,6 +135,8 @@ static void pksav_gen2_get_buffer_save_type_test(
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
+
+    free(save_buffer);
 }
 
 static void pksav_gen2_get_file_save_type_test(
@@ -609,19 +615,17 @@ static void gen2_save_from_buffer_test(
         pksav_test_saves, FS_SEPARATOR, subdir, FS_SEPARATOR, save_name
     );
 
-    uint8_t save_buffer[PKSAV_GEN2_SAVE_SIZE] = {0};
-    if(read_file_into_buffer(
-           original_filepath,
-           save_buffer,
-           sizeof(save_buffer))
-    )
+    uint8_t* save_buffer = NULL;
+    size_t save_size = 0;
+    if(pksav_fs_read_file_to_buffer(original_filepath, &save_buffer, &save_size))
     {
         TEST_FAIL_MESSAGE("Failed to read save into buffer.");
     }
+    TEST_ASSERT_TRUE(save_size >= PKSAV_GEN2_SAVE_SIZE);
 
     error = pksav_gen2_load_save_from_buffer(
                 save_buffer,
-                sizeof(save_buffer),
+                save_size,
                 &gen2_save
             );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
@@ -633,6 +637,8 @@ static void gen2_save_from_buffer_test(
         original_filepath,
         save_name
     );
+
+    free(save_buffer);
 }
 
 static void gen2_save_from_file_test(

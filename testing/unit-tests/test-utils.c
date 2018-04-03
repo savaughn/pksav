@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "util/fs.h"
 #include "test-utils.h"
 
 #include <pksav/config.h>
@@ -60,56 +61,6 @@ int randomize_buffer(
     return 0;
 }
 
-int get_filesize(
-    const char* filename,
-    size_t* result_out
-)
-{
-    if(!filename || !result_out)
-    {
-        return -1;
-    }
-
-    FILE* file = fopen(filename, "r");
-    if(!file)
-    {
-        return -1;
-    }
-
-    fseek(file, 0, SEEK_END);
-    *result_out = ftell(file);
-    fclose(file);
-
-    return 0;
-}
-
-int read_file_into_buffer(
-    const char* filename,
-    uint8_t* buffer,
-    size_t buffer_len
-)
-{
-    if(!filename || !buffer)
-    {
-        return -1;
-    }
-
-    FILE* file = fopen(filename, "rb");
-    if(!file)
-    {
-        return -1;
-    }
-    size_t num_read = fread((void*)buffer, 1, buffer_len, file);
-    (void)num_read;
-
-    if(fclose(file))
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
 int do_files_differ(
     const char* filename1,
     const char* filename2,
@@ -124,23 +75,23 @@ int do_files_differ(
     size_t file1size = 0;
     size_t file2size = 0;
 
-    if(get_filesize(filename1, &file1size) || get_filesize(filename2, &file2size))
+    if(pksav_fs_filesize(filename1, &file1size) || pksav_fs_filesize(filename2, &file2size))
     {
         return -1;
     }
 
     if(file1size == file2size)
     {
-        uint8_t* buffer1 = calloc(file1size, 1);
-        uint8_t* buffer2 = calloc(file2size, 1);
+        uint8_t* buffer1 = NULL;
+        uint8_t* buffer2 = NULL;
 
-        if(read_file_into_buffer(filename1, buffer1, file1size))
+        if(pksav_fs_read_file_to_buffer(filename1, &buffer1, &file1size))
         {
             free(buffer1);
             free(buffer2);
             return -1;
         }
-        if(read_file_into_buffer(filename2, buffer2, file2size))
+        if(pksav_fs_read_file_to_buffer(filename2, &buffer2, &file2size))
         {
             free(buffer1);
             free(buffer2);

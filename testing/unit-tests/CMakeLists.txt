@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -10,9 +10,13 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
+    ${PKSAV_SOURCE_DIR}/lib
 )
 
-ADD_LIBRARY(pksav-test-utils STATIC test-utils.c)
+ADD_LIBRARY(pksav-test-utils STATIC
+    ${PKSAV_SOURCE_DIR}/lib/util/fs.c
+    test-utils.c
+)
 IF(UNIX)
     SET_TARGET_PROPERTIES(pksav-test-utils
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS} -fPIC"
