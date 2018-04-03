@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "text_common.h"
+#include "common/text_common.h"
 
 #include <locale.h>
 #include <stdio.h>

@@ -99,7 +99,8 @@ int read_file_into_buffer(
     {
         return -1;
     }
-    PKSAV_UNUSED(size_t num_read) = fread((void*)buffer, 1, buffer_len, file);
+    size_t num_read = fread((void*)buffer, 1, buffer_len, file);
+    (void)num_read;
 
     if(fclose(file))
     {

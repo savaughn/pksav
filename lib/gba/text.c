@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../common/text_common.h"
+#include "common/text_common.h"
 
 #include <pksav/gba/text.h>
 

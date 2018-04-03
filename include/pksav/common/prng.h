@@ -17,19 +17,19 @@
 extern "C" {
 #endif
 
-static PKSAV_INLINE uint32_t arng_next(
+static inline uint32_t arng_next(
     uint32_t seed
 ) {
     return (0x6C078965 * seed) + 1;
 }
 
-static PKSAV_INLINE uint32_t lcrng32_next(
+static inline uint32_t lcrng32_next(
     uint32_t seed
 ) {
     return (0x41C64E6D * seed) + 0x6073;
 }
 
-static PKSAV_INLINE uint64_t lcrng64_next(
+static inline uint64_t lcrng64_next(
     uint64_t seed
 ) {
     return (0x5D588B656C078965UL * seed) + 0x269EC3;

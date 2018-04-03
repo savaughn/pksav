@@ -1,9 +1,5 @@
 /*!
- * @file    pksav/config.h
- * @ingroup PKSav
- * @brief   Platform-defining and platform-agnostic macros.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,10 +11,8 @@
  * Define cross-platform macros, platform-specific stuff
  ***************************************************************************/
 #if defined(_MSC_VER)
-#    define PKSAV_EXPORT         __declspec(dllexport)
-#    define PKSAV_IMPORT         __declspec(dllimport)
-#    define PKSAV_INLINE         __forceinline
-#    define PKSAV_UNUSED(x)      x
+#    define PKSAV_EXPORT __declspec(dllexport)
+#    define PKSAV_IMPORT __declspec(dllimport)
 #    pragma warning(disable: 4800) // forcing value to bool 'true' or 'false'
 
 // MSVC doesn't have ssize_t for C, so we need to define it
@@ -26,15 +20,11 @@
 typedef intmax_t ssize_t;
 
 #elif defined(__GNUC__) && __GNUC__ >= 4
-#    define PKSAV_EXPORT         __attribute__((visibility("default")))
-#    define PKSAV_IMPORT         __attribute__((visibility("default")))
-#    define PKSAV_INLINE         inline __attribute__((always_inline))
-#    define PKSAV_UNUSED(x)      x __attribute__((unused))
+#    define PKSAV_EXPORT __attribute__((visibility("default")))
+#    define PKSAV_IMPORT __attribute__((visibility("default")))
 #else
 #    define PKSAV_EXPORT
 #    define PKSAV_IMPORT
-#    define PKSAV_INLINE         inline
-#    define PKSAV_UNUSED(x)      x
 #endif
 
 #ifdef PKSAV_DLL_EXPORTS
@@ -59,7 +49,5 @@ typedef intmax_t ssize_t;
 
 #cmakedefine PKSAV_BIG_ENDIAN    1
 #cmakedefine PKSAV_LITTLE_ENDIAN 1
-
-#cmakedefine HAVE_UNISTD_H 1
 
 #endif /* PKSAV_CONFIG_H */

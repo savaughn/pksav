@@ -5,6 +5,11 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/text_common.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/text_common.h
+@ONLY)
+
 SET(pksav_common_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/datetime.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pokedex.c

@@ -1263,7 +1263,6 @@ INCLUDE_FILE_PATTERNS  =
 # instead of the = operator.
 
 PREDEFINED = PKSAV_API= \
-             PKSAV_INLINE= \
              static=inline \
              __DOXYGEN__
 

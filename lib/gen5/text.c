@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../common/xds_common.h"
+#include "common/xds_common.h"
 
 #include <pksav/gen5/text.h>
 

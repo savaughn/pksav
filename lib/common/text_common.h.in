@@ -11,6 +11,8 @@
 
 #include <stdlib.h>
 
+#cmakedefine HAVE_UNISTD_H 1
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

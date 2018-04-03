@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-static PKSAV_INLINE void _pksav_get_pokedex_bit_pos(
+static inline void _pksav_get_pokedex_bit_pos(
     uint16_t pokedex_num,
     uint8_t* index,
     uint8_t* mask

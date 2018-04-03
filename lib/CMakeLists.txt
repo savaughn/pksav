@@ -9,6 +9,7 @@ INCLUDE(StaticAnalysisTools)
 
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
 )
