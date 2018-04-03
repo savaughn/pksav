@@ -47,38 +47,62 @@ static void bcd_odd_count_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint32_t num1 = 23456;
-    uint8_t bcd_buffer1[3] = {0x02, 0x34, 0x56};
+    const size_t test_num = 23456;
+    const uint8_t test_bcd_buffer[3] = {0x02, 0x34, 0x56};
 
-    uint32_t num2 = 0;
-    uint8_t bcd_buffer2[3] = {0x00, 0x00, 0x00};
+    size_t output_num = 0;
+    uint8_t output_bcd_buffer[3] = {0};
 
-    error = pksav_to_bcd(num1, bcd_buffer2);
+    error = pksav_export_bcd(
+                test_num,
+                output_bcd_buffer,
+                3
+            );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-    TEST_ASSERT(!memcmp(bcd_buffer1, bcd_buffer2, 3));
+    TEST_ASSERT_EQUAL_MEMORY(
+        test_bcd_buffer,
+        output_bcd_buffer,
+        sizeof(test_bcd_buffer)
+    );
 
-    error = pksav_from_bcd(bcd_buffer2, 3, &num2);
+    error = pksav_import_bcd(
+                test_bcd_buffer,
+                3,
+                &output_num
+            );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(num1, num2);
+    TEST_ASSERT_EQUAL(test_num, output_num);
 }
 
 static void bcd_even_count_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint32_t num1 = 123456;
-    uint8_t bcd_buffer1[3] = {0x12, 0x34, 0x56};
+    const size_t test_num = 123456;
+    const uint8_t test_bcd_buffer[3] = {0x12, 0x34, 0x56};
 
-    uint32_t num2 = 0;
-    uint8_t bcd_buffer2[3] = {0x00, 0x00, 0x00};
+    size_t output_num = 0;
+    uint8_t output_bcd_buffer[3] = {0};
 
-    pksav_to_bcd(num1, bcd_buffer2);
+    error = pksav_export_bcd(
+                test_num,
+                output_bcd_buffer,
+                3
+            );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-    TEST_ASSERT(!memcmp(bcd_buffer1, bcd_buffer2, 3));
+    TEST_ASSERT_EQUAL_MEMORY(
+        test_bcd_buffer,
+        output_bcd_buffer,
+        sizeof(test_bcd_buffer)
+    );
 
-    error = pksav_from_bcd(bcd_buffer2, 3, &num2);
+    error = pksav_import_bcd(
+                test_bcd_buffer,
+                3,
+                &output_num
+            );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(num1, num2);
+    TEST_ASSERT_EQUAL(test_num, output_num);
 }
 
 PKSAV_TEST_MAIN(

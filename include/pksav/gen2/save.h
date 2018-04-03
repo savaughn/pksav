@@ -133,8 +133,8 @@ struct pksav_gen2_trainer_info
     /*!
      * @brief A pointer to how much money the trainer has (stored in BCD).
      *
-     * This value should be accessed with ::pksav_from_bcd, with a num_bytes value
-     * of 3. It should be set with ::pksav_to_bcd, with a maximum value of 999999.
+     * This value should be accessed with ::pksav_import_bcd, with a num_bytes value
+     * of 3. It should be set with ::pksav_export_bcd, with a maximum value of 999999.
      */
     uint8_t* money_ptr;
 

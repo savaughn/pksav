@@ -204,15 +204,15 @@ static void validate_gen2_item_bag(
 static void validate_bcd(
     const uint8_t* buffer,
     size_t num_bytes,
-    uint32_t max_value
+    size_t max_value
 )
 {
     TEST_ASSERT_NOT_NULL(buffer);
     TEST_ASSERT_TRUE(num_bytes > 0);
     TEST_ASSERT_TRUE(max_value > 0);
 
-    uint32_t bcd_value = 0;
-    enum pksav_error error = pksav_from_bcd(
+    size_t bcd_value = 0;
+    enum pksav_error error = pksav_import_bcd(
                                  buffer,
                                  num_bytes,
                                  &bcd_value
