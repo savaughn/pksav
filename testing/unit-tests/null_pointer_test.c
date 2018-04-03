@@ -356,61 +356,8 @@ static void pksav_gba_save_h_test()
 /*
  * pksav/gba/text.h
  */
-static void pksav_gba_text_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
-
-    uint8_t dummy_uint8_t = 0;
-    char dummy_char = 0;
-
-    /*
-     * pksav_text_from_gba
-     */
-
-    status = pksav_text_from_gba(
-        NULL,
-        &dummy_char,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_from_gba(
-        &dummy_uint8_t,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_from_gba(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_text_to_gba
-     */
-
-    status = pksav_text_to_gba(
-        NULL,
-        &dummy_uint8_t,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_to_gba(
-        &dummy_char,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_text_to_gba(
-        NULL,
-        NULL,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+static void pksav_gba_text_h_test()
+{
 }
 
 PKSAV_TEST_MAIN(

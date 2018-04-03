@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 
 #include <pksav/gba/text.h>
 
+#include <assert.h>
 #include <string.h>
 
 #define PKSAV_GBA_LAST_CHAR  0xF9 // Just control characters past here
@@ -30,7 +31,8 @@
  *  Any application displaying this text will need to graphically substitute in these characters.
  */
 
-static const wchar_t pksav_gba_char_map[] = {
+static const wchar_t PKSAV_GBA_CHAR_MAP[] =
+{
     0x0020,0x00C0,0x00C1,0x00C2,0x00C7,0x00C8,0x00C9,0x00CA,0x00CB,0x00CC,0x3053,0x00CD,0x00CE,0x00D2,0x00D3,0x00D4,
     0x0152,0x00D9,0x00DA,0x00DB,0x00D1,0x1E9E,0x00E0,0x00E1,0x306D,0x00E7,0x00E8,0x00E9,0x00EA,0x00EB,0x00EC,0x307E,
     0x00EE,0x00EF,0x00F2,0x00F3,0x00F4,0x0152,0x00F9,0x00FA,0x00FB,0x00F1,0x00BA,0x00AA,0x003F,0x0026,0x002B,0x3042,
@@ -48,63 +50,79 @@ static const wchar_t pksav_gba_char_map[] = {
     0x006C,0x006D,0x006E,0x006F,0x0070,0x0071,0x0072,0x0073,0x0074,0x0075,0x0076,0x0077,0x0078,0x0079,0x007A,0x25B6,
     0x003A,0x00C4,0x00D6,0x00DC,0x00E4,0x00F6,0x00F6,0x2B06,0x2B07,0x2B05,'\0','\0','\0','\0','\n','\0'
 };
+static const size_t PKSAV_GBA_CHAR_MAP_SIZE =
+    sizeof(PKSAV_GBA_CHAR_MAP)/sizeof(PKSAV_GBA_CHAR_MAP[0]);
 
-static pksav_error_t _pksav_widetext_from_gba(
+static enum pksav_error _pksav_gba_import_widetext(
     const uint8_t* input_buffer,
-    wchar_t* output_text,
+    wchar_t* output_widetext,
     size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
+)
+{
+    assert(input_buffer != NULL);
+    assert(output_widetext != NULL);
 
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
+    memset(output_widetext, 0, sizeof(wchar_t)*num_chars);
 
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] > PKSAV_GBA_LAST_CHAR) {
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        if(input_buffer[char_index] > PKSAV_GBA_LAST_CHAR)
+        {
             break;
-        } else {
-            output_text[i] = pksav_gba_char_map[input_buffer[i]];
+        }
+        else
+        {
+            output_widetext[char_index] = PKSAV_GBA_CHAR_MAP[input_buffer[char_index]];
         }
     }
 
     return PKSAV_ERROR_NONE;
 }
 
-static pksav_error_t _pksav_widetext_to_gba(
-    const wchar_t* input_text,
+static enum pksav_error _pksav_gba_export_widetext(
+    const wchar_t* input_widetext,
     uint8_t* output_buffer,
     size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
+)
+{
+    assert(input_widetext != NULL);
+    assert(output_buffer != NULL);
 
     memset(output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
 
-    for(size_t i = 0; i < num_chars; ++i) {
-        ssize_t index = wchar_map_index(pksav_gba_char_map, 256, input_text[i]);
-        if(index == -1) {
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        ssize_t map_index = wchar_map_index(
+                                PKSAV_GBA_CHAR_MAP,
+                                PKSAV_GBA_CHAR_MAP_SIZE,
+                                input_widetext[char_index]
+                            );
+        if(map_index != -1)
+        {
+            output_buffer[char_index] = (uint8_t)map_index;
+        }
+        else
+        {
             break;
-        } else {
-            output_buffer[i] = (uint8_t)index;
         }
     }
 
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_from_gba(
+enum pksav_error pksav_gba_import_text(
     const uint8_t* input_buffer,
     char* output_text,
     size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
+)
+{
+    if(!input_buffer || !output_text)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    _pksav_widetext_from_gba(
+    _pksav_gba_import_widetext(
         input_buffer, widetext, num_chars
     );
 
@@ -115,19 +133,21 @@ pksav_error_t pksav_text_from_gba(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_to_gba(
+enum pksav_error pksav_gba_export_text(
     const char* input_text,
     uint8_t* output_buffer,
     size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
+)
+{
+    if(!input_text || !output_buffer)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
     pksav_mbstowcs(widetext, input_text, num_chars);
 
-    _pksav_widetext_to_gba(
+    _pksav_gba_export_widetext(
         widetext, output_buffer, num_chars
     );
 
