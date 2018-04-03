@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,31 +20,36 @@
 #    pragma warning(disable: 4552) // expected operator with side effect
 #endif
 
-enum pksav_error pksav_from_base256(
+enum pksav_error pksav_import_base256(
     const uint8_t* buffer,
     size_t num_bytes,
-    uint32_t* result_out
-) {
-    if(!buffer || !result_out) {
+    size_t* result_out
+)
+{
+    if(!buffer || !result_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     *result_out = 0;
     float exp = 0.0;
 
-    for(ssize_t i = (ssize_t)(num_bytes-1); i >= 0; --i) {
-        (*result_out) += buffer[i] * (uint32_t)(pow(256.0f, exp++));
+    for(ssize_t index = (ssize_t)(num_bytes-1); index >= 0; --index)
+    {
+        (*result_out) += buffer[index] * (size_t)(pow(256.0f, exp++));
     }
 
     return PKSAV_ERROR_NONE;
 }
 
-enum pksav_error pksav_to_base256(
-    uint32_t num,
+enum pksav_error pksav_export_base256(
+    size_t num,
     uint8_t* buffer_out,
     size_t buffer_size
-) {
-    if(!buffer_out) {
+)
+{
+    if(!buffer_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
@@ -52,9 +57,10 @@ enum pksav_error pksav_to_base256(
 
     float exp = 1.0f;
     buffer_out[buffer_size-1] = (uint8_t)(num % 256);
-    for(ssize_t i = (ssize_t)(buffer_size-2); i >= 0; --i) {
-        num -= buffer_out[i+1];
-        buffer_out[i] = (uint8_t)((uint32_t)(num / pow(256,exp)) % (uint32_t)(pow(256,exp)));
+    for(ssize_t index = (ssize_t)(buffer_size-2); index >= 0; --index)
+    {
+        num -= buffer_out[index+1];
+        buffer_out[index] = (uint8_t)((size_t)(num / pow(256,exp)) % (size_t)(pow(256,exp)));
         ++exp;
     }
 

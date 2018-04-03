@@ -117,8 +117,8 @@ struct pksav_gen2_pc_pokemon
     /*!
      * @brief The Pokémon's current total experience points (stored in Base-256).
      *
-     * This value should be accessed with ::pksav_from_base256 (with a num_bytes
-     * value of 3) and set with ::pksav_to_base256.
+     * This value should be accessed with ::pksav_import_base256 (with a num_bytes
+     * value of 3) and set with ::pksav_export_base256.
      */
     uint8_t exp[3];
     /*!
