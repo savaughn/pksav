@@ -85,6 +85,7 @@ ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
 SET(unit_tests
     byteswap_test
+    error_test
     gen1_save_test
     gen2_save_test
     gba_save_test

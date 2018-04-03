@@ -77,7 +77,7 @@ static void pksav_gen2_text_test()
 
 static void pksav_gba_text_test()
 {
-    pksav_error_t error = PKSAV_ERROR_NONE;
+    enum pksav_error error = PKSAV_ERROR_NONE;
     uint8_t gba_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
 

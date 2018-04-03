@@ -20,7 +20,7 @@
 #    pragma warning(disable: 4552) // expected operator with side effect
 #endif
 
-pksav_error_t pksav_from_base256(
+enum pksav_error pksav_from_base256(
     const uint8_t* buffer,
     size_t num_bytes,
     uint32_t* result_out
@@ -39,7 +39,7 @@ pksav_error_t pksav_from_base256(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_to_base256(
+enum pksav_error pksav_to_base256(
     uint32_t num,
     uint8_t* buffer_out,
     size_t buffer_size

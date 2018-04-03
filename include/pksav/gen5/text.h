@@ -34,7 +34,7 @@ extern "C" {
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API pksav_error_t pksav_text_from_gen5(
+PKSAV_API enum pksav_error pksav_text_from_gen5(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -53,7 +53,7 @@ PKSAV_API pksav_error_t pksav_text_from_gen5(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API pksav_error_t pksav_widetext_from_gen5(
+PKSAV_API enum pksav_error pksav_widetext_from_gen5(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -72,7 +72,7 @@ PKSAV_API pksav_error_t pksav_widetext_from_gen5(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API pksav_error_t pksav_text_to_gen5(
+PKSAV_API enum pksav_error pksav_text_to_gen5(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
@@ -91,7 +91,7 @@ PKSAV_API pksav_error_t pksav_text_to_gen5(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API pksav_error_t pksav_widetext_to_gen5(
+PKSAV_API enum pksav_error pksav_widetext_to_gen5(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars

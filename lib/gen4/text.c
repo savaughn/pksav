@@ -206,7 +206,7 @@ static const wchar_t pksav_gen4_char_map2[] = {
     0xC330,0xC3BC,0xC4D4,0xCB2C,
 };
 
-pksav_error_t pksav_text_from_gen4(
+enum pksav_error pksav_text_from_gen4(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -227,7 +227,7 @@ pksav_error_t pksav_text_from_gen4(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_widetext_from_gen4(
+enum pksav_error pksav_widetext_from_gen4(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -249,7 +249,7 @@ pksav_error_t pksav_widetext_from_gen4(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_to_gen4(
+enum pksav_error pksav_text_to_gen4(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
@@ -270,7 +270,7 @@ pksav_error_t pksav_text_to_gen4(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_widetext_to_gen4(
+enum pksav_error pksav_widetext_to_gen4(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars

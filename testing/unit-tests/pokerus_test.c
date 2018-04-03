@@ -11,7 +11,7 @@
 
 static void pokerus_test()
 {
-    pksav_error_t error = PKSAV_ERROR_NONE;
+    enum pksav_error error = PKSAV_ERROR_NONE;
 
     uint8_t pokerus = 0;
 

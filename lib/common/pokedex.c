@@ -18,7 +18,7 @@ static inline void _pksav_get_pokedex_bit_pos(
     *mask  = (uint8_t)(pow(2.0, ((pokedex_num-1)%8)));
 }
 
-pksav_error_t pksav_get_pokedex_bit(
+enum pksav_error pksav_get_pokedex_bit(
     const uint8_t* raw,
     uint16_t pokedex_num,
     bool* result_out
@@ -34,7 +34,7 @@ pksav_error_t pksav_get_pokedex_bit(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_set_pokedex_bit(
+enum pksav_error pksav_set_pokedex_bit(
     uint8_t* raw,
     uint16_t pokedex_num,
     bool set

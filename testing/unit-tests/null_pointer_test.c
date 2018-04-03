@@ -13,7 +13,7 @@
  * pksav/common/datetime.h
  */
 static void pksav_common_datetime_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
     pksav_date_t dummy_pksav_date_t;
@@ -68,7 +68,7 @@ static void pksav_common_datetime_h_test() {
  * pksav/common/pokedex.h
  */
 static void pksav_common_pokedex_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
     bool dummy_bool = false;
@@ -115,7 +115,7 @@ static void pksav_common_pokedex_h_test() {
  */
 static void pksav_common_pokerus_h_test()
 {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
     uint8_t dummy_uint8_t = 0;
     pksav_pokerus_strain_t dummy_strain = PKSAV_POKERUS_STRAIN_A;
 
@@ -178,7 +178,7 @@ static void pksav_common_pokerus_h_test()
  * TODO: arng, lcrng functions when gen4 update merged
  */
 static void pksav_common_prng_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     pksav_mtrng_t dummy_pksav_mtrng_t;
     uint32_t dummy_uint32_t = 0;
@@ -219,7 +219,7 @@ static void pksav_common_prng_h_test() {
  * pksav/common/stats.h
  */
 static void pksav_common_stats_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     uint8_t dummy_uint8_t = 0;
     uint16_t dummy_uint16_t = 0;
@@ -318,7 +318,7 @@ static void pksav_gen2_text_h_test()
  * pksav/gen2/time.h
  */
 static void pksav_gen2_time_h_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
     uint16_t dummy_uint16_t = 0;

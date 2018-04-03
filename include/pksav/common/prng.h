@@ -47,11 +47,11 @@ typedef struct {
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER
  */
-PKSAV_API pksav_error_t pksav_mtrng_populate(
+PKSAV_API enum pksav_error pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 );
 
-PKSAV_API pksav_error_t pksav_mtrng_next(
+PKSAV_API enum pksav_error pksav_mtrng_next(
     pksav_mtrng_t* mtrng,
     uint32_t* next_out
 );

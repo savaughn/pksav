@@ -27,25 +27,25 @@ typedef enum {
 extern "C" {
 #endif
 
-PKSAV_API pksav_error_t pksav_get_gb_IV(
+PKSAV_API enum pksav_error pksav_get_gb_IV(
     const uint16_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
 );
 
-PKSAV_API pksav_error_t pksav_set_gb_IV(
+PKSAV_API enum pksav_error pksav_set_gb_IV(
     uint16_t* raw,
     pksav_battle_stat_t stat,
     uint8_t new_IV
 );
 
-PKSAV_API pksav_error_t pksav_get_IV(
+PKSAV_API enum pksav_error pksav_get_IV(
     const uint32_t* raw,
     pksav_battle_stat_t stat,
     uint8_t* IV_out
 );
 
-PKSAV_API pksav_error_t pksav_set_IV(
+PKSAV_API enum pksav_error pksav_set_IV(
     uint32_t* raw,
     pksav_battle_stat_t stat,
     uint8_t new_IV

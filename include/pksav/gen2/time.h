@@ -62,7 +62,7 @@ extern "C" {
  * \returns ::PKSAV_ERROR_NULL_POINTER if time_in or caught_data is NULL
  */
 
-PKSAV_API pksav_error_t pksav_gen2_set_caught_data_time_field(
+PKSAV_API enum pksav_error pksav_gen2_set_caught_data_time_field(
     const time_t* time_in,
     uint16_t* caught_data
 );

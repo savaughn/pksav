@@ -29,7 +29,7 @@ extern "C" {
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
-PKSAV_API pksav_error_t pksav_from_bcd(
+PKSAV_API enum pksav_error pksav_from_bcd(
     const uint8_t* buffer,
     size_t num_bytes,
     uint32_t* result_out
@@ -42,7 +42,7 @@ PKSAV_API pksav_error_t pksav_from_bcd(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if buffer_out is NULL
  */
-PKSAV_API pksav_error_t pksav_to_bcd(
+PKSAV_API enum pksav_error pksav_to_bcd(
     uint32_t num,
     uint8_t* buffer_out
 );

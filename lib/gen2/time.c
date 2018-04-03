@@ -7,7 +7,7 @@
 
 #include <pksav/gen2/time.h>
 
-pksav_error_t pksav_gen2_set_caught_data_time_field(
+enum pksav_error pksav_gen2_set_caught_data_time_field(
     const time_t* time_in,
     uint16_t* caught_data
 ) {

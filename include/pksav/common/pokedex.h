@@ -29,7 +29,7 @@ extern "C" {
  * \param result_out where result is returned
  * \returns if Pokémon with the given Pokédex number has been seen/caught
  */
-PKSAV_API pksav_error_t pksav_get_pokedex_bit(
+PKSAV_API enum pksav_error pksav_get_pokedex_bit(
     const uint8_t* raw,
     uint16_t pokedex_num,
     bool* result_out
@@ -46,7 +46,7 @@ PKSAV_API pksav_error_t pksav_get_pokedex_bit(
  * \param pokedex_num Which Pokémon to set or unset
  * \param set Set whether or not Pokémon has been seen/caught
  */
-PKSAV_API pksav_error_t pksav_set_pokedex_bit(
+PKSAV_API enum pksav_error pksav_set_pokedex_bit(
     uint8_t* raw,
     uint16_t pokedex_num,
     bool set

@@ -21,7 +21,7 @@
 #    pragma warning(disable: 4552) // expected operator with side effect
 #endif
 
-pksav_error_t pksav_from_bcd(
+enum pksav_error pksav_from_bcd(
     const uint8_t* buffer,
     size_t num_bytes,
     uint32_t* result_out
@@ -43,7 +43,7 @@ pksav_error_t pksav_from_bcd(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_to_bcd(
+enum pksav_error pksav_to_bcd(
     uint32_t num,
     uint8_t* buffer_out
 ) {

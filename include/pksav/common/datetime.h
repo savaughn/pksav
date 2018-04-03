@@ -40,7 +40,7 @@ extern "C" {
  * \returns PKSAV_PARAM_OUT_OF_RANGE if time_t's year is pre-2000
  * \returns PKSAV_ERROR_NULL_POINTER if time_in or date_out is NULL
  */
-PKSAV_API pksav_error_t pksav_time_t_to_date_t(
+PKSAV_API enum pksav_error pksav_time_t_to_date_t(
     const time_t* time_in,
     pksav_date_t* date_out
 );
@@ -54,7 +54,7 @@ PKSAV_API pksav_error_t pksav_time_t_to_date_t(
  * \returns PKSAV_PARAM_OUT_OF_RANGE if time_t's year is pre-2000
  * \returns PKSAV_ERROR_NULL_POINTER if time_in or uint32_out is NULL
  */
-PKSAV_API pksav_error_t pksav_time_t_to_uint32_t(
+PKSAV_API enum pksav_error pksav_time_t_to_uint32_t(
     const time_t* time_in,
     uint32_t* uint32_out
 );

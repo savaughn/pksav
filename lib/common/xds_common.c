@@ -11,7 +11,7 @@
 
 #define PKSAV_XDS_TERMINATOR 0xFFFF
 
-pksav_error_t _pksav_text_from_xds(
+enum pksav_error _pksav_text_from_xds(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -32,7 +32,7 @@ pksav_error_t _pksav_text_from_xds(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t _pksav_widetext_from_xds(
+enum pksav_error _pksav_widetext_from_xds(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
@@ -54,7 +54,7 @@ pksav_error_t _pksav_widetext_from_xds(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t _pksav_text_to_xds(
+enum pksav_error _pksav_text_to_xds(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
@@ -75,7 +75,7 @@ pksav_error_t _pksav_text_to_xds(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t _pksav_widetext_to_xds(
+enum pksav_error _pksav_widetext_to_xds(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars

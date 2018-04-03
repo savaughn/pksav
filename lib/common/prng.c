@@ -10,7 +10,7 @@
 #include <math.h>
 #include <time.h>
 
-pksav_error_t pksav_mtrng_populate(
+enum pksav_error pksav_mtrng_populate(
     pksav_mtrng_t* mtrng
 ) {
     if(!mtrng) {
@@ -26,7 +26,7 @@ pksav_error_t pksav_mtrng_populate(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_mtrng_next(
+enum pksav_error pksav_mtrng_next(
     pksav_mtrng_t* mtrng,
     uint32_t* next_out
 ) {

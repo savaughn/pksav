@@ -7,7 +7,7 @@
 
 #include <pksav/common/datetime.h>
 
-pksav_error_t pksav_time_t_to_date_t(
+enum pksav_error pksav_time_t_to_date_t(
     const time_t* time_in,
     pksav_date_t* date_out
 ) {
@@ -27,7 +27,7 @@ pksav_error_t pksav_time_t_to_date_t(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_time_t_to_uint32_t(
+enum pksav_error pksav_time_t_to_uint32_t(
     const time_t* time_in,
     uint32_t* uint32_out
 ) {

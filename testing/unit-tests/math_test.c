@@ -13,7 +13,7 @@
 #include <string.h>
 
 static void base256_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     uint32_t num1 = 1338917;
     uint8_t base256_buffer1[3] = {20, 110, 37};
@@ -31,7 +31,7 @@ static void base256_test() {
 }
 
 static void bcd_odd_count_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     uint32_t num1 = 23456;
     uint8_t bcd_buffer1[3] = {0x02, 0x34, 0x56};
@@ -49,7 +49,7 @@ static void bcd_odd_count_test() {
 }
 
 static void bcd_even_count_test() {
-    pksav_error_t status = PKSAV_ERROR_NONE;
+    enum pksav_error status = PKSAV_ERROR_NONE;
 
     uint32_t num1 = 123456;
     uint8_t bcd_buffer1[3] = {0x12, 0x34, 0x56};

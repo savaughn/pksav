@@ -19,7 +19,7 @@
  */
 
 //! Convert a string from in-game Unicode to a multi-byte C string.
-pksav_error_t _pksav_text_from_xds(
+enum pksav_error _pksav_text_from_xds(
     const uint16_t* input_buffer,
     char* output_text,
     size_t num_chars
@@ -27,21 +27,21 @@ pksav_error_t _pksav_text_from_xds(
 
 
 //! Convert a string from in-game Unicode to a wide-character C string.
-pksav_error_t _pksav_widetext_from_xds(
+enum pksav_error _pksav_widetext_from_xds(
     const uint16_t* input_buffer,
     wchar_t* output_text,
     size_t num_chars
 );
 
 //! Convert a multi-byte C string to in-game Unicode.
-pksav_error_t _pksav_text_to_xds(
+enum pksav_error _pksav_text_to_xds(
     const char* input_text,
     uint16_t* output_buffer,
     size_t num_chars
 );
 
 //! Convert a wide-character C string to in-game Unicode.
-pksav_error_t _pksav_widetext_to_xds(
+enum pksav_error _pksav_widetext_to_xds(
     const wchar_t* input_text,
     uint16_t* output_buffer,
     size_t num_chars
