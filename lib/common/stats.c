@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,15 +18,19 @@
 
 enum pksav_error pksav_get_gb_IV(
     const uint16_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t* IV_out
-) {
-    if(!raw || !IV_out) {
+)
+{
+    if(!raw || !IV_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    switch(stat) {
-        case PKSAV_STAT_HP: {
+    switch(stat)
+    {
+        case PKSAV_STAT_HP:
+        {
             uint8_t atk, def, spd, spcl;
             (void)pksav_get_gb_IV(raw, PKSAV_STAT_ATTACK,  &atk);
             (void)pksav_get_gb_IV(raw, PKSAV_STAT_DEFENSE, &def);
@@ -64,18 +68,22 @@ enum pksav_error pksav_get_gb_IV(
 
 enum pksav_error pksav_set_gb_IV(
     uint16_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t new_IV
-) {
-    if(!raw) {
+)
+{
+    if(!raw)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    if(new_IV > 15) {
+    if(new_IV > 15)
+    {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
-    switch(stat) {
+    switch(stat)
+    {
         case PKSAV_STAT_HP:
             *raw = (((*raw) & 0xEEEE) | ((new_IV & 0x08) << 9)
                                       | ((new_IV & 0x04) << 6)
@@ -117,14 +125,17 @@ enum pksav_error pksav_set_gb_IV(
 
 enum pksav_error pksav_get_IV(
     const uint32_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t* IV_out
-) {
-    if(!raw || !IV_out) {
+)
+{
+    if(!raw || !IV_out)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    switch(stat) {
+    switch(stat)
+    {
         case PKSAV_STAT_HP:
             *IV_out = (*raw) & PKSAV_HP_IV_MASK;
             break;
@@ -158,18 +169,22 @@ enum pksav_error pksav_get_IV(
 
 enum pksav_error pksav_set_IV(
     uint32_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t new_IV
-) {
-    if(!raw) {
+)
+{
+    if(!raw)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    if(new_IV > 31) {
+    if(new_IV > 31)
+    {
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
-    switch(stat) {
+    switch(stat)
+    {
         case PKSAV_STAT_HP:
             *raw = ((*raw) & ~PKSAV_HP_IV_MASK) | new_IV;
             break;

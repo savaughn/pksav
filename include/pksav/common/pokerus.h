@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/pokerus.h
- * @ingroup PKSav
- * @brief   Functions for getting and setting Pokérus values.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,12 +11,13 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum pksav_pokerus_strain
+{
     PKSAV_POKERUS_STRAIN_A = 0,
     PKSAV_POKERUS_STRAIN_B,
     PKSAV_POKERUS_STRAIN_C,
     PKSAV_POKERUS_STRAIN_D
-} pksav_pokerus_strain_t;
+};
 
 #define PKSAV_POKERUS_STRAIN_MASK   ((uint8_t)0xF0)
 #define PKSAV_POKERUS_DURATION_MASK ((uint8_t)0x0F)
@@ -31,7 +28,7 @@ extern "C" {
 
 static inline enum pksav_error pksav_pokerus_get_strain(
     const uint8_t* pokerus_ptr,
-    pksav_pokerus_strain_t* strain_out
+    enum pksav_pokerus_strain* strain_out
 )
 {
     if(!pokerus_ptr)
@@ -43,14 +40,14 @@ static inline enum pksav_error pksav_pokerus_get_strain(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    *strain_out = (pksav_pokerus_strain_t)((((*pokerus_ptr) & PKSAV_POKERUS_STRAIN_MASK) >> 4) % 4);
+    *strain_out = (enum pksav_pokerus_strain)((((*pokerus_ptr) & PKSAV_POKERUS_STRAIN_MASK) >> 4) % 4);
 
     return PKSAV_ERROR_NONE;
 }
 
 static inline enum pksav_error pksav_pokerus_set_strain(
     uint8_t* pokerus_ptr,
-    pksav_pokerus_strain_t strain
+    enum pksav_pokerus_strain strain
 )
 {
     if(!pokerus_ptr)

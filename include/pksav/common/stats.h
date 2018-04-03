@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,8 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum pksav_battle_stat
+{
     PKSAV_STAT_NONE = 0,
     PKSAV_STAT_HP,
     PKSAV_STAT_ATTACK,
@@ -20,8 +21,8 @@ typedef enum {
     PKSAV_STAT_SPATK,
     PKSAV_STAT_SPDEF,
     PKSAV_STAT_SPEED,
-    PKSAV_STAT_SPECIAL = 9
-} pksav_battle_stat_t;
+    PKSAV_STAT_SPECIAL
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,25 +30,25 @@ extern "C" {
 
 PKSAV_API enum pksav_error pksav_get_gb_IV(
     const uint16_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t* IV_out
 );
 
 PKSAV_API enum pksav_error pksav_set_gb_IV(
     uint16_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t new_IV
 );
 
 PKSAV_API enum pksav_error pksav_get_IV(
     const uint32_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t* IV_out
 );
 
 PKSAV_API enum pksav_error pksav_set_IV(
     uint32_t* raw,
-    pksav_battle_stat_t stat,
+    enum pksav_battle_stat stat,
     uint8_t new_IV
 );
 

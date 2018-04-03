@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,14 +16,15 @@
 #pragma pack(push,1)
 
 //! Representation of a date in Generation IV+.
-typedef struct {
+struct pksav_date
+{
     //! Year (since 2000).
     uint8_t year;
     //! Month (1-12).
     uint8_t month;
     //! Day (1-31).
     uint8_t day;
-} pksav_date_t;
+};
 
 #pragma pack(pop)
 
@@ -42,7 +43,7 @@ extern "C" {
  */
 PKSAV_API enum pksav_error pksav_time_t_to_date_t(
     const time_t* time_in,
-    pksav_date_t* date_out
+    struct pksav_date* date_out
 );
 
 /*!

@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/gen3_markings.h
- * @ingroup PKSav
- * @brief   Native storage for ribbons from Generation III games.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +14,8 @@
  * ribbon field that stores which level of contest the Pokémon has one for
  * that particular type. This enum represents all valid values.
  */
-typedef enum {
+enum pksav_gen3_contest_ribbon_level
+{
     //! No contest won.
     PKSAV_GEN3_CONTEST_RIBBON_NONE   = 0,
     //! Normal contest.
@@ -29,12 +26,13 @@ typedef enum {
     PKSAV_GEN3_CONTEST_RIBBON_HYPER  = 3,
     //! Master contest.
     PKSAV_GEN3_CONTEST_RIBBON_MASTER = 4
-} pksav_gen3_contest_ribbon_level_t;
+};
 
 /*!
  * @brief The offsets for the 3-bit slots for each Pokémon contest type.
  */
-typedef enum {
+enum pksav_gen3_contest_ribbons_offset
+{
     //! The offset for the level of Cool contests won.
     PKSAV_GEN3_COOL_RIBBONS_OFFSET   = 0,
     //! The offset for the level of Beauty contests won.
@@ -45,9 +43,10 @@ typedef enum {
     PKSAV_GEN3_SMART_RIBBONS_OFFSET  = 9,
     //! The offset for the level of Tough contests won.
     PKSAV_GEN3_TOUGH_RIBBONS_OFFSET  = 12,
-} pksav_gen3_contest_ribbons_offset_t;
+};
 
-typedef enum {
+enum pksav_gen3_contest_ribbons_mask
+{
     //! The offset for the level of Cool contests won.
     PKSAV_GEN3_COOL_RIBBONS_MASK   =  7,
     //! The offset for the level of Beauty contests won.
@@ -58,9 +57,10 @@ typedef enum {
     PKSAV_GEN3_SMART_RIBBONS_MASK  = (7 << 9),
     //! The offset for the level of Tough contests won.
     PKSAV_GEN3_TOUGH_RIBBONS_MASK  = (7 << 12)
-} pksav_gen3_contest_ribbons_mask_t;
+};
 
-typedef enum {
+enum pksav_gen3_ribbon_mask
+{
     //! Champion Ribbon.
     PKSAV_GEN3_CHAMPION_RIBBON_MASK = (1 << 15),
     //! Winning Ribbon.
@@ -85,6 +85,6 @@ typedef enum {
     PKSAV_GEN3_EARTH_RIBBON_MASK    = (1 << 25),
     //! World Ribbon.
     PKSAV_GEN3_WORLD_RIBBON_MASK    = (1 << 26)
-} pksav_gen3_ribbon_mask_t;
+};
 
 #endif /* PKSAV_COMMON_GEN3_RIBBONS_H */

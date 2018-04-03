@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/markings.h
- * @ingroup PKSav
- * @brief   Native format for storing a Pokémon's markings.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +13,8 @@
  * Markings have no functional use and only serve to help the
  * trainer categorize their Pokémon.
  */
-typedef enum {
+enum pksav_marking_mask
+{
     //! Circle mask.
     PKSAV_MARKING_CIRCLE   = 0x01,
     //! Triangle mask.
@@ -30,6 +27,6 @@ typedef enum {
     PKSAV_MARKING_STAR     = 0x10,
     //! Diamond mask (Generation IV+).
     PKSAV_MARKING_DIAMOND  = 0x20,
-} pksav_marking_t;
+};
 
 #endif /* PKSAV_COMMON_MARKINGS_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -41,7 +41,7 @@ typedef struct {
     uint8_t ev_spd;
     uint8_t ev_spatk;
     uint8_t ev_spdef;
-    pksav_contest_stats_t contest_stats;
+    struct pksav_contest_stats contest_stats;
     uint16_t sinnoh_ribbons1;
     union {
         uint16_t sinnoh_ribbons2; // Generation IV
@@ -79,8 +79,8 @@ typedef struct {
 
 typedef struct {
     uint16_t otname[8];
-    pksav_date_t eggmet_date;
-    pksav_date_t met_date;
+    struct pksav_date eggmet_date;
+    struct pksav_date met_date;
     uint16_t eggmet_dp;
     uint16_t met_dp;
     uint8_t pokerus;

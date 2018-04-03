@@ -16,7 +16,7 @@ static void pksav_common_datetime_h_test() {
     enum pksav_error status = PKSAV_ERROR_NONE;
 
     time_t dummy_time_t = 0;
-    pksav_date_t dummy_pksav_date_t;
+    struct pksav_date dummy_pksav_date;
     uint32_t dummy_uint32_t = 0;
 
     /*
@@ -25,7 +25,7 @@ static void pksav_common_datetime_h_test() {
 
     status = pksav_time_t_to_date_t(
         NULL,
-        &dummy_pksav_date_t
+        &dummy_pksav_date
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
@@ -117,7 +117,7 @@ static void pksav_common_pokerus_h_test()
 {
     enum pksav_error status = PKSAV_ERROR_NONE;
     uint8_t dummy_uint8_t = 0;
-    pksav_pokerus_strain_t dummy_strain = PKSAV_POKERUS_STRAIN_A;
+    enum pksav_pokerus_strain dummy_strain = PKSAV_POKERUS_STRAIN_A;
 
     /*
      * pksav_pokerus_get_strain
@@ -180,7 +180,7 @@ static void pksav_common_pokerus_h_test()
 static void pksav_common_prng_h_test() {
     enum pksav_error status = PKSAV_ERROR_NONE;
 
-    pksav_mtrng_t dummy_pksav_mtrng_t;
+    struct pksav_mtrng dummy_mtrng;
     uint32_t dummy_uint32_t = 0;
 
     /*
@@ -203,7 +203,7 @@ static void pksav_common_prng_h_test() {
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
 
     status = pksav_mtrng_next(
-        &dummy_pksav_mtrng_t,
+        &dummy_mtrng,
         NULL
     );
     TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);

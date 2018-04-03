@@ -15,7 +15,7 @@ static void pokerus_test()
 
     uint8_t pokerus = 0;
 
-    pksav_pokerus_strain_t strain_out = PKSAV_POKERUS_STRAIN_A;
+    enum pksav_pokerus_strain strain_out = PKSAV_POKERUS_STRAIN_A;
     uint8_t duration_out = 0;
 
     // Test invalid duration.
@@ -27,7 +27,7 @@ static void pokerus_test()
     {
         error = pksav_pokerus_set_strain(
                     &pokerus,
-                    (pksav_pokerus_strain_t)i
+                    (enum pksav_pokerus_strain)i
                 );
         TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
 
@@ -36,7 +36,7 @@ static void pokerus_test()
                     &strain_out
                 );
         TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL((pksav_pokerus_strain_t)i, strain_out);
+        TEST_ASSERT_EQUAL((enum pksav_pokerus_strain)i, strain_out);
     }
 
     // Test all valid durations.

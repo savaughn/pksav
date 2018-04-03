@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/gen4_encounter_type.h
- * @ingroup PKSav
- * @brief   Possible values for how a Pokémon was caught in Generation IV.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +13,8 @@
  * This field is only set in Generation IV but is present in
  * Generation V-VI Pokémon structs.
  */
-typedef enum {
+enum pksav_gen4_encounter_type
+{
     //! In-game event.
     PKSAV_GEN4_ENCOUNTER_EVENT         = 0x0,
     //! Found in tall grass.
@@ -34,6 +31,6 @@ typedef enum {
     PKSAV_GEN4_ENCOUNTER_GREAT_MARSH   = 0xA,
     //! A starter Pokémon.
     PKSAV_GEN4_ENCOUNTER_STARTER       = 0xC
-} pksav_gen4_encounter_type_t;
+};
 
 #endif /* PKSAV_COMMON_GEN4_ENCOUNTER_TYPE_H */

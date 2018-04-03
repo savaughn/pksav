@@ -320,7 +320,7 @@ struct pksav_gba_pokemon_effort_block
     //! A Pokémon's Special Defense EV.
     uint8_t ev_spdef;
     //! A Pokémon's contest stats.
-    pksav_contest_stats_t contest_stats;
+    struct pksav_contest_stats contest_stats;
 };
 
 /*!
