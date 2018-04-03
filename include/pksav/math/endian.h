@@ -1,9 +1,5 @@
 /*!
- * @file    pksav/math/endian.h
- * @ingroup PKSav
- * @brief   Endianness (byte-ordering) conversions.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -40,23 +36,14 @@ extern "C" {
 #endif
 
 /*!
- * @brief Swaps the endianness (byte ordering) of a 16-bit number.
- *
- * When possible, this function uses an optimized version of this
- * operation provided by the operating system.
- */
-static PKSAV_INLINE uint16_t pksav_byteswap16(uint16_t num) {
-    return PKSAV_BYTESWAP16(num);
-}
-
-/*!
  * @brief Swaps the endianness of a given 16-bit number to/from big-endian.
  *
  * On big-endian platforms, this simply returns the given number.
  */
-static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
+static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num)
+{
 #if PKSAV_LITTLE_ENDIAN
-    return pksav_byteswap16(num);
+    return PKSAV_BYTESWAP16(num);
 #else
     return num;
 #endif
@@ -67,22 +54,13 @@ static PKSAV_INLINE uint16_t pksav_bigendian16(uint16_t num) {
  *
  * On little-endian platforms, this simply returns the given number.
  */
-static PKSAV_INLINE uint16_t pksav_littleendian16(uint16_t num) {
+static PKSAV_INLINE uint16_t pksav_littleendian16(uint16_t num)
+{
 #if PKSAV_LITTLE_ENDIAN
     return num;
 #else
-    return pksav_byteswap16(num);
+    return PKSAV_BYTESWAP16(num);
 #endif
-}
-
-/*!
- * @brief Swaps the endianness (byte ordering) of a 32-bit number.
- *
- * When possible, this function uses an optimized version of this
- * operation provided by the operating system.
- */
-static PKSAV_INLINE uint32_t pksav_byteswap32(uint32_t num) {
-    return PKSAV_BYTESWAP32(num);
 }
 
 /*!
@@ -90,9 +68,10 @@ static PKSAV_INLINE uint32_t pksav_byteswap32(uint32_t num) {
  *
  * On big-endian platforms, this simply returns the given number.
  */
-static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
+static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num)
+{
 #if PKSAV_LITTLE_ENDIAN
-    return pksav_byteswap32(num);
+    return PKSAV_BYTESWAP32(num);
 #else
     return num;
 #endif
@@ -103,11 +82,12 @@ static PKSAV_INLINE uint32_t pksav_bigendian32(uint32_t num) {
  *
  * On little-endian platforms, this simply returns the given number.
  */
-static PKSAV_INLINE uint32_t pksav_littleendian32(uint32_t num) {
+static PKSAV_INLINE uint32_t pksav_littleendian32(uint32_t num)
+{
 #if PKSAV_LITTLE_ENDIAN
     return num;
 #else
-    return pksav_byteswap32(num);
+    return PKSAV_BYTESWAP32(num);
 #endif
 }
 
