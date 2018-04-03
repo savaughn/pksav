@@ -26,10 +26,10 @@ const char* pksav_strerror(
 )
 {
     const char* ret = NULL;
-    if((error_code >= 0) && (error_code < NUM_ERRORS))
+    if(((int)error_code >= 0) && ((size_t)error_code < NUM_ERRORS))
     {
         ret = PKSAV_ERROR_STRS[error_code];
-    } 
+    }
 
     return ret;
 }
