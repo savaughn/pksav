@@ -39,6 +39,10 @@ struct pksav_gba_pokedex
     uint16_t* nat_pokedex_unlocked_ptrC;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 PKSAV_API enum pksav_error pksav_gba_pokedex_set_has_seen(
     struct pksav_gba_pokedex* gba_pokedex_ptr,
     uint16_t pokedex_num,
@@ -50,5 +54,9 @@ PKSAV_API enum pksav_error pksav_gba_pokedex_set_national_pokedex_unlocked(
     enum pksav_gba_save_type save_type,
     bool is_unlocked
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKSAV_GBA_POKEDEX_H */
