@@ -26,7 +26,7 @@
  * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps to
  * get the PP of that move.
  */
-#define PKSAV_GEN2_MOVE_PP_MASK ((uint8)0x3F)
+#define PKSAV_GEN2_MOVE_PP_MASK ((uint8_t)0x3F)
 
 /*!
  * @brief The mask for the number of PP Ups used on a move (0-3).
@@ -35,7 +35,7 @@
  * and shift it right by ::PKSAV_GEN2_MOVE_PP_UP_MASK to get the number of PP
  * Ups used.
  */
-#define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8)0xC0)
+#define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8_t)0xC0)
 
 /*!
  * @brief The offset of the number of PP UPs used on a move.
@@ -52,7 +52,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask and shift it
  * right by ::PKSAV_GEN2_LEVEL_CAUGHT_OFFSET to get the value.
  */
-#define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16)0x3F00)
+#define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
 
 /*!
  * @brief The offset for the level at which a Pokémon was caught.
@@ -68,7 +68,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to set the trainer's
  * gender to female. Unmask it to set the trainer's gender to male.
  */
-#define PKSAV_GEN2_OT_GENDER_MASK ((uint16)0x0080)
+#define PKSAV_GEN2_OT_GENDER_MASK ((uint16_t)0x0080)
 
 /*!
  * @brief The mask for the index of the location at which the Pokémon was caught.
@@ -76,7 +76,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to get or set the
  * location index.
  */
-#define PKSAV_GEN2_LOCATION_MASK ((uint16)0x007F)
+#define PKSAV_GEN2_LOCATION_MASK ((uint16_t)0x007F)
 
 #pragma pack(push,1)
 

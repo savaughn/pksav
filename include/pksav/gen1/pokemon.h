@@ -262,7 +262,7 @@ struct pksav_gen1_party_pokemon
      * it needs to be used.
      */
     struct pksav_gen1_pokemon_party_data party_data;
-} pksav_gen1_party_pokemon_t;
+};
 
 //! Native format for a trainer's Pokémon party in Generation I.
 struct pksav_gen1_pokemon_party
@@ -294,7 +294,7 @@ struct pksav_gen1_pokemon_party
      * with a num_chars value of 10.
      */
     uint8_t nicknames[PKSAV_GEN1_PARTY_NUM_POKEMON][11];
-} pksav_gen1_pokemon_party_t;
+};
 
 //! Native format for a Pokémon PC box in Generation I.
 struct pksav_gen1_pokemon_box
