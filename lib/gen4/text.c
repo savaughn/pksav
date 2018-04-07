@@ -225,17 +225,17 @@ static enum pksav_error _pksav_gen4_import_widetext(
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
-        if(input_buffer[char_index] == PKSAV_GEN4_TERMINATOR)
-        {
-            break;
-        }
-        else if(input_buffer[char_index] < 0x400)
+        if(input_buffer[char_index] < 0x400)
         {
             output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP1[input_buffer[char_index]];
         }
-        else
+        else if(input_buffer[char_index] <= PKSAV_GEN4_CHAR_MAP2_SIZE)
         {
             output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP2[input_buffer[char_index]];
+        }
+        else
+        {
+            break;
         }
     }
 
