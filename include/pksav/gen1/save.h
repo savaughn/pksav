@@ -22,6 +22,8 @@
 #define PKSAV_GEN1_SAVE_SIZE 0x8000
 #define PKSAV_GEN1_NUM_POKEMON_BOXES 12
 
+#define PKSAV_GEN1_TRAINER_NAME_LENGTH 7
+
 // TODO: name buffer sizes
 
 enum pksav_gen1_save_type

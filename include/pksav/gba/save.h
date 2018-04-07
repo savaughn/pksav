@@ -26,6 +26,8 @@
 
 #define PKSAV_GBA_NUM_POKEMON_BOXES 14
 
+#define PKSAV_GBA_TRAINER_NAME_LENGTH 7
+
 struct pksav_gba_pokemon_storage
 {
     struct pksav_gba_pokemon_party* party_ptr;
