@@ -81,8 +81,6 @@ MACRO(PKSAV_ADD_UNIT_TEST test_name)
     ENDIF(NOT CMAKE_CROSSCOMPILING)
 ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
-# TODO: make C++ copy of null_pointer_test to test linkage
-
 SET(unit_tests
     byteswap_test
     error_test
@@ -98,3 +96,10 @@ SET(unit_tests
 FOREACH(test ${unit_tests})
     PKSAV_ADD_UNIT_TEST(${test})
 ENDFOREACH(test ${unit_tests})
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/null_pointer_test.c
+    ${CMAKE_CURRENT_BINARY_DIR}/cpp_exe.cpp
+)
+ADD_EXECUTABLE(cpp_exe ${CMAKE_CURRENT_BINARY_DIR}/cpp_exe.cpp)
+TARGET_LINK_LIBRARIES(cpp_exe pksav unity pksav-test-utils)

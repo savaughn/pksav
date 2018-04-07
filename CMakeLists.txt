@@ -9,7 +9,7 @@
 # CMake configuration
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
-PROJECT(pksav C)
+PROJECT(pksav C CXX)
 
 SET(PKSAV_VERSION_MAJOR 1)
 SET(PKSAV_VERSION_MINOR 7)
