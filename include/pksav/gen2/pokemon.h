@@ -391,7 +391,7 @@ struct pksav_gen2_pokemon_box_names
      * To access a name, you should use the function ::pksav_text_from_gen2
      * with a num_chars value of 9.
      */
-    uint8_t names[PKSAV_GEN2_NUM_POKEMON_BOXES][PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH];
+    uint8_t names[PKSAV_GEN2_NUM_POKEMON_BOXES][PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH + 1];
 };
 
 #pragma pack(pop)
