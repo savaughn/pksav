@@ -97,6 +97,9 @@ FOREACH(test ${unit_tests})
     PKSAV_ADD_UNIT_TEST(${test})
 ENDFOREACH(test ${unit_tests})
 
+# Build null_pointer_test.c as a C++ executable since it conveniently
+# calls every function. This will fail to link if an 'extern "C"' declaration
+# is missing from any header.
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/null_pointer_test.c
     ${CMAKE_CURRENT_BINARY_DIR}/cpp_exe.cpp
