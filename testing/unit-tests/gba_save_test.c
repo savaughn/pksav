@@ -12,7 +12,7 @@
 #include "util/fs.h"
 
 #include <pksav/config.h>
-#include <pksav/gba/save.h>
+#include <pksav/gba.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -337,6 +337,43 @@ static void gba_save_from_file_test(
     );
 }
 
+static void convenience_macro_test()
+{
+    struct pksav_gba_pc_pokemon pc_pokemon;
+    memset(&pc_pokemon, 0, sizeof(pc_pokemon));
+
+    struct pksav_gba_pokemon_blocks* blocks_ptr = &pc_pokemon.blocks;
+
+    // Origin info
+
+    uint16_t ball = \
+        PKSAV_GBA_POKEMON_BALL(blocks_ptr->misc.origin_info);
+    uint16_t origin_game = \
+        PKSAV_GBA_POKEMON_ORIGIN_GAME(blocks_ptr->misc.origin_info);
+
+    (void)ball;
+    (void)origin_game;
+
+    // Ribbons
+
+    uint32_t cool_contest_level = \
+        PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+    uint32_t beauty_contest_level = \
+        PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+    uint32_t cute_contest_level = \
+        PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+    uint32_t smart_contest_level = \
+        PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+    uint32_t tough_contest_level = \
+        PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+
+    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_SUPER,  cool_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_NONE,   beauty_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_HYPER,  cute_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_NORMAL, smart_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_SUPER,  tough_contest_level);
+}
+
 static void pksav_buffer_is_ruby_save_test()
 {
     pksav_gba_get_buffer_save_type_test(
@@ -447,6 +484,8 @@ static void firered_save_from_file_test()
 
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gba_get_buffer_save_type_on_random_buffer_test)
+
+    PKSAV_TEST(convenience_macro_test)
 
     PKSAV_TEST(pksav_buffer_is_ruby_save_test)
     PKSAV_TEST(pksav_file_is_ruby_save_test)

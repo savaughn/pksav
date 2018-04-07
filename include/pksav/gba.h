@@ -10,7 +10,9 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gba/box_wallpaper.h>
 #include <pksav/gba/items.h>
+#include <pksav/gba/language.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>

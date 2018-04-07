@@ -10,6 +10,7 @@
 #include <pksav/config.h>
 
 #include <pksav/common/contest_stats.h>
+#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/trainer_id.h>
 
 #include <stdint.h>
@@ -22,8 +23,6 @@
 
 #define PKSAV_GBA_NUM_POKEMON_BOXES 14
 #define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH 8
-
-// TODO: wallpaper enum
 
 /*!
  * @brief The mask for determining if a Pokémon is an egg.
@@ -91,153 +90,13 @@
  */
 #define PKSAV_GBA_POKEMON_BALL_OFFSET 11
 
-#define PKSAV_GBA_POKEMON_BALL(field) \
-    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
-
 /*!
  * @brief The mask for determining the gender of a Pokémon's original trainer.
  *
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_OTGENDER_MASK (uint16_t)(1 << 15)
-
-/*!
- * @brief The mask for determining which Coolness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Coolness contests, as follows:
- *  * Bit 3 (MSB): Cool Hyper/Ultra
- *  * Bit 2: Cool Super/Great
- *  * Bit 1 (LSB): Cool
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, then logical-or the
- * result with the new value.
- */
-#define PKSAV_GBA_POKEMON_COOL_MASK (uint32_t)(7)
-
-/*!
- * @brief The mask for determining which Beauty contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Beauty contests, as follows:
- *  * Bit 3 (MSB): Beauty Hyper/Ultra
- *  * Bit 2: Beauty Super/Great
- *  * Bit 1 (LSB): Beauty
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_POKEMON_BEAUTY_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_POKEMON_BEAUTY_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_POKEMON_BEAUTY_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_BEAUTY_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Beauty contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_POKEMON_BEAUTY_MASK for its usage.
- */
-#define PKSAV_GBA_POKEMON_BEAUTY_OFFSET 3
-
-/*!
- * @brief The mask for determining which Cuteness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Cute contests, as follows:
- *  * Bit 3 (MSB): Cute Hyper/Ultra
- *  * Bit 2: Cute Super/Great
- *  * Bit 1 (LSB): Cute
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_POKEMON_CUTE_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_POKEMON_CUTE_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_POKEMON_CUTE_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_CUTE_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Cuteness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_POKEMON_CUTE_MASK for its usage.
- */
-#define PKSAV_GBA_POKEMON_CUTE_OFFSET 6
-
-/*!
- * @brief The mask for determining which Smartness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Smart contests, as follows:
- *  * Bit 3 (MSB): Smart Hyper/Ultra
- *  * Bit 2: Smart Super/Great
- *  * Bit 1 (LSB): Smart
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_POKEMON_SMART_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_POKEMON_SMART_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_POKEMON_SMART_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_SMART_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Smartness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_POKEMON_SMART_MASK for its usage.
- */
-#define PKSAV_GBA_POKEMON_SMART_OFFSET 9
-
-/*!
- * @brief The mask for determining which Toughness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Tough contests, as follows:
- *  * Bit 3 (MSB): Tough Hyper/Ultra
- *  * Bit 2: Tough Super/Great
- *  * Bit 1 (LSB): Tough
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_POKEMON_TOUGH_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_POKEMON_TOUGH_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_POKEMON_TOUGH_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_TOUGH_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Toughness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_POKEMON_TOUGH_MASK for its usage.
- */
-#define PKSAV_GBA_POKEMON_TOUGH_OFFSET 12
-
-#define PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(field) \
-    ((field) & PKSAV_GBA_POKEMON_COOL_MASK)
-
-#define PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GBA_POKEMON_BEAUTY_MASK) >> PKSAV_GBA_POKEMON_BEAUTY_OFFSET)
-
-#define PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GBA_POKEMON_CUTE_MASK) >> PKSAV_GBA_POKEMON_CUTE_OFFSET)
-
-#define PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GBA_POKEMON_SMART_MASK) >> PKSAV_GBA_POKEMON_SMART_OFFSET)
-
-#define PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GBA_POKEMON_TOUGH_MASK) >> PKSAV_GBA_POKEMON_TOUGH_OFFSET)
+#define PKSAV_GBA_OTGENDER_MASK ((uint16_t)(1 << 15))
 
 /*!
  * @brief The mask for determining whether a Mew or Deoxys will be obedient.
@@ -249,9 +108,12 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.ribbons_obedience field
  * to modify this bit.
  */
-#define PKSAV_GBA_POKEMON_OBEDIENCE_MASK (uint32_t)(1 << 31)
+#define PKSAV_GBA_POKEMON_OBEDIENCE_MASK ((uint32_t)(1 << 31))
 
 #pragma pack(push,1)
+
+#define PKSAV_GBA_POKEMON_PP_UP(field,move_num) \
+    (((field) >> (move_num * 2)) & 3)
 
 /*!
  * @brief Internal representation of Pokémon statistics that increase
@@ -346,6 +208,27 @@ struct pksav_gba_pokemon_effort_block
     //! A Pokémon's contest stats.
     struct pksav_contest_stats contest_stats;
 };
+
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME(field) \
+    ((field) & PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK)
+
+#define PKSAV_GBA_POKEMON_BALL(field) \
+    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
+
+#define PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(field) \
+    ((field) & PKSAV_GEN3_COOL_RIBBONS_MASK)
+
+#define PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GEN3_BEAUTY_RIBBONS_MASK) >> PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
+
+#define PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GEN3_CUTE_RIBBONS_MASK) >> PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
+
+#define PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GEN3_SMART_RIBBONS_MASK) >> PKSAV_GEN3_SMART_RIBBONS_OFFSET)
+
+#define PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GEN3_TOUGH_RIBBONS_MASK) >> PKSAV_GEN3_TOUGH_RIBBONS_OFFSET)
 
 /*!
  * @brief Internal representation of Pokémon information that doesn't fit in
@@ -480,7 +363,7 @@ struct pksav_gba_pc_pokemon
      * @brief The checksum of the Pokémon blocks.
      *
      * Users should never need to access or modify this value, as ::pksav_gba_save_save
-     * automatically sets all checksum.
+     * automatically sets all checksums.
      */
     uint16_t checksum;
     //! Unknown.

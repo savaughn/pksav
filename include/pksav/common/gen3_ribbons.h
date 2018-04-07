@@ -7,6 +7,8 @@
 #ifndef PKSAV_COMMON_GEN3_RIBBONS_H
 #define PKSAV_COMMON_GEN3_RIBBONS_H
 
+// TODO: move into gba directory
+
 /*!
  * @brief What level of contest ribbon a given Pokémon has.
  *

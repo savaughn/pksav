@@ -6,7 +6,9 @@
 #
 
 SET(pksav_gba_headers
+    box_wallpaper.h
     items.h
+    language.h
     pokedex.h
     pokemon.h
     save.h
