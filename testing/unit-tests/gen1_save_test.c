@@ -245,7 +245,7 @@ static void validate_gen1_pokemon_party(
         );
         validate_gen1_string(
             party_ptr->nicknames[party_index],
-            10
+            PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
         );
     }
 }
@@ -264,12 +264,12 @@ static void validate_gen1_pokemon_box(
         for(size_t box_index = 0; box_index < pokemon_box_ptr->count; ++box_index)
         {
             validate_gen1_string(
-                pokemon_box_ptr->nicknames[box_index],
+                pokemon_box_ptr->otnames[box_index],
                 10
             );
             validate_gen1_string(
-                pokemon_box_ptr->otnames[box_index],
-                10
+                pokemon_box_ptr->nicknames[box_index],
+                PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
             );
         }
     }

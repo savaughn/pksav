@@ -12,7 +12,9 @@
 #define PKSAV_GEN1_BOX_NUM_POKEMON 20
 #define PKSAV_GEN1_PARTY_NUM_POKEMON 6
 
-// TODO: buffer sizes
+#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH 10
+
+#define PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE 3
 
 /*!
  * @brief The mask for a move's PP in the PP field.
@@ -20,7 +22,7 @@
  * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
  * get the PP of that move.
  */
-#define PKSAV_GEN1_MOVE_PP_MASK ((uint8_t)0x3F)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_MASK ((uint8_t)0x3F)
 
 /*!
  * @brief The mask for the number of PP Ups used on a move (0-3).
@@ -28,7 +30,10 @@
  * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
  * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
  */
-#define PKSAV_GEN1_MOVE_PP_UP_MASK ((uint8_t)0xC0)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP_MASK ((uint8_t)0xC0)
+
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP(field) \
+    (((field) & PKSAV_GEN1_POKEMON_MOVE_PP_UP_MASK) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
 
 /*!
  * @brief Valid values for a Pokémon's types.
@@ -134,7 +139,7 @@ struct pksav_gen1_pc_pokemon
      * This value should be accessed with ::pksav_import_base256 (with a num_bytes
      * value of 3) and set with ::pksav_export_base256.
      */
-    uint8_t exp[3];
+    uint8_t exp[PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE];
     /*!
      * @brief The Pokémon's HP EV stat (stored in big-endian).
      *
@@ -252,7 +257,7 @@ struct pksav_gen1_party_pokemon
      *
      * This data is accessible whether the Pokémon is in the PC or party.
      */
-    struct pksav_gen1_pc_pokemon pc;
+    struct pksav_gen1_pc_pokemon pc_data;
 
     /*!
      * @brief Party data.
@@ -277,7 +282,7 @@ struct pksav_gen1_pokemon_party
      *
      * The final index of this field should always be set to 0xFF.
      */
-    uint8_t species[PKSAV_GEN1_PARTY_NUM_POKEMON+1];
+    uint8_t species[PKSAV_GEN1_PARTY_NUM_POKEMON + 1];
     //! The actual Pokémon in the party.
     struct pksav_gen1_party_pokemon party[PKSAV_GEN1_PARTY_NUM_POKEMON];
     /*!
@@ -293,7 +298,7 @@ struct pksav_gen1_pokemon_party
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t nicknames[PKSAV_GEN1_PARTY_NUM_POKEMON][11];
+    uint8_t nicknames[PKSAV_GEN1_PARTY_NUM_POKEMON][PKSAV_GEN1_POKEMON_NICKNAME_LENGTH + 1];
 };
 
 //! Native format for a Pokémon PC box in Generation I.
@@ -310,7 +315,7 @@ struct pksav_gen1_pokemon_box
      * The first index after the last Pokémon in the box should always be
      * set to 0xFF.
      */
-    uint8_t species[PKSAV_GEN1_BOX_NUM_POKEMON+1];
+    uint8_t species[PKSAV_GEN1_BOX_NUM_POKEMON + 1];
     //! The actual Pokémon in the box.
     struct pksav_gen1_pc_pokemon entries[PKSAV_GEN1_BOX_NUM_POKEMON];
     /*!
@@ -326,7 +331,7 @@ struct pksav_gen1_pokemon_box
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10).
      */
-    uint8_t nicknames[PKSAV_GEN1_BOX_NUM_POKEMON][11];
+    uint8_t nicknames[PKSAV_GEN1_BOX_NUM_POKEMON][PKSAV_GEN1_POKEMON_NICKNAME_LENGTH + 1];
 };
 
 #pragma pack(pop)

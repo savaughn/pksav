@@ -387,7 +387,7 @@ static void _pksav_gba_set_save_pointers(
         ++party_index)
     {
         pksav_gba_crypt_pokemon(
-            &pokemon_storage_ptr->party_ptr->party[party_index].pc,
+            &pokemon_storage_ptr->party_ptr->party[party_index].pc_data,
             false // should_encrypt
         );
     }
@@ -595,7 +595,7 @@ enum pksav_error pksav_gba_save_save(
         ++party_index)
     {
         pksav_gba_crypt_pokemon(
-            &gba_save_ptr->pokemon_storage.party_ptr->party[party_index].pc,
+            &gba_save_ptr->pokemon_storage.party_ptr->party[party_index].pc_data,
             true // should_encrypt
         );
     }

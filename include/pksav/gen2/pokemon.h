@@ -18,10 +18,10 @@
 #define PKSAV_GEN2_BOX_NUM_POKEMON 20
 #define PKSAV_GEN2_PARTY_NUM_POKEMON 6
 
+#define PKSAV_GEN2_POKEMON_NICKNAME_LENGTH 10
+
 #define PKSAV_GEN2_NUM_POKEMON_BOXES 14
 #define PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH 8
-
-// TODO: buffer sizes
 
 /*!
  * @brief The mask for a move's PP in the PP field.
@@ -29,41 +29,47 @@
  * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps to
  * get the PP of that move.
  */
-#define PKSAV_GEN2_MOVE_PP_MASK ((uint8_t)0x3F)
+#define PKSAV_GEN2_POKEMON_MOVE_PP_MASK ((uint8_t)0x3F)
 
 /*!
  * @brief The mask for the number of PP Ups used on a move (0-3).
  *
  * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps
- * and shift it right by ::PKSAV_GEN2_MOVE_PP_UP_MASK to get the number of PP
+ * and shift it right by ::PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK to get the number of PP
  * Ups used.
  */
-#define PKSAV_GEN2_MOVE_PP_UP_MASK ((uint8_t)0xC0)
+#define PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK ((uint8_t)0xC0)
 
 /*!
  * @brief The offset of the number of PP UPs used on a move.
  *
  * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps
- * with ::PKSAV_GEN2_MOVE_PP_UP_OFFSET and shift it right by this to get the
+ * with ::PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET and shift it right by this to get the
  * number of PP Ups used.
  */
-#define PKSAV_GEN2_MOVE_PP_UP_OFFSET 6
+#define PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET 6
+
+#define PKSAV_GEN2_POKEMON_MOVE_PP_UP(field) \
+    (((field) & PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK) >> PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET)
 
 /*!
  * @brief The mask for the level at which a Pokémon was caught.
  *
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask and shift it
- * right by ::PKSAV_GEN2_LEVEL_CAUGHT_OFFSET to get the value.
+ * right by ::PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET to get the value.
  */
-#define PKSAV_GEN2_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
+#define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
 
 /*!
  * @brief The offset for the level at which a Pokémon was caught.
  *
- * Mask struct pksav_gen2_pc_pokemon.caught_data with ::PKSAV_GEN2_LEVEL_CAUGHT_MASK
+ * Mask struct pksav_gen2_pc_pokemon.caught_data with ::PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK
  * and shift it right by this offset to get the value.
  */
-#define PKSAV_GEN2_LEVEL_CAUGHT_OFFSET 8
+#define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET 8
+
+#define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(field) \
+    (((field) & PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET)
 
 /*!
  * @brief The mask for setting a Pokémon's original trainer's gender.
@@ -71,7 +77,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to set the trainer's
  * gender to female. Unmask it to set the trainer's gender to male.
  */
-#define PKSAV_GEN2_OT_GENDER_MASK ((uint16_t)0x0080)
+#define PKSAV_GEN2_POKEMON_OT_GENDER_MASK ((uint16_t)0x0080)
 
 /*!
  * @brief The mask for the index of the location at which the Pokémon was caught.
@@ -79,7 +85,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to get or set the
  * location index.
  */
-#define PKSAV_GEN2_LOCATION_MASK ((uint16_t)0x007F)
+#define PKSAV_GEN2_POKEMON_LOCATION_MASK ((uint16_t)0x007F)
 
 #pragma pack(push,1)
 
@@ -296,7 +302,7 @@ struct pksav_gen2_party_pokemon
      *
      * This data is accessible whether the Pokémon is in the PC or party.
      */
-    struct pksav_gen2_pc_pokemon pc;
+    struct pksav_gen2_pc_pokemon pc_data;
 
     /*!
      * @brief Party data.
@@ -325,7 +331,7 @@ struct pksav_gen2_pokemon_party
      * The first index after the last Pokémon in the box should always be
      * set to 0xFF.
      */
-    uint8_t species[PKSAV_GEN2_PARTY_NUM_POKEMON+1];
+    uint8_t species[PKSAV_GEN2_PARTY_NUM_POKEMON + 1];
     //! The actual Pokémon in the party.
     struct pksav_gen2_party_pokemon party[PKSAV_GEN2_PARTY_NUM_POKEMON];
     /*!
@@ -341,7 +347,7 @@ struct pksav_gen2_pokemon_party
      * To access this value, you should use the function ::pksav_text_from_gen2
      * with a num_chars value of 10.
      */
-    uint8_t nicknames[PKSAV_GEN2_PARTY_NUM_POKEMON][11];
+    uint8_t nicknames[PKSAV_GEN2_PARTY_NUM_POKEMON][PKSAV_GEN2_POKEMON_NICKNAME_LENGTH + 1];
 };
 
 //! Native format for a Pokémon PC box in Generation II.
@@ -361,7 +367,7 @@ struct pksav_gen2_pokemon_box
      * The first index after the last Pokémon in the box should always be
      * set to 0xFF.
      */
-    uint8_t species[PKSAV_GEN2_BOX_NUM_POKEMON+1];
+    uint8_t species[PKSAV_GEN2_BOX_NUM_POKEMON + 1];
     //! The actual Pokémon in the box.
     struct pksav_gen2_pc_pokemon entries[PKSAV_GEN2_BOX_NUM_POKEMON];
     /*!
@@ -377,7 +383,7 @@ struct pksav_gen2_pokemon_box
      * To access this value, you should use the function ::pksav_text_from_gen2
      * with a num_chars value of 10.
      */
-    uint8_t nicknames[PKSAV_GEN2_BOX_NUM_POKEMON][11];
+    uint8_t nicknames[PKSAV_GEN2_BOX_NUM_POKEMON][PKSAV_GEN2_POKEMON_NICKNAME_LENGTH + 1];
     //! Padding.
     uint8_t padding[2];
 };

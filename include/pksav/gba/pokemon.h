@@ -17,6 +17,12 @@
 #define PKSAV_GBA_BOX_NUM_POKEMON 30
 #define PKSAV_GBA_PARTY_NUM_POKEMON 6
 
+#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH 10
+#define PKSAV_GBA_POKEMON_OTNAME_LENGTH 7
+
+#define PKSAV_GBA_NUM_POKEMON_BOXES 14
+#define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH 8
+
 // TODO: wallpaper enum
 
 /*!
@@ -25,7 +31,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.iv_egg_ability
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_EGG_MASK (uint32_t)(1 << 30)
+#define PKSAV_GBA_POKEMON_EGG_MASK ((uint32_t)(1 << 30))
 
 /*!
  * @brief The mask for determining which ability a Pokémon has.
@@ -33,7 +39,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.iv_egg_ability
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_ABILITY_MASK (uint32_t)(1 << 31)
+#define PKSAV_GBA_POKEMON_ABILITY_MASK ((uint32_t)(1 << 31))
 
 /*!
  * @brief The mask for determining at which level a Pokémon was met.
@@ -41,7 +47,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this value.
  */
-#define PKSAV_GBA_LEVEL_MET_MASK (uint16_t)(0x7F)
+#define PKSAV_GBA_POKEMON_LEVEL_MET_MASK ((uint16_t)(0x7F))
 
 /*!
  * @brief The mask for determining a Pokémon's origin game.
@@ -55,7 +61,7 @@
  * value left by ::PKSAV_GBA_ORIGIN_GAME_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_ORIGIN_GAME_MASK (uint16_t)(0x780)
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK ((uint16_t)(0x780))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's origin game in its bitfield.
@@ -76,14 +82,17 @@
  * value left by ::PKSAV_GBA_BALL_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_BALL_MASK (uint16_t)(0x7800)
+#define PKSAV_GBA_POKEMON_BALL_MASK ((uint16_t)(0x7800))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's ball in its bitfield.
  *
  * See ::PKSAV_GBA_BALL_MASK for its usage.
  */
-#define PKSAV_GBA_BALL_OFFSET 11
+#define PKSAV_GBA_POKEMON_BALL_OFFSET 11
+
+#define PKSAV_GBA_POKEMON_BALL(field) \
+    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
 
 /*!
  * @brief The mask for determining the gender of a Pokémon's original trainer.
@@ -109,7 +118,7 @@
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, then logical-or the
  * result with the new value.
  */
-#define PKSAV_GBA_COOL_MASK (uint32_t)(7)
+#define PKSAV_GBA_POKEMON_COOL_MASK (uint32_t)(7)
 
 /*!
  * @brief The mask for determining which Beauty contests a Pokémon has won.
@@ -122,20 +131,20 @@
  *
  * To access this value, apply this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_BEAUTY_OFFSET.
+ * by ::PKSAV_GBA_POKEMON_BEAUTY_OFFSET.
  *
  * To modify this value, apply the inverse of this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_BEAUTY_OFFSET, then logical-or the result with the field.
+ * by ::PKSAV_GBA_POKEMON_BEAUTY_OFFSET, then logical-or the result with the field.
  */
-#define PKSAV_GBA_BEAUTY_MASK (uint32_t)(7 << PKSAV_GBA_BEAUTY_OFFSET)
+#define PKSAV_GBA_POKEMON_BEAUTY_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_BEAUTY_OFFSET)
 
 /*!
  * @brief The offset of the bits corresponding to which Beauty contests a Pokémon has won.
  *
- * See ::PKSAV_GBA_BEAUTY_MASK for its usage.
+ * See ::PKSAV_GBA_POKEMON_BEAUTY_MASK for its usage.
  */
-#define PKSAV_GBA_BEAUTY_OFFSET 3
+#define PKSAV_GBA_POKEMON_BEAUTY_OFFSET 3
 
 /*!
  * @brief The mask for determining which Cuteness contests a Pokémon has won.
@@ -148,20 +157,20 @@
  *
  * To access this value, apply this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_CUTE_OFFSET.
+ * by ::PKSAV_GBA_POKEMON_CUTE_OFFSET.
  *
  * To modify this value, apply the inverse of this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_CUTE_OFFSET, then logical-or the result with the field.
+ * by ::PKSAV_GBA_POKEMON_CUTE_OFFSET, then logical-or the result with the field.
  */
-#define PKSAV_GBA_CUTE_MASK (uint32_t)(7 << PKSAV_GBA_CUTE_OFFSET)
+#define PKSAV_GBA_POKEMON_CUTE_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_CUTE_OFFSET)
 
 /*!
  * @brief The offset of the bits corresponding to which Cuteness contests a Pokémon has won.
  *
- * See ::PKSAV_GBA_CUTE_MASK for its usage.
+ * See ::PKSAV_GBA_POKEMON_CUTE_MASK for its usage.
  */
-#define PKSAV_GBA_CUTE_OFFSET 6
+#define PKSAV_GBA_POKEMON_CUTE_OFFSET 6
 
 /*!
  * @brief The mask for determining which Smartness contests a Pokémon has won.
@@ -174,20 +183,20 @@
  *
  * To access this value, apply this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_SMART_OFFSET.
+ * by ::PKSAV_GBA_POKEMON_SMART_OFFSET.
  *
  * To modify this value, apply the inverse of this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_SMART_OFFSET, then logical-or the result with the field.
+ * by ::PKSAV_GBA_POKEMON_SMART_OFFSET, then logical-or the result with the field.
  */
-#define PKSAV_GBA_SMART_MASK (uint32_t)(7 << PKSAV_GBA_SMART_OFFSET)
+#define PKSAV_GBA_POKEMON_SMART_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_SMART_OFFSET)
 
 /*!
  * @brief The offset of the bits corresponding to which Smartness contests a Pokémon has won.
  *
- * See ::PKSAV_GBA_SMART_MASK for its usage.
+ * See ::PKSAV_GBA_POKEMON_SMART_MASK for its usage.
  */
-#define PKSAV_GBA_SMART_OFFSET 9
+#define PKSAV_GBA_POKEMON_SMART_OFFSET 9
 
 /*!
  * @brief The mask for determining which Toughness contests a Pokémon has won.
@@ -200,20 +209,35 @@
  *
  * To access this value, apply this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_TOUGH_OFFSET.
+ * by ::PKSAV_GBA_POKEMON_TOUGH_OFFSET.
  *
  * To modify this value, apply the inverse of this mask to the
  * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_TOUGH_OFFSET, then logical-or the result with the field.
+ * by ::PKSAV_GBA_POKEMON_TOUGH_OFFSET, then logical-or the result with the field.
  */
-#define PKSAV_GBA_TOUGH_MASK (uint32_t)(7 << PKSAV_GBA_TOUGH_OFFSET)
+#define PKSAV_GBA_POKEMON_TOUGH_MASK (uint32_t)(7 << PKSAV_GBA_POKEMON_TOUGH_OFFSET)
 
 /*!
  * @brief The offset of the bits corresponding to which Toughness contests a Pokémon has won.
  *
- * See ::PKSAV_GBA_TOUGH_MASK for its usage.
+ * See ::PKSAV_GBA_POKEMON_TOUGH_MASK for its usage.
  */
-#define PKSAV_GBA_TOUGH_OFFSET 12
+#define PKSAV_GBA_POKEMON_TOUGH_OFFSET 12
+
+#define PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(field) \
+    ((field) & PKSAV_GBA_POKEMON_COOL_MASK)
+
+#define PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GBA_POKEMON_BEAUTY_MASK) >> PKSAV_GBA_POKEMON_BEAUTY_OFFSET)
+
+#define PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GBA_POKEMON_CUTE_MASK) >> PKSAV_GBA_POKEMON_CUTE_OFFSET)
+
+#define PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GBA_POKEMON_SMART_MASK) >> PKSAV_GBA_POKEMON_SMART_OFFSET)
+
+#define PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(field) \
+    (((field) & PKSAV_GBA_POKEMON_TOUGH_MASK) >> PKSAV_GBA_POKEMON_TOUGH_OFFSET)
 
 /*!
  * @brief The mask for determining whether a Mew or Deoxys will be obedient.
@@ -225,7 +249,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.ribbons_obedience field
  * to modify this bit.
  */
-#define PKSAV_GBA_OBEDIENCE_MASK (uint32_t)(1 << 31)
+#define PKSAV_GBA_POKEMON_OBEDIENCE_MASK (uint32_t)(1 << 31)
 
 #pragma pack(push,1)
 
@@ -428,7 +452,7 @@ struct pksav_gba_pc_pokemon
      *
      * In all cases, the num_chars parameter should be 10.
      */
-    uint8_t nickname[10];
+    uint8_t nickname[PKSAV_GBA_POKEMON_NICKNAME_LENGTH];
     /*!
      * @brief The language of this Pokémon's original game.
      *
@@ -444,7 +468,7 @@ struct pksav_gba_pc_pokemon
      *
      * In all cases, the num_chars parameter should be 7.
      */
-    uint8_t otname[7];
+    uint8_t otname[PKSAV_GBA_POKEMON_OTNAME_LENGTH];
     /*!
      * @brief This Pokémon's trainer-set markings.
      *
@@ -481,27 +505,27 @@ struct pksav_gba_pokemon_party_data
 
 struct pksav_gba_party_pokemon
 {
-    struct pksav_gba_pc_pokemon pc;
+    struct pksav_gba_pc_pokemon pc_data;
     struct pksav_gba_pokemon_party_data party_data;
 };
 
 struct pksav_gba_pokemon_party
 {
     uint32_t count;
-    struct pksav_gba_party_pokemon party[6];
+    struct pksav_gba_party_pokemon party[PKSAV_GBA_PARTY_NUM_POKEMON];
 };
 
 struct pksav_gba_pokemon_box
 {
-    struct pksav_gba_pc_pokemon entries[30];
+    struct pksav_gba_pc_pokemon entries[PKSAV_GBA_BOX_NUM_POKEMON];
 };
 
 struct pksav_gba_pokemon_pc
 {
     uint32_t current_box;
-    struct pksav_gba_pokemon_box boxes[14];
-    uint8_t box_names[14][9];
-    uint8_t wallpapers[14];
+    struct pksav_gba_pokemon_box boxes[PKSAV_GBA_NUM_POKEMON_BOXES];
+    uint8_t box_names[PKSAV_GBA_NUM_POKEMON_BOXES][PKSAV_GBA_POKEMON_BOX_NAME_LENGTH + 1];
+    uint8_t wallpapers[PKSAV_GBA_NUM_POKEMON_BOXES];
 };
 
 #pragma pack(pop)
