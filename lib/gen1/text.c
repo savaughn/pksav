@@ -12,10 +12,8 @@
 #include <assert.h>
 #include <string.h>
 
+#define PKSAV_GEN1_TEXT_SPACE 0x7F
 #define ASCII_SPACE           0x20
-
-#define PKSAV_GEN1_TERMINATOR 0x50
-#define PKSAV_GEN1_SPACE      0x7F
 
 /*
  * Character map for Generation I
@@ -61,7 +59,7 @@ static enum pksav_error _pksav_gen1_import_widetext(
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
-        if(input_buffer[char_index] != PKSAV_GEN1_TERMINATOR)
+        if(input_buffer[char_index] != PKSAV_GEN1_TEXT_TERMINATOR)
         {
             output_widetext[char_index] = PKSAV_GEN1_CHAR_MAP[input_buffer[char_index]];
         }
@@ -83,13 +81,13 @@ static enum pksav_error _pksav_gen1_export_widetext(
     assert(input_widetext != NULL);
     assert(output_buffer != NULL);
 
-    memset(output_buffer, PKSAV_GEN1_TERMINATOR, num_chars);
+    memset(output_buffer, PKSAV_GEN1_TEXT_TERMINATOR, num_chars);
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
         if(input_widetext[char_index] == ASCII_SPACE)
         {
-            output_buffer[char_index] = PKSAV_GEN1_SPACE;
+            output_buffer[char_index] = PKSAV_GEN1_TEXT_SPACE;
         }
         else
         {

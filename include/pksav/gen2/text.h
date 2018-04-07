@@ -13,6 +13,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define PKSAV_GEN2_TEXT_TERMINATOR 0x50
+
 #ifdef __cplusplus
 extern "C" {
 #endif
