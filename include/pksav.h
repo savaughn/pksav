@@ -14,7 +14,6 @@
 
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/datetime.h>
-#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/nature.h>

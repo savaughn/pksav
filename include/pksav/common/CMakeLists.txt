@@ -9,7 +9,6 @@ SET(pksav_common_headers
     condition.h
     contest_stats.h
     datetime.h
-    gen3_ribbons.h
     gen4_encounter_type.h
     item.h
     markings.h

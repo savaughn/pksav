@@ -344,7 +344,16 @@ static void convenience_macro_test()
 
     struct pksav_gba_pokemon_blocks* blocks_ptr = &pc_pokemon.blocks;
 
-    // Origin info
+    //uint16_t* origin_info_ptr = &blocks_ptr->misc.origin_info;
+    uint32_t* ribbons_obedience_ptr = &blocks_ptr->misc.ribbons_obedience;
+
+    *ribbons_obedience_ptr |= PKSAV_GBA_CONTEST_RIBBON_SUPER; // Cool
+    // None for Beauty
+    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_HYPER << PKSAV_GBA_CUTE_RIBBONS_OFFSET);
+    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_NORMAL << PKSAV_GBA_SMART_RIBBONS_OFFSET);
+    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_SUPER << PKSAV_GBA_TOUGH_RIBBONS_OFFSET);
+
+    // Origin info (TODO: add enums, set, and test
 
     uint16_t ball = \
         PKSAV_GBA_POKEMON_BALL(blocks_ptr->misc.origin_info);
@@ -356,22 +365,17 @@ static void convenience_macro_test()
 
     // Ribbons
 
-    uint32_t cool_contest_level = \
-        PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
-    uint32_t beauty_contest_level = \
-        PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
-    uint32_t cute_contest_level = \
-        PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
-    uint32_t smart_contest_level = \
-        PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
-    uint32_t tough_contest_level = \
-        PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(blocks_ptr->misc.ribbons_obedience);
+    uint32_t cool_contest_level   = PKSAV_GBA_COOL_CONTEST_LEVEL(*ribbons_obedience_ptr);
+    uint32_t beauty_contest_level = PKSAV_GBA_BEAUTY_CONTEST_LEVEL(*ribbons_obedience_ptr);
+    uint32_t cute_contest_level   = PKSAV_GBA_CUTE_CONTEST_LEVEL(*ribbons_obedience_ptr);
+    uint32_t smart_contest_level  = PKSAV_GBA_SMART_CONTEST_LEVEL(*ribbons_obedience_ptr);
+    uint32_t tough_contest_level  = PKSAV_GBA_TOUGH_CONTEST_LEVEL(*ribbons_obedience_ptr);
 
-    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_SUPER,  cool_contest_level);
-    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_NONE,   beauty_contest_level);
-    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_HYPER,  cute_contest_level);
-    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_NORMAL, smart_contest_level);
-    TEST_ASSERT_EQUAL(PKSAV_GEN3_CONTEST_RIBBON_SUPER,  tough_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_SUPER,  cool_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_NONE,   beauty_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_HYPER,  cute_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_NORMAL, smart_contest_level);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_SUPER,  tough_contest_level);
 }
 
 static void pksav_buffer_is_ruby_save_test()

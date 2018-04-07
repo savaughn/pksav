@@ -15,6 +15,7 @@
 #include <pksav/gba/language.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/gba/ribbons.h>
 #include <pksav/gba/save.h>
 #include <pksav/gba/save_type.h>
 #include <pksav/gba/text.h>
@@ -22,7 +23,6 @@
 
 #include <pksav/common/condition.h>
 #include <pksav/common/contest_stats.h>
-#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/nature.h>
 #include <pksav/common/pokedex.h>

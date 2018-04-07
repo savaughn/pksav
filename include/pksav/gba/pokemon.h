@@ -10,8 +10,9 @@
 #include <pksav/config.h>
 
 #include <pksav/common/contest_stats.h>
-#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/trainer_id.h>
+
+#include <pksav/gba/ribbons.h>
 
 #include <stdint.h>
 
@@ -213,22 +214,7 @@ struct pksav_gba_pokemon_effort_block
     ((field) & PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK)
 
 #define PKSAV_GBA_POKEMON_BALL(field) \
-    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
-
-#define PKSAV_GBA_POKEMON_COOL_CONTEST_LEVEL(field) \
-    ((field) & PKSAV_GEN3_COOL_RIBBONS_MASK)
-
-#define PKSAV_GBA_POKEMON_BEAUTY_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GEN3_BEAUTY_RIBBONS_MASK) >> PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
-
-#define PKSAV_GBA_POKEMON_CUTE_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GEN3_CUTE_RIBBONS_MASK) >> PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
-
-#define PKSAV_GBA_POKEMON_SMART_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GEN3_SMART_RIBBONS_MASK) >> PKSAV_GEN3_SMART_RIBBONS_OFFSET)
-
-#define PKSAV_GBA_POKEMON_TOUGH_CONTEST_LEVEL(field) \
-    (((field) & PKSAV_GEN3_TOUGH_RIBBONS_MASK) >> PKSAV_GEN3_TOUGH_RIBBONS_OFFSET)
+    ((field) & PKSAV_GBA_POKEMON_BALL_MASK)
 
 /*!
  * @brief Internal representation of Pokémon information that doesn't fit in
