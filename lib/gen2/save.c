@@ -386,8 +386,8 @@ static void _pksav_gen2_set_save_pointers(
     // Pokédex lists
     struct pksav_gen2_pokedex_lists* pokedex_lists_ptr = &gen2_save_ptr->pokedex_lists;
 
-    pokedex_lists_ptr->seen_ptr  = &buffer[PKSAV_GEN2_POKEDEX_SEEN];
-    pokedex_lists_ptr->owned_ptr = &buffer[PKSAV_GEN2_POKEDEX_OWNED];
+    pokedex_lists_ptr->seen_ptr  = &buffer[offsets[PKSAV_GEN2_POKEDEX_SEEN]];
+    pokedex_lists_ptr->owned_ptr = &buffer[offsets[PKSAV_GEN2_POKEDEX_OWNED]];
 
     // Trainer info
     struct pksav_gen2_trainer_info* trainer_info_ptr = &gen2_save_ptr->trainer_info;
