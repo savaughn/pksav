@@ -24,18 +24,10 @@
  */
 #define PKSAV_GEN1_POKEMON_MOVE_PP_MASK ((uint8_t)0x3F)
 
-/*!
- * @brief The mask for the number of PP Ups used on a move (0-3).
- *
- * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
- * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
- */
-#define PKSAV_GEN1_POKEMON_MOVE_PP_UP_MASK ((uint8_t)0xC0)
-
 #define PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET 6
 
 #define PKSAV_GEN1_POKEMON_MOVE_PP_UP(field) \
-    (((field) & PKSAV_GEN1_POKEMON_MOVE_PP_UP_MASK) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
+    ((field) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
 
 /*!
  * @brief Valid values for a Pokémon's types.

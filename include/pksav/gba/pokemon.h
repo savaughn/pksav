@@ -211,10 +211,10 @@ struct pksav_gba_pokemon_effort_block
 };
 
 #define PKSAV_GBA_POKEMON_ORIGIN_GAME(field) \
-    ((field) & PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK)
+    (((field) & PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK) >> PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET)
 
 #define PKSAV_GBA_POKEMON_BALL(field) \
-    ((field) & PKSAV_GBA_POKEMON_BALL_MASK)
+    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
 
 /*!
  * @brief Internal representation of Pokémon information that doesn't fit in
