@@ -54,11 +54,11 @@
  *
  * To access the value, apply the mask to the
  * pksav_gba_pokemon_misc_t.origin_info field and shift the result
- * right by ::PKSAV_GBA_ORIGIN_GAME_OFFSET.
+ * right by ::PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET.
  *
  * To modify the value, apply the inverse of the mask to the
  * pksav_gba_pokemon_misc_t.origin_info field. Then shift the new
- * value left by ::PKSAV_GBA_ORIGIN_GAME_OFFSET and perform a logical-or
+ * value left by ::PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET and perform a logical-or
  * with this value and the field.
  */
 #define PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK ((uint16_t)(0x780))
@@ -68,7 +68,7 @@
  *
  * See ::PKSAV_GBA_ORIGIN_GAME_MASK for it usage.
  */
-#define PKSAV_GBA_ORIGIN_GAME_OFFSET 7
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET 7
 
 /*!
  * @brief The mask for determining which Poké Ball was used to catch a Pokémon.
@@ -97,7 +97,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_OTGENDER_MASK ((uint16_t)(1 << 15))
+#define PKSAV_GBA_POKEMON_OTGENDER_MASK ((uint16_t)(1 << 15))
 
 /*!
  * @brief The mask for determining whether a Mew or Deoxys will be obedient.
