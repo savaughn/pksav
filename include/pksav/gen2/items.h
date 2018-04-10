@@ -72,16 +72,6 @@ struct pksav_gen2_item_pocket
     uint8_t terminator;
 };
 
-/*!
- * @brief Native representation of the trainer's key item pocket in Generation II.
- *
- * All items in this list should be contiguous, and the amount should match
- * the value in the count field. If the count value is too small, the game will
- * ignore any later items, and if it is too large, whatever happens to be in
- * memory will be parsed as items, leading to undefined behavior when used.
- *
- * @todo: verify
- */
 struct pksav_gen2_key_item_pocket
 {
     //! How many unique items are in the bag (0-26).
