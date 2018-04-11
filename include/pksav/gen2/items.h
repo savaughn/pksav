@@ -19,12 +19,13 @@
 #define PKSAV_GEN2_ITEM_PC_SIZE 50
 
 //! Native representation of an item slot in Generation II.
+// TODO: common representation as Generation I's
 struct pksav_gen2_item
 {
-    //! Item count (0-99).
-    uint8_t count;
     //! Item index.
     uint8_t index;
+    //! Item count (0-99).
+    uint8_t count;
 };
 
 /*!
