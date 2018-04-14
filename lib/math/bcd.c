@@ -32,15 +32,14 @@ enum pksav_error pksav_import_bcd(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    size_t mult = 100;
+    *result_out = 0;
 
-    (*result_out) = (buffer[num_bytes-1] & 0x0F) + ((buffer[num_bytes-1] >> 4) * 10);
-    for(ssize_t index = (ssize_t)(num_bytes-2); index >= 0; --index)
+    for(ssize_t index = (ssize_t)(num_bytes-1); index >= 0; --index)
     {
-        (*result_out)  += ((buffer[index] & 0x0F) * mult);
-        mult *= 10;
-        (*result_out)  += ((buffer[index] >> 4) * mult);
-        mult *= 10;
+        *result_out *= 100;
+
+        *result_out += (buffer[index] & 0x0F);
+        *result_out += (10 * (((buffer[index] & 0xF0)) >> 4));
     }
 
     return PKSAV_ERROR_NONE;
@@ -70,14 +69,12 @@ enum pksav_error pksav_export_bcd(
     size_t actual_num_bytes = (num_bytes < num_needed_bytes) ? num_bytes
                                                              : num_needed_bytes;
 
-    size_t mult = 100;
-
-    buffer_out[actual_num_bytes-1] = (((num % 100) / 10) << 4) | (num % 10);
-    for(ssize_t index = (ssize_t)(actual_num_bytes-2); index >= 0; --index)
+    for(ssize_t index = (actual_num_bytes-1); index >= 0; --index)
     {
-        buffer_out[index] = (uint8_t)((((num % (mult*100)) / (mult*10)) << 4) |
-                                      ((num % (mult*10)) / mult));
-        mult *= 100;
+        buffer_out[index] = (uint8_t)(num % 10);
+        buffer_out[index] |= ((uint8_t)((num / 10) % 10) << 4);
+
+        num /= 100;
     }
 
     return PKSAV_ERROR_NONE;
