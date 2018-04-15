@@ -90,7 +90,7 @@ static void pksav_gba_get_buffer_save_type_on_random_buffer_test()
                     sizeof(buffer),
                     &save_type
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
     }
 }
 
@@ -140,7 +140,7 @@ static void pksav_gba_get_buffer_save_type_test(
                 filesize,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 
     free(save_buffer);
@@ -177,7 +177,7 @@ static void pksav_gba_get_file_save_type_test(
                 filepath,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 }
 
@@ -209,7 +209,7 @@ static void gba_save_test(
 
     // Free the save and make sure all fields are set to NULL or default.
     error = pksav_gba_free_save(gba_save_ptr);
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL(PKSAV_GBA_SAVE_TYPE_NONE, gba_save_ptr->save_type);
 
@@ -284,7 +284,7 @@ static void gba_save_from_buffer_test(
                 filesize,
                 &gba_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gba_save_test(
@@ -326,7 +326,7 @@ static void gba_save_from_file_test(
                 original_filepath,
                 &gba_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gba_save_test(

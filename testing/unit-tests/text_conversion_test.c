@@ -36,14 +36,14 @@ static void pksav_gen1_text_test()
                     gen1_buffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_gen1_import_text(
                     gen1_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
     }
@@ -80,14 +80,14 @@ static void pksav_gen2_text_test()
                     gen2_buffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_gen2_import_text(
                     gen2_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
     }
@@ -124,14 +124,14 @@ static void pksav_gba_text_test()
                     gba_buffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_gba_import_text(
                     gba_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
     }
@@ -168,14 +168,14 @@ static void pksav_gen4_text_test()
                     gen4_buffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_gen4_import_text(
                     gen4_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
     }
@@ -212,14 +212,14 @@ static void pksav_gen5_text_test()
                     gen5_buffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_gen5_import_text(
                     gen5_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(strings[string_index], strbuffer);
     }

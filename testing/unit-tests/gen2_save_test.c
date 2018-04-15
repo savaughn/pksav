@@ -89,7 +89,7 @@ static void pksav_gen2_get_buffer_save_type_on_random_buffer_test()
                     sizeof(buffer),
                     &save_type
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
     }
 }
 
@@ -133,7 +133,7 @@ static void pksav_gen2_get_buffer_save_type_test(
                 PKSAV_GEN2_SAVE_SIZE,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 
     free(save_buffer);
@@ -170,7 +170,7 @@ static void pksav_gen2_get_file_save_type_test(
                 filepath,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 }
 
@@ -188,7 +188,7 @@ static void validate_gen2_string(
                                  strbuffer,
                                  buffer_len
                              );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_TRUE(strlen(strbuffer) > 0ULL);
 }
 
@@ -217,7 +217,7 @@ static void validate_bcd(
                                  num_bytes,
                                  &bcd_value
                              );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_TRUE(bcd_value <= max_value);
 }
 
@@ -514,14 +514,14 @@ static void gen2_save_test(
                 tmp_save_filepath,
                 gen2_save_ptr
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     struct pksav_gen2_save tmp_gen2_save = EMPTY_GEN2_SAVE;
     error = pksav_gen2_load_save_from_file(
                 tmp_save_filepath,
                 &tmp_gen2_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     compare_gen2_saves(
         gen2_save_ptr,
@@ -529,7 +529,7 @@ static void gen2_save_test(
     );
 
     error = pksav_gen2_free_save(&tmp_gen2_save);
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     if(delete_file(tmp_save_filepath))
     {
@@ -543,7 +543,7 @@ static void gen2_save_test(
                     &gen2_save_ptr->pokemon_storage,
                     box_index
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL(
             box_index,
@@ -558,7 +558,7 @@ static void gen2_save_test(
 
     // Free the save and make sure all fields are set to NULL or default.
     error = pksav_gen2_free_save(gen2_save_ptr);
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL(PKSAV_GEN2_SAVE_TYPE_NONE, gen2_save_ptr->save_type);
 
@@ -628,7 +628,7 @@ static void gen2_save_from_buffer_test(
                 save_size,
                 &gen2_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gen2_save_test(
@@ -670,7 +670,7 @@ static void gen2_save_from_file_test(
                 original_filepath,
                 &gen2_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gen2_save_test(

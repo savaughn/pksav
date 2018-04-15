@@ -29,13 +29,13 @@ static void pokerus_test()
                     &pokerus,
                     (enum pksav_pokerus_strain)i
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_pokerus_get_strain(
                     &pokerus,
                     &strain_out
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL((enum pksav_pokerus_strain)i, strain_out);
     }
 
@@ -46,13 +46,13 @@ static void pokerus_test()
                     &pokerus,
                     i
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         error = pksav_pokerus_get_duration(
                     &pokerus,
                     &duration_out
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(i, duration_out);
     }
 }

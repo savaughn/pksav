@@ -27,7 +27,7 @@ static void base256_test()
                 output_base256_buffer,
                 3
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
         test_base256_buffer,
         output_base256_buffer,
@@ -39,7 +39,7 @@ static void base256_test()
                 3,
                 &output_num
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num, output_num);
 }
 
@@ -58,7 +58,7 @@ static void bcd_odd_count_test()
                 output_bcd_buffer,
                 3
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
         test_bcd_buffer,
         output_bcd_buffer,
@@ -70,7 +70,7 @@ static void bcd_odd_count_test()
                 3,
                 &output_num
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num, output_num);
 }
 
@@ -89,7 +89,7 @@ static void bcd_even_count_test()
                 output_bcd_buffer,
                 3
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
         test_bcd_buffer,
         output_bcd_buffer,
@@ -101,7 +101,7 @@ static void bcd_even_count_test()
                 3,
                 &output_num
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num, output_num);
 }
 

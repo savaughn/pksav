@@ -82,7 +82,7 @@ static void pksav_gen1_get_buffer_save_type_on_random_buffer_test()
                     sizeof(buffer),
                     &save_type
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
     }
 }
 
@@ -126,7 +126,7 @@ static void pksav_gen1_get_buffer_save_type_test(
                 PKSAV_GEN1_SAVE_SIZE,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 }
 
@@ -161,7 +161,7 @@ static void pksav_gen1_get_file_save_type_test(
                 filepath,
                 &save_type
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 }
 
@@ -179,7 +179,7 @@ static void validate_gen1_string(
                                  strbuffer,
                                  buffer_len
                              );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_TRUE(strlen(strbuffer) > 0ULL);
 }
 
@@ -210,7 +210,7 @@ static void validate_bcd(
                                  num_bytes,
                                  &bcd_value
                              );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_TRUE(bcd_value <= max_value);
 }
 
@@ -358,7 +358,7 @@ static void gen1_save_test(
                 tmp_save_filepath,
                 gen1_save_ptr
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     bool files_differ = false;
     if(do_files_differ(original_filepath, tmp_save_filepath, &files_differ))
@@ -383,7 +383,7 @@ static void gen1_save_test(
                     &gen1_save_ptr->pokemon_storage,
                     box_index
                 );
-        TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+        PKSAV_TEST_ASSERT_SUCCESS(error);
 
         uint8_t current_box_num = *gen1_save_ptr->pokemon_storage.current_box_num_ptr;
         current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
@@ -397,7 +397,7 @@ static void gen1_save_test(
 
     // Free the save and make sure all fields are set to NULL or default.
     error = pksav_gen1_free_save(gen1_save_ptr);
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save_ptr->save_type);
     TEST_ASSERT_NULL(gen1_save_ptr->time_played_ptr);
@@ -467,7 +467,7 @@ static void gen1_save_from_buffer_test(
                 save_size,
                 &gen1_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gen1_save_test(
@@ -509,7 +509,7 @@ static void gen1_save_from_file_test(
                 original_filepath,
                 &gen1_save
             );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NONE, error);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
 
     // This test will free the save.
     gen1_save_test(
