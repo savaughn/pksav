@@ -102,11 +102,11 @@ static void bcd_test()
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num_even, output_num);
 
-    // Test with a multiple of 100 to make sure the function can account
-    // for a valid empty byte.
+    // Test with a smaller number to test that the buffer is emptied and
+    // remnants of previous numbers don't persist.
 
-    const size_t test_num_small = 7300;
-    const uint8_t test_bcd_buffer_small[3] = {0x73, 0x00, 0x00};
+    const size_t test_num_small = 730;
+    const uint8_t test_bcd_buffer_small[3] = {0x07, 0x30, 0xFF};
 
     error = pksav_export_bcd(
                 test_num_small,
