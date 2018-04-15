@@ -34,9 +34,14 @@ enum pksav_error pksav_import_bcd(
 
     *result_out = 0;
 
-    for(ssize_t index = (ssize_t)(num_bytes-1); index >= 0; --index)
+    for(size_t index = 0;
+        (index < num_bytes) && (buffer[index] != 0);
+         ++index)
     {
-        *result_out *= 100;
+        if(index > 0)
+        {
+            *result_out *= 100;
+        }
 
         *result_out += (buffer[index] & 0x0F);
         *result_out += (10 * (((buffer[index] & 0xF0)) >> 4));

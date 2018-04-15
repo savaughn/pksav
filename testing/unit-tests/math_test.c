@@ -25,7 +25,7 @@ static void base256_test()
     error = pksav_export_base256(
                 test_num,
                 output_base256_buffer,
-                3
+                sizeof(output_base256_buffer)
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
@@ -36,77 +36,48 @@ static void base256_test()
 
     error = pksav_import_base256(
                 test_base256_buffer,
-                3,
+                sizeof(test_base256_buffer),
                 &output_num
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num, output_num);
 }
 
-static void bcd_odd_count_test()
+static void bcd_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    const size_t test_num = 23456;
-    const uint8_t test_bcd_buffer[3] = {0x02, 0x34, 0x56};
+    // Test a number with an odd number of digits to test that the no digit
+    // is added to the lower half of the first byte.
 
-    size_t output_num = 0;
-    uint8_t output_bcd_buffer[3] = {0};
+    const size_t test_num_odd = 12345;
+    const uint8_t test_bcd_buffer_odd[3] = {0x01, 0x23, 0x45};
+
+    size_t output_num_odd = 0;
+    uint8_t output_bcd_buffer_odd[3] = {0};
 
     error = pksav_export_bcd(
-                test_num,
-                output_bcd_buffer,
-                3
+                test_num_odd,
+                output_bcd_buffer_odd,
+                sizeof(output_bcd_buffer_odd)
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
-        test_bcd_buffer,
-        output_bcd_buffer,
-        sizeof(test_bcd_buffer)
+        test_bcd_buffer_odd,
+        output_bcd_buffer_odd,
+        sizeof(test_bcd_buffer_odd)
     );
 
     error = pksav_import_bcd(
-                test_bcd_buffer,
-                3,
-                &output_num
+                test_bcd_buffer_odd,
+                sizeof(test_bcd_buffer_odd),
+                &output_num_odd
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(test_num, output_num);
-}
-
-static void bcd_even_count_test()
-{
-    enum pksav_error error = PKSAV_ERROR_NONE;
-
-    const size_t test_num = 123456;
-    const uint8_t test_bcd_buffer[3] = {0x12, 0x34, 0x56};
-
-    size_t output_num = 0;
-    uint8_t output_bcd_buffer[3] = {0};
-
-    error = pksav_export_bcd(
-                test_num,
-                output_bcd_buffer,
-                3
-            );
-    PKSAV_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_MEMORY(
-        test_bcd_buffer,
-        output_bcd_buffer,
-        sizeof(test_bcd_buffer)
-    );
-
-    error = pksav_import_bcd(
-                test_bcd_buffer,
-                3,
-                &output_num
-            );
-    PKSAV_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(test_num, output_num);
+    TEST_ASSERT_EQUAL(test_num_odd, output_num_odd);
 }
 
 PKSAV_TEST_MAIN(
     PKSAV_TEST(base256_test)
-    PKSAV_TEST(bcd_odd_count_test)
-    PKSAV_TEST(bcd_even_count_test)
+    PKSAV_TEST(bcd_test)
 )
