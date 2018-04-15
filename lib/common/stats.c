@@ -22,13 +22,13 @@
 #define PKSAV_GB_DEF_IV_OFFSET 8
 
 #define PKSAV_GB_DEF_IV(raw) \
-    ((uint8_t)((raw) & PKSAV_GB_DEF_IV_MASK) >> PKSAV_GB_DEF_IV_OFFSET)
+    ((uint8_t)(((raw) & PKSAV_GB_DEF_IV_MASK) >> PKSAV_GB_DEF_IV_OFFSET))
 
 #define PKSAV_GB_SPD_IV_MASK  ((uint16_t)0x00F0)
 #define PKSAV_GB_SPD_IV_OFFSET 4
 
 #define PKSAV_GB_SPD_IV(raw) \
-    ((uint8_t)((raw) & PKSAV_GB_SPD_IV_MASK) >> PKSAV_GB_SPD_IV_OFFSET)
+    ((uint8_t)(((raw) & PKSAV_GB_SPD_IV_MASK) >> PKSAV_GB_SPD_IV_OFFSET))
 
 #define PKSAV_GB_SPCL_IV_MASK ((uint16_t)0x000F)
 
@@ -121,8 +121,8 @@ enum pksav_error pksav_set_gb_IV(
             break;
 
         case PKSAV_GB_IV_HP:
-            (*raw_IV_ptr) &= 0xEEEE;
-            (*raw_IV_ptr) = ((IV_value & 0x08) << 9)
+            (*raw_IV_ptr) = ((*raw_IV_ptr) & 0xEEEE)
+                          | ((IV_value & 0x08) << 9)
                           | ((IV_value & 0x04) << 6)
                           | ((IV_value & 0x02) << 3)
                           |  (IV_value & 0x01);

@@ -11,7 +11,39 @@
 
 #include <stdlib.h>
 
-static void test_setting_gb_IV_from_random_raw_storage()
+static void gb_IV_invalid_params_test()
+{
+    enum pksav_error error = PKSAV_ERROR_NONE;
+
+    uint16_t raw_IV = 0;
+
+    enum pksav_gb_IV stat_below_minimum = PKSAV_GB_IV_ATTACK - 1;
+    enum pksav_gb_IV stat_above_maximum = PKSAV_GB_IV_HP + 1;
+    uint8_t IV_above_maximum = 16;
+
+    error = pksav_set_gb_IV(
+                stat_below_minimum,
+                0,
+                &raw_IV
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_PARAM_OUT_OF_RANGE, error);
+
+    error = pksav_set_gb_IV(
+                stat_above_maximum,
+                0,
+                &raw_IV
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_PARAM_OUT_OF_RANGE, error);
+
+    error = pksav_set_gb_IV(
+                PKSAV_GB_IV_ATTACK,
+                IV_above_maximum,
+                &raw_IV
+            );
+    TEST_ASSERT_EQUAL(PKSAV_ERROR_PARAM_OUT_OF_RANGE, error);
+}
+
+static void gb_IV_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
@@ -49,42 +81,7 @@ static void test_setting_gb_IV_from_random_raw_storage()
     TEST_ASSERT_EQUAL(raw_IV, test_raw_IV);
 }
 
-static void test_setting_gb_IV_from_random_IVs()
-{
-    enum pksav_error error = PKSAV_ERROR_NONE;
-
-    uint16_t raw_IV = 0;
-    uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
-
-    // Start from random individual IVs. Write the IVs, read them back,
-    // and make sure they match.
-    for(enum pksav_gb_IV stat = PKSAV_GB_IV_ATTACK;
-        stat <= PKSAV_GB_IV_HP;
-        ++stat)
-    {
-        IVs[stat] = (uint8_t)(rand() % 16);
-
-        error = pksav_set_gb_IV(
-                    stat,
-                    IVs[stat],
-                    &raw_IV
-                );
-        PKSAV_TEST_ASSERT_SUCCESS(error);
-    }
-
-    uint8_t test_IVs[PKSAV_NUM_GB_IVS] = {0};
-    error = pksav_get_gb_IVs(
-                &raw_IV,
-                test_IVs,
-                sizeof(test_IVs),
-                NULL
-            );
-    PKSAV_TEST_ASSERT_SUCCESS(error);
-
-    TEST_ASSERT_EQUAL_MEMORY(IVs, test_IVs, sizeof(IVs));
-}
-
 PKSAV_TEST_MAIN(
-    PKSAV_TEST(test_setting_gb_IV_from_random_raw_storage)
-    PKSAV_TEST(test_setting_gb_IV_from_random_IVs)
+    PKSAV_TEST(gb_IV_invalid_params_test)
+    PKSAV_TEST(gb_IV_test)
 )
