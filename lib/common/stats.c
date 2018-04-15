@@ -73,7 +73,7 @@ enum pksav_error pksav_get_gb_IVs(
 
     if(actual_num_IVs_out)
     {
-        *actual_num_IVs_out = (size_t)PKSAV_GB_IV_HP;
+        *actual_num_IVs_out = PKSAV_NUM_GB_IVS;
     }
 
     return PKSAV_ERROR_NONE;

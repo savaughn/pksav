@@ -22,6 +22,8 @@ enum pksav_gb_IV
     PKSAV_GB_IV_HP
 };
 
+#define PKSAV_NUM_GB_IVS 5
+
 #ifdef __cplusplus
 extern "C" {
 #endif

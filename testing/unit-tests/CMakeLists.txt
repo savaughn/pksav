@@ -90,6 +90,7 @@ SET(unit_tests
     math_test
     null_pointer_test
     pokerus_test
+    stats_test
     text_conversion_test
 )
 
