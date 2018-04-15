@@ -47,34 +47,86 @@ static void bcd_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
 
+    size_t output_num = 0;
+    uint8_t output_bcd_buffer[3] = {0};
+
     // Test a number with an odd number of digits to test that the no digit
     // is added to the lower half of the first byte.
 
     const size_t test_num_odd = 12345;
     const uint8_t test_bcd_buffer_odd[3] = {0x01, 0x23, 0x45};
 
-    size_t output_num_odd = 0;
-    uint8_t output_bcd_buffer_odd[3] = {0};
-
     error = pksav_export_bcd(
                 test_num_odd,
-                output_bcd_buffer_odd,
-                sizeof(output_bcd_buffer_odd)
+                output_bcd_buffer,
+                sizeof(output_bcd_buffer)
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MEMORY(
         test_bcd_buffer_odd,
-        output_bcd_buffer_odd,
+        output_bcd_buffer,
         sizeof(test_bcd_buffer_odd)
     );
 
     error = pksav_import_bcd(
                 test_bcd_buffer_odd,
                 sizeof(test_bcd_buffer_odd),
-                &output_num_odd
+                &output_num
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(test_num_odd, output_num_odd);
+    TEST_ASSERT_EQUAL(test_num_odd, output_num);
+
+    // Test a number with an even number of digits to test that all digits
+    // are accounted for.
+
+    const size_t test_num_even = 567890;
+    const uint8_t test_bcd_buffer_even[3] = {0x56, 0x78, 0x90};
+
+    error = pksav_export_bcd(
+                test_num_even,
+                output_bcd_buffer,
+                sizeof(output_bcd_buffer)
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL_MEMORY(
+        test_bcd_buffer_even,
+        output_bcd_buffer,
+        sizeof(test_bcd_buffer_even)
+    );
+
+    error = pksav_import_bcd(
+                test_bcd_buffer_even,
+                sizeof(test_bcd_buffer_even),
+                &output_num
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(test_num_even, output_num);
+
+    // Test with a multiple of 100 to make sure the function can account
+    // for a valid empty byte.
+
+    const size_t test_num_small = 7300;
+    const uint8_t test_bcd_buffer_small[3] = {0x73, 0x00, 0x00};
+
+    error = pksav_export_bcd(
+                test_num_small,
+                output_bcd_buffer,
+                sizeof(output_bcd_buffer)
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL_MEMORY(
+        test_bcd_buffer_small,
+        output_bcd_buffer,
+        sizeof(test_bcd_buffer_small)
+    );
+
+    error = pksav_import_bcd(
+                test_bcd_buffer_small,
+                sizeof(test_bcd_buffer_small),
+                &output_num
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(test_num_small, output_num);
 }
 
 PKSAV_TEST_MAIN(
