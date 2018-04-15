@@ -11,45 +11,32 @@
 #include <pksav/error.h>
 
 #include <stdint.h>
+#include <stdlib.h>
 
-enum pksav_battle_stat
+enum pksav_gb_IV
 {
-    PKSAV_STAT_NONE = 0,
-    PKSAV_STAT_HP,
-    PKSAV_STAT_ATTACK,
-    PKSAV_STAT_DEFENSE,
-    PKSAV_STAT_SPATK,
-    PKSAV_STAT_SPDEF,
-    PKSAV_STAT_SPEED,
-    PKSAV_STAT_SPECIAL
+    PKSAV_GB_IV_ATTACK,
+    PKSAV_GB_IV_DEFENSE,
+    PKSAV_GB_IV_SPEED,
+    PKSAV_GB_IV_SPECIAL,
+    PKSAV_GB_IV_HP
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKSAV_API enum pksav_error pksav_get_gb_IV(
-    const uint16_t* raw,
-    enum pksav_battle_stat stat,
-    uint8_t* IV_out
+PKSAV_API enum pksav_error pksav_get_gb_IVs(
+    const uint16_t* raw_IV_ptr,
+    uint8_t* IVs_out,
+    size_t IV_buffer_size,
+    size_t* actual_num_IVs_out
 );
 
 PKSAV_API enum pksav_error pksav_set_gb_IV(
-    uint16_t* raw,
-    enum pksav_battle_stat stat,
-    uint8_t new_IV
-);
-
-PKSAV_API enum pksav_error pksav_get_IV(
-    const uint32_t* raw,
-    enum pksav_battle_stat stat,
-    uint8_t* IV_out
-);
-
-PKSAV_API enum pksav_error pksav_set_IV(
-    uint32_t* raw,
-    enum pksav_battle_stat stat,
-    uint8_t new_IV
+    enum pksav_gb_IV stat,
+    uint8_t IV_value,
+    uint16_t* raw_IV_ptr
 );
 
 #ifdef __cplusplus

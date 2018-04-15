@@ -9,63 +9,134 @@
 
 #include <pksav/common/stats.h>
 
+#include <assert.h>
 #include <math.h>
 
 #define PKSAV_GB_ATK_IV_MASK  ((uint16_t)0xF000)
+#define PKSAV_GB_ATK_IV_OFFSET 12
+
+#define PKSAV_GB_ATK_IV(raw) \
+    ((uint8_t)(((raw) & PKSAV_GB_ATK_IV_MASK) >> PKSAV_GB_ATK_IV_OFFSET))
+
 #define PKSAV_GB_DEF_IV_MASK  ((uint16_t)0x0F00)
+#define PKSAV_GB_DEF_IV_OFFSET 8
+
+#define PKSAV_GB_DEF_IV(raw) \
+    ((uint8_t)((raw) & PKSAV_GB_DEF_IV_MASK) >> PKSAV_GB_DEF_IV_OFFSET)
+
 #define PKSAV_GB_SPD_IV_MASK  ((uint16_t)0x00F0)
+#define PKSAV_GB_SPD_IV_OFFSET 4
+
+#define PKSAV_GB_SPD_IV(raw) \
+    ((uint8_t)((raw) & PKSAV_GB_SPD_IV_MASK) >> PKSAV_GB_SPD_IV_OFFSET)
+
 #define PKSAV_GB_SPCL_IV_MASK ((uint16_t)0x000F)
 
-enum pksav_error pksav_get_gb_IV(
-    const uint16_t* raw,
-    enum pksav_battle_stat stat,
-    uint8_t* IV_out
+#define PKSAV_GB_SPCL_IV(raw) \
+    ((uint8_t)((raw) & PKSAV_GB_SPCL_IV_MASK))
+
+enum pksav_error pksav_get_gb_IVs(
+    const uint16_t* raw_IV_ptr,
+    uint8_t* IVs_out,
+    size_t IV_buffer_size,
+    size_t* actual_num_IVs_out
 )
 {
-    if(!raw || !IV_out)
+    if(!raw_IV_ptr || !IVs_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    switch(stat)
+    if(IV_buffer_size > (size_t)PKSAV_GB_IV_ATTACK)
     {
-        case PKSAV_STAT_HP:
-        {
-            uint8_t atk, def, spd, spcl;
-            (void)pksav_get_gb_IV(raw, PKSAV_STAT_ATTACK,  &atk);
-            (void)pksav_get_gb_IV(raw, PKSAV_STAT_DEFENSE, &def);
-            (void)pksav_get_gb_IV(raw, PKSAV_STAT_SPEED,   &spd);
-            (void)pksav_get_gb_IV(raw, PKSAV_STAT_SPECIAL, &spcl);
-            *IV_out = ((atk & 0x01) << 3) | ((def & 0x01) << 2)
-                    | ((spd & 0x01) << 1) | (spcl & 0x01);
-            break;
-        }
+        IVs_out[PKSAV_GB_IV_ATTACK] = PKSAV_GB_ATK_IV((*raw_IV_ptr));
+    }
+    if(IV_buffer_size > (size_t)PKSAV_GB_IV_DEFENSE)
+    {
+        IVs_out[PKSAV_GB_IV_DEFENSE] = PKSAV_GB_DEF_IV((*raw_IV_ptr));
+    }
+    if(IV_buffer_size > (size_t)PKSAV_GB_IV_SPEED)
+    {
+        IVs_out[PKSAV_GB_IV_SPEED] = PKSAV_GB_SPD_IV((*raw_IV_ptr));
+    }
+    if(IV_buffer_size > (size_t)PKSAV_GB_IV_SPECIAL)
+    {
+        IVs_out[PKSAV_GB_IV_SPECIAL] = PKSAV_GB_SPCL_IV((*raw_IV_ptr));
+    }
+    if(IV_buffer_size > (size_t)PKSAV_GB_IV_HP)
+    {
+        IVs_out[PKSAV_GB_IV_HP] = (IVs_out[PKSAV_GB_IV_SPECIAL] & 0x01)
+                                | ((IVs_out[PKSAV_GB_IV_SPEED] & 0x01) << 1)
+                                | ((IVs_out[PKSAV_GB_IV_DEFENSE] & 0x01) << 2)
+                                | ((IVs_out[PKSAV_GB_IV_ATTACK] & 0x01) << 3);
+    }
 
-        case PKSAV_STAT_ATTACK:
-            *IV_out = ((*raw) & PKSAV_GB_ATK_IV_MASK) >> 12;
-            break;
-
-        case PKSAV_STAT_DEFENSE:
-            *IV_out = ((*raw) & PKSAV_GB_DEF_IV_MASK) >> 8;
-            break;
-
-        case PKSAV_STAT_SPEED:
-            *IV_out = ((*raw) & PKSAV_GB_SPD_IV_MASK) >> 4;
-            break;
-
-        case PKSAV_STAT_SPATK:
-        case PKSAV_STAT_SPDEF:
-        case PKSAV_STAT_SPECIAL:
-            *IV_out = (*raw) & PKSAV_GB_SPCL_IV_MASK;
-            break;
-
-        default:
-            return PKSAV_ERROR_INVALID_STAT;
+    if(actual_num_IVs_out)
+    {
+        *actual_num_IVs_out = (size_t)PKSAV_GB_IV_HP;
     }
 
     return PKSAV_ERROR_NONE;
 }
 
+enum pksav_error pksav_set_gb_IV(
+    enum pksav_gb_IV stat,
+    uint8_t IV_value,
+    uint16_t* raw_IV_ptr
+)
+{
+    if(!raw_IV_ptr)
+    {
+        return PKSAV_ERROR_NULL_POINTER;
+    }
+    if((stat < PKSAV_GB_IV_ATTACK) || (stat > PKSAV_GB_IV_HP))
+    {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+    if(IV_value > 15)
+    {
+        return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
+    }
+
+    switch(stat)
+    {
+        case PKSAV_GB_IV_ATTACK:
+            (*raw_IV_ptr) &= ~PKSAV_GB_ATK_IV_MASK;
+            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_ATK_IV_OFFSET);
+            break;
+
+        case PKSAV_GB_IV_DEFENSE:
+            (*raw_IV_ptr) &= ~PKSAV_GB_DEF_IV_MASK;
+            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_DEF_IV_OFFSET);
+            break;
+
+        case PKSAV_GB_IV_SPEED:
+            (*raw_IV_ptr) &= ~PKSAV_GB_SPD_IV_MASK;
+            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_SPD_IV_OFFSET);
+            break;
+
+        case PKSAV_GB_IV_SPECIAL:
+            (*raw_IV_ptr) &= ~PKSAV_GB_SPCL_IV_MASK;
+            (*raw_IV_ptr) |= IV_value;
+            break;
+
+        case PKSAV_GB_IV_HP:
+            (*raw_IV_ptr) &= 0xEEEE;
+            (*raw_IV_ptr) = ((IV_value & 0x08) << 9)
+                          | ((IV_value & 0x04) << 6)
+                          | ((IV_value & 0x02) << 3)
+                          |  (IV_value & 0x01);
+            break;
+
+        // This should have been caught by the input validation above.
+        default:
+            assert(0);
+    }
+
+    return PKSAV_ERROR_NONE;
+}
+
+/*
 enum pksav_error pksav_set_gb_IV(
     uint16_t* raw,
     enum pksav_battle_stat stat,
@@ -215,3 +286,4 @@ enum pksav_error pksav_set_IV(
 
     return PKSAV_ERROR_NONE;
 }
+*/

@@ -218,73 +218,8 @@ static void pksav_common_prng_h_test() {
 /*
  * pksav/common/stats.h
  */
-static void pksav_common_stats_h_test() {
-    enum pksav_error status = PKSAV_ERROR_NONE;
-
-    uint8_t dummy_uint8_t = 0;
-    uint16_t dummy_uint16_t = 0;
-    uint32_t dummy_uint32_t = 0;
-
-    /*
-     * pksav_get_gb_IV
-     */
-
-    status = pksav_get_gb_IV(
-        NULL,
-        PKSAV_STAT_NONE,
-        &dummy_uint8_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_get_gb_IV(
-        &dummy_uint16_t,
-        PKSAV_STAT_NONE,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_get_gb_IV(
-        NULL,
-        PKSAV_STAT_NONE,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_set_gb_IV
-     */
-
-    status = pksav_set_gb_IV(
-        NULL,
-        PKSAV_STAT_NONE,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_get_IV
-     */
-
-    status = pksav_get_IV(
-        NULL,
-        PKSAV_STAT_NONE,
-        &dummy_uint8_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_get_IV(
-        &dummy_uint32_t,
-        PKSAV_STAT_NONE,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_get_IV(
-        NULL,
-        PKSAV_STAT_NONE,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+static void pksav_common_stats_h_test()
+{
 }
 
 /*
