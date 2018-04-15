@@ -130,6 +130,10 @@ static void IV_test()
         raw_IV = (uint32_t)rand();
     }
 
+    // The upper two bits are used for non-IV storage, so remove them to
+    // remove false errors.
+    raw_IV &= ~(3 << 29);
+
     error = pksav_get_IVs(
                 &raw_IV,
                 IVs,
