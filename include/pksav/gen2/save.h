@@ -22,6 +22,8 @@
 
 #define PKSAV_GEN2_TRAINER_NAME_LENGTH 7
 
+#define PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK ((uint8_t)(1 << 7))
+
 // TODO: name buffer sizes
 
 enum pksav_gen2_save_type
