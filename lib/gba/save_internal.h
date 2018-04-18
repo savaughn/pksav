@@ -38,14 +38,14 @@ struct pksav_gba_trainer_info_internal
  * unshuffling and decryption.
  */
 
-#define PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES 12
+#define PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES 48
 
 union pksav_gba_pokemon_blocks_internal
 {
-    uint8_t blocks8[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES];
-    uint16_t blocks16[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/2];
-    uint32_t blocks32[PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4];
-    uint8_t blocks[4][PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4];
+    uint8_t blocks8[PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES];
+    uint16_t blocks16[PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES/2];
+    uint32_t blocks32[PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES/4];
+    uint8_t blocks[4][PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES/4];
     struct pksav_gba_pokemon_blocks by_name;
 };
 

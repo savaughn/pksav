@@ -56,7 +56,7 @@ void pksav_gba_crypt_pokemon(
                           ^ gba_pokemon_ptr->personality;
 
     for(size_t index = 0;
-        index < (PKSAV_GBA_POKEMON_BLOCK_SIZE_BYTES/4);
+        index < (PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES/4);
         ++index)
     {
         gba_pokemon_internal_blocks_ptr->blocks32[index] ^= security_key;

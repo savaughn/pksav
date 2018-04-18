@@ -64,6 +64,12 @@ void pksav_gba_save_load_pokemon_pc(
     assert(gba_save_slot != NULL);
     assert(pokemon_pc_out != NULL);
 
+    memset(
+        pokemon_pc_out,
+        0,
+        sizeof(*pokemon_pc_out)
+    );
+
     // Copy data from sections into contiguous data structure.
     uint8_t* dst_ptr = (uint8_t*)pokemon_pc_out;
     for(size_t section_index = 5;

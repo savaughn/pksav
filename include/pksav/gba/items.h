@@ -13,9 +13,11 @@
 
 #pragma pack(push,1)
 
+#define PKSAV_GBA_ITEM_PC_NUM_ITEMS 50
+
 struct pksav_gba_item_pc
 {
-    struct pksav_item items[50];
+    struct pksav_item items[PKSAV_GBA_ITEM_PC_NUM_ITEMS];
 };
 
 //! Internal represention of item storage in Pokémon Ruby/Sapphire.
