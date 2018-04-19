@@ -173,13 +173,36 @@ union pksav_gba_save_slot
     };
 };
 
+#define PKSAV_GBA_SAVE_SLOT_SIZE 0xE000
+
+struct pksav_gba_save_internal
+{
+    uint8_t* raw_save_ptr;
+
+    // There are multiple storage formats, so we can't just use our
+    // "minimum size" #define.
+    size_t save_len;
+
+    bool is_save_from_first_slot;
+    union pksav_gba_save_slot unshuffled_save_slot;
+    uint8_t shuffled_section_nums[PKSAV_GBA_NUM_SAVE_SECTIONS];
+
+    struct pksav_gba_pokemon_pc consolidated_pokemon_pc;
+    uint32_t* security_key_ptr;
+
+    bool is_buffer_ours;
+};
+
+// Each footer has a field that must equal this value to be considered valid.
+#define PKSAV_GBA_VALIDATION_MAGIC 0x08012025
+
+#pragma pack(pop)
+
 // How many bytes in each section are read for the checksum
 static const size_t pksav_gba_section_sizes[14] =
 {
     3884,3968,3968,3968,3848,3968,3968,
     3968,3968,3968,3968,3968,3968,2000
 };
-
-#pragma pack(pop)
 
 #endif /* PKSAV_GBA_SAVE_INTERNAL_H */

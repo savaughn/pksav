@@ -22,27 +22,6 @@
 
 #include <string.h>
 
-struct pksav_gba_save_internal
-{
-    uint8_t* raw_save_ptr;
-
-    // There are multiple storage formats, so we can't just use our
-    // "minimum size" #define.
-    size_t save_len;
-
-    bool is_save_from_first_slot;
-    union pksav_gba_save_slot unshuffled_save_slot;
-    uint8_t shuffled_section_nums[PKSAV_GBA_NUM_SAVE_SECTIONS];
-
-    struct pksav_gba_pokemon_pc consolidated_pokemon_pc;
-    uint32_t* security_key_ptr;
-
-    bool is_buffer_ours;
-};
-
-// Each footer has a field that must equal this value to be considered valid.
-#define PKSAV_GBA_VALIDATION_MAGIC 0x08012025
-
 /*
  * Offsets
  */
@@ -116,7 +95,7 @@ static union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
 
     union pksav_gba_save_slot* active_save_slot_ptr = NULL;
 
-    if(buffer_len >= PKSAV_GBA_SAVE_SIZE)
+    if(buffer_len >= PKSAV_GBA_SAVE_SLOT_SIZE*2)
     {
         union pksav_gba_save_slot* save_slots = (union pksav_gba_save_slot*)buffer;
         uint32_t save_index1 = pksav_littleendian32(
@@ -134,6 +113,10 @@ static union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
         {
             active_save_slot_ptr = &save_slots[1];
         }
+    }
+    else if(buffer_len >= PKSAV_GBA_SAVE_SLOT_SIZE)
+    {
+        active_save_slot_ptr = (union pksav_gba_save_slot*)buffer;
     }
 
     return active_save_slot_ptr;
@@ -170,11 +153,11 @@ enum pksav_error pksav_gba_get_buffer_save_type(
             (section_index < PKSAV_GBA_NUM_SAVE_SECTIONS) && is_save_valid;
             ++section_index)
         {
-            const struct pksav_gba_section_footer* section1_footer_ptr =
+            const struct pksav_gba_section_footer* section_footer_ptr =
                 &save_slot_ptr->sections_arr[section_index].footer;
 
-            if((section1_footer_ptr->section_id > (PKSAV_GBA_NUM_SAVE_SECTIONS-1)) ||
-               (pksav_littleendian32(section1_footer_ptr->validation) != PKSAV_GBA_VALIDATION_MAGIC))
+            if((section_footer_ptr->section_id > (PKSAV_GBA_NUM_SAVE_SECTIONS-1)) ||
+               (pksav_littleendian32(section_footer_ptr->validation) != PKSAV_GBA_VALIDATION_MAGIC))
             {
                 is_save_valid = false;
             }
@@ -183,7 +166,7 @@ enum pksav_error pksav_gba_get_buffer_save_type(
         if(is_save_valid)
         {
             union pksav_gba_save_slot unshuffled_save_slots;
-            uint8_t section_nums[14]; // Unused
+            uint8_t section_nums[14] = {0}; // Unused
             pksav_gba_save_unshuffle_sections(
                 save_slot_ptr,
                 &unshuffled_save_slots,
@@ -611,12 +594,22 @@ enum pksav_error pksav_gba_save_save(
     // Misc Fields
     *gba_save_ptr->misc_fields.casino_coins_ptr ^= (*internal_ptr->security_key_ptr & 0xFFFF);
 
+    // Save into the less recent save slot if the save file is large enough
+    // for two slots.
     union pksav_gba_save_slot* raw_sections_ptr = (union pksav_gba_save_slot*)(
                                                       internal_ptr->raw_save_ptr
                                                   );
-    union pksav_gba_save_slot* output_save_slot_ptr =
-        internal_ptr->is_save_from_first_slot ? &raw_sections_ptr[1]
-                                              : &raw_sections_ptr[0];
+    union pksav_gba_save_slot* output_save_slot_ptr = NULL;
+    if(internal_ptr->save_len >= PKSAV_GBA_SAVE_SLOT_SIZE*2)
+    {
+        output_save_slot_ptr = internal_ptr->is_save_from_first_slot ? &raw_sections_ptr[1]
+                                                                     : &raw_sections_ptr[0];
+    }
+    else
+    {
+        output_save_slot_ptr = &raw_sections_ptr[0];
+    }
+
 
     pksav_gba_set_section_checksums(&internal_ptr->unshuffled_save_slot);
     pksav_gba_save_shuffle_sections(
@@ -625,19 +618,36 @@ enum pksav_error pksav_gba_save_save(
         internal_ptr->shuffled_section_nums
     );
 
+    // Increment the save index of the new save index.
+    uint32_t save_index = pksav_littleendian32(
+                              output_save_slot_ptr->section0.footer.save_index
+                          );
+    ++save_index;
+
+    for(size_t section_index = 0;
+        section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
+        ++section_index)
+    {
+        output_save_slot_ptr->sections_arr[section_index].footer.save_index =
+            pksav_littleendian32(save_index);
+    }
+
     error = pksav_fs_write_buffer_to_file(
                 filepath,
                 internal_ptr->raw_save_ptr,
                 internal_ptr->save_len
             );
 
-    // With everything saved to the new slot, reset the pointers.
-    _pksav_gba_set_save_pointers(
-        gba_save_ptr,
-        internal_ptr->raw_save_ptr,
-        internal_ptr->save_len,
-        false // should_alloc_internal
-    );
+    if(!error)
+    {
+        // With everything saved to the new slot, reset the pointers.
+        _pksav_gba_set_save_pointers(
+            gba_save_ptr,
+            internal_ptr->raw_save_ptr,
+            internal_ptr->save_len,
+            false // should_alloc_internal
+        );
+    }
 
     return error;
 }

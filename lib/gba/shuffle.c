@@ -51,6 +51,8 @@ void pksav_gba_save_shuffle_sections(
         section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
         ++section_index)
     {
+        assert(section_nums_ptr[section_index] < PKSAV_GBA_NUM_SAVE_SECTIONS);
+
         save_slot_out->sections_arr[section_index] =
             save_slot_in->sections_arr[section_nums_ptr[section_index]];
     }
