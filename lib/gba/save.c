@@ -83,7 +83,7 @@ static const size_t SECTION4_OFFSETS[][2] =
 {
     {0x0C0C,0x0000},
     {0x0CA4,0x0000},
-    {0x0B98,0x0Bcc}
+    {0x0B98,0x0BCC}
 };
 
 static union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
@@ -347,7 +347,7 @@ static void _pksav_gba_set_save_pointers(
     struct pksav_gba_item_storage* item_storage_ptr = &gba_save_ptr->item_storage;
 
     item_storage_ptr->bag_ptr = (union pksav_gba_item_bag*)(
-                                    &section0_ptr->data8[section0_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
+                                    &section1_ptr->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
                                 );
     pksav_gba_save_crypt_items(
         item_storage_ptr->bag_ptr,
@@ -356,7 +356,7 @@ static void _pksav_gba_set_save_pointers(
     );
 
     item_storage_ptr->pc_ptr = (struct pksav_gba_item_pc*)(
-                                    &section0_ptr->data8[section0_offsets_ptr[PKSAV_GBA_ITEM_PC]]
+                                    &section1_ptr->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
                                 );
 
     // Pokémon storage
@@ -426,7 +426,7 @@ static void _pksav_gba_set_save_pointers(
     trainer_info_ptr->gender_ptr = &trainer_info_internal_ptr->gender;
 
     trainer_info_ptr->money_ptr = &section1_ptr->data32[
-                                      section1_offsets_ptr[PKSAV_GBA_MONEY]
+                                      section1_offsets_ptr[PKSAV_GBA_MONEY]/4
                                   ];
     *trainer_info_ptr->money_ptr ^= *internal_ptr->security_key_ptr;
 
