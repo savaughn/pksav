@@ -190,7 +190,6 @@ struct pksav_gen1_save
     //! A pointer to the amount of time this save file has been played.
     struct pksav_gen1_time* time_played_ptr;
 
-    // TODO: add enums
     uint8_t* options_ptr;
 
     struct pksav_gen1_item_storage item_storage;

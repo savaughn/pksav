@@ -11,6 +11,7 @@
 #include <pksav/error.h>
 
 #include <pksav/gen1/items.h>
+#include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>

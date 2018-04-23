@@ -8,6 +8,7 @@
 SET(pksav_gen1_headers
     badges.h
     items.h
+    options.h
     pokemon.h
     save.h
     text.h
