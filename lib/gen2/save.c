@@ -34,7 +34,11 @@ struct pksav_gen2_save_internal
 
 enum pksav_gen2_field
 {
-    PKSAV_GEN2_PLAYER_ID = 0,
+    PKSAV_GEN2_OPTIONS = 0,
+    PKSAV_GEN2_TEXTBOX_FRAME_INDEX,
+    PKSAV_GEN2_GBPRINTER_BRIGHTNESS,
+    PKSAV_GEN2_MENU_ACCOUNT,
+    PKSAV_GEN2_PLAYER_ID,
     PKSAV_GEN2_PLAYER_NAME,
     PKSAV_GEN2_RIVAL_NAME,
     PKSAV_GEN2_DAYLIGHT_SAVINGS,
@@ -60,6 +64,10 @@ enum pksav_gen2_field
 
 static const size_t GS_OFFSETS[] =
 {
+    0x2000, // Options
+    0x2002, // Text box frame index
+    0x2004, // Game Boy Printer brightness
+    0x2005, // Menu account
     0x2009, // Player ID
     0x200B, // Player name
     0x2021, // Rival name
@@ -86,6 +94,10 @@ static const size_t GS_OFFSETS[] =
 
 static const size_t CRYSTAL_OFFSETS[] =
 {
+    0x2000, // Options
+    0x2002, // Text box frame index
+    0x2004, // Game Boy Printer brightness
+    0x2005, // Menu account
     0x2009, // Player ID
     0x200B, // Player name
     0x2021, // Rival name
@@ -328,6 +340,14 @@ static void _pksav_gen2_set_save_pointers(
     internal_ptr->checksum2_ptr = (uint16_t*)&buffer[
                                                  offsets[PKSAV_GEN2_CHECKSUM2]
                                              ];
+
+    // Options
+    struct pksav_gen2_options* options_ptr = &gen2_save_ptr->options;
+
+    options_ptr->misc_options_ptr = &buffer[offsets[PKSAV_GEN2_OPTIONS]];
+    options_ptr->textbox_frame_index_ptr = &buffer[offsets[PKSAV_GEN2_TEXTBOX_FRAME_INDEX]];
+    options_ptr->gbprinter_brightness_ptr = &buffer[offsets[PKSAV_GEN2_GBPRINTER_BRIGHTNESS]];
+    options_ptr->menu_account_ptr = &buffer[offsets[PKSAV_GEN2_MENU_ACCOUNT]];
 
     // Save time
     struct pksav_gen2_save_time* save_time_ptr = &gen2_save_ptr->save_time;

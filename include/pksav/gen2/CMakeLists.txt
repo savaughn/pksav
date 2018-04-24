@@ -7,6 +7,7 @@
 
 SET(pksav_gen2_headers
     items.h
+    options.h
     palette.h
     pokemon.h
     save.h

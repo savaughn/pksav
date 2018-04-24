@@ -47,6 +47,17 @@ struct pksav_gen2_save_time
     uint8_t* daylight_savings_ptr;
 };
 
+struct pksav_gen2_options
+{
+    uint8_t* misc_options_ptr;
+
+    uint8_t* textbox_frame_index_ptr;
+
+    uint8_t* gbprinter_brightness_ptr;
+
+    uint8_t* menu_account_ptr;
+};
+
 struct pksav_gen2_pokedex_lists
 {
     /*!
@@ -189,6 +200,8 @@ struct pksav_gen2_misc_fields
 struct pksav_gen2_save
 {
     enum pksav_gen2_save_type save_type;
+
+    struct pksav_gen2_options options;
 
     struct pksav_gen2_save_time save_time;
 
