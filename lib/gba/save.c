@@ -28,7 +28,10 @@
 
 enum pksav_gba_section0_field
 {
-    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A = 0,
+    PKSAV_GBA_OPTIONS_BUTTON_MODE = 0,
+    PKSAV_GBA_OPTIONS_TEXT,
+    PKSAV_GBA_OPTIONS_SOUND_BATTLE,
+    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A,
     PKSAV_GBA_POKEDEX_OWNED,
     PKSAV_GBA_POKEDEX_SEEN_A,
     PKSAV_GBA_GAME_CODE,
@@ -36,11 +39,11 @@ enum pksav_gba_section0_field
     PKSAV_GBA_SECURITY_KEY2
 };
 
-static const size_t SECTION0_OFFSETS[][6] =
+static const size_t SECTION0_OFFSETS[][9] =
 {
-    {0x0019,0x0028,0x005C,0x00AC,0x00AC,0x00AC},
-    {0x0019,0x0028,0x005C,0x00AC,0x00AC,0x01F4},
-    {0x001B,0x0028,0x005C,0x00AC,0x0AF8,0x0F20}
+    {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x00AC},
+    {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x01F4},
+    {0x0013,0x0014,0x0015,0x001B,0x0028,0x005C,0x00AC,0x0AF8,0x0F20}
 };
 
 enum pksav_gba_section1_field
@@ -342,6 +345,19 @@ static void _pksav_gba_set_save_pointers(
 
     // Time played
     gba_save_ptr->time_played_ptr = &trainer_info_internal_ptr->time_played;
+
+    // Options
+    struct pksav_gba_options* options_ptr = &gba_save_ptr->options;
+
+    options_ptr->button_mode_ptr = &section0_ptr->data8[
+                                       section0_offsets_ptr[PKSAV_GBA_OPTIONS_BUTTON_MODE]
+                                   ];
+    options_ptr->text_options_ptr = &section0_ptr->data8[
+                                        section0_offsets_ptr[PKSAV_GBA_OPTIONS_TEXT]
+                                    ];
+    options_ptr->sound_battle_options_ptr = &section0_ptr->data8[
+                                                section0_offsets_ptr[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
+                                            ];
 
     // Item storage
     struct pksav_gba_item_storage* item_storage_ptr = &gba_save_ptr->item_storage;

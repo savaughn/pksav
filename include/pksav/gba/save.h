@@ -28,6 +28,15 @@
 
 #define PKSAV_GBA_TRAINER_NAME_LENGTH 7
 
+struct pksav_gba_options
+{
+    uint8_t* button_mode_ptr;
+
+    uint8_t* text_options_ptr;
+
+    uint8_t* sound_battle_options_ptr;
+};
+
 struct pksav_gba_pokemon_storage
 {
     struct pksav_gba_pokemon_party* party_ptr;
@@ -73,9 +82,9 @@ struct pksav_gba_save
 {
     enum pksav_gba_save_type save_type;
 
-    // TODO: options
-
     struct pksav_gba_time* time_played_ptr;
+
+    struct pksav_gba_options options;
 
     struct pksav_gba_item_storage item_storage;
 

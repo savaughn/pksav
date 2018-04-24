@@ -13,6 +13,7 @@
 #include <pksav/gba/box_wallpaper.h>
 #include <pksav/gba/items.h>
 #include <pksav/gba/language.h>
+#include <pksav/gba/options.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/ribbons.h>
