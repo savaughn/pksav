@@ -12,6 +12,7 @@
 #include <pksav/common/trainer_id.h>
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #pragma pack(push,1)
 
@@ -173,6 +174,8 @@ union pksav_gba_save_slot
     };
 };
 
+#pragma pack(pop)
+
 #define PKSAV_GBA_SAVE_SLOT_SIZE 0xE000
 
 struct pksav_gba_save_internal
@@ -196,13 +199,91 @@ struct pksav_gba_save_internal
 // Each footer has a field that must equal this value to be considered valid.
 #define PKSAV_GBA_VALIDATION_MAGIC 0x08012025
 
-#pragma pack(pop)
-
 // How many bytes in each section are read for the checksum
 static const size_t pksav_gba_section_sizes[14] =
 {
     3884,3968,3968,3968,3848,3968,3968,
     3968,3968,3968,3968,3968,3968,2000
 };
+
+/*
+ * Offsets
+ */
+
+enum pksav_gba_section0_field
+{
+    PKSAV_GBA_OPTIONS_BUTTON_MODE = 0,
+    PKSAV_GBA_OPTIONS_TEXT,
+    PKSAV_GBA_OPTIONS_SOUND_BATTLE,
+    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A,
+    PKSAV_GBA_POKEDEX_OWNED,
+    PKSAV_GBA_POKEDEX_SEEN_A,
+    PKSAV_GBA_GAME_CODE,
+    PKSAV_GBA_SECURITY_KEY1,
+    PKSAV_GBA_SECURITY_KEY2
+};
+
+static const size_t SECTION0_OFFSETS[][9] =
+{
+    {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x00AC},
+    {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x01F4},
+    {0x0013,0x0014,0x0015,0x001B,0x0028,0x005C,0x00AC,0x0AF8,0x0F20}
+};
+
+enum pksav_gba_section1_field
+{
+    PKSAV_GBA_POKEMON_PARTY = 0,
+    PKSAV_GBA_MONEY,
+    PKSAV_GBA_CASINO_COINS,
+    PKSAV_GBA_ITEM_PC,
+    PKSAV_GBA_ITEM_BAG,
+    PKSAV_GBA_POKEDEX_SEEN_B
+};
+
+static const size_t SECTION1_OFFSETS[][6] =
+{
+    {0x0234,0x0490,0x0494,0x0498,0x0560,0x0938},
+    {0x0234,0x0490,0x0494,0x0498,0x0560,0x0988},
+    {0x0034,0x0290,0x0294,0x0298,0x0310,0x0788}
+};
+
+enum pksav_gba_section2_field
+{
+    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B = 0,
+    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C
+};
+
+static const size_t SECTION2_OFFSETS[][2] =
+{
+    {0x03A6,0x044C},
+    {0x0402,0x04A8},
+    {0x0068,0x011C}
+};
+
+enum pksav_gba_section4_field
+{
+    PKSAV_GBA_POKEDEX_SEEN_C = 0,
+    PKSAV_GBA_FRLG_RIVAL_NAME
+};
+
+static const size_t SECTION4_OFFSETS[][2] =
+{
+    {0x0C0C,0x0000},
+    {0x0CA4,0x0000},
+    {0x0B98,0x0BCC}
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
+    uint8_t* buffer,
+    size_t buffer_len
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKSAV_GBA_SAVE_INTERNAL_H */
