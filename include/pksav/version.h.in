@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,7 +21,7 @@
  *
  * This number is incremented with new feature support, usually the addition
  * of a new generation of games or adding features to an existing component.
- * Existing ABI may be compatible but is not guaranteed.
+ * Existing API is guaranteed to be compatible, but ABI may not be compatible.
  */
 #define PKSAV_VERSION_MINOR @PKSAV_VERSION_MINOR@
 
