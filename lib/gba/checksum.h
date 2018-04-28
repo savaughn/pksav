@@ -18,6 +18,10 @@
 #include <assert.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 uint16_t pksav_gba_get_pokemon_checksum(
     const struct pksav_gba_pc_pokemon* gba_pokemon_ptr
 );
@@ -39,5 +43,9 @@ uint16_t pksav_gba_get_section_checksum(
 void pksav_gba_set_section_checksums(
     union pksav_gba_save_slot* sections_ptr
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKSAV_GBA_CHECKSUM_H */
