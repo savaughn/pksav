@@ -136,9 +136,9 @@ enum pksav_error pksav_gba_get_buffer_save_type(
                 enum pksav_gba_save_type save_type = save_types_to_search[save_type_index];
 
                 const size_t security_key1_offset =
-                    SECTION0_OFFSETS[save_type-1][PKSAV_GBA_SECURITY_KEY1];
+                    PKSAV_GBA_SAVE_SECTION0_OFFSETS[save_type-1][PKSAV_GBA_SECURITY_KEY1];
                 const size_t security_key2_offset =
-                    SECTION0_OFFSETS[save_type-1][PKSAV_GBA_SECURITY_KEY2];
+                    PKSAV_GBA_SAVE_SECTION0_OFFSETS[save_type-1][PKSAV_GBA_SECURITY_KEY2];
 
                 // Ignore endianness for the security keys since we're not actually
                 // using the value, just checking equality.
@@ -153,7 +153,7 @@ enum pksav_error pksav_gba_get_buffer_save_type(
                 if(save_type != PKSAV_GBA_SAVE_TYPE_EMERALD)
                 {
                     const size_t game_code_offset =
-                        SECTION0_OFFSETS[save_type-1][PKSAV_GBA_GAME_CODE];
+                        PKSAV_GBA_SAVE_SECTION0_OFFSETS[save_type-1][PKSAV_GBA_GAME_CODE];
 
                     const uint32_t game_code = pksav_littleendian32(
                                                    unshuffled_save_slots.section0.data32[
@@ -232,10 +232,10 @@ static void _pksav_gba_set_save_pointers(
     assert(buffer != NULL);
 
     // Offsets
-    const size_t* section0_offsets_ptr = SECTION0_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section1_offsets_ptr = SECTION1_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section2_offsets_ptr = SECTION2_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section4_offsets_ptr = SECTION4_OFFSETS[gba_save_ptr->save_type-1];
+    const size_t* section0_offsets_ptr = PKSAV_GBA_SAVE_SECTION0_OFFSETS[gba_save_ptr->save_type-1];
+    const size_t* section1_offsets_ptr = PKSAV_GBA_SAVE_SECTION1_OFFSETS[gba_save_ptr->save_type-1];
+    const size_t* section2_offsets_ptr = PKSAV_GBA_SAVE_SECTION2_OFFSETS[gba_save_ptr->save_type-1];
+    const size_t* section4_offsets_ptr = PKSAV_GBA_SAVE_SECTION4_OFFSETS[gba_save_ptr->save_type-1];
 
     // At this point, we should know the save is valid, so we should be able
     // to get valid sections.

@@ -223,7 +223,7 @@ enum pksav_gba_section0_field
     PKSAV_GBA_SECURITY_KEY2
 };
 
-static const size_t SECTION0_OFFSETS[][9] =
+static const size_t PKSAV_GBA_SAVE_SECTION0_OFFSETS[][9] =
 {
     {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x00AC},
     {0x0013,0x0014,0x0015,0x0019,0x0028,0x005C,0x00AC,0x00AC,0x01F4},
@@ -240,7 +240,7 @@ enum pksav_gba_section1_field
     PKSAV_GBA_POKEDEX_SEEN_B
 };
 
-static const size_t SECTION1_OFFSETS[][6] =
+static const size_t PKSAV_GBA_SAVE_SECTION1_OFFSETS[][6] =
 {
     {0x0234,0x0490,0x0494,0x0498,0x0560,0x0938},
     {0x0234,0x0490,0x0494,0x0498,0x0560,0x0988},
@@ -253,7 +253,7 @@ enum pksav_gba_section2_field
     PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C
 };
 
-static const size_t SECTION2_OFFSETS[][2] =
+static const size_t PKSAV_GBA_SAVE_SECTION2_OFFSETS[][2] =
 {
     {0x03A6,0x044C},
     {0x0402,0x04A8},
@@ -266,7 +266,7 @@ enum pksav_gba_section4_field
     PKSAV_GBA_FRLG_RIVAL_NAME
 };
 
-static const size_t SECTION4_OFFSETS[][2] =
+static const size_t PKSAV_GBA_SAVE_SECTION4_OFFSETS[][2] =
 {
     {0x0C0C,0x0000},
     {0x0CA4,0x0000},
