@@ -9,12 +9,19 @@
 
 #include <stdint.h>
 
-#define PKSAV_GEN1_BOX_NUM_POKEMON 20
-#define PKSAV_GEN1_PARTY_NUM_POKEMON 6
+#define PKSAV_GEN1_BOX_NUM_POKEMON   (20)
+#define PKSAV_GEN1_PARTY_NUM_POKEMON (6)
 
-#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH 10
+#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH (10)
 
-#define PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE 3
+#define PKSAV_GEN1_POKEMON_OTNAME_LENGTH (7)
+#define PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH (10)
+
+#define PKSAV_GEN1_POKEMON_NUM_TYPES (2)
+
+#define PKSAV_GEN1_POKEMON_NUM_MOVES (4)
+
+#define PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
 
 /*!
  * @brief The mask for a move's PP in the PP field.
@@ -109,7 +116,7 @@ struct pksav_gen1_pc_pokemon
      *
      * The enum ::pksav_gen1_type_t contains all valid values for this field.
      */
-    uint8_t types[2];
+    uint8_t types[PKSAV_GEN1_POKEMON_NUM_TYPES];
     /*!
      * @brief The Pokémon's catch rate.
      *
@@ -120,7 +127,7 @@ struct pksav_gen1_pc_pokemon
     /*!
      * @brief Indices for each of this Pokémon's moves.
      */
-    uint8_t moves[4];
+    uint8_t moves[PKSAV_GEN1_POKEMON_NUM_MOVES];
     /*!
      * @brief The Pokémon's original trainer's ID (stored in big-endian).
      *
@@ -179,7 +186,7 @@ struct pksav_gen1_pc_pokemon
      * Mask an index with ::PKSAV_GEN1_MOVE_PP_UP_MASK to get the number of
      * PP Ups applied to the move.
      */
-    uint8_t move_pps[4];
+    uint8_t move_pps[PKSAV_GEN1_POKEMON_NUM_MOVES];
 };
 
 /*!
@@ -285,7 +292,7 @@ struct pksav_gen1_pokemon_party
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[PKSAV_GEN1_PARTY_NUM_POKEMON][11];
+    uint8_t otnames[PKSAV_GEN1_PARTY_NUM_POKEMON][PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
@@ -318,7 +325,7 @@ struct pksav_gen1_pokemon_box
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[PKSAV_GEN1_BOX_NUM_POKEMON][11];
+    uint8_t otnames[PKSAV_GEN1_BOX_NUM_POKEMON][PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *

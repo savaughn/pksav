@@ -11,8 +11,8 @@
 
 #pragma pack(push,1)
 
-#define PKSAV_GEN1_ITEM_BAG_SIZE 20
-#define PKSAV_GEN1_ITEM_PC_SIZE  50
+#define PKSAV_GEN1_ITEM_BAG_SIZE (20)
+#define PKSAV_GEN1_ITEM_PC_SIZE  (50)
 
 //! Native representation of an item slot in Generation I.
 struct pksav_gen1_item

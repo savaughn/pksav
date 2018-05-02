@@ -11,12 +11,12 @@
 
 #pragma pack(push,1)
 
-#define PKSAV_GEN2_TM_COUNT 50
-#define PKSAV_GEN2_HM_COUNT 7
-#define PKSAV_GEN2_ITEM_POCKET_SIZE 20
-#define PKSAV_GEN2_KEY_ITEM_POCKET_SIZE 25
-#define PKSAV_GEN2_BALL_POCKET_SIZE 12
-#define PKSAV_GEN2_ITEM_PC_SIZE 50
+#define PKSAV_GEN2_TM_COUNT (50)
+#define PKSAV_GEN2_HM_COUNT (7)
+#define PKSAV_GEN2_ITEM_POCKET_SIZE (20)
+#define PKSAV_GEN2_KEY_ITEM_POCKET_SIZE (25)
+#define PKSAV_GEN2_BALL_POCKET_SIZE (12)
+#define PKSAV_GEN2_ITEM_PC_SIZE (50)
 
 //! Native representation of an item slot in Generation II.
 // TODO: common representation as Generation I's

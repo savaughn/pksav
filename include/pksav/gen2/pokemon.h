@@ -13,15 +13,22 @@
 #include <stdint.h>
 #include <time.h>
 
-#define PKSAV_GEN2_POKEMON_EGG_INDEX 0xFD
+#define PKSAV_GEN2_POKEMON_EGG_INDEX (0xFD)
 
-#define PKSAV_GEN2_BOX_NUM_POKEMON 20
-#define PKSAV_GEN2_PARTY_NUM_POKEMON 6
+#define PKSAV_GEN2_BOX_NUM_POKEMON (20)
+#define PKSAV_GEN2_PARTY_NUM_POKEMON (6)
 
-#define PKSAV_GEN2_POKEMON_NICKNAME_LENGTH 10
+#define PKSAV_GEN2_POKEMON_NICKNAME_LENGTH (10)
 
-#define PKSAV_GEN2_NUM_POKEMON_BOXES 14
-#define PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH 8
+#define PKSAV_GEN2_POKEMON_OTNAME_LENGTH (7)
+#define PKSAV_GEN2_POKEMON_OTNAME_STORAGE_LENGTH (10)
+
+#define PKSAV_GEN2_NUM_POKEMON_BOXES (14)
+#define PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH (8)
+
+#define PKSAV_GEN2_POKEMON_NUM_MOVES (4)
+
+#define PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
 
 /*!
  * @brief The mask for a move's PP in the PP field.
@@ -47,7 +54,7 @@
  * with ::PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET and shift it right by this to get the
  * number of PP Ups used.
  */
-#define PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET 6
+#define PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET (6)
 
 #define PKSAV_GEN2_POKEMON_MOVE_PP_UP(field) \
     (((field) & PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK) >> PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET)
@@ -66,7 +73,7 @@
  * Mask struct pksav_gen2_pc_pokemon.caught_data with ::PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK
  * and shift it right by this offset to get the value.
  */
-#define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET 8
+#define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET (8)
 
 #define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(field) \
     (((field) & PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET)
@@ -90,7 +97,7 @@
 #pragma pack(push,1)
 
 /*!
- * @brief Native format for the persistent data of a Pokémon in Generation IIII.
+ * @brief Native format for the persistent data of a Pokémon in Generation II.
  *
  * This data is available both when the Pokémon is in the trainer's party or in the
  * PC.
@@ -110,13 +117,13 @@ struct pksav_gen2_pc_pokemon
      *
      * When a Generation I Pokémon is traded into a Generation II game, the
      * struct pksav_gen2_pc_pokemon.catch_rate field is placed here. As such, there is
-     * a set held item corresponding to each species when trading up.
+     * a set held uitem corresponding to each species when trading up.
      */
     uint8_t held_item;
     /*!
      * @brief Indices for each of this Pokémon's moves.
      */
-    uint8_t moves[4];
+    uint8_t moves[PKSAV_GEN2_POKEMON_NUM_MOVES];
     /*!
      * @brief The Pokémon's original trainer's ID (stored in big-endian).
      *
@@ -129,7 +136,7 @@ struct pksav_gen2_pc_pokemon
      * This value should be accessed with ::pksav_import_base256 (with a num_bytes
      * value of 3) and set with ::pksav_export_base256.
      */
-    uint8_t exp[3];
+    uint8_t exp[PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE];
     /*!
      * @brief The Pokémon's HP EV stat (stored in big-endian).
      *
@@ -178,7 +185,7 @@ struct pksav_gen2_pc_pokemon
      * Mask an index with ::PKSAV_GEN2_MOVE_PP_UP_MASK to get the number of
      * PP Ups applied to the move.
      */
-    uint8_t move_pps[4];
+    uint8_t move_pps[PKSAV_GEN2_POKEMON_NUM_MOVES];
     /*!
      * @brief A Pokémon's friendship/happiness value.
      *
@@ -340,7 +347,7 @@ struct pksav_gen2_pokemon_party
      * To access this value, you should use the function ::pksav_text_from_gen2
      * with a num_chars value of 10.
      */
-    uint8_t otnames[PKSAV_GEN2_PARTY_NUM_POKEMON][11];
+    uint8_t otnames[PKSAV_GEN2_PARTY_NUM_POKEMON][PKSAV_GEN2_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
@@ -376,7 +383,7 @@ struct pksav_gen2_pokemon_box
      * To access this value, you should use the function ::pksav_text_from_gen2
      * with a num_chars value of 10.
      */
-    uint8_t otnames[PKSAV_GEN2_BOX_NUM_POKEMON][11];
+    uint8_t otnames[PKSAV_GEN2_BOX_NUM_POKEMON][PKSAV_GEN2_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *
