@@ -7,21 +7,14 @@
 #ifndef PKSAV_GEN1_ITEMS_H
 #define PKSAV_GEN1_ITEMS_H
 
+#include <pksav/common/item.h>
+
 #include <stdint.h>
 
 #pragma pack(push,1)
 
 #define PKSAV_GEN1_ITEM_BAG_SIZE (20)
 #define PKSAV_GEN1_ITEM_PC_SIZE  (50)
-
-//! Native representation of an item slot in Generation I.
-struct pksav_gen1_item
-{
-    //! Item index.
-    uint8_t index;
-    //! Item count (0-99).
-    uint8_t count;
-};
 
 /*!
  * @brief Native representation of the trainer's item bag in Generation I.
@@ -36,7 +29,7 @@ struct pksav_gen1_item_bag
     //! How many unique items are in the bag (0-20).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen1_item items[PKSAV_GEN1_ITEM_BAG_SIZE];
+    struct pksav_gb_item items[PKSAV_GEN1_ITEM_BAG_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -54,7 +47,7 @@ struct pksav_gen1_item_pc
     //! How many unique items are in the PC (0-50).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen1_item items[PKSAV_GEN1_ITEM_PC_SIZE];
+    struct pksav_gb_item items[PKSAV_GEN1_ITEM_PC_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };

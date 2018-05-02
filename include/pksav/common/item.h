@@ -11,6 +11,15 @@
 
 #pragma pack(push,1)
 
+//! Native representation of an item slot in Generation I.
+struct pksav_gb_item
+{
+    //! Item index.
+    uint8_t index;
+    //! Item count (0-99).
+    uint8_t count;
+};
+
 //! Native format for storing an item in Generation III-IV games.
 struct pksav_item
 {

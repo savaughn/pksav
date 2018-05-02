@@ -7,6 +7,8 @@
 #ifndef PKSAV_GEN2_ITEMS_H
 #define PKSAV_GEN2_ITEMS_H
 
+#include <pksav/common/item.h>
+
 #include <stdint.h>
 
 #pragma pack(push,1)
@@ -17,16 +19,6 @@
 #define PKSAV_GEN2_KEY_ITEM_POCKET_SIZE (25)
 #define PKSAV_GEN2_BALL_POCKET_SIZE (12)
 #define PKSAV_GEN2_ITEM_PC_SIZE (50)
-
-//! Native representation of an item slot in Generation II.
-// TODO: common representation as Generation I's
-struct pksav_gen2_item
-{
-    //! Item index.
-    uint8_t index;
-    //! Item count (0-99).
-    uint8_t count;
-};
 
 /*!
  * @brief Native representation of the TM/HM pocket in Generation II.
@@ -68,7 +60,7 @@ struct pksav_gen2_item_pocket
     //! How many unique items are in the bag (0-20).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[PKSAV_GEN2_ITEM_POCKET_SIZE];
+    struct pksav_gb_item items[PKSAV_GEN2_ITEM_POCKET_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -96,7 +88,7 @@ struct pksav_gen2_ball_pocket
     //! How many unique items are in the bag (0-12).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[PKSAV_GEN2_BALL_POCKET_SIZE];
+    struct pksav_gb_item items[PKSAV_GEN2_BALL_POCKET_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
@@ -131,7 +123,7 @@ struct pksav_gen2_item_pc
     //! How many unique items are in the PC (0-50).
     uint8_t count;
     //! Item slots.
-    struct pksav_gen2_item items[PKSAV_GEN2_ITEM_PC_SIZE];
+    struct pksav_gb_item items[PKSAV_GEN2_ITEM_PC_SIZE];
     //! End of the item list.
     uint8_t terminator;
 };
