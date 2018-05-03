@@ -11,7 +11,6 @@ CONFIGURE_FILE(
 @ONLY)
 
 SET(pksav_common_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/datetime.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pokedex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pokerus.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stats.c

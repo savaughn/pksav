@@ -10,61 +10,6 @@
 #include <pksav.h>
 
 /*
- * pksav/common/datetime.h
- */
-static void pksav_common_datetime_h_test() {
-    enum pksav_error status = PKSAV_ERROR_NONE;
-
-    time_t dummy_time_t = 0;
-    struct pksav_date dummy_pksav_date;
-    uint32_t dummy_uint32_t = 0;
-
-    /*
-     * pksav_time_t_to_date_t
-     */
-
-    status = pksav_time_t_to_date_t(
-        NULL,
-        &dummy_pksav_date
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_time_t_to_date_t(
-        &dummy_time_t,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_time_t_to_date_t(
-        NULL,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_time_to_uint32_t
-     */
-
-    status = pksav_time_t_to_uint32_t(
-        NULL,
-        &dummy_uint32_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_time_t_to_uint32_t(
-        &dummy_time_t,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_time_t_to_uint32_t(
-        NULL,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-}
-
-/*
  * pksav/common/pokedex.h
  */
 static void pksav_common_pokedex_h_test() {
@@ -262,7 +207,6 @@ static void pksav_gba_text_h_test()
 }
 
 PKSAV_TEST_MAIN(
-    PKSAV_TEST(pksav_common_datetime_h_test)
     PKSAV_TEST(pksav_common_pokedex_h_test)
     PKSAV_TEST(pksav_common_pokerus_h_test)
     PKSAV_TEST(pksav_common_prng_h_test)
