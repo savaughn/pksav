@@ -175,44 +175,10 @@ static void pksav_common_pokerus_h_test()
 /*
  * pksav/common/prng.h
  *
- * TODO: arng, lcrng functions when gen4 update merged
+ * TODO
  */
-static void pksav_common_prng_h_test() {
-    enum pksav_error status = PKSAV_ERROR_NONE;
-
-    struct pksav_mtrng dummy_mtrng;
-    uint32_t dummy_uint32_t = 0;
-
-    /*
-     * pksav_mtrng_populate
-     */
-
-    status = pksav_mtrng_populate(
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    /*
-     * pksav_mtrng_next
-     */
-
-    status = pksav_mtrng_next(
-        NULL,
-        &dummy_uint32_t
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_mtrng_next(
-        &dummy_mtrng,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
-
-    status = pksav_mtrng_next(
-        NULL,
-        NULL
-    );
-    TEST_ASSERT_EQUAL(PKSAV_ERROR_NULL_POINTER, status);
+static void pksav_common_prng_h_test()
+{
 }
 
 /*

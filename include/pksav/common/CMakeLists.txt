@@ -16,7 +16,6 @@ SET(pksav_common_headers
     nds_pokemon.h
     pokedex.h
     pokerus.h
-    prng.h
     stats.h
     trainer_id.h
 )

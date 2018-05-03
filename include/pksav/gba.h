@@ -28,7 +28,6 @@
 #include <pksav/common/nature.h>
 #include <pksav/common/pokedex.h>
 #include <pksav/common/pokerus.h>
-#include <pksav/common/prng.h>
 #include <pksav/common/stats.h>
 #include <pksav/common/trainer_id.h>
 
