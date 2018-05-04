@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -30,9 +30,9 @@ extern "C" {
  * \returns if Pokémon with the given Pokédex number has been seen/caught
  */
 PKSAV_API enum pksav_error pksav_get_pokedex_bit(
-    const uint8_t* raw,
+    const uint8_t* p_buffer,
     uint16_t pokedex_num,
-    bool* result_out
+    bool* p_result_out
 );
 
 /*!
@@ -47,7 +47,7 @@ PKSAV_API enum pksav_error pksav_get_pokedex_bit(
  * \param set Set whether or not Pokémon has been seen/caught
  */
 PKSAV_API enum pksav_error pksav_set_pokedex_bit(
-    uint8_t* raw,
+    uint8_t* p_buffer,
     uint16_t pokedex_num,
     bool set
 );

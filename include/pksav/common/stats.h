@@ -43,7 +43,7 @@ extern "C" {
 #endif
 
 PKSAV_API enum pksav_error pksav_get_gb_IVs(
-    const uint16_t* raw_IV_ptr,
+    const uint16_t* p_raw_IV,
     uint8_t* IVs_out,
     size_t IV_buffer_size
 );
@@ -51,11 +51,11 @@ PKSAV_API enum pksav_error pksav_get_gb_IVs(
 PKSAV_API enum pksav_error pksav_set_gb_IV(
     enum pksav_gb_IV stat,
     uint8_t IV_value,
-    uint16_t* raw_IV_ptr
+    uint16_t* p_raw_IV
 );
 
 PKSAV_API enum pksav_error pksav_get_IVs(
-    const uint32_t* raw_IV_ptr,
+    const uint32_t* p_raw_IV,
     uint8_t* IVs_out,
     size_t IV_buffer_size
 );
@@ -63,7 +63,7 @@ PKSAV_API enum pksav_error pksav_get_IVs(
 PKSAV_API enum pksav_error pksav_set_IV(
     enum pksav_IV stat,
     uint8_t IV_value,
-    uint32_t* raw_IV_ptr
+    uint32_t* p_raw_IV
 );
 
 #ifdef __cplusplus

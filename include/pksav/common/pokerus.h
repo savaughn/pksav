@@ -28,22 +28,22 @@ extern "C" {
 #endif
 
 PKSAV_API enum pksav_error pksav_pokerus_get_strain(
-    const uint8_t* pokerus_ptr,
-    enum pksav_pokerus_strain* strain_out
+    const uint8_t* p_pokerus,
+    enum pksav_pokerus_strain* p_strain_out
 );
 
 PKSAV_API enum pksav_error pksav_pokerus_set_strain(
-    uint8_t* pokerus_ptr,
+    uint8_t* p_pokerus,
     enum pksav_pokerus_strain strain
 );
 
 PKSAV_API enum pksav_error pksav_pokerus_get_duration(
-    const uint8_t* pokerus_ptr,
-    uint8_t* duration_out
+    const uint8_t* p_pokerus,
+    uint8_t* p_duration_out
 );
 
 PKSAV_API enum pksav_error pksav_pokerus_set_duration(
-    uint8_t* pokerus_ptr,
+    uint8_t* p_pokerus,
     uint8_t duration
 );
 

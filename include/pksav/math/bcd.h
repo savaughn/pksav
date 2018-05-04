@@ -26,9 +26,9 @@ extern "C" {
  * \returns PKSAV_ERROR_NULL_POINTER if buffer or result_out is NULL
  */
 PKSAV_API enum pksav_error pksav_import_bcd(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t num_bytes,
-    size_t* result_out
+    size_t* p_result_out
 );
 
 //! Convert a Base-10 number to binary-coded decimal (BCD).
@@ -40,7 +40,7 @@ PKSAV_API enum pksav_error pksav_import_bcd(
  */
 PKSAV_API enum pksav_error pksav_export_bcd(
     size_t num,
-    uint8_t* buffer_out,
+    uint8_t* p_buffer_out,
     size_t buffer_size
 );
 

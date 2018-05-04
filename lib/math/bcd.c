@@ -24,41 +24,41 @@
 enum pksav_error pksav_import_bcd(
     const uint8_t* buffer,
     size_t num_bytes,
-    size_t* result_out
+    size_t* p_result_out
 )
 {
-    if(!buffer || !result_out)
+    if(!buffer || !p_result_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    *result_out = 0;
+    *p_result_out = 0;
 
     // Double the size, to be sure.
-    char* temp_buffer = calloc(num_bytes, 1);
+    char* p_temp_buffer = calloc(num_bytes*2, 1);
 
     for(size_t index = 0; index < num_bytes; ++index)
     {
         uint8_t num1 = (buffer[index] & 0xF0) >> 4;
         uint8_t num2 = buffer[index] & 0xF;
 
-        char num_as_string[1] = "";
+        char num_as_string[1] = {0};
 
         if(num1 < 0xA)
         {
             num_as_string[0] = (char)(num1 + '0');
             strncat(
-                temp_buffer,
+                p_temp_buffer,
                 num_as_string,
-                sizeof(temp_buffer)-strlen(temp_buffer)
+                sizeof(p_temp_buffer)-strlen(p_temp_buffer)
             );
             if(num2 < 0xA)
             {
                 num_as_string[0] = (char)(num2 + '0');
                 strncat(
-                    temp_buffer,
+                    p_temp_buffer,
                     num_as_string,
-                    sizeof(temp_buffer)-strlen(temp_buffer)
+                    sizeof(p_temp_buffer)-strlen(p_temp_buffer)
                 );
             }
         }
@@ -68,24 +68,24 @@ enum pksav_error pksav_import_bcd(
         }
     }
 
-    *result_out = strtoul(temp_buffer, NULL, 10);
-    free(temp_buffer);
+    *p_result_out = strtoul(p_temp_buffer, NULL, 10);
+    free(p_temp_buffer);
 
     return PKSAV_ERROR_NONE;
 }
 
 enum pksav_error pksav_export_bcd(
     size_t num,
-    uint8_t* buffer_out,
+    uint8_t* p_buffer_out,
     size_t num_bytes
 )
 {
-    if(!buffer_out)
+    if(!p_buffer_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    memset(buffer_out, 0xFF, num_bytes);
+    memset(p_buffer_out, 0xFF, num_bytes);
 
     // Find the actual number of needed bytes.
     size_t log10_num = (size_t)log10((double)num);
@@ -100,8 +100,8 @@ enum pksav_error pksav_export_bcd(
 
     for(ssize_t index = (actual_num_bytes-1); index >= 0; --index)
     {
-        buffer_out[index] = (uint8_t)(num % 10);
-        buffer_out[index] |= ((uint8_t)((num / 10) % 10) << 4);
+        p_buffer_out[index] = (uint8_t)(num % 10);
+        p_buffer_out[index] |= ((uint8_t)((num / 10) % 10) << 4);
 
         num /= 100;
     }

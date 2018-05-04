@@ -21,22 +21,22 @@
 #endif
 
 enum pksav_error pksav_import_base256(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t num_bytes,
-    size_t* result_out
+    size_t* p_result_out
 )
 {
-    if(!buffer || !result_out)
+    if(!p_buffer || !p_result_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    *result_out = 0;
+    *p_result_out = 0;
     float exp = 0.0;
 
     for(ssize_t index = (ssize_t)(num_bytes-1); index >= 0; --index)
     {
-        (*result_out) += buffer[index] * (size_t)(pow(256.0f, exp++));
+        (*p_result_out) += p_buffer[index] * (size_t)(pow(256.0f, exp++));
     }
 
     return PKSAV_ERROR_NONE;
@@ -44,23 +44,24 @@ enum pksav_error pksav_import_base256(
 
 enum pksav_error pksav_export_base256(
     size_t num,
-    uint8_t* buffer_out,
+    uint8_t* p_buffer_out,
     size_t buffer_size
 )
 {
-    if(!buffer_out)
+    if(!p_buffer_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    memset(buffer_out, 0, buffer_size);
+    memset(p_buffer_out, 0, buffer_size);
 
     float exp = 1.0f;
-    buffer_out[buffer_size-1] = (uint8_t)(num % 256);
+    p_buffer_out[buffer_size-1] = (uint8_t)(num % 256);
     for(ssize_t index = (ssize_t)(buffer_size-2); index >= 0; --index)
     {
-        num -= buffer_out[index+1];
-        buffer_out[index] = (uint8_t)((size_t)(num / pow(256,exp)) % (size_t)(pow(256,exp)));
+        num -= p_buffer_out[index+1];
+        p_buffer_out[index] = (uint8_t)((size_t)(num / pow(256,exp))
+                            % (size_t)(pow(256,exp)));
         ++exp;
     }
 

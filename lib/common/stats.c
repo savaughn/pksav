@@ -12,20 +12,20 @@
 #include <assert.h>
 #include <math.h>
 
-#define PKSAV_GB_ATK_IV_MASK  ((uint16_t)0xF000)
-#define PKSAV_GB_ATK_IV_OFFSET 12
+#define PKSAV_GB_ATK_IV_MASK   ((uint16_t)0xF000)
+#define PKSAV_GB_ATK_IV_OFFSET (12)
 
 #define PKSAV_GB_ATK_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_GB_ATK_IV_MASK) >> PKSAV_GB_ATK_IV_OFFSET))
 
-#define PKSAV_GB_DEF_IV_MASK  ((uint16_t)0x0F00)
-#define PKSAV_GB_DEF_IV_OFFSET 8
+#define PKSAV_GB_DEF_IV_MASK   ((uint16_t)0x0F00)
+#define PKSAV_GB_DEF_IV_OFFSET (8)
 
 #define PKSAV_GB_DEF_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_GB_DEF_IV_MASK) >> PKSAV_GB_DEF_IV_OFFSET))
 
-#define PKSAV_GB_SPD_IV_MASK  ((uint16_t)0x00F0)
-#define PKSAV_GB_SPD_IV_OFFSET 4
+#define PKSAV_GB_SPD_IV_MASK   ((uint16_t)0x00F0)
+#define PKSAV_GB_SPD_IV_OFFSET (4)
 
 #define PKSAV_GB_SPD_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_GB_SPD_IV_MASK) >> PKSAV_GB_SPD_IV_OFFSET))
@@ -36,31 +36,31 @@
     ((uint8_t)((raw) & PKSAV_GB_SPCL_IV_MASK))
 
 enum pksav_error pksav_get_gb_IVs(
-    const uint16_t* raw_IV_ptr,
+    const uint16_t* p_raw_IV,
     uint8_t* IVs_out,
     size_t IV_buffer_size
 )
 {
-    if(!raw_IV_ptr || !IVs_out)
+    if(!p_raw_IV || !IVs_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     if(IV_buffer_size > PKSAV_GB_IV_ATTACK)
     {
-        IVs_out[PKSAV_GB_IV_ATTACK] = PKSAV_GB_ATK_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_GB_IV_ATTACK] = PKSAV_GB_ATK_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_GB_IV_DEFENSE)
     {
-        IVs_out[PKSAV_GB_IV_DEFENSE] = PKSAV_GB_DEF_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_GB_IV_DEFENSE] = PKSAV_GB_DEF_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_GB_IV_SPEED)
     {
-        IVs_out[PKSAV_GB_IV_SPEED] = PKSAV_GB_SPD_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_GB_IV_SPEED] = PKSAV_GB_SPD_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_GB_IV_SPECIAL)
     {
-        IVs_out[PKSAV_GB_IV_SPECIAL] = PKSAV_GB_SPCL_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_GB_IV_SPECIAL] = PKSAV_GB_SPCL_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_GB_IV_HP)
     {
@@ -76,10 +76,10 @@ enum pksav_error pksav_get_gb_IVs(
 enum pksav_error pksav_set_gb_IV(
     enum pksav_gb_IV stat,
     uint8_t IV_value,
-    uint16_t* raw_IV_ptr
+    uint16_t* p_raw_IV
 )
 {
-    if(!raw_IV_ptr)
+    if(!p_raw_IV)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -95,27 +95,27 @@ enum pksav_error pksav_set_gb_IV(
     switch(stat)
     {
         case PKSAV_GB_IV_ATTACK:
-            (*raw_IV_ptr) &= ~PKSAV_GB_ATK_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_ATK_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_GB_ATK_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_GB_ATK_IV_OFFSET);
             break;
 
         case PKSAV_GB_IV_DEFENSE:
-            (*raw_IV_ptr) &= ~PKSAV_GB_DEF_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_DEF_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_GB_DEF_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_GB_DEF_IV_OFFSET);
             break;
 
         case PKSAV_GB_IV_SPEED:
-            (*raw_IV_ptr) &= ~PKSAV_GB_SPD_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_GB_SPD_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_GB_SPD_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_GB_SPD_IV_OFFSET);
             break;
 
         case PKSAV_GB_IV_SPECIAL:
-            (*raw_IV_ptr) &= ~PKSAV_GB_SPCL_IV_MASK;
-            (*raw_IV_ptr) |= IV_value;
+            (*p_raw_IV) &= ~PKSAV_GB_SPCL_IV_MASK;
+            (*p_raw_IV) |= IV_value;
             break;
 
         case PKSAV_GB_IV_HP:
-            (*raw_IV_ptr) = ((*raw_IV_ptr) & 0xEEEE)
+            (*p_raw_IV) = ((*p_raw_IV) & 0xEEEE)
                           | ((IV_value & 0x08) << 9)
                           | ((IV_value & 0x04) << 6)
                           | ((IV_value & 0x02) << 3)
@@ -130,75 +130,75 @@ enum pksav_error pksav_set_gb_IV(
     return PKSAV_ERROR_NONE;
 }
 
-#define PKSAV_HP_IV_MASK    ((uint32_t)0x1F)
+#define PKSAV_HP_IV_MASK ((uint32_t)0x1F)
 
 #define PKSAV_HP_IV(raw) \
     ((uint8_t)((raw) & PKSAV_HP_IV_MASK))
 
 #define PKSAV_ATK_IV_MASK   ((uint32_t)0x3E0)
-#define PKSAV_ATK_IV_OFFSET 5
+#define PKSAV_ATK_IV_OFFSET (5)
 
 #define PKSAV_ATK_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_ATK_IV_MASK) >> PKSAV_ATK_IV_OFFSET))
 
 #define PKSAV_DEF_IV_MASK   ((uint32_t)0x7C00)
-#define PKSAV_DEF_IV_OFFSET 10
+#define PKSAV_DEF_IV_OFFSET (10)
 
 #define PKSAV_DEF_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_DEF_IV_MASK) >> PKSAV_DEF_IV_OFFSET))
 
 #define PKSAV_SPD_IV_MASK   ((uint32_t)0xF8000)
-#define PKSAV_SPD_IV_OFFSET 15
+#define PKSAV_SPD_IV_OFFSET (15)
 
 #define PKSAV_SPD_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_SPD_IV_MASK) >> PKSAV_SPD_IV_OFFSET))
 
-#define PKSAV_SPATK_IV_MASK ((uint32_t)0x1F00000)
-#define PKSAV_SPATK_IV_OFFSET 20
+#define PKSAV_SPATK_IV_MASK   ((uint32_t)0x1F00000)
+#define PKSAV_SPATK_IV_OFFSET (20)
 
 #define PKSAV_SPATK_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_SPATK_IV_MASK) >> PKSAV_SPATK_IV_OFFSET))
 
-#define PKSAV_SPDEF_IV_MASK ((uint32_t)0x3E000000)
-#define PKSAV_SPDEF_IV_OFFSET 25
+#define PKSAV_SPDEF_IV_MASK   ((uint32_t)0x3E000000)
+#define PKSAV_SPDEF_IV_OFFSET (25)
 
 #define PKSAV_SPDEF_IV(raw) \
     ((uint8_t)(((raw) & PKSAV_SPDEF_IV_MASK) >> PKSAV_SPDEF_IV_OFFSET))
 
 enum pksav_error pksav_get_IVs(
-    const uint32_t* raw_IV_ptr,
+    const uint32_t* p_raw_IV,
     uint8_t* IVs_out,
     size_t IV_buffer_size
 )
 {
-    if(!raw_IV_ptr || !IVs_out)
+    if(!p_raw_IV || !IVs_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     if(IV_buffer_size > PKSAV_IV_ATTACK)
     {
-        IVs_out[PKSAV_IV_ATTACK] = PKSAV_ATK_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_ATTACK] = PKSAV_ATK_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_IV_DEFENSE)
     {
-        IVs_out[PKSAV_IV_DEFENSE] = PKSAV_DEF_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_DEFENSE] = PKSAV_DEF_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_IV_SPEED)
     {
-        IVs_out[PKSAV_IV_SPEED] = PKSAV_SPD_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_SPEED] = PKSAV_SPD_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_IV_SPATK)
     {
-        IVs_out[PKSAV_IV_SPATK] = PKSAV_SPATK_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_SPATK] = PKSAV_SPATK_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_IV_SPDEF)
     {
-        IVs_out[PKSAV_IV_SPDEF] = PKSAV_SPDEF_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_SPDEF] = PKSAV_SPDEF_IV((*p_raw_IV));
     }
     if(IV_buffer_size > PKSAV_IV_HP)
     {
-        IVs_out[PKSAV_IV_HP] = PKSAV_HP_IV((*raw_IV_ptr));
+        IVs_out[PKSAV_IV_HP] = PKSAV_HP_IV((*p_raw_IV));
     }
 
     return PKSAV_ERROR_NONE;
@@ -207,10 +207,10 @@ enum pksav_error pksav_get_IVs(
 enum pksav_error pksav_set_IV(
     enum pksav_IV stat,
     uint8_t IV_value,
-    uint32_t* raw_IV_ptr
+    uint32_t* p_raw_IV
 )
 {
-    if(!raw_IV_ptr)
+    if(!p_raw_IV)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -226,33 +226,33 @@ enum pksav_error pksav_set_IV(
     switch(stat)
     {
         case PKSAV_IV_ATTACK:
-            (*raw_IV_ptr) &= ~PKSAV_ATK_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_ATK_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_ATK_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_ATK_IV_OFFSET);
             break;
 
         case PKSAV_IV_DEFENSE:
-            (*raw_IV_ptr) &= ~PKSAV_DEF_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_DEF_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_DEF_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_DEF_IV_OFFSET);
             break;
 
         case PKSAV_IV_SPEED:
-            (*raw_IV_ptr) &= ~PKSAV_SPD_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_SPD_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_SPD_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_SPD_IV_OFFSET);
             break;
 
         case PKSAV_IV_SPATK:
-            (*raw_IV_ptr) &= ~PKSAV_SPATK_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_SPATK_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_SPATK_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_SPATK_IV_OFFSET);
             break;
 
         case PKSAV_IV_SPDEF:
-            (*raw_IV_ptr) &= ~PKSAV_SPDEF_IV_MASK;
-            (*raw_IV_ptr) |= (IV_value << PKSAV_SPDEF_IV_OFFSET);
+            (*p_raw_IV) &= ~PKSAV_SPDEF_IV_MASK;
+            (*p_raw_IV) |= (IV_value << PKSAV_SPDEF_IV_OFFSET);
             break;
 
         case PKSAV_IV_HP:
-            (*raw_IV_ptr) &= ~PKSAV_HP_IV_MASK;
-            (*raw_IV_ptr) |= IV_value;
+            (*p_raw_IV) &= ~PKSAV_HP_IV_MASK;
+            (*p_raw_IV) |= IV_value;
             break;
 
         // This should have been caught by the input validation above.
