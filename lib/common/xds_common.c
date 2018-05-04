@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "common/text_common.h"
+#include "util/text_common.h"
 #include "common/xds_common.h"
 
 #include <assert.h>

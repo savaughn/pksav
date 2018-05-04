@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_COMMON_TEXT_COMMON_H
-#define PKSAV_COMMON_TEXT_COMMON_H
+#ifndef PKSAV_UTIL_TEXT_COMMON_H
+#define PKSAV_UTIL_TEXT_COMMON_H
 
 #include <pksav/config.h>
 
@@ -18,21 +18,21 @@
 #endif
 
 void pksav_mbstowcs(
-    wchar_t* output,
-    const char* input,
+    wchar_t* p_output,
+    const char* p_input,
     size_t num_chars
 );
 
 void pksav_wcstombs(
-    char* output,
-    const wchar_t* input,
+    char* p_output,
+    const wchar_t* p_input,
     size_t num_chars
 );
 
 ssize_t wchar_map_index(
-    const wchar_t* char_map,
+    const wchar_t* p_char_map,
     size_t char_map_size,
     wchar_t to_find
 );
 
-#endif /* PKSAV_COMMON_TEXT_COMMON_H */
+#endif /* PKSAV_UTIL_TEXT_COMMON_H */

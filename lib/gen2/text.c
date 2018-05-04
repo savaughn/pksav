@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "common/text_common.h"
+#include "util/text_common.h"
 
 #include <pksav/gen2/text.h>
 
