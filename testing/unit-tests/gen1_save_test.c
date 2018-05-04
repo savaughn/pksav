@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define STRBUFFER_LEN 64
+#define STRBUFFER_LEN (64)
 
 static const struct pksav_gen1_save EMPTY_GEN1_SAVE =
 {

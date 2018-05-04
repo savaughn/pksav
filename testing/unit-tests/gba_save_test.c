@@ -21,7 +21,7 @@
  * Testing TODO: make sure saving alternates between slots
  */
 
-#define STRBUFFER_LEN 64
+#define STRBUFFER_LEN (64)
 
 static const struct pksav_gba_save EMPTY_GBA_SAVE =
 {

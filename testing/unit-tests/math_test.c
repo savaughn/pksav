@@ -6,11 +6,17 @@
  */
 
 #include "c_test_common.h"
+#include "test-utils.h"
 
 #include <pksav/math/base256.h>
 #include <pksav/math/bcd.h>
 
 #include <string.h>
+
+// This buffer needs to be small in order to avoid floating-point or
+// arithmetic exceptions.
+#define BASE256_BUFFER_LEN (5)
+#define BCD_BUFFER_LEN (256)
 
 static void base256_test()
 {
@@ -41,6 +47,25 @@ static void base256_test()
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num, output_num);
+
+    // Make sure processing invalid buffers doesn't crash.
+    size_t dummy_num = 0;
+    uint8_t base256_buffer[BASE256_BUFFER_LEN] = {0};
+
+    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    {
+        randomize_buffer(base256_buffer, sizeof(base256_buffer));
+        pksav_import_base256(
+            base256_buffer,
+            sizeof(base256_buffer),
+            &dummy_num
+        );
+        pksav_export_base256(
+            dummy_num,
+            base256_buffer,
+            sizeof(base256_buffer)
+        );
+    }
 }
 
 static void bcd_test()
@@ -127,6 +152,25 @@ static void bcd_test()
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(test_num_small, output_num);
+
+    // Make sure processing invalid buffers doesn't crash.
+    size_t dummy_num = 0;
+    uint8_t bcd_buffer[BCD_BUFFER_LEN] = {0};
+
+    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    {
+        randomize_buffer(bcd_buffer, sizeof(bcd_buffer));
+        pksav_import_bcd(
+            bcd_buffer,
+            sizeof(bcd_buffer),
+            &dummy_num
+        );
+        pksav_export_bcd(
+            dummy_num,
+            bcd_buffer,
+            sizeof(bcd_buffer)
+        );
+    }
 }
 
 PKSAV_TEST_MAIN(

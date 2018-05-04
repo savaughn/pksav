@@ -10,7 +10,7 @@
 
 #include <pksav.h>
 
-#define BUFFER_LEN 256
+#define BUFFER_LEN (256)
 
 static const char* strings[] =
 {
