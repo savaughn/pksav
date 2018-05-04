@@ -22,11 +22,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define PKSAV_GBA_SAVE_SIZE 0x10000
+#define PKSAV_GBA_SAVE_SIZE (0x10000)
 
-#define PKSAV_GBA_NUM_POKEMON_BOXES 14
+#define PKSAV_GBA_TRAINER_NAME_LENGTH (7)
+#define PKSAV_GBA_RIVAL_NAME_LENGTH (7)
 
-#define PKSAV_GBA_TRAINER_NAME_LENGTH 7
+#define PKSAV_GBA_SAVE_MONEY_MAX_VALUE (999999)
+#define PKSAV_GBA_SAVE_CASINO_COINS_MAX_VALUE (9999)
 
 struct pksav_gba_options
 {

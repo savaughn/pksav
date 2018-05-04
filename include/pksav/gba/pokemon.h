@@ -16,14 +16,16 @@
 
 #include <stdint.h>
 
-#define PKSAV_GBA_BOX_NUM_POKEMON 30
-#define PKSAV_GBA_PARTY_NUM_POKEMON 6
+#define PKSAV_GBA_BOX_NUM_POKEMON (30)
+#define PKSAV_GBA_PARTY_NUM_POKEMON (6)
 
-#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH 10
-#define PKSAV_GBA_POKEMON_OTNAME_LENGTH 7
+#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH (10)
+#define PKSAV_GBA_POKEMON_OTNAME_LENGTH (7)
 
-#define PKSAV_GBA_NUM_POKEMON_BOXES 14
-#define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH 8
+#define PKSAV_GBA_POKEMON_NUM_MOVES (4)
+
+#define PKSAV_GBA_NUM_POKEMON_BOXES (14)
+#define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH (8)
 
 /*!
  * @brief The mask for determining if a Pokémon is an egg.
@@ -47,7 +49,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this value.
  */
-#define PKSAV_GBA_POKEMON_LEVEL_MET_MASK ((uint16_t)(0x7F))
+#define PKSAV_GBA_POKEMON_LEVEL_MET_MASK (((uint16_t)(0x7F)))
 
 /*!
  * @brief The mask for determining a Pokémon's origin game.
@@ -61,14 +63,14 @@
  * value left by ::PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK ((uint16_t)(0x780))
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK (((uint16_t)(0x780)))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's origin game in its bitfield.
  *
  * See ::PKSAV_GBA_ORIGIN_GAME_MASK for it usage.
  */
-#define PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET 7
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET (7)
 
 /*!
  * @brief The mask for determining which Poké Ball was used to catch a Pokémon.
@@ -82,14 +84,14 @@
  * value left by ::PKSAV_GBA_BALL_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_POKEMON_BALL_MASK ((uint16_t)(0x7800))
+#define PKSAV_GBA_POKEMON_BALL_MASK (((uint16_t)(0x7800)))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's ball in its bitfield.
  *
  * See ::PKSAV_GBA_BALL_MASK for its usage.
  */
-#define PKSAV_GBA_POKEMON_BALL_OFFSET 11
+#define PKSAV_GBA_POKEMON_BALL_OFFSET (11)
 
 /*!
  * @brief The mask for determining the gender of a Pokémon's original trainer.
@@ -179,13 +181,13 @@ struct pksav_gba_pokemon_attacks_block
      * These values are stored in little-endian, so access and modify them
      * with the function ::pksav_littleendian16.
      */
-    uint16_t moves[4];
+    uint16_t moves[PKSAV_GBA_POKEMON_NUM_MOVES];
     /*!
      * @brief The PP for each of the Pokémon's moves.
      *
      * The maximum value for each slot is dependent on the move.
      */
-    uint8_t move_pps[4];
+    uint8_t move_pps[PKSAV_GBA_POKEMON_NUM_MOVES];
 };
 
 /*!

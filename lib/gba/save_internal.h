@@ -32,14 +32,14 @@ struct pksav_gba_trainer_info_internal
     struct pksav_gba_time time_played;
 };
 
-#define PKSAV_GBA_NUM_SAVE_SECTIONS 14
+#define PKSAV_GBA_NUM_SAVE_SECTIONS (14)
 
 /*!
  * This union allows the data to be parsed in multiple ways, which is useful for
  * unshuffling and decryption.
  */
 
-#define PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES 48
+#define PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES (48)
 
 union pksav_gba_pokemon_blocks_internal
 {
@@ -95,7 +95,7 @@ struct pksav_gba_section_footer
  * Each section is 3968 bytes, and each save slot is made of 14 of these sections.
  */
 
-#define PKSAV_GBA_SAVE_SECTION_SIZE_BYTES 3968
+#define PKSAV_GBA_SAVE_SECTION_SIZE_BYTES (3968)
 
 struct pksav_gba_save_section
 {
@@ -176,7 +176,7 @@ union pksav_gba_save_slot
 
 #pragma pack(pop)
 
-#define PKSAV_GBA_SAVE_SLOT_SIZE 0xE000
+#define PKSAV_GBA_SAVE_SLOT_SIZE (0xE000)
 
 struct pksav_gba_save_internal
 {
@@ -197,7 +197,7 @@ struct pksav_gba_save_internal
 };
 
 // Each footer has a field that must equal this value to be considered valid.
-#define PKSAV_GBA_VALIDATION_MAGIC 0x08012025
+#define PKSAV_GBA_VALIDATION_MAGIC (0x08012025)
 
 // How many bytes in each section are read for the checksum
 static const size_t pksav_gba_section_sizes[14] =

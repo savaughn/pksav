@@ -13,7 +13,7 @@
 
 #pragma pack(push,1)
 
-#define PKSAV_GBA_ITEM_PC_NUM_ITEMS 50
+#define PKSAV_GBA_ITEM_PC_NUM_ITEMS (50)
 
 struct pksav_gba_item_pc
 {

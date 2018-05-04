@@ -22,8 +22,8 @@ enum pksav_gb_IV
     PKSAV_GB_IV_HP
 };
 
-#define PKSAV_NUM_GB_IVS 5
-#define PKSAV_MAX_GB_IV 15
+#define PKSAV_NUM_GB_IVS (5)
+#define PKSAV_MAX_GB_IV (15)
 
 enum pksav_IV
 {
@@ -35,8 +35,8 @@ enum pksav_IV
     PKSAV_IV_HP
 };
 
-#define PKSAV_NUM_IVS 6
-#define PKSAV_MAX_IV 31
+#define PKSAV_NUM_IVS (6)
+#define PKSAV_MAX_IV (31)
 
 #ifdef __cplusplus
 extern "C" {
