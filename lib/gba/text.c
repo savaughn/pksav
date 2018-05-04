@@ -54,25 +54,25 @@ static const size_t PKSAV_GBA_CHAR_MAP_SIZE =
     sizeof(PKSAV_GBA_CHAR_MAP)/sizeof(PKSAV_GBA_CHAR_MAP[0]);
 
 static enum pksav_error _pksav_gba_import_widetext(
-    const uint8_t* input_buffer,
-    wchar_t* output_widetext,
+    const uint8_t* p_input_buffer,
+    wchar_t* p_output_widetext,
     size_t num_chars
 )
 {
-    assert(input_buffer != NULL);
-    assert(output_widetext != NULL);
+    assert(p_input_buffer != NULL);
+    assert(p_output_widetext != NULL);
 
-    memset(output_widetext, 0, sizeof(wchar_t)*num_chars);
+    memset(p_output_widetext, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
-        if(input_buffer[char_index] > PKSAV_GBA_LAST_CHAR)
+        if(p_input_buffer[char_index] > PKSAV_GBA_LAST_CHAR)
         {
             break;
         }
         else
         {
-            output_widetext[char_index] = PKSAV_GBA_CHAR_MAP[input_buffer[char_index]];
+            p_output_widetext[char_index] = PKSAV_GBA_CHAR_MAP[p_input_buffer[char_index]];
         }
     }
 
@@ -80,26 +80,26 @@ static enum pksav_error _pksav_gba_import_widetext(
 }
 
 static enum pksav_error _pksav_gba_export_widetext(
-    const wchar_t* input_widetext,
-    uint8_t* output_buffer,
+    const wchar_t* p_input_widetext,
+    uint8_t* p_output_buffer,
     size_t num_chars
 )
 {
-    assert(input_widetext != NULL);
-    assert(output_buffer != NULL);
+    assert(p_input_widetext != NULL);
+    assert(p_output_buffer != NULL);
 
-    memset(output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
+    memset(p_output_buffer, PKSAV_GBA_TERMINATOR, num_chars);
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
         ssize_t map_index = wchar_map_index(
                                 PKSAV_GBA_CHAR_MAP,
                                 PKSAV_GBA_CHAR_MAP_SIZE,
-                                input_widetext[char_index]
+                                p_input_widetext[char_index]
                             );
         if(map_index != -1)
         {
-            output_buffer[char_index] = (uint8_t)map_index;
+            p_output_buffer[char_index] = (uint8_t)map_index;
         }
         else
         {
@@ -111,47 +111,47 @@ static enum pksav_error _pksav_gba_export_widetext(
 }
 
 enum pksav_error pksav_gba_import_text(
-    const uint8_t* input_buffer,
-    char* output_text,
+    const uint8_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 )
 {
-    if(!input_buffer || !output_text)
+    if(!p_input_buffer || !p_output_text)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
     _pksav_gba_import_widetext(
-        input_buffer, widetext, num_chars
+        p_input_buffer, p_widetext, num_chars
     );
 
-    memset(output_text, 0, num_chars);
-    pksav_wcstombs(output_text, widetext, num_chars);
-    free(widetext);
+    memset(p_output_text, 0, num_chars);
+    pksav_wcstombs(p_output_text, p_widetext, num_chars);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }
 
 enum pksav_error pksav_gba_export_text(
-    const char* input_text,
-    uint8_t* output_buffer,
+    const char* p_input_text,
+    uint8_t* p_output_buffer,
     size_t num_chars
 )
 {
-    if(!input_text || !output_buffer)
+    if(!p_input_text || !p_output_buffer)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    pksav_mbstowcs(widetext, input_text, num_chars);
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
+    pksav_mbstowcs(p_widetext, p_input_text, num_chars);
 
     _pksav_gba_export_widetext(
-        widetext, output_buffer, num_chars
+        p_widetext, p_output_buffer, num_chars
     );
 
-    free(widetext);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }

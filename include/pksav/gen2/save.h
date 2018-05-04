@@ -48,20 +48,20 @@ enum pksav_gen2_gender
 struct pksav_gen2_save_time
 {
     //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen2_time* time_played_ptr;
+    struct pksav_gen2_time* p_time_played;
 
-    uint8_t* daylight_savings_ptr;
+    uint8_t* p_daylight_savings;
 };
 
 struct pksav_gen2_options
 {
-    uint8_t* misc_options_ptr;
+    uint8_t* p_misc_options;
 
-    uint8_t* textbox_frame_index_ptr;
+    uint8_t* p_textbox_frame_index;
 
-    uint8_t* gbprinter_brightness_ptr;
+    uint8_t* p_gbprinter_brightness;
 
-    uint8_t* menu_account_ptr;
+    uint8_t* p_menu_account;
 };
 
 struct pksav_gen2_pokedex_lists
@@ -72,7 +72,7 @@ struct pksav_gen2_pokedex_lists
      * This list should be accessed with ::pksav_get_pokedex_bit and set with
      * ::pksav_set_pokedex_bit.
      */
-    uint8_t* seen_ptr;
+    uint8_t* p_seen;
 
     /*!
      * @brief A pointer to the list of Pokémon owned by the trainer.
@@ -80,12 +80,12 @@ struct pksav_gen2_pokedex_lists
      * This list should be accessed with ::pksav_get_pokedex_bit and set with
      * ::pksav_set_pokedex_bit.
      */
-    uint8_t* owned_ptr;
+    uint8_t* p_owned;
 };
 
 struct pksav_gen2_pokemon_storage
 {
-    struct pksav_gen2_pokemon_party* party_ptr;
+    struct pksav_gen2_pokemon_party* p_party;
 
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
@@ -93,9 +93,9 @@ struct pksav_gen2_pokemon_storage
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    struct pksav_gen2_pokemon_box* box_ptrs[PKSAV_GEN2_NUM_POKEMON_BOXES];
+    struct pksav_gen2_pokemon_box* pp_boxes[PKSAV_GEN2_NUM_POKEMON_BOXES];
 
-    struct pksav_gen2_pokemon_box_names* box_names_ptr;
+    struct pksav_gen2_pokemon_box_names* p_box_names;
 
     /*!
      * @brief The number of the current Pokémon box (0-11).
@@ -106,7 +106,7 @@ struct pksav_gen2_pokemon_storage
      * The ::PKSAV_GEN2_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
      * this value.
      */
-    uint8_t* current_box_num_ptr;
+    uint8_t* p_current_box_num;
 
     /*!
      * @brief A pointer to the current Pokémon box.
@@ -114,16 +114,16 @@ struct pksav_gen2_pokemon_storage
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    struct pksav_gen2_pokemon_box* current_box_ptr;
+    struct pksav_gen2_pokemon_box* p_current_box;
 };
 
 struct pksav_gen2_item_storage
 {
     //! A pointer to the trainer's item bag.
-    struct pksav_gen2_item_bag* item_bag_ptr;
+    struct pksav_gen2_item_bag* p_item_bag;
 
     //! A pointer to the trainer's item PC.
-    struct pksav_gen2_item_pc* item_pc_ptr;
+    struct pksav_gen2_item_pc* p_item_pc;
 };
 
 struct pksav_gen2_trainer_info
@@ -133,7 +133,7 @@ struct pksav_gen2_trainer_info
      *
      * This value should be accessed and modified with ::pksav_bigendian16.
      */
-    uint16_t* id_ptr;
+    uint16_t* p_id;
 
     /*!
      * @brief A pointer to the trainer's name.
@@ -144,11 +144,11 @@ struct pksav_gen2_trainer_info
      * This value should be set with ::pksav_text_to_gen2 with a num_chars
      * value of 7.
      */
-    uint8_t* name_ptr;
+    uint8_t* p_name;
 
-    uint8_t* gender_ptr;
+    uint8_t* p_gender;
 
-    uint8_t* palette_ptr;
+    uint8_t* p_palette;
 
     /*!
      * @brief A pointer to how much money the trainer has (stored in BCD).
@@ -156,7 +156,7 @@ struct pksav_gen2_trainer_info
      * This value should be accessed with ::pksav_import_bcd, with a num_bytes value
      * of 3. It should be set with ::pksav_export_bcd, with a maximum value of 999999.
      */
-    uint8_t* money_ptr;
+    uint8_t* p_money;
 
     /*!
      * @brief A pointer to the list of Johto badges the trainer has earned.
@@ -164,7 +164,7 @@ struct pksav_gen2_trainer_info
      * This value should be manipulated with the bitmasks given in the
      * ::pksav_gen2_johto_badge_t enum.
      */
-    uint8_t* johto_badges_ptr;
+    uint8_t* p_johto_badges;
 
     /*!
      * @brief A pointer to the list of Kanto badges the trainer has earned.
@@ -172,7 +172,7 @@ struct pksav_gen2_trainer_info
      * This value should be manipulated with the bitmasks given in the
      * ::pksav_gen2_kanto_badge_t enum.
      */
-    uint8_t* kanto_badges_ptr;
+    uint8_t* p_kanto_badges;
 };
 
 struct pksav_gen2_misc_fields
@@ -186,7 +186,7 @@ struct pksav_gen2_misc_fields
      * This value should be set with ::pksav_text_to_gen1 with a num_chars
      * value of 7.
      */
-    uint8_t* rival_name_ptr;
+    uint8_t* p_rival_name;
 };
 
 /*!
@@ -198,7 +198,7 @@ struct pksav_gen2_misc_fields
  * in undefined behavior.
  *
  * To save the save file's data to another location, pass the struct into
- * ::pksav_gen2_save_save, along with a filepath.
+ * ::pksav_gen2_save_save, along with a p_filepath.
  *
  * Once you are finished using the struct, pass it into ::pksav_gen2_save_free to
  * free the memory allocated by ::pksav_gen2_save_load.
@@ -221,7 +221,7 @@ struct pksav_gen2_save
 
     struct pksav_gen2_misc_fields misc_fields;
 
-    void* internal_ptr;
+    void* p_internal;
 };
 
 #ifdef __cplusplus
@@ -231,36 +231,36 @@ extern "C" {
 PKSAV_API enum pksav_error pksav_gen2_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
-    enum pksav_gen2_save_type* save_type_out
+    enum pksav_gen2_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gen2_get_file_save_type(
-    const char* filepath,
-    enum pksav_gen2_save_type* save_type_out
+    const char* p_filepath,
+    enum pksav_gen2_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gen2_load_save_from_buffer(
     uint8_t* buffer,
     size_t buffer_len,
-    struct pksav_gen2_save* gen2_save_out
+    struct pksav_gen2_save* p_gen2_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gen2_load_save_from_file(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save_out
+    const char* p_filepath,
+    struct pksav_gen2_save* p_gen2_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gen2_save_save(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save_ptr
+    const char* p_filepath,
+    struct pksav_gen2_save* p_gen2_save
 );
 
 PKSAV_API enum pksav_error pksav_gen2_free_save(
-    struct pksav_gen2_save* gen2_save_ptr
+    struct pksav_gen2_save* p_gen2_save
 );
 
 PKSAV_API enum pksav_error pksav_gen2_pokemon_storage_set_current_box(
-    struct pksav_gen2_pokemon_storage* gen2_pokemon_storage_ptr,
+    struct pksav_gen2_pokemon_storage* p_gen2_pokemon_storage,
     uint8_t new_current_box_num
 );
 

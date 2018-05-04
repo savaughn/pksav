@@ -24,15 +24,15 @@ extern "C" {
  * Both buffers passed into the function must be at least the length passed
  * in the num_chars parameter, or it will result in undefined behavior.
  *
- * \param input_buffer Generation V string
- * \param output_text output buffer in which to place converted text
+ * \param p_input_buffer Generation V string
+ * \param p_output_text output buffer in which to place converted text
  * \param num_chars the number of characters to convert
  * \returns PKSAV_ERROR_NONE upon success
- * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
+ * \returns PKSAV_ERROR_NULL_POINTER if p_input_buffer or p_output_text is NULL
  */
 PKSAV_API enum pksav_error pksav_gen5_import_text(
-    const uint16_t* input_buffer,
-    char* output_text,
+    const uint16_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 );
 
@@ -43,15 +43,15 @@ PKSAV_API enum pksav_error pksav_gen5_import_text(
  * Both buffers passed into the function must be at least the length passed
  * in the num_chars parameter, or it will result in undefined behavior.
  *
- * \param input_text C string to convert
- * \param output_buffer output buffer in which to place converted text
+ * \param p_input_text C string to convert
+ * \param p_output_buffer output buffer in which to place converted text
  * \param num_chars the number of characters to convert
  * \returns PKSAV_ERROR_NONE upon success
- * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
+ * \returns PKSAV_ERROR_NULL_POINTER if p_input_text or p_output_buffer is NULL
  */
 PKSAV_API enum pksav_error pksav_gen5_export_text(
-    const char* input_text,
-    uint16_t* output_buffer,
+    const char* p_input_text,
+    uint16_t* p_output_buffer,
     size_t num_chars
 );
 

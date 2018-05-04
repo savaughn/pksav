@@ -10,27 +10,27 @@
 #include <pksav/gen5/text.h>
 
 enum pksav_error pksav_gen5_import_text(
-    const uint16_t* input_buffer,
-    char* output_text,
+    const uint16_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 )
 {
     return pksav_xds_import_text(
-               input_buffer,
-               output_text,
+               p_input_buffer,
+               p_output_text,
                num_chars
            );
 }
 
 enum pksav_error pksav_gen5_export_text(
-    const char* input_text,
-    uint16_t* output_buffer,
+    const char* p_input_text,
+    uint16_t* p_output_buffer,
     size_t num_chars
 )
 {
     return pksav_xds_export_text(
-               input_text,
-               output_buffer,
+               p_input_text,
+               p_output_buffer,
                num_chars
            );
 }

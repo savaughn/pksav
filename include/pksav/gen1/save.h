@@ -58,7 +58,7 @@ struct pksav_gen1_pokedex_lists
      * This list should be accessed with ::pksav_get_pokedex_bit and set with
      * ::pksav_set_pokedex_bit.
      */
-    uint8_t* seen_ptr;
+    uint8_t* p_seen;
 
     /*!
      * @brief A pointer to the list of Pokémon owned by the trainer.
@@ -66,12 +66,12 @@ struct pksav_gen1_pokedex_lists
      * This list should be accessed with ::pksav_get_pokedex_bit and set with
      * ::pksav_set_pokedex_bit.
      */
-    uint8_t* owned_ptr;
+    uint8_t* p_owned;
 };
 
 struct pksav_gen1_pokemon_storage
 {
-    struct pksav_gen1_pokemon_party* party_ptr;
+    struct pksav_gen1_pokemon_party* p_party;
 
     /*!
      * @brief Pointers to the trainer's Pokémon boxes.
@@ -79,7 +79,7 @@ struct pksav_gen1_pokemon_storage
      * The boxes are not stored contiguously in the save file, so these pointers
      * point to their actual positions in the file.
      */
-    struct pksav_gen1_pokemon_box* box_ptrs[PKSAV_GEN1_NUM_POKEMON_BOXES];
+    struct pksav_gen1_pokemon_box* pp_boxes[PKSAV_GEN1_NUM_POKEMON_BOXES];
 
     /*!
      * @brief The number of the current Pokémon box (0-11).
@@ -90,7 +90,7 @@ struct pksav_gen1_pokemon_storage
      * The ::PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK should be used to access or set
      * this value.
      */
-    uint8_t* current_box_num_ptr;
+    uint8_t* p_current_box_num;
 
     /*!
      * @brief A pointer to the current Pokémon box.
@@ -98,16 +98,16 @@ struct pksav_gen1_pokemon_storage
      * Pokémon are only deposited or withdrawn from this box, and its data is
      * switched out when the current box is changed.
      */
-    struct pksav_gen1_pokemon_box* current_box_ptr;
+    struct pksav_gen1_pokemon_box* p_current_box;
 };
 
 struct pksav_gen1_item_storage
 {
     //! A pointer to the trainer's item bag.
-    struct pksav_gen1_item_bag* item_bag_ptr;
+    struct pksav_gen1_item_bag* p_item_bag;
 
     //! A pointer to the trainer's item PC.
-    struct pksav_gen1_item_pc* item_pc_ptr;
+    struct pksav_gen1_item_pc* p_item_pc;
 };
 
 struct pksav_gen1_trainer_info
@@ -117,7 +117,7 @@ struct pksav_gen1_trainer_info
      *
      * This value should be accessed and modified with ::pksav_bigendian16.
      */
-    uint16_t* id_ptr;
+    uint16_t* p_id;
 
     /*!
      * @brief A pointer to the trainer's name.
@@ -128,7 +128,7 @@ struct pksav_gen1_trainer_info
      * This value should be set with ::pksav_text_to_gen1 with a num_chars
      * value of 7.
      */
-    uint8_t* name_ptr;
+    uint8_t* p_name;
 
     /*!
      * @brief A pointer to how much money the trainer has (stored in BCD).
@@ -136,7 +136,7 @@ struct pksav_gen1_trainer_info
      * This value should be accessed with ::pksav_import_bcd, with a num_bytes value
      * of 3. It should be set with ::pksav_export_bcd, with a maximum value of 999999.
      */
-    uint8_t* money_ptr;
+    uint8_t* p_money;
 
     /*!
      * @brief A pointer to the list of badges the trainer has earned.
@@ -144,7 +144,7 @@ struct pksav_gen1_trainer_info
      * This value should be manipulated with the bitmasks given in the
      * ::pksav_gen1_badge_t enum.
      */
-    uint8_t* badges_ptr;
+    uint8_t* p_badges;
 };
 
 struct pksav_gen1_misc_fields
@@ -158,7 +158,7 @@ struct pksav_gen1_misc_fields
      * This value should be set with ::pksav_text_to_gen1 with a num_chars
      * value of 7.
      */
-    uint8_t* rival_name_ptr;
+    uint8_t* p_rival_name;
 
     /*!
      * @brief A pointer to how many casino coins the trainer has (stored in BCD).
@@ -166,14 +166,14 @@ struct pksav_gen1_misc_fields
      * This value should be accessed with ::pksav_import_bcd, with a num_bytes value
      * of 2. It should be set with ::pksav_export_bcd, with a maximum value of 999.
      */
-    uint8_t* casino_coins_ptr;
+    uint8_t* p_casino_coins;
 
     /*!
      * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
      *
      * In Pokémon Red/Blue, this field is unused and is set to 0.
      */
-    uint8_t* pikachu_friendship_ptr;
+    uint8_t* p_pikachu_friendship;
 };
 
 /*!
@@ -195,9 +195,9 @@ struct pksav_gen1_save
     enum pksav_gen1_save_type save_type;
 
     //! A pointer to the amount of time this save file has been played.
-    struct pksav_gen1_time* time_played_ptr;
+    struct pksav_gen1_time* p_time_played;
 
-    uint8_t* options_ptr;
+    uint8_t* p_options;
 
     struct pksav_gen1_item_storage item_storage;
 
@@ -209,7 +209,7 @@ struct pksav_gen1_save
 
     struct pksav_gen1_misc_fields misc_fields;
 
-    void* internal_ptr;
+    void* p_internal;
 };
 
 #ifdef __cplusplus
@@ -217,38 +217,38 @@ extern "C" {
 #endif
 
 PKSAV_API enum pksav_error pksav_gen1_get_buffer_save_type(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t buffer_len,
-    enum pksav_gen1_save_type* save_type_out
+    enum pksav_gen1_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gen1_get_file_save_type(
-    const char* filepath,
-    enum pksav_gen1_save_type* save_type_out
+    const char* p_filepath,
+    enum pksav_gen1_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gen1_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
-    struct pksav_gen1_save* gen1_save_out
+    struct pksav_gen1_save* p_gen1_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gen1_load_save_from_file(
-    const char* filepath,
-    struct pksav_gen1_save* gen1_save_out
+    const char* p_filepath,
+    struct pksav_gen1_save* p_gen1_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gen1_save_save(
-    const char* filepath,
-    struct pksav_gen1_save* gen1_save_ptr
+    const char* p_filepath,
+    struct pksav_gen1_save* p_gen1_save
 );
 
 PKSAV_API enum pksav_error pksav_gen1_free_save(
-    struct pksav_gen1_save* gen1_save_ptr
+    struct pksav_gen1_save* p_gen1_save
 );
 
 PKSAV_API enum pksav_error pksav_gen1_pokemon_storage_set_current_box(
-    struct pksav_gen1_pokemon_storage* gen1_pokemon_storage_ptr,
+    struct pksav_gen1_pokemon_storage* p_gen1_pokemon_storage,
     uint8_t new_current_box_num
 );
 

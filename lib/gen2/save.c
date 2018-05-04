@@ -19,49 +19,49 @@
 
 void pksav_gen2_get_save_checksums(
     enum pksav_gen2_save_type save_type,
-    const uint8_t* buffer,
-    uint16_t* checksum1_out,
-    uint16_t* checksum2_out
+    const uint8_t* p_buffer,
+    uint16_t* p_checksum1_out,
+    uint16_t* p_checksum2_out
 )
 {
-    assert(buffer != NULL);
-    assert(checksum1_out != NULL);
-    assert(checksum2_out != NULL);
+    assert(p_buffer != NULL);
+    assert(p_checksum1_out != NULL);
+    assert(p_checksum2_out != NULL);
 
-    *checksum1_out = 0;
-    *checksum2_out = 0;
+    *p_checksum1_out = 0;
+    *p_checksum2_out = 0;
 
     switch(save_type)
     {
         case PKSAV_GEN2_SAVE_TYPE_GS:
             for(size_t buffer_index = 0x2009; buffer_index <= 0x2D68; ++buffer_index)
             {
-                *checksum1_out += buffer[buffer_index];
+                *p_checksum1_out += p_buffer[buffer_index];
             }
 
             for(size_t buffer_index = 0x0C6B; buffer_index <= 0x17EC; ++buffer_index)
             {
-                *checksum2_out += buffer[buffer_index];
+                *p_checksum2_out += p_buffer[buffer_index];
             }
             for(size_t buffer_index = 0x3D96; buffer_index <= 0x3F3F; ++buffer_index)
             {
-                *checksum2_out += buffer[buffer_index];
+                *p_checksum2_out += p_buffer[buffer_index];
             }
             for(size_t buffer_index = 0x7E39; buffer_index <= 0x7E6C; ++buffer_index)
             {
-                *checksum2_out += buffer[buffer_index];
+                *p_checksum2_out += p_buffer[buffer_index];
             }
             break;
 
         case PKSAV_GEN2_SAVE_TYPE_CRYSTAL:
             for(size_t buffer_index = 0x2009; buffer_index <= 0x2B82; ++buffer_index)
             {
-                *checksum1_out += buffer[buffer_index];
+                *p_checksum1_out += p_buffer[buffer_index];
             }
 
             for(size_t buffer_index = 0x1209; buffer_index <= 0x1D82; ++buffer_index)
             {
-                *checksum2_out += buffer[buffer_index];
+                *p_checksum2_out += p_buffer[buffer_index];
             }
             break;
 
@@ -69,24 +69,24 @@ void pksav_gen2_get_save_checksums(
             assert(false);
     }
 
-    *checksum1_out = pksav_littleendian16(*checksum1_out);
-    *checksum2_out = pksav_littleendian16(*checksum2_out);
+    *p_checksum1_out = pksav_littleendian16(*p_checksum1_out);
+    *p_checksum2_out = pksav_littleendian16(*p_checksum2_out);
 }
 
 enum pksav_error pksav_gen2_get_buffer_save_type(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t buffer_len,
-    enum pksav_gen2_save_type* save_type_out
+    enum pksav_gen2_save_type* p_save_type_out
 )
 {
-    if(!buffer || !save_type_out)
+    if(!p_buffer || !p_save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    *save_type_out = PKSAV_GEN2_SAVE_TYPE_NONE;
+    *p_save_type_out = PKSAV_GEN2_SAVE_TYPE_NONE;
     if(buffer_len >= PKSAV_GEN2_SAVE_SIZE)
     {
         bool is_type_found = false;
@@ -98,7 +98,7 @@ enum pksav_error pksav_gen2_get_buffer_save_type(
             uint16_t buffer_checksum2 = 0;
             pksav_gen2_get_save_checksums(
                 save_type,
-                buffer,
+                p_buffer,
                 &buffer_checksum1,
                 &buffer_checksum2
             );
@@ -121,11 +121,11 @@ enum pksav_error pksav_gen2_get_buffer_save_type(
                     assert(false);
             }
 
-            const uint16_t* checksum1_ptr = (const uint16_t*)&buffer[checksum1_index];
-            const uint16_t* checksum2_ptr = (const uint16_t*)&buffer[checksum2_index];
+            const uint16_t* p_checksum1 = (const uint16_t*)&p_buffer[checksum1_index];
+            const uint16_t* p_checksum2 = (const uint16_t*)&p_buffer[checksum2_index];
 
-            uint16_t checksum1 = pksav_littleendian16(*checksum1_ptr);
-            uint16_t checksum2 = pksav_littleendian16(*checksum2_ptr);
+            uint16_t checksum1 = pksav_littleendian16(*p_checksum1);
+            uint16_t checksum2 = pksav_littleendian16(*p_checksum2);
 
             switch(save_type)
             {
@@ -149,7 +149,7 @@ enum pksav_error pksav_gen2_get_buffer_save_type(
 
             if(is_type_found)
             {
-                *save_type_out = save_type;
+                *p_save_type_out = save_type;
             }
         }
     }
@@ -158,40 +158,40 @@ enum pksav_error pksav_gen2_get_buffer_save_type(
 }
 
 enum pksav_error pksav_gen2_get_file_save_type(
-    const char* filepath,
-    enum pksav_gen2_save_type* save_type_out
+    const char* p_filepath,
+    enum pksav_gen2_save_type* p_save_type_out
 )
 {
-    if(!filepath || !save_type_out)
+    if(!p_filepath || !p_save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t* file_buffer = NULL;
+    uint8_t* p_file_buffer = NULL;
     size_t buffer_len = 0;
     error = pksav_fs_read_file_to_buffer(
-                filepath,
-                &file_buffer,
+                p_filepath,
+                &p_file_buffer,
                 &buffer_len
             );
     if(!error)
     {
-        assert(file_buffer != NULL);
+        assert(p_file_buffer != NULL);
 
         enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
         error = pksav_gen2_get_buffer_save_type(
-                    file_buffer,
+                    p_file_buffer,
                     buffer_len,
                     &save_type
                 );
-        free(file_buffer);
+        free(p_file_buffer);
 
         // Only return a result upon success.
         if(!error)
         {
-            *save_type_out = save_type;
+            *p_save_type_out = save_type;
         }
     }
 
@@ -199,150 +199,150 @@ enum pksav_error pksav_gen2_get_file_save_type(
 }
 
 static void _pksav_gen2_set_save_pointers(
-    struct pksav_gen2_save* gen2_save_ptr,
-    uint8_t* buffer
+    struct pksav_gen2_save* p_gen2_save,
+    uint8_t* p_buffer
 )
 {
-    assert(gen2_save_ptr != NULL);
-    assert(buffer != NULL);
+    assert(p_gen2_save != NULL);
+    assert(p_buffer != NULL);
 
-    const size_t* offsets = NULL;
+    const size_t* p_offsets = NULL;
 
     // Internal
-    gen2_save_ptr->internal_ptr = calloc(sizeof(struct pksav_gen2_save_internal), 1);
-    struct pksav_gen2_save_internal* internal_ptr = gen2_save_ptr->internal_ptr;
-    internal_ptr->raw_save_ptr = buffer;
-    switch(gen2_save_ptr->save_type)
+    p_gen2_save->p_internal = calloc(sizeof(struct pksav_gen2_save_internal), 1);
+    struct pksav_gen2_save_internal* p_internal = p_gen2_save->p_internal;
+    p_internal->p_raw_save = p_buffer;
+    switch(p_gen2_save->save_type)
     {
         case PKSAV_GEN2_SAVE_TYPE_GS:
-            offsets = GS_OFFSETS;
+            p_offsets = GS_OFFSETS;
             break;
 
         case PKSAV_GEN2_SAVE_TYPE_CRYSTAL:
-            offsets = CRYSTAL_OFFSETS;
+            p_offsets = CRYSTAL_OFFSETS;
             break;
 
         default:
             assert(false);
     }
 
-    assert(offsets != NULL);
+    assert(p_offsets != NULL);
 
-    internal_ptr->checksum1_ptr = (uint16_t*)&buffer[
-                                                 offsets[PKSAV_GEN2_CHECKSUM1]
-                                             ];
+    p_internal->p_checksum1 = (uint16_t*)&p_buffer[
+                                  p_offsets[PKSAV_GEN2_CHECKSUM1]
+                              ];
 
-    internal_ptr->checksum2_ptr = (uint16_t*)&buffer[
-                                                 offsets[PKSAV_GEN2_CHECKSUM2]
-                                             ];
+    p_internal->p_checksum2 = (uint16_t*)&p_buffer[
+                                  p_offsets[PKSAV_GEN2_CHECKSUM2]
+                              ];
 
     // Options
-    struct pksav_gen2_options* options_ptr = &gen2_save_ptr->options;
+    struct pksav_gen2_options* p_options = &p_gen2_save->options;
 
-    options_ptr->misc_options_ptr = &buffer[offsets[PKSAV_GEN2_OPTIONS]];
-    options_ptr->textbox_frame_index_ptr = &buffer[offsets[PKSAV_GEN2_TEXTBOX_FRAME_INDEX]];
-    options_ptr->gbprinter_brightness_ptr = &buffer[offsets[PKSAV_GEN2_GBPRINTER_BRIGHTNESS]];
-    options_ptr->menu_account_ptr = &buffer[offsets[PKSAV_GEN2_MENU_ACCOUNT]];
+    p_options->p_misc_options = &p_buffer[p_offsets[PKSAV_GEN2_OPTIONS]];
+    p_options->p_textbox_frame_index = &p_buffer[p_offsets[PKSAV_GEN2_TEXTBOX_FRAME_INDEX]];
+    p_options->p_gbprinter_brightness = &p_buffer[p_offsets[PKSAV_GEN2_GBPRINTER_BRIGHTNESS]];
+    p_options->p_menu_account = &p_buffer[p_offsets[PKSAV_GEN2_MENU_ACCOUNT]];
 
     // Save time
-    struct pksav_gen2_save_time* save_time_ptr = &gen2_save_ptr->save_time;
+    struct pksav_gen2_save_time* p_save_time = &p_gen2_save->save_time;
 
-    save_time_ptr->time_played_ptr = (struct pksav_gen2_time*)(
-                                         &buffer[offsets[PKSAV_GEN2_TIME_PLAYED]]
-                                     );
-    save_time_ptr->daylight_savings_ptr = &buffer[offsets[PKSAV_GEN2_DAYLIGHT_SAVINGS]];
+    p_save_time->p_time_played = (struct pksav_gen2_time*)(
+                                     &p_buffer[p_offsets[PKSAV_GEN2_TIME_PLAYED]]
+                                 );
+    p_save_time->p_daylight_savings = &p_buffer[p_offsets[PKSAV_GEN2_DAYLIGHT_SAVINGS]];
 
     // Item storage
-    struct pksav_gen2_item_storage* item_storage_ptr = &gen2_save_ptr->item_storage;
+    struct pksav_gen2_item_storage* p_item_storage = &p_gen2_save->item_storage;
 
-    item_storage_ptr->item_bag_ptr = (struct pksav_gen2_item_bag*)(
-                                         &buffer[offsets[PKSAV_GEN2_ITEM_BAG]]
-                                     );
-    item_storage_ptr->item_pc_ptr = (struct pksav_gen2_item_pc*)(
-                                        &buffer[offsets[PKSAV_GEN2_ITEM_PC]]
-                                    );
+    p_item_storage->p_item_bag = (struct pksav_gen2_item_bag*)(
+                                     &p_buffer[p_offsets[PKSAV_GEN2_ITEM_BAG]]
+                                 );
+    p_item_storage->p_item_pc = (struct pksav_gen2_item_pc*)(
+                                    &p_buffer[p_offsets[PKSAV_GEN2_ITEM_PC]]
+                                );
 
     // Pokémon storage
-    struct pksav_gen2_pokemon_storage* pokemon_storage_ptr = &gen2_save_ptr->pokemon_storage;
+    struct pksav_gen2_pokemon_storage* p_pokemon_storage = &p_gen2_save->pokemon_storage;
 
-    pokemon_storage_ptr->party_ptr = (struct pksav_gen2_pokemon_party*)(
-                                         &buffer[offsets[PKSAV_GEN2_POKEMON_PARTY]]
-                                     );
+    p_pokemon_storage->p_party = (struct pksav_gen2_pokemon_party*)(
+                                     &p_buffer[p_offsets[PKSAV_GEN2_POKEMON_PARTY]]
+                                 );
 
     for(size_t box_index = 0; box_index < 7; ++box_index)
     {
-        size_t offset = offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF] +
+        size_t offset = p_offsets[PKSAV_GEN2_POKEMON_PC_FIRST_HALF] +
                         (sizeof(struct pksav_gen2_pokemon_box) * box_index);
 
-        pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen2_pokemon_box*)(
-                                                       &buffer[offset]
-                                                   );
+        p_pokemon_storage->pp_boxes[box_index] = (struct pksav_gen2_pokemon_box*)(
+                                                     &p_buffer[offset]
+                                                 );
     }
     for(size_t box_index = 7; box_index < 14; ++box_index)
     {
-        size_t offset = offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF] +
+        size_t offset = p_offsets[PKSAV_GEN2_POKEMON_PC_SECOND_HALF] +
                         (sizeof(struct pksav_gen2_pokemon_box) * (box_index - 7));
 
-        pokemon_storage_ptr->box_ptrs[box_index] = (struct pksav_gen2_pokemon_box*)(
-                                                       &buffer[offset]
-                                                   );
+        p_pokemon_storage->pp_boxes[box_index] = (struct pksav_gen2_pokemon_box*)(
+                                                     &p_buffer[offset]
+                                                 );
     }
 
-    pokemon_storage_ptr->box_names_ptr = (struct pksav_gen2_pokemon_box_names*)(
-                                             &buffer[offsets[PKSAV_GEN2_PC_BOX_NAMES]]
-                                         );
-    pokemon_storage_ptr->current_box_num_ptr = &buffer[
-                                                   offsets[PKSAV_GEN2_CURRENT_BOX_NUM]
-                                               ];
-    pokemon_storage_ptr->current_box_ptr = (struct pksav_gen2_pokemon_box*)(
-                                               &buffer[offsets[PKSAV_GEN2_CURRENT_BOX]]
-                                           );
+    p_pokemon_storage->p_box_names = (struct pksav_gen2_pokemon_box_names*)(
+                                         &p_buffer[p_offsets[PKSAV_GEN2_PC_BOX_NAMES]]
+                                     );
+    p_pokemon_storage->p_current_box_num = &p_buffer[
+                                               p_offsets[PKSAV_GEN2_CURRENT_BOX_NUM]
+                                           ];
+    p_pokemon_storage->p_current_box = (struct pksav_gen2_pokemon_box*)(
+                                           &p_buffer[p_offsets[PKSAV_GEN2_CURRENT_BOX]]
+                                       );
 
     // Pokédex lists
-    struct pksav_gen2_pokedex_lists* pokedex_lists_ptr = &gen2_save_ptr->pokedex_lists;
+    struct pksav_gen2_pokedex_lists* p_pokedex_lists = &p_gen2_save->pokedex_lists;
 
-    pokedex_lists_ptr->seen_ptr  = &buffer[offsets[PKSAV_GEN2_POKEDEX_SEEN]];
-    pokedex_lists_ptr->owned_ptr = &buffer[offsets[PKSAV_GEN2_POKEDEX_OWNED]];
+    p_pokedex_lists->p_seen  = &p_buffer[p_offsets[PKSAV_GEN2_POKEDEX_SEEN]];
+    p_pokedex_lists->p_owned = &p_buffer[p_offsets[PKSAV_GEN2_POKEDEX_OWNED]];
 
     // Trainer info
-    struct pksav_gen2_trainer_info* trainer_info_ptr = &gen2_save_ptr->trainer_info;
+    struct pksav_gen2_trainer_info* p_trainer_info = &p_gen2_save->trainer_info;
 
-    trainer_info_ptr->id_ptr           = (uint16_t*)&buffer[offsets[PKSAV_GEN2_PLAYER_ID]];
-    trainer_info_ptr->name_ptr         = &buffer[offsets[PKSAV_GEN2_PLAYER_NAME]];
-    if(gen2_save_ptr->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
+    p_trainer_info->p_id   = (uint16_t*)&p_buffer[p_offsets[PKSAV_GEN2_PLAYER_ID]];
+    p_trainer_info->p_name = &p_buffer[p_offsets[PKSAV_GEN2_PLAYER_NAME]];
+    if(p_gen2_save->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
     {
-        trainer_info_ptr->gender_ptr = &buffer[offsets[PKSAV_GEN2_PLAYER_GENDER]];
+        p_trainer_info->p_gender = &p_buffer[p_offsets[PKSAV_GEN2_PLAYER_GENDER]];
     }
     else
     {
-        trainer_info_ptr->gender_ptr = NULL;
+        p_trainer_info->p_gender = NULL;
     }
-    trainer_info_ptr->palette_ptr      = &buffer[offsets[PKSAV_GEN2_PLAYER_PALETTE]];
-    trainer_info_ptr->money_ptr        = &buffer[offsets[PKSAV_GEN2_MONEY]];
-    trainer_info_ptr->johto_badges_ptr = &buffer[offsets[PKSAV_GEN2_JOHTO_BADGES]];
-    trainer_info_ptr->kanto_badges_ptr = &buffer[offsets[PKSAV_GEN2_KANTO_BADGES]];
+    p_trainer_info->p_palette      = &p_buffer[p_offsets[PKSAV_GEN2_PLAYER_PALETTE]];
+    p_trainer_info->p_money        = &p_buffer[p_offsets[PKSAV_GEN2_MONEY]];
+    p_trainer_info->p_johto_badges = &p_buffer[p_offsets[PKSAV_GEN2_JOHTO_BADGES]];
+    p_trainer_info->p_kanto_badges = &p_buffer[p_offsets[PKSAV_GEN2_KANTO_BADGES]];
 
     // Misc
-    struct pksav_gen2_misc_fields* misc_fields_ptr = &gen2_save_ptr->misc_fields;
+    struct pksav_gen2_misc_fields* p_misc_fields = &p_gen2_save->misc_fields;
 
-    misc_fields_ptr->rival_name_ptr = &buffer[offsets[PKSAV_GEN2_RIVAL_NAME]];
+    p_misc_fields->p_rival_name = &p_buffer[p_offsets[PKSAV_GEN2_RIVAL_NAME]];
 }
 
 static enum pksav_error _pksav_gen2_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
     bool is_buffer_ours,
-    struct pksav_gen2_save* gen2_save_out
+    struct pksav_gen2_save* p_gen2_save_out
 )
 {
-    assert(gen2_save_out != NULL);
-    assert(buffer != NULL);
+    assert(p_gen2_save_out != NULL);
+    assert(p_buffer != NULL);
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     enum pksav_gen2_save_type save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
     error = pksav_gen2_get_buffer_save_type(
-                buffer,
+                p_buffer,
                 buffer_len,
                 &save_type
             );
@@ -350,15 +350,15 @@ static enum pksav_error _pksav_gen2_load_save_from_buffer(
     {
         if(save_type != PKSAV_GEN2_SAVE_TYPE_NONE)
         {
-            gen2_save_out->save_type = save_type;
+            p_gen2_save_out->save_type = save_type;
             _pksav_gen2_set_save_pointers(
-                gen2_save_out,
-                buffer
+                p_gen2_save_out,
+                p_buffer
             );
 
             // Internal
-            struct pksav_gen2_save_internal* internal_ptr = gen2_save_out->internal_ptr;
-            internal_ptr->is_buffer_ours = is_buffer_ours;
+            struct pksav_gen2_save_internal* p_internal = p_gen2_save_out->p_internal;
+            p_internal->is_buffer_ours = is_buffer_ours;
         }
         else
         {
@@ -370,57 +370,57 @@ static enum pksav_error _pksav_gen2_load_save_from_buffer(
 }
 
 enum pksav_error pksav_gen2_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
-    struct pksav_gen2_save* gen2_save_out
+    struct pksav_gen2_save* p_gen2_save_out
 )
 {
-    if(!buffer || !gen2_save_out)
+    if(!p_buffer || !p_gen2_save_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     return _pksav_gen2_load_save_from_buffer(
-               buffer,
+               p_buffer,
                buffer_len,
                false, // is_buffer_ours
-               gen2_save_out
+               p_gen2_save_out
            );
 }
 
 enum pksav_error pksav_gen2_load_save_from_file(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save_out
+    const char* p_filepath,
+    struct pksav_gen2_save* p_gen2_save_out
 )
 {
-    if(!filepath || !gen2_save_out)
+    if(!p_filepath || !p_gen2_save_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t* file_buffer = NULL;
+    uint8_t* p_file_buffer = NULL;
     size_t buffer_len = 0;
     error = pksav_fs_read_file_to_buffer(
-                filepath,
-                &file_buffer,
+                p_filepath,
+                &p_file_buffer,
                 &buffer_len
             );
 
     if(!error)
     {
         error = _pksav_gen2_load_save_from_buffer(
-                    file_buffer,
+                    p_file_buffer,
                     buffer_len,
                     true, // is_buffer_ours
-                    gen2_save_out
+                    p_gen2_save_out
                 );
         if(error)
         {
             // We made this buffer, so it's on us to free it if there's
             // an error.
-            free(file_buffer);
+            free(p_file_buffer);
         }
     }
 
@@ -428,28 +428,28 @@ enum pksav_error pksav_gen2_load_save_from_file(
 }
 
 enum pksav_error pksav_gen2_save_save(
-    const char* filepath,
-    struct pksav_gen2_save* gen2_save_ptr
+    const char* p_filepath,
+    struct pksav_gen2_save* p_gen2_save
 )
 {
-    if(!filepath || !gen2_save_ptr)
+    if(!p_filepath || !p_gen2_save)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    struct pksav_gen2_save_internal* internal_ptr = gen2_save_ptr->internal_ptr;
+    struct pksav_gen2_save_internal* p_internal = p_gen2_save->p_internal;
     pksav_gen2_get_save_checksums(
-        gen2_save_ptr->save_type,
-        internal_ptr->raw_save_ptr,
-        internal_ptr->checksum1_ptr,
-        internal_ptr->checksum2_ptr
+        p_gen2_save->save_type,
+        p_internal->p_raw_save,
+        p_internal->p_checksum1,
+        p_internal->p_checksum2
     );
 
     error = pksav_fs_write_buffer_to_file(
-                filepath,
-                internal_ptr->raw_save_ptr,
+                p_filepath,
+                p_internal->p_raw_save,
                 PKSAV_GEN2_SAVE_SIZE
             );
 
@@ -457,38 +457,34 @@ enum pksav_error pksav_gen2_save_save(
 }
 
 enum pksav_error pksav_gen2_free_save(
-    struct pksav_gen2_save* gen2_save_ptr
+    struct pksav_gen2_save* p_gen2_save
 )
 {
-    if(!gen2_save_ptr)
+    if(!p_gen2_save)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    struct pksav_gen2_save_internal* internal_ptr = gen2_save_ptr->internal_ptr;
-    if(internal_ptr->is_buffer_ours)
+    struct pksav_gen2_save_internal* p_internal = p_gen2_save->p_internal;
+    if(p_internal->is_buffer_ours)
     {
-        free(internal_ptr->raw_save_ptr);
+        free(p_internal->p_raw_save);
     }
-    free(internal_ptr);
+    free(p_internal);
 
     // Everything else is a pointer or an enum with a default value of 0,
     // so this one memset should be fine.
-    memset(
-        gen2_save_ptr,
-        0,
-        sizeof(*gen2_save_ptr)
-    );
+    memset(p_gen2_save, 0, sizeof(*p_gen2_save));
 
     return PKSAV_ERROR_NONE;
 }
 
 enum pksav_error pksav_gen2_pokemon_storage_set_current_box(
-    struct pksav_gen2_pokemon_storage* gen2_pokemon_storage_ptr,
+    struct pksav_gen2_pokemon_storage* p_gen2_pokemon_storage,
     uint8_t new_current_box_num
 )
 {
-    if(!gen2_pokemon_storage_ptr)
+    if(!p_gen2_pokemon_storage)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -497,13 +493,13 @@ enum pksav_error pksav_gen2_pokemon_storage_set_current_box(
         return PKSAV_ERROR_PARAM_OUT_OF_RANGE;
     }
 
-    uint8_t* current_box_num_ptr = gen2_pokemon_storage_ptr->current_box_num_ptr;
-    struct pksav_gen2_pokemon_box* current_box_ptr = gen2_pokemon_storage_ptr->current_box_ptr;
-    struct pksav_gen2_pokemon_box** box_ptrs = gen2_pokemon_storage_ptr->box_ptrs;
+    uint8_t* p_current_box_num = p_gen2_pokemon_storage->p_current_box_num;
+    struct pksav_gen2_pokemon_box* p_current_box = p_gen2_pokemon_storage->p_current_box;
+    struct pksav_gen2_pokemon_box** pp_boxes = p_gen2_pokemon_storage->pp_boxes;
 
-    *box_ptrs[*current_box_num_ptr] = *current_box_ptr;
-    *current_box_num_ptr = new_current_box_num;
-    *current_box_ptr = *box_ptrs[new_current_box_num];
+    *pp_boxes[*p_current_box_num] = *p_current_box;
+    *p_current_box_num = new_current_box_num;
+    *p_current_box = *pp_boxes[new_current_box_num];
 
     return PKSAV_ERROR_NONE;
 }

@@ -27,47 +27,47 @@ static const struct pksav_gba_save EMPTY_GBA_SAVE =
 {
     .save_type = PKSAV_GBA_SAVE_TYPE_NONE,
 
-    .time_played_ptr = NULL,
+    .p_time_played = NULL,
 
     .item_storage =
     {
-        .bag_ptr = NULL,
-        .pc_ptr  = NULL
+        .p_bag = NULL,
+        .p_pc  = NULL
     },
 
     .pokemon_storage =
     {
-        .party_ptr = NULL,
-        .pc_ptr    = NULL
+        .p_party = NULL,
+        .p_pc    = NULL
     },
 
     .pokedex =
     {
-        .seen_ptrA  = NULL,
-        .seen_ptrB  = NULL,
-        .seen_ptrC  = NULL,
-        .owned_ptr  = NULL,
-        .rse_nat_pokedex_unlocked_ptrA  = NULL,
-        .frlg_nat_pokedex_unlocked_ptrA = NULL,
-        .nat_pokedex_unlocked_ptrB      = NULL,
-        .nat_pokedex_unlocked_ptrC      = NULL
+        .p_seenA  = NULL,
+        .p_seenB  = NULL,
+        .p_seenC  = NULL,
+        .p_owned  = NULL,
+        .p_rse_nat_pokedex_unlockedA  = NULL,
+        .p_frlg_nat_pokedex_unlockedA = NULL,
+        .p_nat_pokedex_unlockedB      = NULL,
+        .p_nat_pokedex_unlockedC      = NULL
     },
 
     .trainer_info =
     {
-        .id_ptr     = NULL,
-        .name_ptr   = NULL,
-        .gender_ptr = NULL,
-        .money_ptr  = NULL,
+        .p_id     = NULL,
+        .p_name   = NULL,
+        .p_gender = NULL,
+        .p_money  = NULL,
     },
 
     .misc_fields =
     {
-        .rival_name_ptr   = NULL,
-        .casino_coins_ptr = NULL
+        .p_rival_name   = NULL,
+        .p_casino_coins = NULL
     },
 
-    .internal_ptr = NULL
+    .p_internal = NULL
 };
 
 /*
@@ -182,13 +182,13 @@ static void pksav_gba_get_file_save_type_test(
 }
 
 static void gba_save_test(
-    struct pksav_gba_save* gba_save_ptr,
+    struct pksav_gba_save* p_gba_save,
     enum pksav_gba_save_type expected_save_type,
     const char* original_filepath,
     const char* save_name
 )
 {
-    TEST_ASSERT_NOT_NULL(gba_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_gba_save);
     TEST_ASSERT_NOT_NULL(original_filepath);
     TEST_ASSERT_NOT_NULL(save_name);
 
@@ -203,41 +203,41 @@ static void gba_save_test(
 
     // Validate fields. Most pointers should not be NULL, and some fields have
     // a specific set of valid values.
-    TEST_ASSERT_NOT_NULL(gba_save_ptr->internal_ptr);
+    TEST_ASSERT_NOT_NULL(p_gba_save->p_internal);
 
-    TEST_ASSERT_EQUAL(expected_save_type, gba_save_ptr->save_type);
+    TEST_ASSERT_EQUAL(expected_save_type, p_gba_save->save_type);
 
     // Free the save and make sure all fields are set to NULL or default.
-    error = pksav_gba_free_save(gba_save_ptr);
+    error = pksav_gba_free_save(p_gba_save);
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL(PKSAV_GBA_SAVE_TYPE_NONE, gba_save_ptr->save_type);
+    TEST_ASSERT_EQUAL(PKSAV_GBA_SAVE_TYPE_NONE, p_gba_save->save_type);
 
-    TEST_ASSERT_NULL(gba_save_ptr->time_played_ptr);
+    TEST_ASSERT_NULL(p_gba_save->p_time_played);
 
-    TEST_ASSERT_NULL(gba_save_ptr->item_storage.bag_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->item_storage.pc_ptr);
+    TEST_ASSERT_NULL(p_gba_save->item_storage.p_bag);
+    TEST_ASSERT_NULL(p_gba_save->item_storage.p_pc);
 
-    TEST_ASSERT_NULL(gba_save_ptr->pokemon_storage.party_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->pokemon_storage.pc_ptr);
+    TEST_ASSERT_NULL(p_gba_save->pokemon_storage.p_party);
+    TEST_ASSERT_NULL(p_gba_save->pokemon_storage.p_pc);
 
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.seen_ptrA);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.seen_ptrB);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.seen_ptrC);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.owned_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.rse_nat_pokedex_unlocked_ptrA);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.frlg_nat_pokedex_unlocked_ptrA);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.nat_pokedex_unlocked_ptrB);
-    TEST_ASSERT_NULL(gba_save_ptr->pokedex.nat_pokedex_unlocked_ptrC);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_seenA);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_seenB);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_seenC);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_owned);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_rse_nat_pokedex_unlockedA);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_frlg_nat_pokedex_unlockedA);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_nat_pokedex_unlockedB);
+    TEST_ASSERT_NULL(p_gba_save->pokedex.p_nat_pokedex_unlockedC);
 
-    TEST_ASSERT_NULL(gba_save_ptr->trainer_info.id_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->trainer_info.name_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->trainer_info.money_ptr);
+    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_id);
+    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_name);
+    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_money);
 
-    TEST_ASSERT_NULL(gba_save_ptr->misc_fields.rival_name_ptr);
-    TEST_ASSERT_NULL(gba_save_ptr->misc_fields.casino_coins_ptr);
+    TEST_ASSERT_NULL(p_gba_save->misc_fields.p_rival_name);
+    TEST_ASSERT_NULL(p_gba_save->misc_fields.p_casino_coins);
 
-    TEST_ASSERT_NULL(gba_save_ptr->internal_ptr);
+    TEST_ASSERT_NULL(p_gba_save->p_internal);
 }
 
 static void gba_save_from_buffer_test(
@@ -342,34 +342,34 @@ static void convenience_macro_test()
     struct pksav_gba_pc_pokemon pc_pokemon;
     memset(&pc_pokemon, 0, sizeof(pc_pokemon));
 
-    struct pksav_gba_pokemon_blocks* blocks_ptr = &pc_pokemon.blocks;
+    struct pksav_gba_pokemon_blocks* p_blocks = &pc_pokemon.blocks;
 
-    //uint16_t* origin_info_ptr = &blocks_ptr->misc.origin_info;
-    uint32_t* ribbons_obedience_ptr = &blocks_ptr->misc.ribbons_obedience;
+    //uint16_t* p_origin_info = &p_blocks->misc.origin_info;
+    uint32_t* p_ribbons_obedience = &p_blocks->misc.ribbons_obedience;
 
-    *ribbons_obedience_ptr |= PKSAV_GBA_CONTEST_RIBBON_SUPER; // Cool
+    *p_ribbons_obedience |= PKSAV_GBA_CONTEST_RIBBON_SUPER; // Cool
     // None for Beauty
-    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_HYPER << PKSAV_GBA_CUTE_RIBBONS_OFFSET);
-    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_NORMAL << PKSAV_GBA_SMART_RIBBONS_OFFSET);
-    *ribbons_obedience_ptr |= (PKSAV_GBA_CONTEST_RIBBON_SUPER << PKSAV_GBA_TOUGH_RIBBONS_OFFSET);
+    *p_ribbons_obedience |= (PKSAV_GBA_CONTEST_RIBBON_HYPER << PKSAV_GBA_CUTE_RIBBONS_OFFSET);
+    *p_ribbons_obedience |= (PKSAV_GBA_CONTEST_RIBBON_NORMAL << PKSAV_GBA_SMART_RIBBONS_OFFSET);
+    *p_ribbons_obedience |= (PKSAV_GBA_CONTEST_RIBBON_SUPER << PKSAV_GBA_TOUGH_RIBBONS_OFFSET);
 
     // Origin info (TODO: add enums, set, and test
 
     uint16_t ball = \
-        PKSAV_GBA_POKEMON_BALL(blocks_ptr->misc.origin_info);
+        PKSAV_GBA_POKEMON_BALL(p_blocks->misc.origin_info);
     uint16_t origin_game = \
-        PKSAV_GBA_POKEMON_ORIGIN_GAME(blocks_ptr->misc.origin_info);
+        PKSAV_GBA_POKEMON_ORIGIN_GAME(p_blocks->misc.origin_info);
 
     (void)ball;
     (void)origin_game;
 
     // Ribbons
 
-    uint32_t cool_contest_level   = PKSAV_GBA_COOL_CONTEST_LEVEL(*ribbons_obedience_ptr);
-    uint32_t beauty_contest_level = PKSAV_GBA_BEAUTY_CONTEST_LEVEL(*ribbons_obedience_ptr);
-    uint32_t cute_contest_level   = PKSAV_GBA_CUTE_CONTEST_LEVEL(*ribbons_obedience_ptr);
-    uint32_t smart_contest_level  = PKSAV_GBA_SMART_CONTEST_LEVEL(*ribbons_obedience_ptr);
-    uint32_t tough_contest_level  = PKSAV_GBA_TOUGH_CONTEST_LEVEL(*ribbons_obedience_ptr);
+    uint32_t cool_contest_level   = PKSAV_GBA_COOL_CONTEST_LEVEL(*p_ribbons_obedience);
+    uint32_t beauty_contest_level = PKSAV_GBA_BEAUTY_CONTEST_LEVEL(*p_ribbons_obedience);
+    uint32_t cute_contest_level   = PKSAV_GBA_CUTE_CONTEST_LEVEL(*p_ribbons_obedience);
+    uint32_t smart_contest_level  = PKSAV_GBA_SMART_CONTEST_LEVEL(*p_ribbons_obedience);
+    uint32_t tough_contest_level  = PKSAV_GBA_TOUGH_CONTEST_LEVEL(*p_ribbons_obedience);
 
     TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_SUPER,  cool_contest_level);
     TEST_ASSERT_EQUAL(PKSAV_GBA_CONTEST_RIBBON_NONE,   beauty_contest_level);

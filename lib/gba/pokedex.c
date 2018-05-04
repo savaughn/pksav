@@ -10,12 +10,12 @@
 #include <pksav/gba/pokedex.h>
 
 enum pksav_error pksav_gba_pokedex_set_has_seen(
-    struct pksav_gba_pokedex* gba_pokedex_ptr,
+    struct pksav_gba_pokedex* p_gba_pokedex,
     uint16_t pokedex_num,
     bool has_seen
 )
 {
-    if(!gba_pokedex_ptr)
+    if(!p_gba_pokedex)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -27,21 +27,21 @@ enum pksav_error pksav_gba_pokedex_set_has_seen(
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     error = pksav_set_pokedex_bit(
-                gba_pokedex_ptr->seen_ptrA,
+                p_gba_pokedex->p_seenA,
                 pokedex_num,
                 has_seen
             );
     if(!error)
     {
         error = pksav_set_pokedex_bit(
-                    gba_pokedex_ptr->seen_ptrB,
+                    p_gba_pokedex->p_seenB,
                     pokedex_num,
                     has_seen
                 );
         if(!error)
         {
             error = pksav_set_pokedex_bit(
-                        gba_pokedex_ptr->seen_ptrC,
+                        p_gba_pokedex->p_seenC,
                         pokedex_num,
                         has_seen
                     );
@@ -52,12 +52,12 @@ enum pksav_error pksav_gba_pokedex_set_has_seen(
 }
 
 enum pksav_error pksav_gba_pokedex_set_national_pokedex_unlocked(
-    struct pksav_gba_pokedex* gba_pokedex_ptr,
+    struct pksav_gba_pokedex* p_gba_pokedex,
     enum pksav_gba_save_type save_type,
     bool is_unlocked
 )
 {
-    if(!gba_pokedex_ptr)
+    if(!p_gba_pokedex)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -68,41 +68,41 @@ enum pksav_error pksav_gba_pokedex_set_national_pokedex_unlocked(
 
     if(is_unlocked)
     {
-        *gba_pokedex_ptr->nat_pokedex_unlocked_ptrB |=
+        *p_gba_pokedex->p_nat_pokedex_unlockedB |=
             PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B_FLAG;
 
         if(save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
         {
-            *gba_pokedex_ptr->frlg_nat_pokedex_unlocked_ptrA |=
+            *p_gba_pokedex->p_frlg_nat_pokedex_unlockedA |=
                 PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_A_FLAG;
-            *gba_pokedex_ptr->nat_pokedex_unlocked_ptrC |=
+            *p_gba_pokedex->p_nat_pokedex_unlockedC |=
                 PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_C_FLAG;
         }
         else
         {
-            *gba_pokedex_ptr->rse_nat_pokedex_unlocked_ptrA |=
+            *p_gba_pokedex->p_rse_nat_pokedex_unlockedA |=
                 PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_A_FLAG;
-            *gba_pokedex_ptr->nat_pokedex_unlocked_ptrC |=
+            *p_gba_pokedex->p_nat_pokedex_unlockedC |=
                 PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_C_FLAG;
         }
     }
     else
     {
-        *gba_pokedex_ptr->nat_pokedex_unlocked_ptrB &=
+        *p_gba_pokedex->p_nat_pokedex_unlockedB &=
             ~PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B_FLAG;
 
         if(save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
         {
-            *gba_pokedex_ptr->frlg_nat_pokedex_unlocked_ptrA &=
+            *p_gba_pokedex->p_frlg_nat_pokedex_unlockedA &=
                 ~PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_A_FLAG;
-            *gba_pokedex_ptr->nat_pokedex_unlocked_ptrC &=
+            *p_gba_pokedex->p_nat_pokedex_unlockedC &=
                 ~PKSAV_GBA_FRLG_NAT_POKEDEX_UNLOCKED_C_FLAG;
         }
         else
         {
-            *gba_pokedex_ptr->rse_nat_pokedex_unlocked_ptrA &=
+            *p_gba_pokedex->p_rse_nat_pokedex_unlockedA &=
                 ~PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_A_FLAG;
-            *gba_pokedex_ptr->nat_pokedex_unlocked_ptrC &=
+            *p_gba_pokedex->p_nat_pokedex_unlockedC &=
                 ~PKSAV_GBA_RSE_NAT_POKEDEX_UNLOCKED_C_FLAG;
         }
     }

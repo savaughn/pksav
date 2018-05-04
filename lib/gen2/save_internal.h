@@ -12,18 +12,18 @@
 
 #include <stdint.h>
 
-#define PKSAV_GS_CHECKSUM1 0x2D69
-#define PKSAV_GS_CHECKSUM2 0x7E6D
+#define PKSAV_GS_CHECKSUM1 (0x2D69)
+#define PKSAV_GS_CHECKSUM2 (0x7E6D)
 
-#define PKSAV_CRYSTAL_CHECKSUM1 0x2D02
-#define PKSAV_CRYSTAL_CHECKSUM2 0x1F0D
+#define PKSAV_CRYSTAL_CHECKSUM1 (0x2D02)
+#define PKSAV_CRYSTAL_CHECKSUM2 (0x1F0D)
 
 struct pksav_gen2_save_internal
 {
-    uint8_t* raw_save_ptr;
+    uint8_t* p_raw_save;
 
-    uint16_t* checksum1_ptr;
-    uint16_t* checksum2_ptr;
+    uint16_t* p_checksum1;
+    uint16_t* p_checksum2;
 
     bool is_buffer_ours;
 };
@@ -124,9 +124,9 @@ extern "C" {
 
 void pksav_gen2_get_save_checksums(
     enum pksav_gen2_save_type save_type,
-    const uint8_t* buffer,
-    uint16_t* checksum1_out,
-    uint16_t* checksum2_out
+    const uint8_t* p_buffer,
+    uint16_t* p_checksum1_out,
+    uint16_t* p_checksum2_out
 );
 
 #ifdef __cplusplus

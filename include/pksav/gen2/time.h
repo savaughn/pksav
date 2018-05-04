@@ -63,8 +63,8 @@ extern "C" {
  */
 
 PKSAV_API enum pksav_error pksav_gen2_set_caught_data_time_field(
-    const time_t* time_in,
-    uint16_t* caught_data
+    const time_t* p_ctime,
+    uint16_t* p_caught_data
 );
 
 #ifdef __cplusplus

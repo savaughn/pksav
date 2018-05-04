@@ -26,47 +26,47 @@ static const struct pksav_gen2_save EMPTY_GEN2_SAVE =
 
     .save_time =
     {
-        .time_played_ptr      = NULL,
-        .daylight_savings_ptr = NULL
+        .p_time_played      = NULL,
+        .p_daylight_savings = NULL
     },
 
     .item_storage =
     {
-        .item_bag_ptr = NULL,
-        .item_pc_ptr  = NULL
+        .p_item_bag = NULL,
+        .p_item_pc  = NULL
     },
 
     .pokemon_storage =
     {
-        .party_ptr           = NULL,
-        .box_ptrs            = {NULL},
-        .current_box_num_ptr = NULL,
-        .current_box_ptr     = NULL
+        .p_party           = NULL,
+        .pp_boxes            = {NULL},
+        .p_current_box_num = NULL,
+        .p_current_box     = NULL
     },
 
     .pokedex_lists =
     {
-        .seen_ptr  = NULL,
-        .owned_ptr = NULL
+        .p_seen  = NULL,
+        .p_owned = NULL
     },
 
     .trainer_info =
     {
-        .id_ptr           = NULL,
-        .name_ptr         = NULL,
-        .gender_ptr       = NULL,
-        .palette_ptr      = NULL,
-        .money_ptr        = NULL,
-        .johto_badges_ptr = NULL,
-        .kanto_badges_ptr = NULL
+        .p_id           = NULL,
+        .p_name         = NULL,
+        .p_gender       = NULL,
+        .p_palette      = NULL,
+        .p_money        = NULL,
+        .p_johto_badges = NULL,
+        .p_kanto_badges = NULL
     },
 
     .misc_fields =
     {
-        .rival_name_ptr = NULL
+        .p_rival_name = NULL
     },
 
-    .internal_ptr = NULL
+    .p_internal = NULL
 };
 
 /*
@@ -193,10 +193,10 @@ static void validate_gen2_string(
 }
 
 static void validate_gen2_item_bag(
-    const struct pksav_gen2_item_bag* item_bag_ptr
+    const struct pksav_gen2_item_bag* p_item_bag
 )
 {
-    TEST_ASSERT_NOT_NULL(item_bag_ptr);
+    TEST_ASSERT_NOT_NULL(p_item_bag);
 
     // TODO: validate pockets
 }
@@ -222,38 +222,38 @@ static void validate_bcd(
 }
 
 static void validate_gen2_item_pc(
-    const struct pksav_gen2_item_pc* item_pc_ptr
+    const struct pksav_gen2_item_pc* p_item_pc
 )
 {
-    TEST_ASSERT_NOT_NULL(item_pc_ptr);
-    TEST_ASSERT_TRUE(item_pc_ptr->count <= PKSAV_GEN2_ITEM_PC_SIZE);
+    TEST_ASSERT_NOT_NULL(p_item_pc);
+    TEST_ASSERT_TRUE(p_item_pc->count <= PKSAV_GEN2_ITEM_PC_SIZE);
 
     // Don't validate item contents. Generation I games are buggy enough
     // to make this unreliable.
 }
 
 static void validate_gen2_pokemon_party(
-    const struct pksav_gen2_pokemon_party* party_ptr
+    const struct pksav_gen2_pokemon_party* p_party
 )
 {
-    TEST_ASSERT_NOT_NULL(party_ptr);
-    TEST_ASSERT_TRUE(party_ptr->count <= PKSAV_GEN2_PARTY_NUM_POKEMON);
+    TEST_ASSERT_NOT_NULL(p_party);
+    TEST_ASSERT_TRUE(p_party->count <= PKSAV_GEN2_PARTY_NUM_POKEMON);
 
-    if(party_ptr->count < PKSAV_GEN2_PARTY_NUM_POKEMON)
+    if(p_party->count < PKSAV_GEN2_PARTY_NUM_POKEMON)
     {
-        TEST_ASSERT_EQUAL(0xFF, party_ptr->species[party_ptr->count]);
+        TEST_ASSERT_EQUAL(0xFF, p_party->species[p_party->count]);
     }
 
-    for(size_t party_index = 0; party_index < party_ptr->count; ++party_index)
+    for(size_t party_index = 0; party_index < p_party->count; ++party_index)
     {
-        if(party_ptr->species[party_index] != PKSAV_GEN2_POKEMON_EGG_INDEX)
+        if(p_party->species[party_index] != PKSAV_GEN2_POKEMON_EGG_INDEX)
         {
             validate_gen2_string(
-                party_ptr->otnames[party_index],
+                p_party->otnames[party_index],
                 10
             );
             validate_gen2_string(
-                party_ptr->nicknames[party_index],
+                p_party->nicknames[party_index],
                 10
             );
         }
@@ -261,26 +261,26 @@ static void validate_gen2_pokemon_party(
 }
 
 static void validate_gen2_pokemon_box(
-    const struct pksav_gen2_pokemon_box* pokemon_box_ptr
+    const struct pksav_gen2_pokemon_box* p_pokemon_box
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_box_ptr);
-    TEST_ASSERT_TRUE(pokemon_box_ptr->count <= PKSAV_GEN2_BOX_NUM_POKEMON);
+    TEST_ASSERT_NOT_NULL(p_pokemon_box);
+    TEST_ASSERT_TRUE(p_pokemon_box->count <= PKSAV_GEN2_BOX_NUM_POKEMON);
 
-    if(pokemon_box_ptr->count < PKSAV_GEN2_BOX_NUM_POKEMON)
+    if(p_pokemon_box->count < PKSAV_GEN2_BOX_NUM_POKEMON)
     {
-        TEST_ASSERT_EQUAL(0xFF, pokemon_box_ptr->species[pokemon_box_ptr->count]);
+        TEST_ASSERT_EQUAL(0xFF, p_pokemon_box->species[p_pokemon_box->count]);
 
-        for(size_t box_index = 0; box_index < pokemon_box_ptr->count; ++box_index)
+        for(size_t box_index = 0; box_index < p_pokemon_box->count; ++box_index)
         {
-            if(pokemon_box_ptr->species[box_index] != PKSAV_GEN2_POKEMON_EGG_INDEX)
+            if(p_pokemon_box->species[box_index] != PKSAV_GEN2_POKEMON_EGG_INDEX)
             {
                 validate_gen2_string(
-                    pokemon_box_ptr->nicknames[box_index],
+                    p_pokemon_box->nicknames[box_index],
                     10
                 );
                 validate_gen2_string(
-                    pokemon_box_ptr->otnames[box_index],
+                    p_pokemon_box->otnames[box_index],
                     10
                 );
             }
@@ -289,152 +289,152 @@ static void validate_gen2_pokemon_box(
 }
 
 static void compare_gen2_saves(
-    struct pksav_gen2_save* gen2_save1_ptr,
-    struct pksav_gen2_save* gen2_save2_ptr
+    struct pksav_gen2_save* gen2_save1p_,
+    struct pksav_gen2_save* gen2_save2p_
 )
 {
-    TEST_ASSERT_NOT_NULL(gen2_save1_ptr);
-    TEST_ASSERT_NOT_NULL(gen2_save2_ptr);
+    TEST_ASSERT_NOT_NULL(gen2_save1p_);
+    TEST_ASSERT_NOT_NULL(gen2_save2p_);
 
     TEST_ASSERT_EQUAL(
-        gen2_save1_ptr->save_type,
-        gen2_save2_ptr->save_type
+        gen2_save1p_->save_type,
+        gen2_save2p_->save_type
     );
 
     // Save time
-    struct pksav_gen2_save_time* save_time1_ptr = &gen2_save1_ptr->save_time;
-    struct pksav_gen2_save_time* save_time2_ptr = &gen2_save2_ptr->save_time;
+    struct pksav_gen2_save_time* save_time1p_ = &gen2_save1p_->save_time;
+    struct pksav_gen2_save_time* save_time2p_ = &gen2_save2p_->save_time;
 
     TEST_ASSERT_EQUAL_MEMORY(
-        save_time1_ptr->time_played_ptr,
-        save_time2_ptr->time_played_ptr,
-        sizeof(*save_time1_ptr->time_played_ptr)
+        save_time1p_->p_time_played,
+        save_time2p_->p_time_played,
+        sizeof(*save_time1p_->p_time_played)
     );
     TEST_ASSERT_EQUAL(
-        *save_time1_ptr->daylight_savings_ptr,
-        *save_time2_ptr->daylight_savings_ptr
+        *save_time1p_->p_daylight_savings,
+        *save_time2p_->p_daylight_savings
     );
 
     // Item storage
-    struct pksav_gen2_item_storage* item_storage1_ptr = &gen2_save1_ptr->item_storage;
-    struct pksav_gen2_item_storage* item_storage2_ptr = &gen2_save2_ptr->item_storage;
+    struct pksav_gen2_item_storage* item_storage1p_ = &gen2_save1p_->item_storage;
+    struct pksav_gen2_item_storage* item_storage2p_ = &gen2_save2p_->item_storage;
 
     TEST_ASSERT_EQUAL_MEMORY(
-        item_storage1_ptr->item_bag_ptr,
-        item_storage2_ptr->item_bag_ptr,
-        sizeof(*item_storage1_ptr->item_bag_ptr)
+        item_storage1p_->p_item_bag,
+        item_storage2p_->p_item_bag,
+        sizeof(*item_storage1p_->p_item_bag)
     );
     TEST_ASSERT_EQUAL_MEMORY(
-        item_storage1_ptr->item_pc_ptr,
-        item_storage2_ptr->item_pc_ptr,
-        sizeof(*item_storage1_ptr->item_pc_ptr)
+        item_storage1p_->p_item_pc,
+        item_storage2p_->p_item_pc,
+        sizeof(*item_storage1p_->p_item_pc)
     );
 
     // Pokémon storage
-    struct pksav_gen2_pokemon_storage* pokemon_storage1_ptr = &gen2_save1_ptr->pokemon_storage;
-    struct pksav_gen2_pokemon_storage* pokemon_storage2_ptr = &gen2_save2_ptr->pokemon_storage;
+    struct pksav_gen2_pokemon_storage* pokemon_storage1p_ = &gen2_save1p_->pokemon_storage;
+    struct pksav_gen2_pokemon_storage* pokemon_storage2p_ = &gen2_save2p_->pokemon_storage;
 
     TEST_ASSERT_EQUAL_MEMORY(
-        pokemon_storage1_ptr->party_ptr,
-        pokemon_storage2_ptr->party_ptr,
-        sizeof(*pokemon_storage1_ptr->party_ptr)
+        pokemon_storage1p_->p_party,
+        pokemon_storage2p_->p_party,
+        sizeof(*pokemon_storage1p_->p_party)
     );
     for(size_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
     {
         TEST_ASSERT_EQUAL_MEMORY(
-            pokemon_storage1_ptr->box_ptrs[box_index],
-            pokemon_storage2_ptr->box_ptrs[box_index],
-            sizeof(*pokemon_storage1_ptr->box_ptrs[box_index])
+            pokemon_storage1p_->pp_boxes[box_index],
+            pokemon_storage2p_->pp_boxes[box_index],
+            sizeof(*pokemon_storage1p_->pp_boxes[box_index])
         );
     }
     TEST_ASSERT_EQUAL_MEMORY(
-        pokemon_storage1_ptr->box_names_ptr,
-        pokemon_storage2_ptr->box_names_ptr,
-        sizeof(*pokemon_storage1_ptr->box_names_ptr)
+        pokemon_storage1p_->p_box_names,
+        pokemon_storage2p_->p_box_names,
+        sizeof(*pokemon_storage1p_->p_box_names)
     );
     TEST_ASSERT_EQUAL(
-        *pokemon_storage1_ptr->current_box_num_ptr,
-        *pokemon_storage2_ptr->current_box_num_ptr
+        *pokemon_storage1p_->p_current_box_num,
+        *pokemon_storage2p_->p_current_box_num
     );
     TEST_ASSERT_EQUAL_MEMORY(
-        pokemon_storage1_ptr->current_box_ptr,
-        pokemon_storage2_ptr->current_box_ptr,
-        sizeof(*pokemon_storage1_ptr->current_box_ptr)
+        pokemon_storage1p_->p_current_box,
+        pokemon_storage2p_->p_current_box,
+        sizeof(*pokemon_storage1p_->p_current_box)
     );
 
     // Pokédex lists
-    struct pksav_gen2_pokedex_lists* pokedex_lists1_ptr = &gen2_save1_ptr->pokedex_lists;
-    struct pksav_gen2_pokedex_lists* pokedex_lists2_ptr = &gen2_save2_ptr->pokedex_lists;
+    struct pksav_gen2_pokedex_lists* pokedex_lists1p_ = &gen2_save1p_->pokedex_lists;
+    struct pksav_gen2_pokedex_lists* pokedex_lists2p_ = &gen2_save2p_->pokedex_lists;
     const size_t pokedex_buffer_size = (251 / 8) + 1;
 
     TEST_ASSERT_EQUAL_MEMORY(
-        pokedex_lists1_ptr->seen_ptr,
-        pokedex_lists2_ptr->seen_ptr,
+        pokedex_lists1p_->p_seen,
+        pokedex_lists2p_->p_seen,
         pokedex_buffer_size
     );
     TEST_ASSERT_EQUAL_MEMORY(
-        pokedex_lists1_ptr->owned_ptr,
-        pokedex_lists2_ptr->owned_ptr,
+        pokedex_lists1p_->p_owned,
+        pokedex_lists2p_->p_owned,
         pokedex_buffer_size
     );
 
     // Trainer info
-    struct pksav_gen2_trainer_info* trainer_info1_ptr = &gen2_save1_ptr->trainer_info;
-    struct pksav_gen2_trainer_info* trainer_info2_ptr = &gen2_save2_ptr->trainer_info;
+    struct pksav_gen2_trainer_info* trainer_info1p_ = &gen2_save1p_->trainer_info;
+    struct pksav_gen2_trainer_info* trainer_info2p_ = &gen2_save2p_->trainer_info;
 
     TEST_ASSERT_EQUAL(
-        *trainer_info1_ptr->id_ptr,
-        *trainer_info2_ptr->id_ptr
+        *trainer_info1p_->p_id,
+        *trainer_info2p_->p_id
     );
     TEST_ASSERT_EQUAL_MEMORY(
-        trainer_info1_ptr->name_ptr,
-        trainer_info2_ptr->name_ptr,
+        trainer_info1p_->p_name,
+        trainer_info2p_->p_name,
         7
     );
-    if(gen2_save1_ptr->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
+    if(gen2_save1p_->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
     {
         TEST_ASSERT_EQUAL(
-            *trainer_info1_ptr->gender_ptr,
-            *trainer_info2_ptr->gender_ptr
+            *trainer_info1p_->p_gender,
+            *trainer_info2p_->p_gender
         );
     }
     TEST_ASSERT_EQUAL(
-        *trainer_info1_ptr->palette_ptr,
-        *trainer_info2_ptr->palette_ptr
+        *trainer_info1p_->p_palette,
+        *trainer_info2p_->p_palette
     );
     TEST_ASSERT_EQUAL_MEMORY(
-        trainer_info1_ptr->money_ptr,
-        trainer_info2_ptr->money_ptr,
+        trainer_info1p_->p_money,
+        trainer_info2p_->p_money,
         3
     );
     TEST_ASSERT_EQUAL(
-        *trainer_info1_ptr->johto_badges_ptr,
-        *trainer_info2_ptr->johto_badges_ptr
+        *trainer_info1p_->p_johto_badges,
+        *trainer_info2p_->p_johto_badges
     );
     TEST_ASSERT_EQUAL(
-        *trainer_info1_ptr->kanto_badges_ptr,
-        *trainer_info2_ptr->kanto_badges_ptr
+        *trainer_info1p_->p_kanto_badges,
+        *trainer_info2p_->p_kanto_badges
     );
 
     // Trainer info
-    struct pksav_gen2_misc_fields* misc_fields1_ptr = &gen2_save1_ptr->misc_fields;
-    struct pksav_gen2_misc_fields* misc_fields2_ptr = &gen2_save2_ptr->misc_fields;
+    struct pksav_gen2_misc_fields* misc_fields1p_ = &gen2_save1p_->misc_fields;
+    struct pksav_gen2_misc_fields* misc_fields2p_ = &gen2_save2p_->misc_fields;
 
     TEST_ASSERT_EQUAL_MEMORY(
-        misc_fields1_ptr->rival_name_ptr,
-        misc_fields2_ptr->rival_name_ptr,
+        misc_fields1p_->p_rival_name,
+        misc_fields2p_->p_rival_name,
         7
     );
 }
 
 static void gen2_save_test(
-    struct pksav_gen2_save* gen2_save_ptr,
+    struct pksav_gen2_save* p_gen2_save,
     enum pksav_gen2_save_type expected_save_type,
     const char* original_filepath,
     const char* save_name
 )
 {
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save);
     TEST_ASSERT_NOT_NULL(original_filepath);
     TEST_ASSERT_NOT_NULL(save_name);
 
@@ -449,62 +449,62 @@ static void gen2_save_test(
 
     // Validate fields. No pointers should be NULL (except the trainer gender
     // pointer for Gold/Silver), and some fields have a specific set of valid values.
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->internal_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->p_internal);
 
-    TEST_ASSERT_EQUAL(expected_save_type, gen2_save_ptr->save_type);
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->save_time.time_played_ptr);
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->save_time.daylight_savings_ptr);
+    TEST_ASSERT_EQUAL(expected_save_type, p_gen2_save->save_type);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->save_time.p_time_played);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->save_time.p_daylight_savings);
 
-    validate_gen2_item_bag(gen2_save_ptr->item_storage.item_bag_ptr);
-    validate_gen2_item_pc(gen2_save_ptr->item_storage.item_pc_ptr);
-    validate_gen2_pokemon_party(gen2_save_ptr->pokemon_storage.party_ptr);
+    validate_gen2_item_bag(p_gen2_save->item_storage.p_item_bag);
+    validate_gen2_item_pc(p_gen2_save->item_storage.p_item_pc);
+    validate_gen2_pokemon_party(p_gen2_save->pokemon_storage.p_party);
 
     for(size_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
     {
         validate_gen2_string(
-            gen2_save_ptr->pokemon_storage.box_names_ptr->names[box_index],
+            p_gen2_save->pokemon_storage.p_box_names->names[box_index],
             9
         );
         validate_gen2_pokemon_box(
-            gen2_save_ptr->pokemon_storage.box_ptrs[box_index]
+            p_gen2_save->pokemon_storage.pp_boxes[box_index]
         );
     }
 
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->pokemon_storage.current_box_num_ptr);
-    TEST_ASSERT_TRUE(*gen2_save_ptr->pokemon_storage.current_box_num_ptr <=
+    TEST_ASSERT_NOT_NULL(p_gen2_save->pokemon_storage.p_current_box_num);
+    TEST_ASSERT_TRUE(*p_gen2_save->pokemon_storage.p_current_box_num <=
                      PKSAV_GEN2_NUM_POKEMON_BOXES);
 
-    validate_gen2_pokemon_box(gen2_save_ptr->pokemon_storage.current_box_ptr);
+    validate_gen2_pokemon_box(p_gen2_save->pokemon_storage.p_current_box);
 
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->pokedex_lists.seen_ptr);
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->pokedex_lists.owned_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->pokedex_lists.p_seen);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->pokedex_lists.p_owned);
 
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->trainer_info.id_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->trainer_info.p_id);
     validate_gen2_string(
-        gen2_save_ptr->trainer_info.name_ptr,
+        p_gen2_save->trainer_info.p_name,
         7
     );
 
-    if(gen2_save_ptr->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
+    if(p_gen2_save->save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
     {
-        TEST_ASSERT_NOT_NULL(gen2_save_ptr->trainer_info.gender_ptr);
+        TEST_ASSERT_NOT_NULL(p_gen2_save->trainer_info.p_gender);
     }
     else
     {
-        TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.gender_ptr);
+        TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_gender);
     }
 
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->trainer_info.palette_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->trainer_info.p_palette);
     validate_bcd(
-        gen2_save_ptr->trainer_info.money_ptr,
+        p_gen2_save->trainer_info.p_money,
         3,
         999999
     );
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->trainer_info.johto_badges_ptr);
-    TEST_ASSERT_NOT_NULL(gen2_save_ptr->trainer_info.kanto_badges_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->trainer_info.p_johto_badges);
+    TEST_ASSERT_NOT_NULL(p_gen2_save->trainer_info.p_kanto_badges);
 
     validate_gen2_string(
-        gen2_save_ptr->misc_fields.rival_name_ptr,
+        p_gen2_save->misc_fields.p_rival_name,
         7
     );
 
@@ -512,7 +512,7 @@ static void gen2_save_test(
     // is not guaranteed to be set for some reason, compare each part.
     error = pksav_gen2_save_save(
                 tmp_save_filepath,
-                gen2_save_ptr
+                p_gen2_save
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
@@ -524,7 +524,7 @@ static void gen2_save_test(
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
     compare_gen2_saves(
-        gen2_save_ptr,
+        p_gen2_save,
         &tmp_gen2_save
     );
 
@@ -540,54 +540,54 @@ static void gen2_save_test(
     for(uint8_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
     {
         error = pksav_gen2_pokemon_storage_set_current_box(
-                    &gen2_save_ptr->pokemon_storage,
+                    &p_gen2_save->pokemon_storage,
                     box_index
                 );
         PKSAV_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL(
             box_index,
-            *gen2_save_ptr->pokemon_storage.current_box_num_ptr
+            *p_gen2_save->pokemon_storage.p_current_box_num
         );
         TEST_ASSERT_EQUAL_MEMORY(
-            gen2_save_ptr->pokemon_storage.box_ptrs[box_index],
-            gen2_save_ptr->pokemon_storage.current_box_ptr,
+            p_gen2_save->pokemon_storage.pp_boxes[box_index],
+            p_gen2_save->pokemon_storage.p_current_box,
             sizeof(struct pksav_gen2_pokemon_box)
         );
     }
 
     // Free the save and make sure all fields are set to NULL or default.
-    error = pksav_gen2_free_save(gen2_save_ptr);
+    error = pksav_gen2_free_save(p_gen2_save);
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL(PKSAV_GEN2_SAVE_TYPE_NONE, gen2_save_ptr->save_type);
+    TEST_ASSERT_EQUAL(PKSAV_GEN2_SAVE_TYPE_NONE, p_gen2_save->save_type);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->save_time.time_played_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->save_time.daylight_savings_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->save_time.p_time_played);
+    TEST_ASSERT_NULL(p_gen2_save->save_time.p_daylight_savings);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->item_storage.item_bag_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->item_storage.item_pc_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->item_storage.p_item_bag);
+    TEST_ASSERT_NULL(p_gen2_save->item_storage.p_item_pc);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->pokemon_storage.party_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->pokemon_storage.p_party);
     for(size_t box_index = 0; box_index < PKSAV_GEN2_NUM_POKEMON_BOXES; ++box_index)
     {
-        TEST_ASSERT_NULL(gen2_save_ptr->pokemon_storage.box_ptrs[box_index]);
+        TEST_ASSERT_NULL(p_gen2_save->pokemon_storage.pp_boxes[box_index]);
     }
-    TEST_ASSERT_NULL(gen2_save_ptr->pokemon_storage.current_box_num_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->pokemon_storage.current_box_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->pokemon_storage.p_current_box_num);
+    TEST_ASSERT_NULL(p_gen2_save->pokemon_storage.p_current_box);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->pokedex_lists.seen_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->pokedex_lists.owned_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->pokedex_lists.p_seen);
+    TEST_ASSERT_NULL(p_gen2_save->pokedex_lists.p_owned);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.id_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.name_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.money_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.johto_badges_ptr);
-    TEST_ASSERT_NULL(gen2_save_ptr->trainer_info.kanto_badges_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_id);
+    TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_name);
+    TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_money);
+    TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_johto_badges);
+    TEST_ASSERT_NULL(p_gen2_save->trainer_info.p_kanto_badges);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->misc_fields.rival_name_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->misc_fields.p_rival_name);
 
-    TEST_ASSERT_NULL(gen2_save_ptr->internal_ptr);
+    TEST_ASSERT_NULL(p_gen2_save->p_internal);
 }
 
 static void gen2_save_from_buffer_test(

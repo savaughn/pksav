@@ -15,8 +15,8 @@
 
 struct pksav_gen1_save_internal
 {
-    uint8_t* raw_save_ptr;
-    uint8_t* checksum_ptr;
+    uint8_t* p_raw_save;
+    uint8_t* p_checksum;
 
     bool is_buffer_ours;
 };
@@ -50,17 +50,17 @@ extern "C" {
 #endif
 
 static inline uint8_t pksav_gen1_get_save_checksum(
-    const uint8_t* buffer
+    const uint8_t* p_buffer
 )
 {
-    assert(buffer != NULL);
+    assert(p_buffer != NULL);
 
     uint8_t checksum = 255;
     for(size_t buffer_index = PKSAV_GEN1_PLAYER_NAME;
         buffer_index < PKSAV_GEN1_CHECKSUM;
         ++buffer_index)
     {
-        checksum -= buffer[buffer_index];
+        checksum -= p_buffer[buffer_index];
     }
 
     return checksum;

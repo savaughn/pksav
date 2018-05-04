@@ -12,59 +12,59 @@
 #include <assert.h>
 
 uint16_t pksav_gba_get_pokemon_checksum(
-    const struct pksav_gba_pc_pokemon* gba_pokemon_ptr
+    const struct pksav_gba_pc_pokemon* p_gba_pokemon
 )
 {
-    assert(gba_pokemon_ptr != NULL);
+    assert(p_gba_pokemon != NULL);
 
-    union pksav_gba_pokemon_blocks_internal* gba_pokemon_internal_blocks_ptr =
-        (union pksav_gba_pokemon_blocks_internal*)&gba_pokemon_ptr->blocks;
+    union pksav_gba_pokemon_blocks_internal* p_gba_pokemon_internal_blocks =
+        (union pksav_gba_pokemon_blocks_internal*)&p_gba_pokemon->blocks;
 
     uint16_t ret = 0;
     for(size_t index = 0;
         index < (sizeof(union pksav_gba_pokemon_blocks_internal)/2);
         ++index)
     {
-        ret += gba_pokemon_internal_blocks_ptr->blocks16[index];
+        ret += p_gba_pokemon_internal_blocks->blocks16[index];
     }
 
     return ret;
 }
 
 uint16_t pksav_gba_get_section_checksum(
-    const struct pksav_gba_save_section* section_ptr,
+    const struct pksav_gba_save_section* p_section,
     size_t section_num
 )
 {
-    assert(section_ptr != NULL);
+    assert(p_section != NULL);
     assert(section_num < PKSAV_GBA_NUM_SAVE_SECTIONS);
 
     uint32_t checksum = 0;
-    uint16_t* checksum_ptr = (uint16_t*)&checksum;
+    uint16_t* p_checksum = (uint16_t*)&checksum;
 
     for(size_t index = 0;
         index < (pksav_gba_section_sizes[section_num]/4);
         ++index)
     {
-        checksum += section_ptr->data32[index];
+        checksum += p_section->data32[index];
     }
 
-    return (checksum_ptr[0] + checksum_ptr[1]);
+    return (p_checksum[0] + p_checksum[1]);
 }
 
 void pksav_gba_set_section_checksums(
-    union pksav_gba_save_slot* sections_ptr
+    union pksav_gba_save_slot* p_sections
 )
 {
-    assert(sections_ptr != NULL);
+    assert(p_sections != NULL);
 
     for(size_t section_index = 0;
-        section_index < 14;
+        section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
         ++section_index)
     {
-        sections_ptr->sections_arr[section_index].footer.checksum =
+        p_sections->sections_arr[section_index].footer.checksum =
             pksav_gba_get_section_checksum(
-                &sections_ptr->sections_arr[section_index],
+                &p_sections->sections_arr[section_index],
                 section_index
             );
     }

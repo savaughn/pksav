@@ -22,18 +22,18 @@
 
 #include <string.h>
 
-union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
-    uint8_t* buffer,
+union pksav_gba_save_slot* pksav_gba_get_active_save_slot_ptr(
+    uint8_t* p_buffer,
     size_t buffer_len
 )
 {
-    assert(buffer != NULL);
+    assert(p_buffer != NULL);
 
-    union pksav_gba_save_slot* active_save_slot_ptr = NULL;
+    union pksav_gba_save_slot* p_active_save_slot = NULL;
 
     if(buffer_len >= PKSAV_GBA_SAVE_SLOT_SIZE*2)
     {
-        union pksav_gba_save_slot* save_slots = (union pksav_gba_save_slot*)buffer;
+        union pksav_gba_save_slot* save_slots = (union pksav_gba_save_slot*)p_buffer;
         uint32_t save_index1 = pksav_littleendian32(
                                    save_slots[0].section0.footer.save_index
                                );
@@ -43,40 +43,40 @@ union pksav_gba_save_slot* _pksav_gba_get_active_save_slot_ptr(
 
         if(save_index1 > save_index2)
         {
-            active_save_slot_ptr = &save_slots[0];
+            p_active_save_slot = &save_slots[0];
         }
         else
         {
-            active_save_slot_ptr = &save_slots[1];
+            p_active_save_slot = &save_slots[1];
         }
     }
     else if(buffer_len >= PKSAV_GBA_SAVE_SLOT_SIZE)
     {
-        active_save_slot_ptr = (union pksav_gba_save_slot*)buffer;
+        p_active_save_slot = (union pksav_gba_save_slot*)p_buffer;
     }
 
-    return active_save_slot_ptr;
+    return p_active_save_slot;
 }
 
 enum pksav_error pksav_gba_get_buffer_save_type(
     const uint8_t* buffer,
     size_t buffer_len,
-    enum pksav_gba_save_type* save_type_out
+    enum pksav_gba_save_type* p_save_type_out
 )
 {
-    if(!buffer || !save_type_out)
+    if(!buffer || !p_save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    *save_type_out = PKSAV_GBA_SAVE_TYPE_NONE;
-    const union pksav_gba_save_slot* save_slot_ptr = _pksav_gba_get_active_save_slot_ptr(
-                                                          (uint8_t*)buffer,
-                                                          buffer_len
-                                                     );
-    if(save_slot_ptr != NULL)
+    *p_save_type_out = PKSAV_GBA_SAVE_TYPE_NONE;
+    const union pksav_gba_save_slot* p_save_slot = pksav_gba_get_active_save_slot_ptr(
+                                                       (uint8_t*)buffer,
+                                                       buffer_len
+                                                   );
+    if(p_save_slot != NULL)
     {
         // At this point, we know the buffer is large enough to be a save, so
         // now to validate the sections.
@@ -89,11 +89,11 @@ enum pksav_error pksav_gba_get_buffer_save_type(
             (section_index < PKSAV_GBA_NUM_SAVE_SECTIONS) && is_save_valid;
             ++section_index)
         {
-            const struct pksav_gba_section_footer* section_footer_ptr =
-                &save_slot_ptr->sections_arr[section_index].footer;
+            const struct pksav_gba_section_footer* p_section_footer =
+                &p_save_slot->sections_arr[section_index].footer;
 
-            if((section_footer_ptr->section_id > (PKSAV_GBA_NUM_SAVE_SECTIONS-1)) ||
-               (pksav_littleendian32(section_footer_ptr->validation) != PKSAV_GBA_VALIDATION_MAGIC))
+            if((p_section_footer->section_id > (PKSAV_GBA_NUM_SAVE_SECTIONS-1)) ||
+               (pksav_littleendian32(p_section_footer->validation) != PKSAV_GBA_VALIDATION_MAGIC))
             {
                 is_save_valid = false;
             }
@@ -104,7 +104,7 @@ enum pksav_error pksav_gba_get_buffer_save_type(
             union pksav_gba_save_slot unshuffled_save_slots;
             uint8_t section_nums[14] = {0}; // Unused
             pksav_gba_save_unshuffle_sections(
-                save_slot_ptr,
+                p_save_slot,
                 &unshuffled_save_slots,
                 section_nums
             );
@@ -169,7 +169,7 @@ enum pksav_error pksav_gba_get_buffer_save_type(
 
                 if(is_save_valid)
                 {
-                    *save_type_out = save_type;
+                    *p_save_type_out = save_type;
                 }
             }
         }
@@ -179,40 +179,40 @@ enum pksav_error pksav_gba_get_buffer_save_type(
 }
 
 enum pksav_error pksav_gba_get_file_save_type(
-    const char* filepath,
-    enum pksav_gba_save_type* save_type_out
+    const char* p_filepath,
+    enum pksav_gba_save_type* p_save_type_out
 )
 {
-    if(!filepath || !save_type_out)
+    if(!p_filepath || !p_save_type_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t* file_buffer = NULL;
+    uint8_t* p_file_buffer = NULL;
     size_t buffer_len = 0;
     error = pksav_fs_read_file_to_buffer(
-                filepath,
-                &file_buffer,
+                p_filepath,
+                &p_file_buffer,
                 &buffer_len
             );
     if(!error)
     {
-        assert(file_buffer != NULL);
+        assert(p_file_buffer != NULL);
 
         enum pksav_gba_save_type save_type = PKSAV_GBA_SAVE_TYPE_NONE;
         error = pksav_gba_get_buffer_save_type(
-                    file_buffer,
+                    p_file_buffer,
                     buffer_len,
                     &save_type
                 );
-        free(file_buffer);
+        free(p_file_buffer);
 
         // Only return a result upon success.
         if(!error)
         {
-            *save_type_out = save_type;
+            *p_save_type_out = save_type;
         }
     }
 
@@ -220,200 +220,200 @@ enum pksav_error pksav_gba_get_file_save_type(
 }
 
 static void _pksav_gba_set_save_pointers(
-    struct pksav_gba_save* gba_save_ptr,
+    struct pksav_gba_save* p_gba_save,
     uint8_t* buffer,
     size_t buffer_len,
     bool should_alloc_internal
 )
 {
-    assert(gba_save_ptr != NULL);
-    assert(gba_save_ptr->save_type >= PKSAV_GBA_SAVE_TYPE_RS);
-    assert(gba_save_ptr->save_type <= PKSAV_GBA_SAVE_TYPE_FRLG);
+    assert(p_gba_save != NULL);
+    assert(p_gba_save->save_type >= PKSAV_GBA_SAVE_TYPE_RS);
+    assert(p_gba_save->save_type <= PKSAV_GBA_SAVE_TYPE_FRLG);
     assert(buffer != NULL);
 
     // Offsets
-    const size_t* section0_offsets_ptr = PKSAV_GBA_SAVE_SECTION0_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section1_offsets_ptr = PKSAV_GBA_SAVE_SECTION1_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section2_offsets_ptr = PKSAV_GBA_SAVE_SECTION2_OFFSETS[gba_save_ptr->save_type-1];
-    const size_t* section4_offsets_ptr = PKSAV_GBA_SAVE_SECTION4_OFFSETS[gba_save_ptr->save_type-1];
+    const size_t* section0_offsets_ptr = PKSAV_GBA_SAVE_SECTION0_OFFSETS[p_gba_save->save_type-1];
+    const size_t* section1_offsets_ptr = PKSAV_GBA_SAVE_SECTION1_OFFSETS[p_gba_save->save_type-1];
+    const size_t* section2_offsets_ptr = PKSAV_GBA_SAVE_SECTION2_OFFSETS[p_gba_save->save_type-1];
+    const size_t* section4_offsets_ptr = PKSAV_GBA_SAVE_SECTION4_OFFSETS[p_gba_save->save_type-1];
 
     // At this point, we should know the save is valid, so we should be able
     // to get valid sections.
-    union pksav_gba_save_slot* save_slot_ptr = _pksav_gba_get_active_save_slot_ptr(
+    union pksav_gba_save_slot* p_save_slot = pksav_gba_get_active_save_slot_ptr(
                                                     buffer,
                                                     buffer_len
                                                );
-    assert(save_slot_ptr != NULL);
+    assert(p_save_slot != NULL);
 
     // Internal
     if(should_alloc_internal)
     {
-        gba_save_ptr->internal_ptr = calloc(sizeof(struct pksav_gba_save_internal), 1);
+        p_gba_save->p_internal = calloc(sizeof(struct pksav_gba_save_internal), 1);
     }
 
-    struct pksav_gba_save_internal* internal_ptr = gba_save_ptr->internal_ptr;
-    internal_ptr->raw_save_ptr = buffer;
-    internal_ptr->save_len = buffer_len;
-    internal_ptr->is_save_from_first_slot = ((uint8_t*)save_slot_ptr == buffer);
+    struct pksav_gba_save_internal* p_internal = p_gba_save->p_internal;
+    p_internal->p_raw_save = buffer;
+    p_internal->save_len = buffer_len;
+    p_internal->is_save_from_first_slot = ((uint8_t*)p_save_slot == buffer);
 
     pksav_gba_save_unshuffle_sections(
-        save_slot_ptr,
-        &internal_ptr->unshuffled_save_slot,
-        internal_ptr->shuffled_section_nums
+        p_save_slot,
+        &p_internal->unshuffled_save_slot,
+        p_internal->shuffled_section_nums
     );
 
     // Pointers to relevant sections
-    struct pksav_gba_save_section* section0_ptr = &internal_ptr->unshuffled_save_slot.section0;
-    struct pksav_gba_trainer_info_internal* trainer_info_internal_ptr =
-        (struct pksav_gba_trainer_info_internal*)section0_ptr;
+    struct pksav_gba_save_section* section0 = &p_internal->unshuffled_save_slot.section0;
+    struct pksav_gba_trainer_info_internal* p_trainer_info_internal =
+        (struct pksav_gba_trainer_info_internal*)section0;
 
-    struct pksav_gba_save_section* section1_ptr = &internal_ptr->unshuffled_save_slot.section1;
-    struct pksav_gba_save_section* section2_ptr = &internal_ptr->unshuffled_save_slot.section2;
-    struct pksav_gba_save_section* section4_ptr = &internal_ptr->unshuffled_save_slot.section4;
+    struct pksav_gba_save_section* section1 = &p_internal->unshuffled_save_slot.section1;
+    struct pksav_gba_save_section* section2 = &p_internal->unshuffled_save_slot.section2;
+    struct pksav_gba_save_section* section4 = &p_internal->unshuffled_save_slot.section4;
 
     // Security key, used in decryption
-    internal_ptr->security_key_ptr = &section0_ptr->data32[
-                                         section0_offsets_ptr[PKSAV_GBA_SECURITY_KEY1]/4
-                                     ];
+    p_internal->p_security_key = &section0->data32[
+                                     section0_offsets_ptr[PKSAV_GBA_SECURITY_KEY1]/4
+                                 ];
 
     // Time played
-    gba_save_ptr->time_played_ptr = &trainer_info_internal_ptr->time_played;
+    p_gba_save->p_time_played = &p_trainer_info_internal->time_played;
 
     // Options
-    struct pksav_gba_options* options_ptr = &gba_save_ptr->options;
+    struct pksav_gba_options* p_options = &p_gba_save->options;
 
-    options_ptr->button_mode_ptr = &section0_ptr->data8[
-                                       section0_offsets_ptr[PKSAV_GBA_OPTIONS_BUTTON_MODE]
-                                   ];
-    options_ptr->text_options_ptr = &section0_ptr->data8[
-                                        section0_offsets_ptr[PKSAV_GBA_OPTIONS_TEXT]
-                                    ];
-    options_ptr->sound_battle_options_ptr = &section0_ptr->data8[
-                                                section0_offsets_ptr[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
-                                            ];
+    p_options->p_button_mode = &section0->data8[
+                                   section0_offsets_ptr[PKSAV_GBA_OPTIONS_BUTTON_MODE]
+                               ];
+    p_options->p_text_options = &section0->data8[
+                                    section0_offsets_ptr[PKSAV_GBA_OPTIONS_TEXT]
+                                ];
+    p_options->p_sound_battle_options = &section0->data8[
+                                            section0_offsets_ptr[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
+                                        ];
 
     // Item storage
-    struct pksav_gba_item_storage* item_storage_ptr = &gba_save_ptr->item_storage;
+    struct pksav_gba_item_storage* p_item_storage = &p_gba_save->item_storage;
 
-    item_storage_ptr->bag_ptr = (union pksav_gba_item_bag*)(
-                                    &section1_ptr->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
-                                );
+    p_item_storage->p_bag = (union pksav_gba_item_bag*)(
+                                &section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
+                            );
     pksav_gba_save_crypt_items(
-        item_storage_ptr->bag_ptr,
-        *internal_ptr->security_key_ptr,
-        gba_save_ptr->save_type
+        p_item_storage->p_bag,
+        *p_internal->p_security_key,
+        p_gba_save->save_type
     );
 
-    item_storage_ptr->pc_ptr = (struct pksav_gba_item_pc*)(
-                                    &section1_ptr->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
-                                );
+    p_item_storage->p_pc = (struct pksav_gba_item_pc*)(
+                               &section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
+                           );
 
     // Pokémon storage
-    struct pksav_gba_pokemon_storage* pokemon_storage_ptr = &gba_save_ptr->pokemon_storage;
+    struct pksav_gba_pokemon_storage* p_pokemon_storage = &p_gba_save->pokemon_storage;
 
-    pokemon_storage_ptr->party_ptr = (struct pksav_gba_pokemon_party*)(
-                                         &section1_ptr->data8[section1_offsets_ptr[PKSAV_GBA_POKEMON_PARTY]]
-                                     );
+    p_pokemon_storage->p_party = (struct pksav_gba_pokemon_party*)(
+                                     &section1->data8[section1_offsets_ptr[PKSAV_GBA_POKEMON_PARTY]]
+                                 );
     for(size_t party_index = 0;
         party_index < PKSAV_GBA_PARTY_NUM_POKEMON;
         ++party_index)
     {
         pksav_gba_crypt_pokemon(
-            &pokemon_storage_ptr->party_ptr->party[party_index].pc_data,
+            &p_pokemon_storage->p_party->party[party_index].pc_data,
             false // should_encrypt
         );
     }
 
     pksav_gba_save_load_pokemon_pc(
-        &internal_ptr->unshuffled_save_slot,
-        &internal_ptr->consolidated_pokemon_pc
+        &p_internal->unshuffled_save_slot,
+        &p_internal->consolidated_pokemon_pc
     );
-    pokemon_storage_ptr->pc_ptr = &internal_ptr->consolidated_pokemon_pc;
+    p_pokemon_storage->p_pc = &p_internal->consolidated_pokemon_pc;
 
     // Pokédex
-    struct pksav_gba_pokedex* pokedex_ptr = &gba_save_ptr->pokedex;
+    struct pksav_gba_pokedex* p_pokedex = &p_gba_save->pokedex;
 
-    pokedex_ptr->seen_ptrA = &section0_ptr->data8[
-                                 section0_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_A]
-                             ];
-    pokedex_ptr->seen_ptrB = &section1_ptr->data8[
-                                 section1_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_B]
-                             ];
-    pokedex_ptr->seen_ptrC = &section4_ptr->data8[
-                                 section4_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_C]
-                             ];
-    pokedex_ptr->owned_ptr = &section0_ptr->data8[
-                                 section0_offsets_ptr[PKSAV_GBA_POKEDEX_OWNED]
-                             ];
+    p_pokedex->p_seenA = &section0->data8[
+                             section0_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_A]
+                         ];
+    p_pokedex->p_seenB = &section1->data8[
+                             section1_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_B]
+                         ];
+    p_pokedex->p_seenC = &section4->data8[
+                             section4_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_C]
+                         ];
+    p_pokedex->p_owned = &section0->data8[
+                             section0_offsets_ptr[PKSAV_GBA_POKEDEX_OWNED]
+                         ];
 
-    if(gba_save_ptr->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+    if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
-        pokedex_ptr->frlg_nat_pokedex_unlocked_ptrA =
-            &section0_ptr->data8[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
+        p_pokedex->p_frlg_nat_pokedex_unlockedA =
+            &section0->data8[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
 
-        pokedex_ptr->rse_nat_pokedex_unlocked_ptrA = NULL;
+        p_pokedex->p_rse_nat_pokedex_unlockedA = NULL;
     }
     else
     {
-        pokedex_ptr->rse_nat_pokedex_unlocked_ptrA =
-            &section0_ptr->data16[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
+        p_pokedex->p_rse_nat_pokedex_unlockedA =
+            &section0->data16[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
 
-        pokedex_ptr->frlg_nat_pokedex_unlocked_ptrA = NULL;
+        p_pokedex->p_frlg_nat_pokedex_unlockedA = NULL;
     }
 
-    pokedex_ptr->nat_pokedex_unlocked_ptrB =
-        &section2_ptr->data8[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
+    p_pokedex->p_nat_pokedex_unlockedB =
+        &section2->data8[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
 
-    pokedex_ptr->nat_pokedex_unlocked_ptrC =
-        &section2_ptr->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
+    p_pokedex->p_nat_pokedex_unlockedC =
+        &section2->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
 
     // Trainer Info
-    struct pksav_gba_trainer_info* trainer_info_ptr = &gba_save_ptr->trainer_info;
+    struct pksav_gba_trainer_info* p_trainer_info = &p_gba_save->trainer_info;
 
-    trainer_info_ptr->id_ptr = &trainer_info_internal_ptr->id;
-    trainer_info_ptr->name_ptr = trainer_info_internal_ptr->name;
-    trainer_info_ptr->gender_ptr = &trainer_info_internal_ptr->gender;
+    p_trainer_info->p_id     = &p_trainer_info_internal->id;
+    p_trainer_info->p_name   = p_trainer_info_internal->name;
+    p_trainer_info->p_gender = &p_trainer_info_internal->gender;
 
-    trainer_info_ptr->money_ptr = &section1_ptr->data32[
-                                      section1_offsets_ptr[PKSAV_GBA_MONEY]/4
-                                  ];
-    *trainer_info_ptr->money_ptr ^= *internal_ptr->security_key_ptr;
+    p_trainer_info->p_money = &section1->data32[
+                                  section1_offsets_ptr[PKSAV_GBA_MONEY]/4
+                              ];
+    *p_trainer_info->p_money ^= *p_internal->p_security_key;
 
     // Misc Fields
-    struct pksav_gba_misc_fields* misc_fields_ptr = &gba_save_ptr->misc_fields;
+    struct pksav_gba_misc_fields* p_misc_fields = &p_gba_save->misc_fields;
 
-    if(gba_save_ptr->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+    if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
-        misc_fields_ptr->rival_name_ptr = &section4_ptr->data8[
-                                              section4_offsets_ptr[PKSAV_GBA_FRLG_RIVAL_NAME]
-                                          ];
+        p_misc_fields->p_rival_name = &section4->data8[
+                                          section4_offsets_ptr[PKSAV_GBA_FRLG_RIVAL_NAME]
+                                      ];
     }
     else
     {
-        misc_fields_ptr->rival_name_ptr = NULL;
+        p_misc_fields->p_rival_name = NULL;
     }
 
-    misc_fields_ptr->casino_coins_ptr = &section1_ptr->data16[
-                                            section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
-                                        ];
-    *misc_fields_ptr->casino_coins_ptr ^= (*internal_ptr->security_key_ptr & 0xFFFF);
+    p_misc_fields->p_casino_coins = &section1->data16[
+                                        section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
+                                    ];
+    *p_misc_fields->p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);
 }
 
 static enum pksav_error _pksav_gba_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
     bool is_buffer_ours,
-    struct pksav_gba_save* gba_save_out
+    struct pksav_gba_save* p_gba_save_out
 )
 {
-    assert(gba_save_out != NULL);
-    assert(buffer != NULL);
+    assert(p_buffer != NULL);
+    assert(p_gba_save_out != NULL);
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     enum pksav_gba_save_type save_type = PKSAV_GBA_SAVE_TYPE_NONE;
     error = pksav_gba_get_buffer_save_type(
-                buffer,
+                p_buffer,
                 buffer_len,
                 &save_type
             );
@@ -421,17 +421,17 @@ static enum pksav_error _pksav_gba_load_save_from_buffer(
     {
         if(save_type != PKSAV_GBA_SAVE_TYPE_NONE)
         {
-            gba_save_out->save_type = save_type;
+            p_gba_save_out->save_type = save_type;
             _pksav_gba_set_save_pointers(
-                gba_save_out,
-                buffer,
+                p_gba_save_out,
+                p_buffer,
                 buffer_len,
                 true // should_alloc_internal
             );
 
             // Internal
-            struct pksav_gba_save_internal* internal_ptr = gba_save_out->internal_ptr;
-            internal_ptr->is_buffer_ours = is_buffer_ours;
+            struct pksav_gba_save_internal* p_internal = p_gba_save_out->p_internal;
+            p_internal->is_buffer_ours = is_buffer_ours;
         }
         else
         {
@@ -443,57 +443,57 @@ static enum pksav_error _pksav_gba_load_save_from_buffer(
 }
 
 enum pksav_error pksav_gba_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
-    struct pksav_gba_save* gba_save_out
+    struct pksav_gba_save* p_gba_save_out
 )
 {
-    if(!buffer || !gba_save_out)
+    if(!p_buffer || !p_gba_save_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     return _pksav_gba_load_save_from_buffer(
-               buffer,
+               p_buffer,
                buffer_len,
                false, // is_buffer_ours
-               gba_save_out
+               p_gba_save_out
            );
 }
 
 enum pksav_error pksav_gba_load_save_from_file(
-    const char* filepath,
-    struct pksav_gba_save* gba_save_out
+    const char* p_filepath,
+    struct pksav_gba_save* p_gba_save_out
 )
 {
-    if(!filepath || !gba_save_out)
+    if(!p_filepath || !p_gba_save_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    uint8_t* file_buffer = NULL;
+    uint8_t* p_file_buffer = NULL;
     size_t buffer_len = 0;
     error = pksav_fs_read_file_to_buffer(
-                filepath,
-                &file_buffer,
+                p_filepath,
+                &p_file_buffer,
                 &buffer_len
             );
 
     if(!error)
     {
         error = _pksav_gba_load_save_from_buffer(
-                    file_buffer,
+                    p_file_buffer,
                     buffer_len,
                     true, // is_buffer_ours
-                    gba_save_out
+                    p_gba_save_out
                 );
         if(error)
         {
             // We made this buffer, so it's on us to free it if there's
             // an error.
-            free(file_buffer);
+            free(p_file_buffer);
         }
     }
 
@@ -501,24 +501,24 @@ enum pksav_error pksav_gba_load_save_from_file(
 }
 
 enum pksav_error pksav_gba_save_save(
-    const char* filepath,
-    struct pksav_gba_save* gba_save_ptr
+    const char* p_filepath,
+    struct pksav_gba_save* p_gba_save
 )
 {
-    if(!filepath || !gba_save_ptr)
+    if(!p_filepath || !p_gba_save)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
     enum pksav_error error = PKSAV_ERROR_NONE;
 
-    struct pksav_gba_save_internal* internal_ptr = gba_save_ptr->internal_ptr;
+    struct pksav_gba_save_internal* p_internal = p_gba_save->p_internal;
 
     // Item Storage
     pksav_gba_save_crypt_items(
-        gba_save_ptr->item_storage.bag_ptr,
-        *internal_ptr->security_key_ptr,
-        gba_save_ptr->save_type
+        p_gba_save->item_storage.p_bag,
+        *p_internal->p_security_key,
+        p_gba_save->save_type
     );
 
     // Pokémon Storage
@@ -527,49 +527,49 @@ enum pksav_error pksav_gba_save_save(
         ++party_index)
     {
         pksav_gba_crypt_pokemon(
-            &gba_save_ptr->pokemon_storage.party_ptr->party[party_index].pc_data,
+            &p_gba_save->pokemon_storage.p_party->party[party_index].pc_data,
             true // should_encrypt
         );
     }
 
     pksav_gba_save_save_pokemon_pc(
-        &internal_ptr->consolidated_pokemon_pc,
-        &internal_ptr->unshuffled_save_slot
+        &p_internal->consolidated_pokemon_pc,
+        &p_internal->unshuffled_save_slot
     );
 
     // Trainer Info
-    *gba_save_ptr->trainer_info.money_ptr ^= *internal_ptr->security_key_ptr;
+    *p_gba_save->trainer_info.p_money ^= *p_internal->p_security_key;
 
     // Misc Fields
-    *gba_save_ptr->misc_fields.casino_coins_ptr ^= (*internal_ptr->security_key_ptr & 0xFFFF);
+    *p_gba_save->misc_fields.p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);
 
     // Save into the less recent save slot if the save file is large enough
     // for two slots.
-    union pksav_gba_save_slot* raw_sections_ptr = (union pksav_gba_save_slot*)(
-                                                      internal_ptr->raw_save_ptr
+    union pksav_gba_save_slot* p_raw_sections = (union pksav_gba_save_slot*)(
+                                                      p_internal->p_raw_save
                                                   );
-    union pksav_gba_save_slot* output_save_slot_ptr = NULL;
-    if(internal_ptr->save_len >= PKSAV_GBA_SAVE_SLOT_SIZE*2)
+    union pksav_gba_save_slot* p_output_save_slot = NULL;
+    if(p_internal->save_len >= PKSAV_GBA_SAVE_SLOT_SIZE*2)
     {
-        output_save_slot_ptr = internal_ptr->is_save_from_first_slot ? &raw_sections_ptr[1]
-                                                                     : &raw_sections_ptr[0];
+        p_output_save_slot = p_internal->is_save_from_first_slot ? &p_raw_sections[1]
+                                                                 : &p_raw_sections[0];
     }
     else
     {
-        output_save_slot_ptr = &raw_sections_ptr[0];
+        p_output_save_slot = &p_raw_sections[0];
     }
 
 
-    pksav_gba_set_section_checksums(&internal_ptr->unshuffled_save_slot);
+    pksav_gba_set_section_checksums(&p_internal->unshuffled_save_slot);
     pksav_gba_save_shuffle_sections(
-        &internal_ptr->unshuffled_save_slot,
-        output_save_slot_ptr,
-        internal_ptr->shuffled_section_nums
+        &p_internal->unshuffled_save_slot,
+        p_output_save_slot,
+        p_internal->shuffled_section_nums
     );
 
     // Increment the save index of the new save index.
     uint32_t save_index = pksav_littleendian32(
-                              output_save_slot_ptr->section0.footer.save_index
+                              p_output_save_slot->section0.footer.save_index
                           );
     ++save_index;
 
@@ -577,23 +577,23 @@ enum pksav_error pksav_gba_save_save(
         section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
         ++section_index)
     {
-        output_save_slot_ptr->sections_arr[section_index].footer.save_index =
+        p_output_save_slot->sections_arr[section_index].footer.save_index =
             pksav_littleendian32(save_index);
     }
 
     error = pksav_fs_write_buffer_to_file(
-                filepath,
-                internal_ptr->raw_save_ptr,
-                internal_ptr->save_len
+                p_filepath,
+                p_internal->p_raw_save,
+                p_internal->save_len
             );
 
     if(!error)
     {
         // With everything saved to the new slot, reset the pointers.
         _pksav_gba_set_save_pointers(
-            gba_save_ptr,
-            internal_ptr->raw_save_ptr,
-            internal_ptr->save_len,
+            p_gba_save,
+            p_internal->p_raw_save,
+            p_internal->save_len,
             false // should_alloc_internal
         );
     }
@@ -602,28 +602,24 @@ enum pksav_error pksav_gba_save_save(
 }
 
 enum pksav_error pksav_gba_free_save(
-    struct pksav_gba_save* gba_save_ptr
+    struct pksav_gba_save* p_gba_save
 )
 {
-    if(!gba_save_ptr)
+    if(!p_gba_save)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    struct pksav_gba_save_internal* internal_ptr = gba_save_ptr->internal_ptr;
-    if(internal_ptr->is_buffer_ours)
+    struct pksav_gba_save_internal* p_internal = p_gba_save->p_internal;
+    if(p_internal->is_buffer_ours)
     {
-        free(internal_ptr->raw_save_ptr);
+        free(p_internal->p_raw_save);
     }
-    free(internal_ptr);
+    free(p_internal);
 
     // Everything else is a pointer or an enum with a default value of 0,
     // so this one memset should be fine.
-    memset(
-        gba_save_ptr,
-        0,
-        sizeof(*gba_save_ptr)
-    );
+    memset(p_gba_save, 0, sizeof(*p_gba_save));
 
     return PKSAV_ERROR_NONE;
 }

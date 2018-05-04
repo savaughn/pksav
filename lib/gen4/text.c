@@ -213,25 +213,25 @@ static const wchar_t PKSAV_GEN4_CHAR_MAP2[] =
 static const size_t PKSAV_GEN4_CHAR_MAP2_SIZE = sizeof(PKSAV_GEN4_CHAR_MAP2)/sizeof(wchar_t);
 
 static enum pksav_error _pksav_gen4_import_widetext(
-    const uint16_t* input_buffer,
-    wchar_t* output_widetext,
+    const uint16_t* p_input_buffer,
+    wchar_t* p_output_widetext,
     size_t num_chars
 )
 {
-    assert(input_buffer != NULL);
-    assert(output_widetext != NULL);
+    assert(p_input_buffer != NULL);
+    assert(p_output_widetext != NULL);
 
-    memset(output_widetext, 0, sizeof(wchar_t)*num_chars);
+    memset(p_output_widetext, 0, sizeof(wchar_t)*num_chars);
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
-        if(input_buffer[char_index] < 0x400)
+        if(p_input_buffer[char_index] < 0x400)
         {
-            output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP1[input_buffer[char_index]];
+            p_output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP1[p_input_buffer[char_index]];
         }
-        else if(input_buffer[char_index] <= PKSAV_GEN4_CHAR_MAP2_SIZE)
+        else if(p_input_buffer[char_index] <= PKSAV_GEN4_CHAR_MAP2_SIZE)
         {
-            output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP2[input_buffer[char_index]];
+            p_output_widetext[char_index] = PKSAV_GEN4_CHAR_MAP2[p_input_buffer[char_index]];
         }
         else
         {
@@ -243,29 +243,29 @@ static enum pksav_error _pksav_gen4_import_widetext(
 }
 
 static enum pksav_error _pksav_gen4_export_widetext(
-    const wchar_t* input_widetext,
-    uint16_t* output_buffer,
+    const wchar_t* p_input_widetext,
+    uint16_t* p_output_buffer,
     size_t num_chars
 )
 {
-    assert(input_widetext != NULL);
-    assert(output_buffer != NULL);
+    assert(p_input_widetext != NULL);
+    assert(p_output_buffer != NULL);
 
-    memset(output_buffer, 0xFF, sizeof(uint16_t)*num_chars);
+    memset(p_output_buffer, 0xFF, sizeof(uint16_t)*num_chars);
 
     for(size_t char_index = 0; char_index < num_chars; ++char_index)
     {
         ssize_t index = wchar_map_index(
                             PKSAV_GEN4_CHAR_MAP1,
                             PKSAV_GEN4_CHAR_MAP1_SIZE,
-                            input_widetext[char_index]
+                            p_input_widetext[char_index]
                         );
         if(index == -1)
         {
             index = wchar_map_index(
                         PKSAV_GEN4_CHAR_MAP2,
                         PKSAV_GEN4_CHAR_MAP2_SIZE,
-                        input_widetext[char_index]
+                        p_input_widetext[char_index]
                     );
             if(index == -1)
             {
@@ -273,10 +273,10 @@ static enum pksav_error _pksav_gen4_export_widetext(
             }
             else
             {
-                output_buffer[char_index] = (uint16_t)index;
+                p_output_buffer[char_index] = (uint16_t)index;
             }
         } else {
-            output_buffer[char_index] = (uint16_t)index;
+            p_output_buffer[char_index] = (uint16_t)index;
         }
     }
 
@@ -284,47 +284,47 @@ static enum pksav_error _pksav_gen4_export_widetext(
 }
 
 enum pksav_error pksav_gen4_import_text(
-    const uint16_t* input_buffer,
-    char* output_text,
+    const uint16_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 )
 {
-    if(!input_buffer || !output_text)
+    if(!p_input_buffer || !p_output_text)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* p_widetext = malloc(sizeof(wchar_t)*num_chars);
     _pksav_gen4_import_widetext(
-        input_buffer, widetext, num_chars
+        p_input_buffer, p_widetext, num_chars
     );
 
-    memset(output_text, 0, num_chars);
-    pksav_wcstombs(output_text, widetext, num_chars);
-    free(widetext);
+    memset(p_output_text, 0, num_chars);
+    pksav_wcstombs(p_output_text, p_widetext, num_chars);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }
 
 enum pksav_error pksav_gen4_export_text(
-    const char* input_text,
-    uint16_t* output_buffer,
+    const char* p_input_text,
+    uint16_t* p_output_buffer,
     size_t num_chars
 )
 {
-    if(!input_text || !output_buffer)
+    if(!p_input_text || !p_output_buffer)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = malloc(sizeof(wchar_t)*num_chars);
-    pksav_mbstowcs(widetext, input_text, num_chars);
+    wchar_t* p_widetext = malloc(sizeof(wchar_t)*num_chars);
+    pksav_mbstowcs(p_widetext, p_input_text, num_chars);
 
     _pksav_gen4_export_widetext(
-        widetext, output_buffer, num_chars
+        p_widetext, p_output_buffer, num_chars
     );
 
-    free(widetext);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }

@@ -23,25 +23,25 @@ extern "C" {
 #endif
 
 uint16_t pksav_gba_get_pokemon_checksum(
-    const struct pksav_gba_pc_pokemon* gba_pokemon_ptr
+    const struct pksav_gba_pc_pokemon* p_gba_pokemon
 );
 
 static inline void pksav_gba_set_pokemon_checksum(
-    struct pksav_gba_pc_pokemon* gba_pokemon_ptr
+    struct pksav_gba_pc_pokemon* p_gba_pokemon
 )
 {
-    assert(gba_pokemon_ptr != NULL);
+    assert(p_gba_pokemon != NULL);
 
-    gba_pokemon_ptr->checksum = pksav_gba_get_pokemon_checksum(gba_pokemon_ptr);
+    p_gba_pokemon->checksum = pksav_gba_get_pokemon_checksum(p_gba_pokemon);
 }
 
 uint16_t pksav_gba_get_section_checksum(
-    const struct pksav_gba_save_section* section_ptr,
+    const struct pksav_gba_save_section* p_section,
     size_t section_num
 );
 
 void pksav_gba_set_section_checksums(
-    union pksav_gba_save_slot* sections_ptr
+    union pksav_gba_save_slot* p_sections
 );
 
 #ifdef __cplusplus

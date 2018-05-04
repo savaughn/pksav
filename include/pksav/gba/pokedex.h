@@ -25,18 +25,18 @@
 
 struct pksav_gba_pokedex
 {
-    uint8_t* seen_ptrA;
-    uint8_t* seen_ptrB;
-    uint8_t* seen_ptrC;
+    uint8_t* p_seenA;
+    uint8_t* p_seenB;
+    uint8_t* p_seenC;
 
-    uint8_t* owned_ptr;
+    uint8_t* p_owned;
 
-    uint16_t* rse_nat_pokedex_unlocked_ptrA;
-    uint8_t* frlg_nat_pokedex_unlocked_ptrA;
+    uint16_t* p_rse_nat_pokedex_unlockedA;
+    uint8_t* p_frlg_nat_pokedex_unlockedA;
 
-    uint8_t* nat_pokedex_unlocked_ptrB;
+    uint8_t* p_nat_pokedex_unlockedB;
 
-    uint16_t* nat_pokedex_unlocked_ptrC;
+    uint16_t* p_nat_pokedex_unlockedC;
 };
 
 #ifdef __cplusplus
@@ -44,13 +44,13 @@ extern "C" {
 #endif
 
 PKSAV_API enum pksav_error pksav_gba_pokedex_set_has_seen(
-    struct pksav_gba_pokedex* gba_pokedex_ptr,
+    struct pksav_gba_pokedex* p_gba_pokedex,
     uint16_t pokedex_num,
     bool has_seen
 );
 
 PKSAV_API enum pksav_error pksav_gba_pokedex_set_national_pokedex_unlocked(
-    struct pksav_gba_pokedex* gba_pokedex_ptr,
+    struct pksav_gba_pokedex* p_gba_pokedex,
     enum pksav_gba_save_type save_type,
     bool is_unlocked
 );

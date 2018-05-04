@@ -180,7 +180,7 @@ union pksav_gba_save_slot
 
 struct pksav_gba_save_internal
 {
-    uint8_t* raw_save_ptr;
+    uint8_t* p_raw_save;
 
     // There are multiple storage formats, so we can't just use our
     // "minimum size" #define.
@@ -191,7 +191,7 @@ struct pksav_gba_save_internal
     uint8_t shuffled_section_nums[PKSAV_GBA_NUM_SAVE_SECTIONS];
 
     struct pksav_gba_pokemon_pc consolidated_pokemon_pc;
-    uint32_t* security_key_ptr;
+    uint32_t* p_security_key;
 
     bool is_buffer_ours;
 };

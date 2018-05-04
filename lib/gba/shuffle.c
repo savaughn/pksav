@@ -40,21 +40,21 @@ void pksav_gba_save_unshuffle_sections(
 void pksav_gba_save_shuffle_sections(
     const union pksav_gba_save_slot* save_slot_in,
     union pksav_gba_save_slot* save_slot_out,
-    const uint8_t* section_nums_ptr
+    const uint8_t* p_section_nums
 )
 {
     assert(save_slot_in != NULL);
     assert(save_slot_out != NULL);
-    assert(section_nums_ptr != NULL);
+    assert(p_section_nums != NULL);
 
     for(size_t section_index = 0;
         section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
         ++section_index)
     {
-        assert(section_nums_ptr[section_index] < PKSAV_GBA_NUM_SAVE_SECTIONS);
+        assert(p_section_nums[section_index] < PKSAV_GBA_NUM_SAVE_SECTIONS);
 
         save_slot_out->sections_arr[section_index] =
-            save_slot_in->sections_arr[section_nums_ptr[section_index]];
+            save_slot_in->sections_arr[p_section_nums[section_index]];
     }
 }
 
@@ -73,18 +73,18 @@ void pksav_gba_save_load_pokemon_pc(
     );
 
     // Copy data from sections into contiguous data structure.
-    uint8_t* dst_ptr = (uint8_t*)pokemon_pc_out;
+    uint8_t* p_dst = (uint8_t*)pokemon_pc_out;
     for(size_t section_index = 5;
         section_index <= 13;
         ++section_index)
     {
         memcpy(
-            dst_ptr,
+            p_dst,
             gba_save_slot->sections_arr[section_index].data8,
             pksav_gba_section_sizes[section_index]
         );
 
-        dst_ptr += pksav_gba_section_sizes[section_index];
+        p_dst += pksav_gba_section_sizes[section_index];
     }
 
     // Decrypt Pokémon.
@@ -105,11 +105,11 @@ void pksav_gba_save_load_pokemon_pc(
 }
 
 void pksav_gba_save_save_pokemon_pc(
-    struct pksav_gba_pokemon_pc* pokemon_pc_ptr,
+    struct pksav_gba_pokemon_pc* p_pokemon_pc,
     union pksav_gba_save_slot* gba_save_slot_out
 )
 {
-    assert(pokemon_pc_ptr != NULL);
+    assert(p_pokemon_pc != NULL);
     assert(gba_save_slot_out != NULL);
 
     // Set Pokémon checksum and encrypt.
@@ -122,26 +122,26 @@ void pksav_gba_save_save_pokemon_pc(
             ++pokemon_index)
         {
             pksav_gba_set_pokemon_checksum(
-                &pokemon_pc_ptr->boxes[box_index].entries[pokemon_index]
+                &p_pokemon_pc->boxes[box_index].entries[pokemon_index]
             );
             pksav_gba_crypt_pokemon(
-                &pokemon_pc_ptr->boxes[box_index].entries[pokemon_index],
+                &p_pokemon_pc->boxes[box_index].entries[pokemon_index],
                 true
             );
         }
     }
 
     // Copy contiguous data structure back into sections.
-    uint8_t* src_ptr = (uint8_t*)pokemon_pc_ptr;
+    uint8_t* p_src = (uint8_t*)p_pokemon_pc;
     for(size_t section_index = 5;
         section_index <= 13;
         ++section_index)
     {
         memcpy(
             gba_save_slot_out->sections_arr[section_index].data8,
-            src_ptr,
+            p_src,
             pksav_gba_section_sizes[section_index]
         );
-        src_ptr += pksav_gba_section_sizes[section_index];
+        p_src += pksav_gba_section_sizes[section_index];
     }
 }

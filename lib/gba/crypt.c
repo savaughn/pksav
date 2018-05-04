@@ -43,26 +43,26 @@ static const size_t GBA_BLOCK_ORDERS[24][4] =
 };
 
 void pksav_gba_crypt_pokemon(
-    struct pksav_gba_pc_pokemon* gba_pokemon_ptr,
+    struct pksav_gba_pc_pokemon* p_gba_pokemon,
     bool should_encrypt
 )
 {
-    assert(gba_pokemon_ptr != NULL);
+    assert(p_gba_pokemon != NULL);
 
-    union pksav_gba_pokemon_blocks_internal* gba_pokemon_internal_blocks_ptr =
-        (union pksav_gba_pokemon_blocks_internal*)&gba_pokemon_ptr->blocks;
+    union pksav_gba_pokemon_blocks_internal* p_gba_pokemon_internal_blocks =
+        (union pksav_gba_pokemon_blocks_internal*)&p_gba_pokemon->blocks;
 
-    uint32_t security_key = gba_pokemon_ptr->ot_id.id
-                          ^ gba_pokemon_ptr->personality;
+    uint32_t security_key = p_gba_pokemon->ot_id.id
+                          ^ p_gba_pokemon->personality;
 
     for(size_t index = 0;
         index < (PKSAV_GBA_POKEMON_ALL_BLOCKS_SIZE_BYTES/4);
         ++index)
     {
-        gba_pokemon_internal_blocks_ptr->blocks32[index] ^= security_key;
+        p_gba_pokemon_internal_blocks->blocks32[index] ^= security_key;
     }
 
-    size_t index         = gba_pokemon_ptr->personality % 24;
+    size_t index         = p_gba_pokemon->personality % 24;
     size_t attacks_index = GBA_BLOCK_ORDERS[index][0];
     size_t effort_index  = GBA_BLOCK_ORDERS[index][1];
     size_t growth_index  = GBA_BLOCK_ORDERS[index][2];
@@ -73,22 +73,22 @@ void pksav_gba_crypt_pokemon(
     {
         memcpy(
             &new_blocks_internal.blocks[growth_index],
-            &gba_pokemon_ptr->blocks.growth,
+            &p_gba_pokemon->blocks.growth,
             sizeof(struct pksav_gba_pokemon_growth_block)
         );
         memcpy(
             &new_blocks_internal.blocks[attacks_index],
-            &gba_pokemon_ptr->blocks.attacks,
+            &p_gba_pokemon->blocks.attacks,
             sizeof(struct pksav_gba_pokemon_attacks_block)
         );
         memcpy(
             &new_blocks_internal.blocks[effort_index],
-            &gba_pokemon_ptr->blocks.effort,
+            &p_gba_pokemon->blocks.effort,
             sizeof(struct pksav_gba_pokemon_effort_block)
         );
         memcpy(
             &new_blocks_internal.blocks[misc_index],
-            &gba_pokemon_ptr->blocks.misc,
+            &p_gba_pokemon->blocks.misc,
             sizeof(struct pksav_gba_pokemon_misc_block)
         );
     }
@@ -96,40 +96,40 @@ void pksav_gba_crypt_pokemon(
     {
         memcpy(
             &new_blocks_internal.by_name.growth,
-            &gba_pokemon_internal_blocks_ptr->blocks[growth_index],
+            &p_gba_pokemon_internal_blocks->blocks[growth_index],
             sizeof(struct pksav_gba_pokemon_growth_block)
         );
         memcpy(
             &new_blocks_internal.by_name.attacks,
-            &gba_pokemon_internal_blocks_ptr->blocks[attacks_index],
+            &p_gba_pokemon_internal_blocks->blocks[attacks_index],
             sizeof(struct pksav_gba_pokemon_attacks_block)
         );
         memcpy(
             &new_blocks_internal.by_name.effort,
-            &gba_pokemon_internal_blocks_ptr->blocks[effort_index],
+            &p_gba_pokemon_internal_blocks->blocks[effort_index],
             sizeof(struct pksav_gba_pokemon_effort_block)
         );
         memcpy(
             &new_blocks_internal.by_name.misc,
-            &gba_pokemon_internal_blocks_ptr->blocks[misc_index],
+            &p_gba_pokemon_internal_blocks->blocks[misc_index],
             sizeof(struct pksav_gba_pokemon_misc_block)
         );
     }
 
-    gba_pokemon_ptr->blocks = new_blocks_internal.by_name;
+    p_gba_pokemon->blocks = new_blocks_internal.by_name;
 }
 
 void pksav_gba_save_crypt_items(
-    union pksav_gba_item_bag* gba_item_bag_ptr,
+    union pksav_gba_item_bag* p_gba_item_bag,
     uint32_t security_key,
     enum pksav_gba_save_type save_type
 )
 {
-    assert(gba_item_bag_ptr != NULL);
+    assert(p_gba_item_bag != NULL);
     assert(save_type >= PKSAV_GBA_SAVE_TYPE_RS);
     assert(save_type <= PKSAV_GBA_SAVE_TYPE_FRLG);
 
-    struct pksav_item* items_ptr = (struct pksav_item*)gba_item_bag_ptr;
+    struct pksav_item* p_items = (struct pksav_item*)p_gba_item_bag;
     size_t num_items = 0;
     switch(save_type)
     {
@@ -147,6 +147,6 @@ void pksav_gba_save_crypt_items(
     }
     for(size_t item_index = 0; item_index < num_items; ++item_index)
     {
-        items_ptr[item_index].count ^= (uint16_t)(security_key & 0xFFFF);
+        p_items[item_index].count ^= (uint16_t)(security_key & 0xFFFF);
     }
 }

@@ -32,30 +32,30 @@
 
 struct pksav_gba_options
 {
-    uint8_t* button_mode_ptr;
+    uint8_t* p_button_mode;
 
-    uint8_t* text_options_ptr;
+    uint8_t* p_text_options;
 
-    uint8_t* sound_battle_options_ptr;
+    uint8_t* p_sound_battle_options;
 };
 
 struct pksav_gba_pokemon_storage
 {
-    struct pksav_gba_pokemon_party* party_ptr;
+    struct pksav_gba_pokemon_party* p_party;
 
-    struct pksav_gba_pokemon_pc* pc_ptr;
+    struct pksav_gba_pokemon_pc* p_pc;
 };
 
 struct pksav_gba_item_storage
 {
-    union pksav_gba_item_bag* bag_ptr;
+    union pksav_gba_item_bag* p_bag;
 
-    struct pksav_gba_item_pc* pc_ptr;
+    struct pksav_gba_item_pc* p_pc;
 };
 
 struct pksav_gba_trainer_info
 {
-    union pksav_trainer_id* id_ptr;
+    union pksav_trainer_id* p_id;
 
     /*!
      * @brief A pointer to the trainer's name.
@@ -66,25 +66,25 @@ struct pksav_gba_trainer_info
      * This value should be set with ::pksav_text_to_gba with a num_chars
      * value of 7.
      */
-    uint8_t* name_ptr;
+    uint8_t* p_name;
 
-    uint8_t* gender_ptr;
+    uint8_t* p_gender;
 
-    uint32_t* money_ptr;
+    uint32_t* p_money;
 };
 
 struct pksav_gba_misc_fields
 {
-    uint8_t* rival_name_ptr;
+    uint8_t* p_rival_name;
 
-    uint16_t* casino_coins_ptr;
+    uint16_t* p_casino_coins;
 };
 
 struct pksav_gba_save
 {
     enum pksav_gba_save_type save_type;
 
-    struct pksav_gba_time* time_played_ptr;
+    struct pksav_gba_time* p_time_played;
 
     struct pksav_gba_options options;
 
@@ -98,7 +98,7 @@ struct pksav_gba_save
 
     struct pksav_gba_misc_fields misc_fields;
 
-    void* internal_ptr;
+    void* p_internal;
 };
 
 #ifdef __cplusplus
@@ -106,34 +106,34 @@ extern "C" {
 #endif
 
 PKSAV_API enum pksav_error pksav_gba_get_buffer_save_type(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t buffer_len,
-    enum pksav_gba_save_type* save_type_out
+    enum pksav_gba_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gba_get_file_save_type(
-    const char* filepath,
-    enum pksav_gba_save_type* save_type_out
+    const char* p_filepath,
+    enum pksav_gba_save_type* p_save_type_out
 );
 
 PKSAV_API enum pksav_error pksav_gba_load_save_from_buffer(
-    uint8_t* buffer,
+    uint8_t* p_buffer,
     size_t buffer_len,
-    struct pksav_gba_save* gba_save_out
+    struct pksav_gba_save* p_gba_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gba_load_save_from_file(
-    const char* filepath,
-    struct pksav_gba_save* gba_save_out
+    const char* p_filepath,
+    struct pksav_gba_save* p_gba_save_out
 );
 
 PKSAV_API enum pksav_error pksav_gba_save_save(
-    const char* filepath,
-    struct pksav_gba_save* gba_save_ptr
+    const char* p_filepath,
+    struct pksav_gba_save* p_gba_save
 );
 
 PKSAV_API enum pksav_error pksav_gba_free_save(
-    struct pksav_gba_save* gba_save_ptr
+    struct pksav_gba_save* p_gba_save
 );
 
 #ifdef __cplusplus

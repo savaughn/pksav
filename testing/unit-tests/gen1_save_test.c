@@ -21,45 +21,45 @@
 static const struct pksav_gen1_save EMPTY_GEN1_SAVE =
 {
     .save_type       = PKSAV_GEN1_SAVE_TYPE_NONE,
-    .time_played_ptr = NULL,
-    .options_ptr     = NULL,
+    .p_time_played = NULL,
+    .p_options     = NULL,
 
     .item_storage =
     {
-        .item_bag_ptr = NULL,
-        .item_pc_ptr  = NULL
+        .p_item_bag = NULL,
+        .p_item_pc  = NULL
     },
 
     .pokemon_storage =
     {
-        .party_ptr           = NULL,
-        .box_ptrs            = {NULL},
-        .current_box_num_ptr = NULL,
-        .current_box_ptr     = NULL
+        .p_party           = NULL,
+        .pp_boxes          = {NULL},
+        .p_current_box_num = NULL,
+        .p_current_box     = NULL
     },
 
     .pokedex_lists =
     {
-        .seen_ptr  = NULL,
-        .owned_ptr = NULL
+        .p_seen  = NULL,
+        .p_owned = NULL
     },
 
     .trainer_info =
     {
-        .id_ptr     = NULL,
-        .name_ptr   = NULL,
-        .money_ptr  = NULL,
-        .badges_ptr = NULL
+        .p_id     = NULL,
+        .p_name   = NULL,
+        .p_money  = NULL,
+        .p_badges = NULL
     },
 
     .misc_fields =
     {
-        .rival_name_ptr         = NULL,
-        .casino_coins_ptr       = NULL,
-        .pikachu_friendship_ptr = NULL
+        .p_rival_name         = NULL,
+        .p_casino_coins       = NULL,
+        .p_pikachu_friendship = NULL
     },
 
-    .internal_ptr = NULL
+    .p_internal = NULL
 };
 
 /*
@@ -184,11 +184,11 @@ static void validate_gen1_string(
 }
 
 static void validate_gen1_item_bag(
-    const struct pksav_gen1_item_bag* item_bag_ptr
+    const struct pksav_gen1_item_bag* p_item_bag
 )
 {
-    TEST_ASSERT_NOT_NULL(item_bag_ptr);
-    TEST_ASSERT_TRUE(item_bag_ptr->count <= PKSAV_GEN1_ITEM_BAG_SIZE);
+    TEST_ASSERT_NOT_NULL(p_item_bag);
+    TEST_ASSERT_TRUE(p_item_bag->count <= PKSAV_GEN1_ITEM_BAG_SIZE);
 
     // Don't validate item contents. Generation I games are buggy enough
     // to make this unreliable.
@@ -215,60 +215,60 @@ static void validate_bcd(
 }
 
 static void validate_gen1_item_pc(
-    const struct pksav_gen1_item_pc* item_pc_ptr
+    const struct pksav_gen1_item_pc* p_item_pc
 )
 {
-    TEST_ASSERT_NOT_NULL(item_pc_ptr);
-    TEST_ASSERT_TRUE(item_pc_ptr->count <= PKSAV_GEN1_ITEM_PC_SIZE);
+    TEST_ASSERT_NOT_NULL(p_item_pc);
+    TEST_ASSERT_TRUE(p_item_pc->count <= PKSAV_GEN1_ITEM_PC_SIZE);
 
     // Don't validate item contents. Generation I games are buggy enough
     // to make this unreliable.
 }
 
 static void validate_gen1_pokemon_party(
-    const struct pksav_gen1_pokemon_party* party_ptr
+    const struct pksav_gen1_pokemon_party* p_party
 )
 {
-    TEST_ASSERT_NOT_NULL(party_ptr);
-    TEST_ASSERT_TRUE(party_ptr->count <= PKSAV_GEN1_PARTY_NUM_POKEMON);
+    TEST_ASSERT_NOT_NULL(p_party);
+    TEST_ASSERT_TRUE(p_party->count <= PKSAV_GEN1_PARTY_NUM_POKEMON);
 
-    if(party_ptr->count < PKSAV_GEN1_PARTY_NUM_POKEMON)
+    if(p_party->count < PKSAV_GEN1_PARTY_NUM_POKEMON)
     {
-        TEST_ASSERT_EQUAL(0xFF, party_ptr->species[party_ptr->count]);
+        TEST_ASSERT_EQUAL(0xFF, p_party->species[p_party->count]);
     }
 
-    for(size_t party_index = 0; party_index < party_ptr->count; ++party_index)
+    for(size_t party_index = 0; party_index < p_party->count; ++party_index)
     {
         validate_gen1_string(
-            party_ptr->otnames[party_index],
+            p_party->otnames[party_index],
             10
         );
         validate_gen1_string(
-            party_ptr->nicknames[party_index],
+            p_party->nicknames[party_index],
             PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
         );
     }
 }
 
 static void validate_gen1_pokemon_box(
-    const struct pksav_gen1_pokemon_box* pokemon_box_ptr
+    const struct pksav_gen1_pokemon_box* p_pokemon_box
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_box_ptr);
-    TEST_ASSERT_TRUE(pokemon_box_ptr->count <= PKSAV_GEN1_BOX_NUM_POKEMON);
+    TEST_ASSERT_NOT_NULL(p_pokemon_box);
+    TEST_ASSERT_TRUE(p_pokemon_box->count <= PKSAV_GEN1_BOX_NUM_POKEMON);
 
-    if(pokemon_box_ptr->count < PKSAV_GEN1_BOX_NUM_POKEMON)
+    if(p_pokemon_box->count < PKSAV_GEN1_BOX_NUM_POKEMON)
     {
-        TEST_ASSERT_EQUAL(0xFF, pokemon_box_ptr->species[pokemon_box_ptr->count]);
+        TEST_ASSERT_EQUAL(0xFF, p_pokemon_box->species[p_pokemon_box->count]);
 
-        for(size_t box_index = 0; box_index < pokemon_box_ptr->count; ++box_index)
+        for(size_t box_index = 0; box_index < p_pokemon_box->count; ++box_index)
         {
             validate_gen1_string(
-                pokemon_box_ptr->otnames[box_index],
+                p_pokemon_box->otnames[box_index],
                 10
             );
             validate_gen1_string(
-                pokemon_box_ptr->nicknames[box_index],
+                p_pokemon_box->nicknames[box_index],
                 PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
             );
         }
@@ -276,13 +276,13 @@ static void validate_gen1_pokemon_box(
 }
 
 static void gen1_save_test(
-    struct pksav_gen1_save* gen1_save_ptr,
+    struct pksav_gen1_save* p_gen1_save,
     enum pksav_gen1_save_type expected_save_type,
     const char* original_filepath,
     const char* save_name
 )
 {
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen1_save);
     TEST_ASSERT_NOT_NULL(save_name);
 
     char tmp_save_filepath[256] = {0};
@@ -296,67 +296,67 @@ static void gen1_save_test(
 
     // Validate fields. No pointers should be NULL (except the Pikachu friendship
     // pointer for Red/Blue), and some fields have a specific set of valid values.
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->internal_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->p_internal);
 
-    TEST_ASSERT_EQUAL(expected_save_type, gen1_save_ptr->save_type);
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->time_played_ptr);
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->options_ptr);
+    TEST_ASSERT_EQUAL(expected_save_type, p_gen1_save->save_type);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->p_time_played);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->p_options);
 
-    validate_gen1_item_bag(gen1_save_ptr->item_storage.item_bag_ptr);
-    validate_gen1_item_pc(gen1_save_ptr->item_storage.item_pc_ptr);
-    validate_gen1_pokemon_party(gen1_save_ptr->pokemon_storage.party_ptr);
+    validate_gen1_item_bag(p_gen1_save->item_storage.p_item_bag);
+    validate_gen1_item_pc(p_gen1_save->item_storage.p_item_pc);
+    validate_gen1_pokemon_party(p_gen1_save->pokemon_storage.p_party);
 
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
         validate_gen1_pokemon_box(
-            gen1_save_ptr->pokemon_storage.box_ptrs[box_index]
+            p_gen1_save->pokemon_storage.pp_boxes[box_index]
         );
     }
 
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokemon_storage.current_box_num_ptr);
-    uint8_t current_box_num = (*gen1_save_ptr->pokemon_storage.current_box_num_ptr
+    TEST_ASSERT_NOT_NULL(p_gen1_save->pokemon_storage.p_current_box_num);
+    uint8_t current_box_num = (*p_gen1_save->pokemon_storage.p_current_box_num
                             & PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK);
     TEST_ASSERT_TRUE(current_box_num <= PKSAV_GEN1_NUM_POKEMON_BOXES);
 
-    validate_gen1_pokemon_box(gen1_save_ptr->pokemon_storage.current_box_ptr);
+    validate_gen1_pokemon_box(p_gen1_save->pokemon_storage.p_current_box);
 
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokedex_lists.seen_ptr);
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->pokedex_lists.owned_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->pokedex_lists.p_seen);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->pokedex_lists.p_owned);
 
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->trainer_info.id_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->trainer_info.p_id);
     validate_gen1_string(
-        gen1_save_ptr->trainer_info.name_ptr,
+        p_gen1_save->trainer_info.p_name,
         7
     );
     validate_bcd(
-        gen1_save_ptr->trainer_info.money_ptr,
+        p_gen1_save->trainer_info.p_money,
         3,
         999999
     );
-    TEST_ASSERT_NOT_NULL(gen1_save_ptr->trainer_info.badges_ptr);
+    TEST_ASSERT_NOT_NULL(p_gen1_save->trainer_info.p_badges);
 
     validate_gen1_string(
-        gen1_save_ptr->misc_fields.rival_name_ptr,
+        p_gen1_save->misc_fields.p_rival_name,
         7
     );
     validate_bcd(
-        gen1_save_ptr->misc_fields.casino_coins_ptr,
+        p_gen1_save->misc_fields.p_casino_coins,
         2,
         9999
     );
-    if(gen1_save_ptr->save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
+    if(p_gen1_save->save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
     {
-        TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
+        TEST_ASSERT_NULL(p_gen1_save->misc_fields.p_pikachu_friendship);
     }
     else
     {
-        TEST_ASSERT_NOT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
+        TEST_ASSERT_NOT_NULL(p_gen1_save->misc_fields.p_pikachu_friendship);
     }
 
     // Make sure loading and saving are perfectly symmetrical.
     error = pksav_gen1_save_save(
                 tmp_save_filepath,
-                gen1_save_ptr
+                p_gen1_save
             );
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
@@ -380,53 +380,53 @@ static void gen1_save_test(
     for(uint8_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
         error = pksav_gen1_pokemon_storage_set_current_box(
-                    &gen1_save_ptr->pokemon_storage,
+                    &p_gen1_save->pokemon_storage,
                     box_index
                 );
         PKSAV_TEST_ASSERT_SUCCESS(error);
 
-        uint8_t current_box_num = *gen1_save_ptr->pokemon_storage.current_box_num_ptr;
+        uint8_t current_box_num = *p_gen1_save->pokemon_storage.p_current_box_num;
         current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
         TEST_ASSERT_EQUAL(box_index, current_box_num);
         TEST_ASSERT_EQUAL_MEMORY(
-            gen1_save_ptr->pokemon_storage.box_ptrs[box_index],
-            gen1_save_ptr->pokemon_storage.current_box_ptr,
+            p_gen1_save->pokemon_storage.pp_boxes[box_index],
+            p_gen1_save->pokemon_storage.p_current_box,
             sizeof(struct pksav_gen1_pokemon_box)
         );
     }
 
     // Free the save and make sure all fields are set to NULL or default.
-    error = pksav_gen1_free_save(gen1_save_ptr);
+    error = pksav_gen1_free_save(p_gen1_save);
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, gen1_save_ptr->save_type);
-    TEST_ASSERT_NULL(gen1_save_ptr->time_played_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->options_ptr);
+    TEST_ASSERT_EQUAL(PKSAV_GEN1_SAVE_TYPE_NONE, p_gen1_save->save_type);
+    TEST_ASSERT_NULL(p_gen1_save->p_time_played);
+    TEST_ASSERT_NULL(p_gen1_save->p_options);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->item_storage.item_bag_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->item_storage.item_pc_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->item_storage.p_item_bag);
+    TEST_ASSERT_NULL(p_gen1_save->item_storage.p_item_pc);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.party_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->pokemon_storage.p_party);
     for(size_t box_index = 0; box_index < PKSAV_GEN1_NUM_POKEMON_BOXES; ++box_index)
     {
-        TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.box_ptrs[box_index]);
+        TEST_ASSERT_NULL(p_gen1_save->pokemon_storage.pp_boxes[box_index]);
     }
-    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.current_box_num_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->pokemon_storage.current_box_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->pokemon_storage.p_current_box_num);
+    TEST_ASSERT_NULL(p_gen1_save->pokemon_storage.p_current_box);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->pokedex_lists.seen_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->pokedex_lists.owned_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->pokedex_lists.p_seen);
+    TEST_ASSERT_NULL(p_gen1_save->pokedex_lists.p_owned);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.id_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.name_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.money_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->trainer_info.badges_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->trainer_info.p_id);
+    TEST_ASSERT_NULL(p_gen1_save->trainer_info.p_name);
+    TEST_ASSERT_NULL(p_gen1_save->trainer_info.p_money);
+    TEST_ASSERT_NULL(p_gen1_save->trainer_info.p_badges);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.rival_name_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.casino_coins_ptr);
-    TEST_ASSERT_NULL(gen1_save_ptr->misc_fields.pikachu_friendship_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->misc_fields.p_rival_name);
+    TEST_ASSERT_NULL(p_gen1_save->misc_fields.p_casino_coins);
+    TEST_ASSERT_NULL(p_gen1_save->misc_fields.p_pikachu_friendship);
 
-    TEST_ASSERT_NULL(gen1_save_ptr->internal_ptr);
+    TEST_ASSERT_NULL(p_gen1_save->p_internal);
 }
 
 static void gen1_save_from_buffer_test(

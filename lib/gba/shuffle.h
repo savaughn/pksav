@@ -24,7 +24,7 @@ void pksav_gba_save_unshuffle_sections(
 void pksav_gba_save_shuffle_sections(
     const union pksav_gba_save_slot* save_slot_in,
     union pksav_gba_save_slot* save_slot_out,
-    const uint8_t* section_nums_ptr
+    const uint8_t* p_section_nums
 );
 
 void pksav_gba_save_load_pokemon_pc(
@@ -33,7 +33,7 @@ void pksav_gba_save_load_pokemon_pc(
 );
 
 void pksav_gba_save_save_pokemon_pc(
-    struct pksav_gba_pokemon_pc* pokemon_pc_ptr,
+    struct pksav_gba_pokemon_pc* p_pokemon_pc,
     union pksav_gba_save_slot* gba_save_slot_out
 );
 
