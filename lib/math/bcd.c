@@ -75,7 +75,13 @@ enum pksav_error pksav_import_bcd(
     }
     printf("---\n");
 
-    *p_result_out = strtoul(p_temp_buffer, NULL, 10);
+    char* p_num_start = p_temp_buffer;
+    for(size_t char_index = 0;
+        (char_index < strlen(p_temp_buffer)) && (*p_num_start == '0');
+        ++p_num_start);
+
+    printf("%s %s\n", p_temp_buffer, p_num_start);
+    *p_result_out = strtoul(p_num_start, NULL, 10);
     free(p_temp_buffer);
 
     return PKSAV_ERROR_NONE;
