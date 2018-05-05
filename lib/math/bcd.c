@@ -35,7 +35,8 @@ enum pksav_error pksav_import_bcd(
     *p_result_out = 0;
 
     // Double the size, to be sure.
-    char* p_temp_buffer = calloc(num_bytes*2, 1);
+    const size_t temp_buffer_size = num_bytes*2;
+    char* p_temp_buffer = calloc(temp_buffer_size, 1);
 
     for(size_t index = 0; index < num_bytes; ++index)
     {
@@ -50,7 +51,7 @@ enum pksav_error pksav_import_bcd(
             strncat(
                 p_temp_buffer,
                 num_as_string,
-                sizeof(p_temp_buffer)-strlen(p_temp_buffer)
+                temp_buffer_size-strlen(p_temp_buffer)
             );
             if(num2 < 0xA)
             {
@@ -58,7 +59,7 @@ enum pksav_error pksav_import_bcd(
                 strncat(
                     p_temp_buffer,
                     num_as_string,
-                    sizeof(p_temp_buffer)-strlen(p_temp_buffer)
+                    temp_buffer_size-strlen(p_temp_buffer)
                 );
             }
         }
