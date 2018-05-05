@@ -13,6 +13,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+// Effort values (EVs)
+
+#define PKSAV_MIN_GB_EV (0)
+#define PKSAV_MAX_GB_EV (UINT16_MAX)
+
+#define PKSAV_MIN_EV (0)
+#define PKSAV_MAX_EV (UINT8_MAX)
+
+// Individual values (IVs)
+
 enum pksav_gb_IV
 {
     PKSAV_GB_IV_ATTACK,
@@ -23,6 +33,8 @@ enum pksav_gb_IV
 };
 
 #define PKSAV_NUM_GB_IVS (5)
+
+#define PKSAV_MIN_GB_IV (0)
 #define PKSAV_MAX_GB_IV (15)
 
 enum pksav_IV
@@ -36,6 +48,8 @@ enum pksav_IV
 };
 
 #define PKSAV_NUM_IVS (6)
+
+#define PKSAV_MIN_IV (0)
 #define PKSAV_MAX_IV (31)
 
 #ifdef __cplusplus
