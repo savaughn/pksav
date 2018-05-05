@@ -22,12 +22,12 @@
 #endif
 
 enum pksav_error pksav_import_bcd(
-    const uint8_t* buffer,
+    const uint8_t* p_buffer,
     size_t num_bytes,
     size_t* p_result_out
 )
 {
-    if(!buffer || !p_result_out)
+    if(!p_buffer || !p_result_out)
     {
         return PKSAV_ERROR_NULL_POINTER;
     }
@@ -38,16 +38,20 @@ enum pksav_error pksav_import_bcd(
     const size_t temp_buffer_size = num_bytes*2;
     char* p_temp_buffer = calloc(temp_buffer_size, 1);
 
+    printf("---\n");
     for(size_t index = 0; index < num_bytes; ++index)
     {
-        uint8_t num1 = (buffer[index] & 0xF0) >> 4;
-        uint8_t num2 = buffer[index] & 0xF;
+        uint8_t num1 = (p_buffer[index] & 0xF0) >> 4;
+        uint8_t num2 = p_buffer[index] & 0xF;
+
+        printf("%u %u\n", num1, num2);
 
         char num_as_string[1] = {0};
 
         if(num1 < 0xA)
         {
             num_as_string[0] = (char)(num1 + '0');
+            printf("%c\n", num_as_string[0]);
             strncat(
                 p_temp_buffer,
                 num_as_string,
@@ -56,6 +60,7 @@ enum pksav_error pksav_import_bcd(
             if(num2 < 0xA)
             {
                 num_as_string[0] = (char)(num2 + '0');
+                printf("%c\n", num_as_string[0]);
                 strncat(
                     p_temp_buffer,
                     num_as_string,
@@ -68,6 +73,7 @@ enum pksav_error pksav_import_bcd(
             break;
         }
     }
+    printf("---\n");
 
     *p_result_out = strtoul(p_temp_buffer, NULL, 10);
     free(p_temp_buffer);
