@@ -68,7 +68,7 @@ static const size_t GS_OFFSETS[] =
     0x200B, // Player name
     0x2021, // Rival name
     0x2037, // Daylight savings
-    0x2053, // Time played
+    0x2054, // Time played
     0x206B, // Player palette
     0x23DB, // Money
     0x23E4, // Johto badges
