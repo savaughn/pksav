@@ -8,10 +8,16 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
     ${PKSAV_SOURCE_DIR}/lib
 )
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-utils.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test-utils.h
+@ONLY)
 
 ADD_LIBRARY(pksav-test-utils STATIC
     ${PKSAV_SOURCE_DIR}/lib/util/fs.c

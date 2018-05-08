@@ -34,8 +34,9 @@ enum pksav_error pksav_import_bcd(
 
     *p_result_out = 0;
 
-    // Double the size, to be sure.
-    const size_t temp_buffer_size = num_bytes*2;
+    // Each byte is represented by two numbers, plus the null
+    // terminator.
+    const size_t temp_buffer_size = num_bytes*2 + 1;
     char* p_temp_buffer = calloc(temp_buffer_size, 1);
 
     for(size_t index = 0; index < num_bytes; ++index)

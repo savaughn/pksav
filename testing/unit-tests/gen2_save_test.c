@@ -79,7 +79,7 @@ static void pksav_gen2_get_buffer_save_type_on_random_buffer_test()
     enum pksav_error error = PKSAV_ERROR_NONE;
 
     uint8_t buffer[PKSAV_GEN2_SAVE_SIZE] = {0};
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(buffer, sizeof(buffer));
 

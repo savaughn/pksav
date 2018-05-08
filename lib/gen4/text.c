@@ -294,7 +294,7 @@ enum pksav_error pksav_gen4_import_text(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* p_widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
     _pksav_gen4_import_widetext(
         p_input_buffer, p_widetext, num_chars
     );
@@ -317,7 +317,7 @@ enum pksav_error pksav_gen4_export_text(
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* p_widetext = malloc(sizeof(wchar_t)*num_chars);
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
     pksav_mbstowcs(p_widetext, p_input_text, num_chars);
 
     _pksav_gen4_export_widetext(

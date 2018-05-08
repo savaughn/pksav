@@ -52,7 +52,7 @@ static void base256_test()
     size_t dummy_num = 0;
     uint8_t base256_buffer[BASE256_BUFFER_LEN] = {0};
 
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(base256_buffer, sizeof(base256_buffer));
         pksav_import_base256(
@@ -157,7 +157,7 @@ static void bcd_test()
     size_t dummy_num = 0;
     uint8_t bcd_buffer[BCD_BUFFER_LEN] = {0};
 
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(bcd_buffer, sizeof(bcd_buffer));
         pksav_import_bcd(

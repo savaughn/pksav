@@ -49,7 +49,7 @@ static void pksav_gen1_text_test()
     }
 
     // Make sure processing invalid buffers doesn't crash.
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(gen1_buffer, sizeof(gen1_buffer));
         pksav_gen1_import_text(
@@ -93,7 +93,7 @@ static void pksav_gen2_text_test()
     }
 
     // Make sure processing invalid buffers doesn't crash.
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(gen2_buffer, sizeof(gen2_buffer));
         pksav_gen2_import_text(
@@ -137,7 +137,7 @@ static void pksav_gba_text_test()
     }
 
     // Make sure processing invalid buffers doesn't crash.
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer(gba_buffer, sizeof(gba_buffer));
         pksav_gba_import_text(
@@ -181,7 +181,7 @@ static void pksav_gen4_text_test()
     }
 
     // Make sure processing invalid buffers doesn't crash.
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer((uint8_t*)gen4_buffer, sizeof(gen4_buffer));
         pksav_gen4_import_text(
@@ -225,7 +225,7 @@ static void pksav_gen5_text_test()
     }
 
     // Make sure processing invalid buffers doesn't crash.
-    for(size_t run_index = 0; run_index < 1000; ++run_index)
+    for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
         randomize_buffer((uint8_t*)gen5_buffer, sizeof(gen5_buffer));
         pksav_gen5_import_text(

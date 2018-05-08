@@ -14,6 +14,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#cmakedefine TEST_WITH_VALGRIND 1
+
+#ifdef TEST_WITH_VALGRIND
+// Fewer iterations due to Valgrind slowing things down
+#define FUZZING_TEST_NUM_ITERATIONS 100
+#else
+#define FUZZING_TEST_NUM_ITERATIONS 1000
+#endif
+
 #ifdef PKSAV_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
 #else
