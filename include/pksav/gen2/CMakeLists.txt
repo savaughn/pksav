@@ -6,6 +6,7 @@
 #
 
 SET(pksav_gen2_headers
+    badges.h
     items.h
     options.h
     palette.h

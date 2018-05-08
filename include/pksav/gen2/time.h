@@ -47,7 +47,10 @@ enum pksav_gen2_time_of_day
 #define PKSAV_GEN2_TIME_OF_DAY_MASK    ((uint16_t)0xC000)
 
 //! The offset of the time of day information in the pksav_gen2_pc_pokemon_t.caught_data field.
-#define PKSAV_GEN2_TIME_OF_DAY_OFFSET  14
+#define PKSAV_GEN2_TIME_OF_DAY_OFFSET  (14)
+
+#define PKSAV_GEN2_TIME_OF_DAY(field) \
+    (((field) & PKSAV_GEN2_TIME_OF_DAY_MASK) >> PKSAV_GEN2_TIME_OF_DAY_OFFSET)
 
 #ifdef __cplusplus
 extern "C" {

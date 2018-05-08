@@ -10,6 +10,7 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen2/badges.h>
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/options.h>
 #include <pksav/gen2/palette.h>
