@@ -34,9 +34,10 @@ enum pksav_error pksav_import_bcd(
 
     *p_result_out = 0;
 
-    // Each byte is represented by two numbers, plus the null
-    // terminator.
-    const size_t temp_buffer_size = num_bytes*2 + 1;
+    // Allocate a larger buffer than theoretically necessary. Practically,
+    // this function will only be called with small buffers, so this allocation
+    // will typically be on the scale of bytes anyway.
+    const size_t temp_buffer_size = num_bytes * 3;
     char* p_temp_buffer = calloc(temp_buffer_size, 1);
 
     for(size_t index = 0; index < num_bytes; ++index)
