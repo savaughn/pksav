@@ -13,6 +13,7 @@ SET(pksav_gen1_headers
     save.h
     text.h
     time.h
+    type.h
 )
 
 INSTALL(
