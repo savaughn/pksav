@@ -41,6 +41,9 @@ enum pksav_gen2_field
     PKSAV_GEN2_TIME_PLAYED,
     PKSAV_GEN2_PLAYER_PALETTE,
     PKSAV_GEN2_MONEY,
+    PKSAV_GEN2_MONEY_WITH_MOM,
+    PKSAV_GEN2_MOM_MONEY_POLICY,
+    PKSAV_GEN2_CASINO_COINS,
     PKSAV_GEN2_JOHTO_BADGES,
     PKSAV_GEN2_KANTO_BADGES,
     PKSAV_GEN2_ITEM_BAG,
@@ -71,6 +74,9 @@ static const size_t GS_OFFSETS[] =
     0x2054, // Time played
     0x206B, // Player palette
     0x23DB, // Money
+    0x23DE, // Mom's money
+    0x23E1, // Mom's money policy
+    0x23E2, // Casino coins
     0x23E4, // Johto badges
     0x23E5, // Kanto badges
     0x23E6, // Item bag
@@ -100,7 +106,10 @@ static const size_t CRYSTAL_OFFSETS[] =
     0x2037, // Daylight savings
     0x2054, // Time played
     0x206A, // Player palette
-    0x23DB, // Money
+    0x23DC, // Money
+    0x23DF, // Mom's money
+    0x23E2, // Mom's money policy
+    0x23E3, // Casino coins
     0x23E5, // Johto badges
     0x23E6, // Kanto badges
     0x23E7, // Item bag

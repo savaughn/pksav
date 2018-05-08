@@ -326,6 +326,9 @@ static void _pksav_gen2_set_save_pointers(
     struct pksav_gen2_misc_fields* p_misc_fields = &p_gen2_save->misc_fields;
 
     p_misc_fields->p_rival_name = &p_buffer[p_offsets[PKSAV_GEN2_RIVAL_NAME]];
+    p_misc_fields->p_money_with_mom = &p_buffer[p_offsets[PKSAV_GEN2_MONEY_WITH_MOM]];
+    p_misc_fields->p_mom_money_policy = &p_buffer[p_offsets[PKSAV_GEN2_MOM_MONEY_POLICY]];
+    p_misc_fields->p_casino_coins = &p_buffer[p_offsets[PKSAV_GEN2_CASINO_COINS]];
 }
 
 static enum pksav_error _pksav_gen2_load_save_from_buffer(

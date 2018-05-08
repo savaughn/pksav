@@ -185,6 +185,12 @@ struct pksav_gen2_misc_fields
      * value of 7.
      */
     uint8_t* p_rival_name;
+
+    uint8_t* p_money_with_mom;
+
+    uint8_t* p_mom_money_policy;
+
+    uint8_t* p_casino_coins;
 };
 
 /*!
