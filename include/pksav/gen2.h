@@ -12,6 +12,7 @@
 
 #include <pksav/gen2/badges.h>
 #include <pksav/gen2/items.h>
+#include <pksav/gen2/mom_money_policy.h>
 #include <pksav/gen2/options.h>
 #include <pksav/gen2/palette.h>
 #include <pksav/gen2/pokemon.h>

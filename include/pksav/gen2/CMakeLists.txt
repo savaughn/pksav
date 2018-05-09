@@ -8,6 +8,7 @@
 SET(pksav_gen2_headers
     badges.h
     items.h
+    mom_money_policy.h
     options.h
     palette.h
     pokemon.h
