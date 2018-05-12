@@ -8,7 +8,10 @@
 #define PKSAV_GBA_BLOCKS_INTERNAL_H
 
 #include "battle_tower.h"
+#include "map.h"
 
+#include <pksav/gba/items.h>
+#include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
 #include <pksav/gba/time.h>
 #include <pksav/common/trainer_id.h>
@@ -63,5 +66,43 @@ struct pksav_gba_rs_save_block0
 
     struct pksav_gba_rs_battle_tower_data battle_tower_data;
 };
+
+struct pksav_gba_rs_save_block1
+{
+    struct pksav_gba_coords position;
+    struct pksav_gba_warp_data warp1;
+    struct pksav_gba_warp_data warp2;
+    struct pksav_gba_warp_data last_heal_location;
+    struct pksav_gba_warp_data warp4;
+
+    uint16_t saved_music;
+    uint8_t weather;
+    uint8_t weather_cycle_stage;
+    uint8_t flash_level; // 0-4
+    uint16_t map_data_id;
+    uint16_t map_view[0x100];
+
+    struct pksav_gba_pokemon_party pokemon_party;
+
+    uint32_t money;
+    uint16_t casino_coins;
+    uint16_t registered_item_index;
+
+    struct pksav_gba_rs_item_bag item_bag;
+
+    uint8_t pokedex_seen2[PKSAV_GBA_POKEDEX_BUFFER_SIZE_BYTES];
+
+    uint16_t berry_blender_records[3];
+
+    uint8_t unknown1[6];
+
+    uint16_t trainer_rematch_step_counter;
+    uint8_t trainer_rematches[100];
+
+    struct pksav_gba_rs_map_object map_objects[16];
+    struct pksav_gba_rs_map_object_template map_object_templates[64];
+};
+
+#pragma pack(pop)
 
 #endif /* PKSAV_GBA_BLOCKS_INTERNAL_H */
