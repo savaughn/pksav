@@ -107,6 +107,8 @@ static void _pksav_gen1_set_save_pointers(
     assert(p_gen1_save != NULL);
     assert(p_file_buffer != NULL);
 
+    // TODO: clean up alignment after field name length changes
+
     // Item storage
     struct pksav_gen1_item_storage* p_item_storage = &p_gen1_save->item_storage;
 
@@ -161,6 +163,13 @@ static void _pksav_gen1_set_save_pointers(
     p_trainer_info->p_name   = &p_file_buffer[PKSAV_GEN1_PLAYER_NAME];
     p_trainer_info->p_money  = &p_file_buffer[PKSAV_GEN1_MONEY];
     p_trainer_info->p_badges = &p_file_buffer[PKSAV_GEN1_BADGES];
+
+    // Daycare (TODO: are other fields stored in save?)
+    struct pksav_gen1_daycare* p_daycare = &p_gen1_save->daycare;
+
+    p_daycare->p_daycare_data = (struct pksav_gen1_daycare_data*)(
+                                    &p_file_buffer[PKSAV_GEN1_DAYCARE_DATA]
+                                );
 
     // Misc
     struct pksav_gen1_misc_fields* p_misc_fields = &p_gen1_save->misc_fields;

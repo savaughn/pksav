@@ -38,6 +38,7 @@ enum pksav_gen1_save_offset
     PKSAV_GEN1_CURRENT_BOX_NUM        = 0x284C,
     PKSAV_GEN1_CASINO_COINS           = 0x2850,
     PKSAV_GEN1_TIME_PLAYED            = 0x2CED,
+    PKSAV_GEN1_DAYCARE_DATA           = 0x2CF4,
     PKSAV_GEN1_POKEMON_PARTY          = 0x2F2C,
     PKSAV_GEN1_CURRENT_BOX            = 0x30C0,
     PKSAV_GEN1_CHECKSUM               = 0x3523,

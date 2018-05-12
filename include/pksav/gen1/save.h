@@ -11,6 +11,7 @@
 #include <pksav/error.h>
 
 #include <pksav/gen1/badges.h>
+#include <pksav/gen1/daycare_data.h>
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/time.h>
@@ -147,6 +148,16 @@ struct pksav_gen1_trainer_info
     uint8_t* p_badges;
 };
 
+struct pksav_gen1_daycare
+{
+    // TODO: are these stored in the save, or does the ROM check the save data
+    // and determine it programmatically?
+    uint8_t* p_daycare_start_level;
+    uint8_t* p_daycare_num_levels_grown;
+
+    struct pksav_gen1_daycare_data* p_daycare_data;
+};
+
 struct pksav_gen1_misc_fields
 {
     /*!
@@ -206,6 +217,8 @@ struct pksav_gen1_save
     struct pksav_gen1_pokedex_lists pokedex_lists;
 
     struct pksav_gen1_trainer_info trainer_info;
+
+    struct pksav_gen1_daycare daycare;
 
     struct pksav_gen1_misc_fields misc_fields;
 
