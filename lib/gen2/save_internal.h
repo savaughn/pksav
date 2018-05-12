@@ -30,7 +30,8 @@ struct pksav_gen2_save_internal
 
 enum pksav_gen2_field
 {
-    PKSAV_GEN2_OPTIONS = 0,
+    PKSAV_GEN2_DAYCARE_DATA = 0,
+    PKSAV_GEN2_OPTIONS,
     PKSAV_GEN2_TEXTBOX_FRAME_INDEX,
     PKSAV_GEN2_GBPRINTER_BRIGHTNESS,
     PKSAV_GEN2_MENU_ACCOUNT,
@@ -63,6 +64,7 @@ enum pksav_gen2_field
 
 static const size_t GS_OFFSETS[] =
 {
+    0x1306, // Daycare data
     0x2000, // Options
     0x2002, // Text box frame index
     0x2004, // Game Boy Printer brightness
@@ -96,6 +98,7 @@ static const size_t GS_OFFSETS[] =
 
 static const size_t CRYSTAL_OFFSETS[] =
 {
+    0x1C82, // Daycare data
     0x2000, // Options
     0x2002, // Text box frame index
     0x2004, // Game Boy Printer brightness

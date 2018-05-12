@@ -13,7 +13,7 @@
 
 #pragma pack(push,1)
 
-// TODO: find offsets
+// TODO: find offsets, add bitfield enums
 
 struct pksav_gen2_daycare_pokemon_data
 {

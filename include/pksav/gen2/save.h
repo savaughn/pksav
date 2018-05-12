@@ -227,6 +227,8 @@ struct pksav_gen2_save
 
     struct pksav_gen2_trainer_info trainer_info;
 
+    struct pksav_gen2_daycare_data* p_daycare_data;
+
     struct pksav_gen2_misc_fields misc_fields;
 
     void* p_internal;
