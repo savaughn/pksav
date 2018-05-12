@@ -7,6 +7,8 @@
 #ifndef PKSAV_GBA_SAVE_INTERNAL_H
 #define PKSAV_GBA_SAVE_INTERNAL_H
 
+#include "blocks_internal.h"
+
 #include <pksav/gba/save.h>
 #include <pksav/gba/time.h>
 #include <pksav/common/trainer_id.h>
@@ -15,22 +17,6 @@
 #include <stdlib.h>
 
 #pragma pack(push,1)
-
-// If it weren't for the padding, this could be user-facing...
-struct pksav_gba_trainer_info_internal
-{
-    uint8_t name[7];
-    //! Padding. No relevant data is stored here.
-    uint8_t padding1;
-    //! Trainer gender (0: male, 1: female).
-    uint8_t gender;
-    //! Padding. No relevant data is stored here.
-    uint8_t padding2;
-    //! Trainer ID.
-    union pksav_trainer_id id;
-    //! How long this save in the given slot has been played.
-    struct pksav_gba_time time_played;
-};
 
 #define PKSAV_GBA_NUM_SAVE_SECTIONS (14)
 
