@@ -10,6 +10,7 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen2/daycare_data.h>
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/time.h>

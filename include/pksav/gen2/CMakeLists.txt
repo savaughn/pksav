@@ -7,6 +7,7 @@
 
 SET(pksav_gen2_headers
     badges.h
+    daycare_data.h
     items.h
     mom_money_policy.h
     options.h
