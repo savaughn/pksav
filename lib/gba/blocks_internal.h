@@ -50,6 +50,33 @@ struct pksav_gba_rs_pokedex_internal
     uint8_t owned[PKSAV_GBA_POKEDEX_BUFFER_SIZE_BYTES];
 };
 
+struct pksav_gba_rs_secret_base_record
+{
+    uint8_t secret_base_id;
+    uint8_t trainer_gender_misc;
+    uint8_t trainer_name[PKSAV_GBA_TRAINER_NAME_LENGTH]; // TODO: does this have a terminator?
+    uint16_t field_e;
+    uint8_t fields[2];
+    uint8_t decorations[16];
+    uint8_t decoration_positions[6];
+    uint32_t party_personalities[PKSAV_GBA_PARTY_NUM_POKEMON];
+    uint16_t party_moves[PKSAV_GBA_PARTY_NUM_POKEMON * PKSAV_GBA_POKEMON_NUM_MOVES];
+    uint16_t party_species[PKSAV_GBA_PARTY_NUM_POKEMON];
+    uint8_t party_levels[PKSAV_GBA_PARTY_NUM_POKEMON];
+    uint8_t party_EVs[PKSAV_GBA_PARTY_NUM_POKEMON];
+};
+
+struct pksav_gba_rs_berry_tree
+{
+    uint8_t berry_id;
+    uint8_t stage; // TODO: bitfield enum
+    uint16_t minutes_until_next_stage;
+    uint8_t berry_yield;
+    uint8_t stats; // TODO: bitfield enum
+};
+
+// Ruby/Sapphire save blocks
+
 struct pksav_gba_rs_save_block0
 {
     struct pksav_gba_trainer_info_internal trainer_info;
@@ -67,6 +94,7 @@ struct pksav_gba_rs_save_block0
     struct pksav_gba_rs_battle_tower_data battle_tower_data;
 };
 
+// TODO: this assumes there's no filler before the position, verify
 struct pksav_gba_rs_save_block1
 {
     struct pksav_gba_coords position;
@@ -101,6 +129,16 @@ struct pksav_gba_rs_save_block1
 
     struct pksav_gba_rs_map_object map_objects[16];
     struct pksav_gba_rs_map_object_template map_object_templates[64];
+};
+
+// TODO: this assumes there's no filler before the flags, verify
+struct pksav_gba_rs_save_block2
+{
+    uint8_t flags[256];
+    uint16_t vars[256];
+    uint32_t game_stats[50];
+    struct pksav_gba_rs_berry_tree berry_trees[128];
+    struct pksav_gba_rs_secret_base_record secret_bases[20];
 };
 
 #pragma pack(pop)
