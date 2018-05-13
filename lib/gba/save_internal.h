@@ -7,7 +7,7 @@
 #ifndef PKSAV_GBA_SAVE_INTERNAL_H
 #define PKSAV_GBA_SAVE_INTERNAL_H
 
-#include "blocks_internal.h"
+#include "sections_internal.h"
 
 #include <pksav/gba/save.h>
 #include <pksav/gba/time.h>
