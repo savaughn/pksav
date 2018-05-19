@@ -11,9 +11,18 @@
 
 #include <stdint.h>
 
-#pragma pack(push,1)
+#define PKSAV_GEN2_DAYCARE_MAN_POKEMON_PRESENT_MASK        ((uint8_t)1)
+#define PKSAV_GEN2_DAYCARE_MAN_ARE_POKEMON_COMPATIBLE_MASK ((uint8_t)(1 << 5))
+#define PKSAV_GEN2_DAYCARE_MAN_IS_EGG_READY_MASK           ((uint8_t)(1 << 6))
+#define PKSAV_GEN2_DAYCARE_MAN_IS_ACTIVE_MASK              ((uint8_t)(1 << 7))
 
-// TODO: find offsets, add bitfield enums
+#define PKSAV_GEN2_DAYCARE_LADY_POKEMON_PRESENT_MASK ((uint8_t)1);
+#define PKSAV_GEN2_DAYCARE_LADY_IS_ACTIVE_MASK       ((uint8_t)(1 << 7))
+
+#define PKSAV_GEN2_DAYCARE_BREED_IS_NOT_MOTHER_OR_NON_DITTO ((uint8_t)0)
+#define PKSAV_GEN2_DAYCARE_BREED_IS_MOTHER_OR_NON_DITTO     ((uint8_t)1)
+
+#pragma pack(push,1)
 
 struct pksav_gen2_daycare_pokemon_data
 {

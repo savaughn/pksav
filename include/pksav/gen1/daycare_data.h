@@ -11,6 +11,9 @@
 
 #include <stdint.h>
 
+#define PKSAV_GEN1_DAYCARE_NOT_IN_USE ((uint8_t)0)
+#define PKSAV_GEN1_DAYCARE_IN_USE     ((uint8_t)1)
+
 #pragma pack(push,1)
 
 struct pksav_gen1_daycare_data
