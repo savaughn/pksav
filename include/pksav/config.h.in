@@ -14,11 +14,6 @@
 #    define PKSAV_EXPORT __declspec(dllexport)
 #    define PKSAV_IMPORT __declspec(dllimport)
 #    pragma warning(disable: 4800) // forcing value to bool 'true' or 'false'
-
-// MSVC doesn't have ssize_t for C, so we need to define it
-#include <stdint.h>
-typedef intmax_t ssize_t;
-
 #elif defined(__GNUC__) && __GNUC__ >= 4
 #    define PKSAV_EXPORT __attribute__((visibility("default")))
 #    define PKSAV_IMPORT __attribute__((visibility("default")))
@@ -41,6 +36,19 @@ typedef intmax_t ssize_t;
 #    define PKSAV_PLATFORM_WIN32
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #    define PKSAV_PLATFORM_MACOS
+#endif
+
+/*
+ * Not all supported platforms have ssize_t, so if that's the case, define
+ * it ourselves.
+ */
+#ifndef HAVE_SSIZE_T
+
+#include <stdint.h>
+typedef intmax_t ssize_t;
+
+#define HAVE_SSIZE_T
+
 #endif
 
 /*
