@@ -37,20 +37,26 @@ enum pksav_error pksav_gen1_get_buffer_save_type(
         if(buffer_checksum == calculated_checksum)
         {
             /*
-             * Check if this save is for the Yellow version. The only way to
-             * check this is to check the Pikachu Friendship field, which
-             * isn't used in Red/Blue. This is usually fine but will fail if
-             * the trainer's Pikachu despises the trainer enough to have a
-             * friendship value of 0, which is unlikely but technically
-             * possible.
+             * In Yellow, this area of the save stores information about
+             * Pikachu's position on the screen, animation frame numbers, etc.
+             * In theory, there is no valid state in Yellow in which this
+             * entire buffer is zeroed out, as even when creating a new save,
+             * Pikachu's friendship is initialized to 90. So this should be
+             * a safe way to differentiate Red/Blue from Yellow.
              */
-            if(p_buffer[PKSAV_GEN1_PIKACHU_FRIENDSHIP] > 0)
+            static const size_t YELLOW_PIKACHU_BUFFER_START = 0x26DC;
+            static const size_t YELLOW_PIKACHU_BUFFER_END = 0x275C;
+
+            *p_save_type_out = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
+            for(size_t buffer_index = YELLOW_PIKACHU_BUFFER_START;
+                buffer_index < YELLOW_PIKACHU_BUFFER_END;
+                ++buffer_index)
             {
-                *p_save_type_out = PKSAV_GEN1_SAVE_TYPE_YELLOW;
-            }
-            else
-            {
-                *p_save_type_out = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
+                if(p_buffer[buffer_index] > 0)
+                {
+                    *p_save_type_out = PKSAV_GEN1_SAVE_TYPE_YELLOW;
+                    break;
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ struct pksav_gen1_save_internal
 enum pksav_gen1_save_offset
 {
     PKSAV_GEN1_PLAYER_NAME            = 0x2598,
+
     PKSAV_GEN1_POKEDEX_OWNED          = 0x25A3,
     PKSAV_GEN1_POKEDEX_SEEN           = 0x25B6,
     PKSAV_GEN1_ITEM_BAG               = 0x25C9,
@@ -39,8 +40,11 @@ enum pksav_gen1_save_offset
     PKSAV_GEN1_CASINO_COINS           = 0x2850,
     PKSAV_GEN1_TIME_PLAYED            = 0x2CED,
     PKSAV_GEN1_DAYCARE_DATA           = 0x2CF4,
+    // Sprite data here
     PKSAV_GEN1_POKEMON_PARTY          = 0x2F2C,
     PKSAV_GEN1_CURRENT_BOX            = 0x30C0,
+    // Tileset type here
+
     PKSAV_GEN1_CHECKSUM               = 0x3523,
     PKSAV_GEN1_POKEMON_PC_FIRST_HALF  = 0x4000,
     PKSAV_GEN1_POKEMON_PC_SECOND_HALF = 0x6000
