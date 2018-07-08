@@ -22,7 +22,8 @@
 extern "C" {
 #endif
 
-uint16_t pksav_gba_get_pokemon_checksum(
+// Expose this to allow third-party libraries to do memory comparisons.
+PKSAV_API uint16_t pksav_gba_get_pokemon_checksum(
     const struct pksav_gba_pc_pokemon* p_gba_pokemon
 );
 
