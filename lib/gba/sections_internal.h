@@ -62,6 +62,7 @@ struct pksav_gba_rs_secret_base_record
     uint32_t party_personalities[PKSAV_GBA_PARTY_NUM_POKEMON];
     uint16_t party_moves[PKSAV_GBA_PARTY_NUM_POKEMON * PKSAV_GBA_POKEMON_NUM_MOVES];
     uint16_t party_species[PKSAV_GBA_PARTY_NUM_POKEMON];
+    uint16_t party_held_items[PKSAV_GBA_PARTY_NUM_POKEMON];
     uint8_t party_levels[PKSAV_GBA_PARTY_NUM_POKEMON];
     uint8_t party_EVs[PKSAV_GBA_PARTY_NUM_POKEMON];
 };
@@ -73,6 +74,19 @@ struct pksav_gba_rs_berry_tree
     uint16_t minutes_until_next_stage;
     uint8_t berry_yield;
     uint8_t stats; // TODO: bitfield enum
+};
+
+struct pksav_gba_rs_player_room_decorations
+{
+    uint8_t decorations[12];
+    uint8_t positions[12];
+    uint8_t chairs[10];
+    uint8_t plants[10];
+    uint8_t ornaments[10];
+    uint8_t maps[10];
+    uint8_t posters[10];
+    uint8_t dolls[10];
+    uint8_t cushions[10];
 };
 
 // Ruby/Sapphire save blocks
@@ -139,6 +153,7 @@ struct pksav_gba_rs_save_block2
     uint32_t game_stats[50];
     struct pksav_gba_rs_berry_tree berry_trees[128];
     struct pksav_gba_rs_secret_base_record secret_bases[20];
+    struct pksav_gba_rs_player_room_decorations player_room_decorations;
 };
 
 #pragma pack(pop)
