@@ -7,8 +7,10 @@
 
 SET(pksav_gba_headers
     box_wallpaper.h
+    daycare.h
     items.h
     language.h
+    mail.h
     options.h
     pokedex.h
     pokemon.h

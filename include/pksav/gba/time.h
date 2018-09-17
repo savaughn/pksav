@@ -24,6 +24,14 @@ struct pksav_gba_time
     uint8_t frames;
 };
 
+struct pksav_gba_time_offset
+{
+    int16_t days;
+    int8_t hours;
+    int8_t minutes;
+    int8_t seconds;
+};
+
 #pragma pack(pop)
 
 #endif /* PKSAV_GBA_TIME_H */

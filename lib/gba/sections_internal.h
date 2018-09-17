@@ -10,6 +10,7 @@
 #include "battle_tower.h"
 #include "map.h"
 
+#include <pksav/gba/daycare.h>
 #include <pksav/gba/items.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
@@ -36,7 +37,7 @@ struct pksav_gba_trainer_info_internal
     struct pksav_gba_time time_played;
 };
 
-struct pksav_gba_rs_pokedex_internal
+struct pksav_gba_pokedex_internal
 {
     uint8_t pokedex_order;
     uint8_t unknown1;
@@ -98,7 +99,7 @@ struct pksav_gba_rs_save_block0
     uint8_t button_mode;
     uint8_t options[4];
 
-    struct pksav_gba_rs_pokedex_internal pokedex;
+    struct pksav_gba_pokedex_internal pokedex;
 
     uint8_t unknown[8];
 
