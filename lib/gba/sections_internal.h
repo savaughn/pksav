@@ -8,10 +8,10 @@
 #define PKSAV_GBA_BLOCKS_INTERNAL_H
 
 #include "battle_tower.h"
-#include "map.h"
 
 #include <pksav/gba/daycare.h>
 #include <pksav/gba/items.h>
+#include <pksav/gba/map.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save.h>
 #include <pksav/gba/time.h>
@@ -141,9 +141,6 @@ struct pksav_gba_rs_save_block1
 
     uint16_t trainer_rematch_step_counter;
     uint8_t trainer_rematches[100];
-
-    struct pksav_gba_rs_map_object map_objects[16];
-    struct pksav_gba_rs_map_object_template map_object_templates[64];
 };
 
 // TODO: this assumes there's no filler before the flags, verify

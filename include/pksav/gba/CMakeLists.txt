@@ -11,6 +11,7 @@ SET(pksav_gba_headers
     items.h
     language.h
     mail.h
+    map.h
     options.h
     pokedex.h
     pokemon.h
