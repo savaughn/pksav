@@ -64,6 +64,7 @@ static const struct pksav_gba_save EMPTY_GBA_SAVE =
     .misc_fields =
     {
         .p_casino_coins = NULL,
+        .p_roamer = NULL,
         {},
         {},
         {}

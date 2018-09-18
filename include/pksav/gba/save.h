@@ -17,6 +17,7 @@
 #include <pksav/gba/map.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/gba/roamer.h>
 #include <pksav/gba/save_type.h>
 #include <pksav/gba/time.h>
 
@@ -81,15 +82,15 @@ struct pksav_gba_player_info
     struct pksav_gba_player_location_info* p_location_info;
 };
 
-struct pksav_gba_rs_only_fields
+struct pksav_gba_rs_fields
 {
 };
 
-struct pksav_gba_emerald_only_fields
+struct pksav_gba_emerald_fields
 {
 };
 
-struct pksav_gba_frlg_only_fields
+struct pksav_gba_frlg_fields
 {
     uint8_t* p_rival_name;
 };
@@ -98,9 +99,11 @@ struct pksav_gba_misc_fields
 {
     uint16_t* p_casino_coins;
 
-    struct pksav_gba_rs_only_fields rs_only;
-    struct pksav_gba_emerald_only_fields emerald_only;
-    struct pksav_gba_frlg_only_fields frlg_only;
+    struct pksav_gba_roamer* p_roamer;
+
+    struct pksav_gba_rs_fields rs;
+    struct pksav_gba_emerald_fields emerald;
+    struct pksav_gba_frlg_fields frlg;
 };
 
 struct pksav_gba_save

@@ -15,6 +15,7 @@ SET(pksav_gba_headers
     options.h
     pokedex.h
     pokemon.h
+    roamer.h
     save.h
     save_type.h
     text.h
