@@ -67,6 +67,16 @@ struct pksav_gba_emerald_frlg_daycare
     uint8_t remaining_egg_cycle_steps;
 };
 
+//
+// Convenience union
+//
+
+union pksav_gba_daycare
+{
+    struct pksav_gba_rs_daycare rs;
+    struct pksav_gba_emerald_frlg_daycare emerald_frlg;
+};
+
 #pragma pack(pop)
 
 #endif /* PKSAV_GBA_DAYCARE_H */

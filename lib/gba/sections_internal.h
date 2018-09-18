@@ -27,7 +27,7 @@
 #define PKSAV_GBA_NUM_POKEDEX_SLOTS 412
 #define PKSAV_GBA_POKEDEX_BUFFER_SIZE_BYTES ((PKSAV_GBA_NUM_POKEDEX_SLOTS / 8) + 1)
 
-struct pksav_gba_trainer_info_internal
+struct pksav_gba_player_info_internal
 {
     uint8_t name[PKSAV_GBA_TRAINER_NAME_LENGTH];
     uint8_t terminator;
@@ -94,7 +94,7 @@ struct pksav_gba_rs_player_room_decorations
 
 struct pksav_gba_rs_save_block0
 {
-    struct pksav_gba_trainer_info_internal trainer_info;
+    struct pksav_gba_player_info_internal player_info;
 
     uint8_t button_mode;
     uint8_t options[4];

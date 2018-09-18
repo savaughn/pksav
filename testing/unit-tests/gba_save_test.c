@@ -53,7 +53,7 @@ static const struct pksav_gba_save EMPTY_GBA_SAVE =
         .p_nat_pokedex_unlockedC      = NULL
     },
 
-    .trainer_info =
+    .player_info =
     {
         .p_id     = NULL,
         .p_name   = NULL,
@@ -63,8 +63,10 @@ static const struct pksav_gba_save EMPTY_GBA_SAVE =
 
     .misc_fields =
     {
-        .p_rival_name   = NULL,
-        .p_casino_coins = NULL
+        .p_casino_coins = NULL,
+        {},
+        {},
+        {}
     },
 
     .p_internal = NULL
@@ -230,11 +232,11 @@ static void gba_save_test(
     TEST_ASSERT_NULL(p_gba_save->pokedex.p_nat_pokedex_unlockedB);
     TEST_ASSERT_NULL(p_gba_save->pokedex.p_nat_pokedex_unlockedC);
 
-    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_id);
-    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_name);
-    TEST_ASSERT_NULL(p_gba_save->trainer_info.p_money);
+    TEST_ASSERT_NULL(p_gba_save->player_info.p_id);
+    TEST_ASSERT_NULL(p_gba_save->player_info.p_name);
+    TEST_ASSERT_NULL(p_gba_save->player_info.p_money);
 
-    TEST_ASSERT_NULL(p_gba_save->misc_fields.p_rival_name);
+    //TEST_ASSERT_NULL(p_gba_save->misc_fields.p_rival_name);
     TEST_ASSERT_NULL(p_gba_save->misc_fields.p_casino_coins);
 
     TEST_ASSERT_NULL(p_gba_save->p_internal);

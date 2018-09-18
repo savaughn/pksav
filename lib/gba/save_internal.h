@@ -129,7 +129,7 @@ union pksav_gba_save_slot
             // Access the data as a normal section.
             struct pksav_gba_save_section section0;
             // Access the data as a trainer info struct.
-            struct pksav_gba_trainer_info_internal trainer_info;
+            struct pksav_gba_player_info_internal player_info;
         };
         // Section 1 (team/items).
         struct pksav_gba_save_section section1;

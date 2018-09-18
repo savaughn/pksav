@@ -264,8 +264,8 @@ static void _pksav_gba_set_save_pointers(
 
     // Pointers to relevant sections
     struct pksav_gba_save_section* section0 = &p_internal->unshuffled_save_slot.section0;
-    struct pksav_gba_trainer_info_internal* p_trainer_info_internal =
-        (struct pksav_gba_trainer_info_internal*)section0;
+    struct pksav_gba_player_info_internal* p_player_info_internal =
+        (struct pksav_gba_player_info_internal*)section0;
 
     struct pksav_gba_save_section* section1 = &p_internal->unshuffled_save_slot.section1;
     struct pksav_gba_save_section* section2 = &p_internal->unshuffled_save_slot.section2;
@@ -277,7 +277,7 @@ static void _pksav_gba_set_save_pointers(
                                  ];
 
     // Time played
-    p_gba_save->p_time_played = &p_trainer_info_internal->time_played;
+    p_gba_save->p_time_played = &p_player_info_internal->time_played;
 
     // Options
     struct pksav_gba_options* p_options = &p_gba_save->options;
@@ -368,21 +368,21 @@ static void _pksav_gba_set_save_pointers(
         &section2->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
 
     // Trainer Info
-    struct pksav_gba_trainer_info* p_trainer_info = &p_gba_save->trainer_info;
+    struct pksav_gba_player_info* p_player_info = &p_gba_save->player_info;
 
-    p_trainer_info->p_id     = &p_trainer_info_internal->id;
-    p_trainer_info->p_name   = p_trainer_info_internal->name;
-    p_trainer_info->p_gender = &p_trainer_info_internal->gender;
+    p_player_info->p_id     = &p_player_info_internal->id;
+    p_player_info->p_name   = p_player_info_internal->name;
+    p_player_info->p_gender = &p_player_info_internal->gender;
 
-    p_trainer_info->p_money = &section1->data32[
+    p_player_info->p_money = &section1->data32[
                                   section1_offsets_ptr[PKSAV_GBA_MONEY]/4
                               ];
-    *p_trainer_info->p_money ^= *p_internal->p_security_key;
+    *p_player_info->p_money ^= *p_internal->p_security_key;
 
     // Misc Fields
     struct pksav_gba_misc_fields* p_misc_fields = &p_gba_save->misc_fields;
 
-    if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+    /*if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
         p_misc_fields->p_rival_name = &section4->data8[
                                           section4_offsets_ptr[PKSAV_GBA_FRLG_RIVAL_NAME]
@@ -391,7 +391,7 @@ static void _pksav_gba_set_save_pointers(
     else
     {
         p_misc_fields->p_rival_name = NULL;
-    }
+    }*/
 
     p_misc_fields->p_casino_coins = &section1->data16[
                                         section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
@@ -538,7 +538,7 @@ enum pksav_error pksav_gba_save_save(
     );
 
     // Trainer Info
-    *p_gba_save->trainer_info.p_money ^= *p_internal->p_security_key;
+    *p_gba_save->player_info.p_money ^= *p_internal->p_security_key;
 
     // Misc Fields
     *p_gba_save->misc_fields.p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);

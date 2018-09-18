@@ -12,7 +12,9 @@
 
 #include <pksav/common/trainer_id.h>
 
+#include <pksav/gba/daycare.h>
 #include <pksav/gba/items.h>
+#include <pksav/gba/map.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/save_type.h>
@@ -44,6 +46,8 @@ struct pksav_gba_pokemon_storage
     struct pksav_gba_pokemon_party* p_party;
 
     struct pksav_gba_pokemon_pc* p_pc;
+
+    union pksav_gba_daycare* p_daycare;
 };
 
 struct pksav_gba_item_storage
@@ -51,9 +55,11 @@ struct pksav_gba_item_storage
     union pksav_gba_item_bag* p_bag;
 
     struct pksav_gba_item_pc* p_pc;
+
+    uint16_t* p_registered_item;
 };
 
-struct pksav_gba_trainer_info
+struct pksav_gba_player_info
 {
     union pksav_trainer_id* p_id;
 
@@ -71,13 +77,30 @@ struct pksav_gba_trainer_info
     uint8_t* p_gender;
 
     uint32_t* p_money;
+
+    struct pksav_gba_player_location_info* p_location_info;
+};
+
+struct pksav_gba_rs_only_fields
+{
+};
+
+struct pksav_gba_emerald_only_fields
+{
+};
+
+struct pksav_gba_frlg_only_fields
+{
+    uint8_t* p_rival_name;
 };
 
 struct pksav_gba_misc_fields
 {
-    uint8_t* p_rival_name;
-
     uint16_t* p_casino_coins;
+
+    struct pksav_gba_rs_only_fields rs_only;
+    struct pksav_gba_emerald_only_fields emerald_only;
+    struct pksav_gba_frlg_only_fields frlg_only;
 };
 
 struct pksav_gba_save
@@ -94,7 +117,7 @@ struct pksav_gba_save
 
     struct pksav_gba_pokedex pokedex;
 
-    struct pksav_gba_trainer_info trainer_info;
+    struct pksav_gba_player_info player_info;
 
     struct pksav_gba_misc_fields misc_fields;
 
