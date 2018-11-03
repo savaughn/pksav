@@ -65,9 +65,9 @@ static const struct pksav_gba_save EMPTY_GBA_SAVE =
     {
         .p_casino_coins = NULL,
         .p_roamer = NULL,
-        .rs = {},
-        .emerald = {},
-        .frlg =
+        .rs_fields = {},
+        .emerald_fields = {},
+        .frlg_fields =
         {
             .p_rival_name = NULL
         }
@@ -187,6 +187,183 @@ static void pksav_gba_get_file_save_type_test(
     TEST_ASSERT_EQUAL(expected_save_type, save_type);
 }
 
+static void validate_gba_string(
+    const uint8_t* buffer,
+    size_t buffer_len
+)
+{
+    TEST_ASSERT_NOT_NULL(buffer);
+    TEST_ASSERT_TRUE(buffer_len > 0);
+
+    char strbuffer[STRBUFFER_LEN] = {0};
+    enum pksav_error error = pksav_gba_import_text(
+                                 buffer,
+                                 strbuffer,
+                                 buffer_len
+                             );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_TRUE(strlen(strbuffer) > 0ULL);
+}
+
+static void validate_gba_pokemon_party(
+    const struct pksav_gba_pokemon_party* p_party
+)
+{
+    TEST_ASSERT_NOT_NULL(p_party);
+    TEST_ASSERT_TRUE(p_party->count <= PKSAV_GBA_PARTY_NUM_POKEMON);
+
+    for(size_t party_index = 0; party_index < p_party->count; ++party_index)
+    {
+        validate_gba_string(
+            p_party->party[party_index].pc_data.nickname,
+            PKSAV_GBA_POKEMON_NICKNAME_LENGTH
+        );
+        validate_gba_string(
+            p_party->party[party_index].pc_data.otname,
+            PKSAV_GBA_POKEMON_OTNAME_LENGTH
+        );
+    }
+}
+
+// Because 1-386 would make too much sense
+static inline bool is_gba_pokemon_index_valid(uint16_t species)
+{
+    return (species >= 1 && species <= 251) ||
+           (species >= 277 && species <= 439);
+}
+
+static void validate_gba_pokemon_box(
+    const struct pksav_gba_pokemon_box* p_box
+)
+{
+    TEST_ASSERT_NOT_NULL(p_box);
+
+    for(size_t box_index = 0; box_index < PKSAV_GBA_BOX_NUM_POKEMON; ++box_index)
+    {
+        uint16_t species = pksav_littleendian16(p_box->entries[box_index].blocks.growth.species);
+        if(is_gba_pokemon_index_valid(species))
+        {
+            validate_gba_string(
+                p_box->entries[box_index].nickname,
+                PKSAV_GBA_POKEMON_NICKNAME_LENGTH
+            );
+            validate_gba_string(
+                p_box->entries[box_index].otname,
+                PKSAV_GBA_POKEMON_OTNAME_LENGTH
+            );
+        }
+    }
+}
+
+static void validate_gba_pokemon_pc(
+    const struct pksav_gba_pokemon_pc* p_pc
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pc);
+
+    uint32_t current_box = pksav_littleendian32(p_pc->current_box);
+    TEST_ASSERT_TRUE(current_box < PKSAV_GBA_NUM_POKEMON_BOXES);
+
+    const uint8_t min_wallpaper = (uint8_t)PKSAV_GBA_BOX_WALLPAPER_FOREST;
+
+    // Plain is RSE-only, but the value matches the highest for FRLG, so this
+    // is fine.
+    const uint8_t max_wallpaper = (uint8_t)PKSAV_GBA_RSE_BOX_WALLPAPER_PLAIN;
+
+    for(size_t box_index = 0; box_index < PKSAV_GBA_NUM_POKEMON_BOXES; ++box_index)
+    {
+        validate_gba_pokemon_box(&p_pc->boxes[box_index]);
+        validate_gba_string(
+            p_pc->box_names[box_index],
+            PKSAV_GBA_POKEMON_BOX_NAME_LENGTH
+        );
+
+        TEST_ASSERT_TRUE(p_pc->wallpapers[box_index] >= min_wallpaper);
+        TEST_ASSERT_TRUE(p_pc->wallpapers[box_index] <= max_wallpaper);
+    }
+}
+
+static void validate_gba_daycare(
+    const union pksav_gba_daycare* p_daycare,
+    enum pksav_gba_save_type save_type
+)
+{
+    TEST_ASSERT_NOT_NULL(p_daycare);
+
+    for(size_t daycare_index = 0;
+        daycare_index < PKSAV_GBA_DAYCARE_NUM_POKEMON;
+        ++daycare_index)
+    {
+        const struct pksav_gba_pc_pokemon* p_daycare_pokemon = NULL;
+
+        if(save_type == PKSAV_GBA_SAVE_TYPE_RS)
+        {
+            p_daycare_pokemon = &p_daycare->rs.pokemon[daycare_index];
+        }
+        else
+        {
+            p_daycare_pokemon = &p_daycare->emerald_frlg.pokemon[daycare_index].pokemon;
+        }
+        TEST_ASSERT_NOT_NULL(p_daycare_pokemon);
+
+        uint16_t pokemon_index = pksav_littleendian16(p_daycare_pokemon->blocks.growth.species);
+        if(is_gba_pokemon_index_valid(pokemon_index))
+        {
+            validate_gba_string(
+                p_daycare_pokemon->nickname,
+                PKSAV_GBA_POKEMON_NICKNAME_LENGTH
+            );
+            validate_gba_string(
+                p_daycare_pokemon->otname,
+                PKSAV_GBA_POKEMON_OTNAME_LENGTH
+            );
+        }
+    }
+}
+
+static void validate_gba_pokedex(
+    const struct pksav_gba_pokedex* p_pokedex,
+    enum pksav_gba_save_type save_type
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokedex);
+
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_seenA);
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_seenB);
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_seenC);
+
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_owned);
+
+    if(save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+    {
+        TEST_ASSERT_NULL(p_pokedex->p_rse_nat_pokedex_unlockedA);
+        TEST_ASSERT_NOT_NULL(p_pokedex->p_frlg_nat_pokedex_unlockedA);
+    }
+    else
+    {
+        TEST_ASSERT_NOT_NULL(p_pokedex->p_rse_nat_pokedex_unlockedA);
+        TEST_ASSERT_NULL(p_pokedex->p_frlg_nat_pokedex_unlockedA);
+    }
+
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_nat_pokedex_unlockedB);
+    TEST_ASSERT_NOT_NULL(p_pokedex->p_nat_pokedex_unlockedC);
+
+    // TODO: #define
+    static const size_t num_pokedex_bytes = (386 / 8) + 1;
+
+    // TODO: confirm B offset
+    /*TEST_ASSERT_EQUAL_MEMORY(
+        p_pokedex->p_seenA,
+        p_pokedex->p_seenB,
+        num_pokedex_bytes
+    );*/
+    TEST_ASSERT_EQUAL_MEMORY(
+        p_pokedex->p_seenA,
+        p_pokedex->p_seenC,
+        num_pokedex_bytes
+    );
+}
+
 static void gba_save_test(
     struct pksav_gba_save* p_gba_save,
     enum pksav_gba_save_type expected_save_type,
@@ -207,13 +384,75 @@ static void gba_save_test(
         get_tmp_dir(), FS_SEPARATOR, get_pid(), save_name
     );
 
+    //
     // Validate fields. Most pointers should not be NULL, and some fields have
     // a specific set of valid values.
+    //
+
     TEST_ASSERT_NOT_NULL(p_gba_save->p_internal);
 
     TEST_ASSERT_EQUAL(expected_save_type, p_gba_save->save_type);
+    TEST_ASSERT_NOT_NULL(p_gba_save->p_time_played);
 
+    // TODO: options, items
+    validate_gba_pokemon_party(p_gba_save->pokemon_storage.p_party);
+    validate_gba_pokemon_pc(p_gba_save->pokemon_storage.p_pc);
+    validate_gba_daycare(
+        p_gba_save->pokemon_storage.p_daycare,
+        p_gba_save->save_type
+    );
+    validate_gba_pokedex(
+        &p_gba_save->pokedex,
+        p_gba_save->save_type
+    );
+
+    TEST_ASSERT_NOT_NULL(p_gba_save->player_info.p_id);
+    validate_gba_string(
+        p_gba_save->player_info.p_name,
+        PKSAV_GBA_TRAINER_NAME_LENGTH
+    );
+    TEST_ASSERT_NOT_NULL(p_gba_save->player_info.p_gender);
+    TEST_ASSERT_TRUE((*p_gba_save->player_info.p_gender == 0) ||
+                     (*p_gba_save->player_info.p_gender == 1));
+    TEST_ASSERT_NOT_NULL(p_gba_save->player_info.p_money);
+
+    TEST_ASSERT_TRUE(
+        pksav_littleendian32(*p_gba_save->player_info.p_money) <=
+        PKSAV_GBA_SAVE_MONEY_MAX_VALUE
+    );
+
+    //TEST_ASSERT_NOT_NULL(p_gba_save->player_info.p_location_info);
+
+    TEST_ASSERT_NOT_NULL(p_gba_save->misc_fields.p_casino_coins);
+    TEST_ASSERT_TRUE(
+        pksav_littleendian16(*p_gba_save->misc_fields.p_casino_coins) <=
+        PKSAV_GBA_SAVE_CASINO_COINS_MAX_VALUE
+    );
+
+    //TEST_ASSERT_NOT_NULL(p_gba_save->misc_fields.p_roamer);
+
+    switch(p_gba_save->save_type)
+    {
+        case PKSAV_GBA_SAVE_TYPE_RS:
+            TEST_ASSERT_NULL(p_gba_save->misc_fields.frlg_fields.p_rival_name);
+            break;
+
+        case PKSAV_GBA_SAVE_TYPE_EMERALD:
+            TEST_ASSERT_NULL(p_gba_save->misc_fields.frlg_fields.p_rival_name);
+            break;
+
+        default:
+            validate_gba_string(
+                p_gba_save->misc_fields.frlg_fields.p_rival_name,
+                PKSAV_GBA_RIVAL_NAME_LENGTH
+            );
+            break;
+    }
+
+    //
     // Free the save and make sure all fields are set to NULL or default.
+    //
+
     error = pksav_gba_free_save(p_gba_save);
     PKSAV_TEST_ASSERT_SUCCESS(error);
 
@@ -359,7 +598,7 @@ static void convenience_macro_test()
     *p_ribbons_obedience |= (PKSAV_GBA_CONTEST_RIBBON_NORMAL << PKSAV_GBA_SMART_RIBBONS_OFFSET);
     *p_ribbons_obedience |= (PKSAV_GBA_CONTEST_RIBBON_SUPER << PKSAV_GBA_TOUGH_RIBBONS_OFFSET);
 
-    // Origin info (TODO: add enums, set, and test
+    // Origin info (TODO: add enums, set, and test)
 
     uint16_t ball = \
         PKSAV_GBA_POKEMON_BALL(p_blocks->misc.origin_info);
