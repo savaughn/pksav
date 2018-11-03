@@ -101,9 +101,9 @@ struct pksav_gba_misc_fields
 
     struct pksav_gba_roamer* p_roamer;
 
-    struct pksav_gba_rs_fields rs;
-    struct pksav_gba_emerald_fields emerald;
-    struct pksav_gba_frlg_fields frlg;
+    struct pksav_gba_rs_fields rs_fields;
+    struct pksav_gba_emerald_fields emerald_fields;
+    struct pksav_gba_frlg_fields frlg_fields;
 };
 
 struct pksav_gba_save

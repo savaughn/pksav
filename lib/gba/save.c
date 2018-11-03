@@ -263,16 +263,16 @@ static void _pksav_gba_set_save_pointers(
     );
 
     // Pointers to relevant sections
-    struct pksav_gba_save_section* section0 = &p_internal->unshuffled_save_slot.section0;
+    struct pksav_gba_save_section* p_section0 = &p_internal->unshuffled_save_slot.section0;
     struct pksav_gba_player_info_internal* p_player_info_internal =
-        (struct pksav_gba_player_info_internal*)section0;
+        (struct pksav_gba_player_info_internal*)p_section0;
 
-    struct pksav_gba_save_section* section1 = &p_internal->unshuffled_save_slot.section1;
-    struct pksav_gba_save_section* section2 = &p_internal->unshuffled_save_slot.section2;
-    struct pksav_gba_save_section* section4 = &p_internal->unshuffled_save_slot.section4;
+    struct pksav_gba_save_section* p_section1 = &p_internal->unshuffled_save_slot.section1;
+    struct pksav_gba_save_section* p_section2 = &p_internal->unshuffled_save_slot.section2;
+    struct pksav_gba_save_section* p_section4 = &p_internal->unshuffled_save_slot.section4;
 
     // Security key, used in decryption
-    p_internal->p_security_key = &section0->data32[
+    p_internal->p_security_key = &p_section0->data32[
                                      section0_offsets_ptr[PKSAV_GBA_SECURITY_KEY1]/4
                                  ];
 
@@ -282,37 +282,21 @@ static void _pksav_gba_set_save_pointers(
     // Options
     struct pksav_gba_options* p_options = &p_gba_save->options;
 
-    p_options->p_button_mode = &section0->data8[
+    p_options->p_button_mode = &p_section0->data8[
                                    section0_offsets_ptr[PKSAV_GBA_OPTIONS_BUTTON_MODE]
                                ];
-    p_options->p_text_options = &section0->data8[
+    p_options->p_text_options = &p_section0->data8[
                                     section0_offsets_ptr[PKSAV_GBA_OPTIONS_TEXT]
                                 ];
-    p_options->p_sound_battle_options = &section0->data8[
+    p_options->p_sound_battle_options = &p_section0->data8[
                                             section0_offsets_ptr[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
                                         ];
-
-    // Item storage
-    struct pksav_gba_item_storage* p_item_storage = &p_gba_save->item_storage;
-
-    p_item_storage->p_bag = (union pksav_gba_item_bag*)(
-                                &section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
-                            );
-    pksav_gba_save_crypt_items(
-        p_item_storage->p_bag,
-        *p_internal->p_security_key,
-        p_gba_save->save_type
-    );
-
-    p_item_storage->p_pc = (struct pksav_gba_item_pc*)(
-                               &section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
-                           );
 
     // Pokémon storage
     struct pksav_gba_pokemon_storage* p_pokemon_storage = &p_gba_save->pokemon_storage;
 
     p_pokemon_storage->p_party = (struct pksav_gba_pokemon_party*)(
-                                     &section1->data8[section1_offsets_ptr[PKSAV_GBA_POKEMON_PARTY]]
+                                     &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_POKEMON_PARTY]]
                                  );
     for(size_t party_index = 0;
         party_index < PKSAV_GBA_PARTY_NUM_POKEMON;
@@ -330,42 +314,86 @@ static void _pksav_gba_set_save_pointers(
     );
     p_pokemon_storage->p_pc = &p_internal->consolidated_pokemon_pc;
 
+    // TODO: confirm crypting happens in daycare
+    p_pokemon_storage->p_daycare = (union pksav_gba_daycare*)(
+                                       &p_section4->data8[section4_offsets_ptr[PKSAV_GBA_DAYCARE]]
+                                   );
+    for(size_t daycare_index = 0;
+        daycare_index < PKSAV_GBA_DAYCARE_NUM_POKEMON;
+        ++daycare_index)
+    {
+        if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_RS)
+        {
+            pksav_gba_crypt_pokemon(
+                &p_pokemon_storage->p_daycare->rs.pokemon[daycare_index],
+                false // should_encrypt
+            );
+        }
+        else
+        {
+            pksav_gba_crypt_pokemon(
+                &p_pokemon_storage->p_daycare->emerald_frlg.pokemon[daycare_index].pokemon,
+                false // should_encrypt
+            );
+        }
+    }
+
+    // Item storage
+    struct pksav_gba_item_storage* p_item_storage = &p_gba_save->item_storage;
+
+    p_item_storage->p_bag = (union pksav_gba_item_bag*)(
+                                &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
+                            );
+    pksav_gba_save_crypt_items(
+        p_item_storage->p_bag,
+        *p_internal->p_security_key,
+        p_gba_save->save_type
+    );
+
+    p_item_storage->p_pc = (struct pksav_gba_item_pc*)(
+                               &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
+                           );
+
+    p_item_storage->p_registered_item = &p_section1->data16[
+                                            section1_offsets_ptr[PKSAV_GBA_REGISTERED_ITEM]/2
+                                        ];
+
     // Pokédex
     struct pksav_gba_pokedex* p_pokedex = &p_gba_save->pokedex;
 
-    p_pokedex->p_seenA = &section0->data8[
+    p_pokedex->p_seenA = &p_section0->data8[
                              section0_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_A]
                          ];
-    p_pokedex->p_seenB = &section1->data8[
+    p_pokedex->p_seenB = &p_section1->data8[
                              section1_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_B]
                          ];
-    p_pokedex->p_seenC = &section4->data8[
+    p_pokedex->p_seenC = &p_section4->data8[
                              section4_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_C]
                          ];
-    p_pokedex->p_owned = &section0->data8[
+    p_pokedex->p_owned = &p_section0->data8[
                              section0_offsets_ptr[PKSAV_GBA_POKEDEX_OWNED]
                          ];
 
     if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
         p_pokedex->p_frlg_nat_pokedex_unlockedA =
-            &section0->data8[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
+            &p_section0->data8[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
 
         p_pokedex->p_rse_nat_pokedex_unlockedA = NULL;
     }
     else
     {
         p_pokedex->p_rse_nat_pokedex_unlockedA =
-            &section0->data16[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
+            &p_section0->data16[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
 
         p_pokedex->p_frlg_nat_pokedex_unlockedA = NULL;
     }
 
     p_pokedex->p_nat_pokedex_unlockedB =
-        &section2->data8[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
+        &p_section2->data8[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
 
     p_pokedex->p_nat_pokedex_unlockedC =
-        &section2->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
+        &p_section2->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
 
     // Trainer Info
     struct pksav_gba_player_info* p_player_info = &p_gba_save->player_info;
@@ -374,7 +402,7 @@ static void _pksav_gba_set_save_pointers(
     p_player_info->p_name   = p_player_info_internal->name;
     p_player_info->p_gender = &p_player_info_internal->gender;
 
-    p_player_info->p_money = &section1->data32[
+    p_player_info->p_money = &p_section1->data32[
                                   section1_offsets_ptr[PKSAV_GBA_MONEY]/4
                               ];
     *p_player_info->p_money ^= *p_internal->p_security_key;
@@ -382,21 +410,31 @@ static void _pksav_gba_set_save_pointers(
     // Misc Fields
     struct pksav_gba_misc_fields* p_misc_fields = &p_gba_save->misc_fields;
 
-    /*if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+    p_misc_fields->p_casino_coins = &p_section1->data16[
+                                        section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
+                                    ];
+    *p_misc_fields->p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);
+
+    // TODO: roamer, once offset determined
+
+    // Ruby/Sapphire-specific fields
+    //struct pksav_gba_rs_fields* p_rs_fields = &p_misc_fields->rs_fields;
+
+    // Emerald-specific fields
+    //struct pksav_gba_emerald_fields* p_emerald_fields = &p_misc_fields->emerald_fields;
+
+    // FireRed/LeafGreen-specific fields
+    struct pksav_gba_frlg_fields* p_frlg_fields = &p_misc_fields->frlg_fields;
+    if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
-        p_misc_fields->p_rival_name = &section4->data8[
+        p_frlg_fields->p_rival_name = &p_section4->data8[
                                           section4_offsets_ptr[PKSAV_GBA_FRLG_RIVAL_NAME]
                                       ];
     }
     else
     {
-        p_misc_fields->p_rival_name = NULL;
-    }*/
-
-    p_misc_fields->p_casino_coins = &section1->data16[
-                                        section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
-                                    ];
-    *p_misc_fields->p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);
+        p_frlg_fields->p_rival_name = NULL;
+    }
 }
 
 static enum pksav_error _pksav_gba_load_save_from_buffer(
@@ -536,6 +574,27 @@ enum pksav_error pksav_gba_save_save(
         &p_internal->consolidated_pokemon_pc,
         &p_internal->unshuffled_save_slot
     );
+
+    // TODO: confirm crypting happens in daycare
+    for(size_t daycare_index = 0;
+        daycare_index < PKSAV_GBA_DAYCARE_NUM_POKEMON;
+        ++daycare_index)
+    {
+        if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_RS)
+        {
+            pksav_gba_crypt_pokemon(
+                &p_gba_save->pokemon_storage.p_daycare->rs.pokemon[daycare_index],
+                true // should_encrypt
+            );
+        }
+        else
+        {
+            pksav_gba_crypt_pokemon(
+                &p_gba_save->pokemon_storage.p_daycare->emerald_frlg.pokemon[daycare_index].pokemon,
+                true // should_encrypt
+            );
+        }
+    }
 
     // Trainer Info
     *p_gba_save->player_info.p_money ^= *p_internal->p_security_key;
