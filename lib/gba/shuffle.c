@@ -13,7 +13,6 @@
 #include <pksav/gba/save.h>
 
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
 void pksav_gba_save_unshuffle_sections(
@@ -53,8 +52,6 @@ void pksav_gba_save_shuffle_sections(
         ++section_index)
     {
         assert(p_section_nums[section_index] < PKSAV_GBA_NUM_SAVE_SECTIONS);
-
-        printf("%zu %zu\n", section_index, (size_t)(p_section_nums[section_index]));
 
         save_slot_out->sections_arr[section_index] =
             save_slot_in->sections_arr[p_section_nums[section_index]];

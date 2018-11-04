@@ -364,6 +364,15 @@ static void validate_gba_pokedex(
     );
 }
 
+static void compare_gba_saves(
+    const struct pksav_gba_save* p_gba_save1,
+    const struct pksav_gba_save* p_gba_save2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_gba_save1);
+    TEST_ASSERT_NOT_NULL(p_gba_save2);
+}
+
 static void gba_save_test(
     struct pksav_gba_save* p_gba_save,
     enum pksav_gba_save_type expected_save_type,
@@ -447,6 +456,37 @@ static void gba_save_test(
                 PKSAV_GBA_RIVAL_NAME_LENGTH
             );
             break;
+    }
+
+    //
+    // Make sure loading and saving are perfectly symmetrical. As the checksum
+    // is not guaranteed to be set for some reason, compare each part.
+    //
+
+    error = pksav_gba_save_save(
+                tmp_save_filepath,
+                p_gba_save
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+
+    struct pksav_gba_save tmp_gba_save = EMPTY_GBA_SAVE;
+    error = pksav_gba_load_save_from_file(
+                tmp_save_filepath,
+                &tmp_gba_save
+            );
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+
+    compare_gba_saves(
+        p_gba_save,
+        &tmp_gba_save
+    );
+
+    error = pksav_gba_free_save(&tmp_gba_save);
+    PKSAV_TEST_ASSERT_SUCCESS(error);
+
+    if(delete_file(tmp_save_filepath))
+    {
+        TEST_FAIL_MESSAGE("Failed to clean up temp file.");
     }
 
     //
