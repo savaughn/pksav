@@ -232,17 +232,17 @@ static void _pksav_gba_set_save_pointers(
     assert(buffer != NULL);
 
     // Offsets
-    const size_t* section0_offsets_ptr = PKSAV_GBA_SAVE_SECTION0_OFFSETS[p_gba_save->save_type-1];
-    const size_t* section1_offsets_ptr = PKSAV_GBA_SAVE_SECTION1_OFFSETS[p_gba_save->save_type-1];
-    const size_t* section2_offsets_ptr = PKSAV_GBA_SAVE_SECTION2_OFFSETS[p_gba_save->save_type-1];
-    const size_t* section4_offsets_ptr = PKSAV_GBA_SAVE_SECTION4_OFFSETS[p_gba_save->save_type-1];
+    const size_t* p_section0_offsets = PKSAV_GBA_SAVE_SECTION0_OFFSETS[p_gba_save->save_type-1];
+    const size_t* p_section1_offsets = PKSAV_GBA_SAVE_SECTION1_OFFSETS[p_gba_save->save_type-1];
+    const size_t* p_section2_offsets = PKSAV_GBA_SAVE_SECTION2_OFFSETS[p_gba_save->save_type-1];
+    const size_t* p_section4_offsets = PKSAV_GBA_SAVE_SECTION4_OFFSETS[p_gba_save->save_type-1];
 
     // At this point, we should know the save is valid, so we should be able
     // to get valid sections.
     union pksav_gba_save_slot* p_save_slot = pksav_gba_get_active_save_slot_ptr(
-                                                    buffer,
-                                                    buffer_len
-                                               );
+                                                 buffer,
+                                                 buffer_len
+                                             );
     assert(p_save_slot != NULL);
 
     // Internal
@@ -273,7 +273,7 @@ static void _pksav_gba_set_save_pointers(
 
     // Security key, used in decryption
     p_internal->p_security_key = &p_section0->data32[
-                                     section0_offsets_ptr[PKSAV_GBA_SECURITY_KEY1]/4
+                                     p_section0_offsets[PKSAV_GBA_SECURITY_KEY1]/4
                                  ];
 
     // Time played
@@ -283,20 +283,20 @@ static void _pksav_gba_set_save_pointers(
     struct pksav_gba_options* p_options = &p_gba_save->options;
 
     p_options->p_button_mode = &p_section0->data8[
-                                   section0_offsets_ptr[PKSAV_GBA_OPTIONS_BUTTON_MODE]
+                                   p_section0_offsets[PKSAV_GBA_OPTIONS_BUTTON_MODE]
                                ];
     p_options->p_text_options = &p_section0->data8[
-                                    section0_offsets_ptr[PKSAV_GBA_OPTIONS_TEXT]
+                                    p_section0_offsets[PKSAV_GBA_OPTIONS_TEXT]
                                 ];
     p_options->p_sound_battle_options = &p_section0->data8[
-                                            section0_offsets_ptr[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
+                                            p_section0_offsets[PKSAV_GBA_OPTIONS_SOUND_BATTLE]
                                         ];
 
     // Pokémon storage
     struct pksav_gba_pokemon_storage* p_pokemon_storage = &p_gba_save->pokemon_storage;
 
     p_pokemon_storage->p_party = (struct pksav_gba_pokemon_party*)(
-                                     &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_POKEMON_PARTY]]
+                                     &p_section1->data8[p_section1_offsets[PKSAV_GBA_POKEMON_PARTY]]
                                  );
     for(size_t party_index = 0;
         party_index < PKSAV_GBA_PARTY_NUM_POKEMON;
@@ -316,7 +316,7 @@ static void _pksav_gba_set_save_pointers(
 
     // TODO: confirm crypting happens in daycare
     p_pokemon_storage->p_daycare = (union pksav_gba_daycare*)(
-                                       &p_section4->data8[section4_offsets_ptr[PKSAV_GBA_DAYCARE]]
+                                       &p_section4->data8[p_section4_offsets[PKSAV_GBA_DAYCARE]]
                                    );
     for(size_t daycare_index = 0;
         daycare_index < PKSAV_GBA_DAYCARE_NUM_POKEMON;
@@ -342,7 +342,7 @@ static void _pksav_gba_set_save_pointers(
     struct pksav_gba_item_storage* p_item_storage = &p_gba_save->item_storage;
 
     p_item_storage->p_bag = (union pksav_gba_item_bag*)(
-                                &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_BAG]]
+                                &p_section1->data8[p_section1_offsets[PKSAV_GBA_ITEM_BAG]]
                             );
     pksav_gba_save_crypt_items(
         p_item_storage->p_bag,
@@ -351,49 +351,49 @@ static void _pksav_gba_set_save_pointers(
     );
 
     p_item_storage->p_pc = (struct pksav_gba_item_pc*)(
-                               &p_section1->data8[section1_offsets_ptr[PKSAV_GBA_ITEM_PC]]
+                               &p_section1->data8[p_section1_offsets[PKSAV_GBA_ITEM_PC]]
                            );
 
     p_item_storage->p_registered_item = &p_section1->data16[
-                                            section1_offsets_ptr[PKSAV_GBA_REGISTERED_ITEM]/2
+                                            p_section1_offsets[PKSAV_GBA_REGISTERED_ITEM]/2
                                         ];
 
     // Pokédex
     struct pksav_gba_pokedex* p_pokedex = &p_gba_save->pokedex;
 
     p_pokedex->p_seenA = &p_section0->data8[
-                             section0_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_A]
+                             p_section0_offsets[PKSAV_GBA_POKEDEX_SEEN_A]
                          ];
     p_pokedex->p_seenB = &p_section1->data8[
-                             section1_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_B]
+                             p_section1_offsets[PKSAV_GBA_POKEDEX_SEEN_B]
                          ];
     p_pokedex->p_seenC = &p_section4->data8[
-                             section4_offsets_ptr[PKSAV_GBA_POKEDEX_SEEN_C]
+                             p_section4_offsets[PKSAV_GBA_POKEDEX_SEEN_C]
                          ];
     p_pokedex->p_owned = &p_section0->data8[
-                             section0_offsets_ptr[PKSAV_GBA_POKEDEX_OWNED]
+                             p_section0_offsets[PKSAV_GBA_POKEDEX_OWNED]
                          ];
 
     if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
         p_pokedex->p_frlg_nat_pokedex_unlockedA =
-            &p_section0->data8[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
+            &p_section0->data8[p_section0_offsets[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]];
 
         p_pokedex->p_rse_nat_pokedex_unlockedA = NULL;
     }
     else
     {
         p_pokedex->p_rse_nat_pokedex_unlockedA =
-            &p_section0->data16[section0_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
+            &p_section0->data16[p_section0_offsets[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_A]/2];
 
         p_pokedex->p_frlg_nat_pokedex_unlockedA = NULL;
     }
 
     p_pokedex->p_nat_pokedex_unlockedB =
-        &p_section2->data8[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
+        &p_section2->data8[p_section2_offsets[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B]];
 
     p_pokedex->p_nat_pokedex_unlockedC =
-        &p_section2->data16[section2_offsets_ptr[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
+        &p_section2->data16[p_section2_offsets[PKSAV_GBA_NAT_POKEDEX_UNLOCKED_C]/2];
 
     // Trainer Info
     struct pksav_gba_player_info* p_player_info = &p_gba_save->player_info;
@@ -403,7 +403,7 @@ static void _pksav_gba_set_save_pointers(
     p_player_info->p_gender = &p_player_info_internal->gender;
 
     p_player_info->p_money = &p_section1->data32[
-                                  section1_offsets_ptr[PKSAV_GBA_MONEY]/4
+                                  p_section1_offsets[PKSAV_GBA_MONEY]/4
                               ];
     *p_player_info->p_money ^= *p_internal->p_security_key;
 
@@ -411,7 +411,7 @@ static void _pksav_gba_set_save_pointers(
     struct pksav_gba_misc_fields* p_misc_fields = &p_gba_save->misc_fields;
 
     p_misc_fields->p_casino_coins = &p_section1->data16[
-                                        section1_offsets_ptr[PKSAV_GBA_CASINO_COINS]/2
+                                        p_section1_offsets[PKSAV_GBA_CASINO_COINS]/2
                                     ];
     *p_misc_fields->p_casino_coins ^= (*p_internal->p_security_key & 0xFFFF);
 
@@ -428,7 +428,7 @@ static void _pksav_gba_set_save_pointers(
     if(p_gba_save->save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
     {
         p_frlg_fields->p_rival_name = &p_section4->data8[
-                                          section4_offsets_ptr[PKSAV_GBA_FRLG_RIVAL_NAME]
+                                          p_section4_offsets[PKSAV_GBA_FRLG_RIVAL_NAME]
                                       ];
     }
     else

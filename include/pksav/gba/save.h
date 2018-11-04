@@ -82,13 +82,13 @@ struct pksav_gba_player_info
     struct pksav_gba_player_location_info* p_location_info;
 };
 
-struct pksav_gba_rs_fields
+/*struct pksav_gba_rs_fields
 {
 };
 
 struct pksav_gba_emerald_fields
 {
-};
+};*/
 
 struct pksav_gba_frlg_fields
 {
@@ -101,8 +101,8 @@ struct pksav_gba_misc_fields
 
     struct pksav_gba_roamer* p_roamer;
 
-    struct pksav_gba_rs_fields rs_fields;
-    struct pksav_gba_emerald_fields emerald_fields;
+    //struct pksav_gba_rs_fields rs_fields;
+    //struct pksav_gba_emerald_fields emerald_fields;
     struct pksav_gba_frlg_fields frlg_fields;
 };
 
