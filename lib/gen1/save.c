@@ -8,6 +8,7 @@
 #include "gen1/save_internal.h"
 #include "util/fs.h"
 
+#include <pksav/gen1/common.h>
 #include <pksav/gen1/save.h>
 
 #include <assert.h>
@@ -45,7 +46,7 @@ enum pksav_error pksav_gen1_get_buffer_save_type(
              * a safe way to differentiate Red/Blue from Yellow.
              */
             static const size_t YELLOW_PIKACHU_BUFFER_START = 0x26DC;
-            static const size_t YELLOW_PIKACHU_BUFFER_END = 0x275C;
+            static const size_t YELLOW_PIKACHU_BUFFER_END   = 0x275C;
 
             *p_save_type_out = PKSAV_GEN1_SAVE_TYPE_RED_BLUE;
             for(size_t buffer_index = YELLOW_PIKACHU_BUFFER_START;

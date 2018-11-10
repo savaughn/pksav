@@ -11,6 +11,7 @@
 #include <pksav/error.h>
 
 #include <pksav/gen1/badges.h>
+#include <pksav/gen1/common.h>
 #include <pksav/gen1/daycare_data.h>
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/options.h>

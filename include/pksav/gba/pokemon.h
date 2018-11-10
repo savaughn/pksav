@@ -7,24 +7,24 @@
 #ifndef PKSAV_GBA_POKEMON_H
 #define PKSAV_GBA_POKEMON_H
 
-#include <pksav/config.h>
-
+#include <pksav/common/constants.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
+#include <pksav/gba/common.h>
 #include <pksav/gba/ribbons.h>
 
 #include <stdint.h>
 
-#define PKSAV_GBA_BOX_NUM_POKEMON (30)
-#define PKSAV_GBA_PARTY_NUM_POKEMON (6)
+#define PKSAV_GBA_BOX_NUM_POKEMON   (30)
+#define PKSAV_GBA_PARTY_NUM_POKEMON PKSAV_STANDARD_POKEMON_PARTY_SIZE
 
-#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH (10)
-#define PKSAV_GBA_POKEMON_OTNAME_LENGTH (7)
+#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH PKSAV_STANDARD_NICKNAME_LENGTH
+#define PKSAV_GBA_POKEMON_OTNAME_LENGTH   PKSAV_GBA_TRAINER_NAME_LENGTH
 
-#define PKSAV_GBA_POKEMON_NUM_MOVES (4)
+#define PKSAV_GBA_POKEMON_NUM_MOVES PKSAV_STANDARD_POKEMON_NUM_MOVES
 
-#define PKSAV_GBA_NUM_POKEMON_BOXES (14)
+#define PKSAV_GBA_NUM_POKEMON_BOXES       (14)
 #define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH (8)
 
 /*!
@@ -113,10 +113,10 @@
  */
 #define PKSAV_GBA_POKEMON_OBEDIENCE_MASK ((uint32_t)(1 << 31))
 
-#pragma pack(push,1)
-
 #define PKSAV_GBA_POKEMON_PP_UP(field,move_num) \
     (((field) >> (move_num * 2)) & 3)
+
+#pragma pack(push,1)
 
 /*!
  * @brief Internal representation of Pokémon statistics that increase

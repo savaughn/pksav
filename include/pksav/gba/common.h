@@ -4,8 +4,12 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKSAV_GBA_SAVE_TYPE_H
-#define PKSAV_GBA_SAVE_TYPE_H
+#ifndef PKSAV_GBA_COMMON_H
+#define PKSAV_GBA_COMMON_H
+
+#include <pksav/common/constants.h>
+
+#define PKSAV_GBA_TRAINER_NAME_LENGTH PKSAV_STANDARD_TRAINER_NAME_LENGTH
 
 enum pksav_gba_save_type
 {
@@ -15,4 +19,4 @@ enum pksav_gba_save_type
     PKSAV_GBA_SAVE_TYPE_FRLG
 };
 
-#endif /* PKSAV_GBA_SAVE_TYPE_H */
+#endif /* PKSAV_GBA_COMMON_H */

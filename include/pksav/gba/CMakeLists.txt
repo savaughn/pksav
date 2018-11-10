@@ -7,6 +7,7 @@
 
 SET(pksav_gba_headers
     box_wallpaper.h
+    common.h
     daycare.h
     items.h
     language.h
@@ -17,7 +18,6 @@ SET(pksav_gba_headers
     pokemon.h
     roamer.h
     save.h
-    save_type.h
     text.h
     time.h
 )

@@ -8,7 +8,7 @@
 #include "gba/crypt.h"
 #include "gba/save_internal.h"
 
-#include <pksav/gba/save_type.h>
+#include <pksav/gba/common.h>
 
 #include <assert.h>
 #include <string.h>

@@ -8,6 +8,7 @@
 #include "gen2/save_internal.h"
 #include "util/fs.h"
 
+#include <pksav/gen2/common.h>
 #include <pksav/gen2/save.h>
 
 #include <pksav/math/endian.h>

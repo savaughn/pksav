@@ -10,7 +10,7 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
-#include <pksav/gba/save_type.h>
+#include <pksav/gba/common.h>
 
 #include <stdint.h>
 #include <stdbool.h>

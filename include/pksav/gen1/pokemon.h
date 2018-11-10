@@ -7,34 +7,28 @@
 #ifndef PKSAV_GEN1_POKEMON_H
 #define PKSAV_GEN1_POKEMON_H
 
+#include <pksav/gen1/common.h>
+
+#include <pksav/common/constants.h>
+
 #include <stdint.h>
 
 #define PKSAV_GEN1_BOX_NUM_POKEMON   (20)
-#define PKSAV_GEN1_PARTY_NUM_POKEMON (6)
+#define PKSAV_GEN1_PARTY_NUM_POKEMON PKSAV_STANDARD_POKEMON_PARTY_SIZE
+#define PKSAV_GEN1_POKEMON_NUM_MOVES PKSAV_STANDARD_POKEMON_NUM_MOVES
 
-#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH (10)
-
-#define PKSAV_GEN1_POKEMON_OTNAME_LENGTH (7)
+#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH       PKSAV_STANDARD_NICKNAME_LENGTH
+#define PKSAV_GEN1_POKEMON_OTNAME_LENGTH         PKSAV_GEN1_TRAINER_NAME_LENGTH
 #define PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH (10)
 
-#define PKSAV_GEN1_POKEMON_NUM_TYPES (2)
-
-#define PKSAV_GEN1_POKEMON_NUM_MOVES (4)
-
 #define PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
+#define PKSAV_GEN1_POKEMON_NUM_TYPES              (2)
 
-/*!
- * @brief The mask for a move's PP in the PP field.
- *
- * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
- * get the PP of that move.
- */
-#define PKSAV_GEN1_POKEMON_MOVE_PP_MASK ((uint8_t)0x3F)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_MASK   ((uint8_t)0x3F)
+#define PKSAV_GEN1_POKEMON_MOVE_PP(field) ((field) & PKSAV_GEN1_POKEMON_MOVE_PP_MASK)
 
-#define PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET 6
-
-#define PKSAV_GEN1_POKEMON_MOVE_PP_UP(field) \
-    ((field) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET (6)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP(field) ((field) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
 
 #pragma pack(push,1)
 

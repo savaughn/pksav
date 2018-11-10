@@ -10,6 +10,7 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen2/common.h>
 #include <pksav/gen2/daycare_data.h>
 #include <pksav/gen2/items.h>
 #include <pksav/gen2/pokemon.h>
@@ -21,8 +22,7 @@
 
 #define PKSAV_GEN2_SAVE_SIZE (0x8000)
 
-#define PKSAV_GEN2_TRAINER_NAME_LENGTH (7)
-#define PKSAV_GEN2_RIVAL_NAME_LENGTH   (7)
+#define PKSAV_GEN2_RIVAL_NAME_LENGTH PKSAV_GEN2_TRAINER_NAME_LENGTH
 
 #define PKSAV_GEN2_SAVE_MONEY_BUFFER_SIZE_BYTES (3)
 #define PKSAV_GEN2_SAVE_MONEY_MAX_VALUE         (999999)
@@ -33,19 +33,6 @@
 #define PKSAV_GEN2_POKEDEX_BUFFER_SIZE_BYTES ((251 / 8) + 1)
 
 #define PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK ((uint8_t)(1 << 7))
-
-enum pksav_gen2_save_type
-{
-    PKSAV_GEN2_SAVE_TYPE_NONE,
-    PKSAV_GEN2_SAVE_TYPE_GS,
-    PKSAV_GEN2_SAVE_TYPE_CRYSTAL
-};
-
-enum pksav_gen2_gender
-{
-    PKSAV_GEN2_GENDER_MALE,
-    PKSAV_GEN2_GENDER_FEMALE
-};
 
 struct pksav_gen2_save_time
 {

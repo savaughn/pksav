@@ -10,7 +10,10 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/common/pokedex.h>
+
 #include <pksav/gen1/badges.h>
+#include <pksav/gen1/common.h>
 #include <pksav/gen1/daycare_data.h>
 #include <pksav/gen1/items.h>
 #include <pksav/gen1/pokemon.h>
@@ -21,25 +24,17 @@
 #include <stdlib.h>
 
 #define PKSAV_GEN1_SAVE_SIZE (0x8000)
-#define PKSAV_GEN1_NUM_POKEMON_BOXES (12)
 
-#define PKSAV_GEN1_TRAINER_NAME_LENGTH (7)
-#define PKSAV_GEN1_RIVAL_NAME_LENGTH (7)
+#define PKSAV_GEN1_SAVE_RIVAL_NAME_LENGTH PKSAV_GEN1_TRAINER_NAME_LENGTH
 
 #define PKSAV_GEN1_SAVE_MONEY_BUFFER_SIZE_BYTES (3)
-#define PKSAV_GEN1_SAVE_MONEY_MAX_VALUE (999999)
+#define PKSAV_GEN1_SAVE_MONEY_MAX_VALUE         (999999)
 
 #define PKSAV_GEN1_SAVE_CASINO_COINS_BUFFER_SIZE_BYTES (2)
-#define PKSAV_GEN1_SAVE_CASINO_COINS_MAX_VALUE (9999)
+#define PKSAV_GEN1_SAVE_CASINO_COINS_MAX_VALUE         (9999)
 
-#define PKSAV_GEN1_POKEDEX_BUFFER_SIZE_BYTES ((151 / 8) + 1)
-
-enum pksav_gen1_save_type
-{
-    PKSAV_GEN1_SAVE_TYPE_NONE,
-    PKSAV_GEN1_SAVE_TYPE_RED_BLUE,
-    PKSAV_GEN1_SAVE_TYPE_YELLOW
-};
+#define PKSAV_GEN1_POKEDEX_NUM_POKEMON       (151)
+#define PKSAV_GEN1_POKEDEX_BUFFER_SIZE_BYTES PKSAV_POKEDEX_BUFFER_SIZE_BYTES(PKSAV_GEN1_POKEDEX_NUM_POKEMON)
 
 /*!
  * @brief Mask for getting the current Pokémon box number.

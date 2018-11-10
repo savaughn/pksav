@@ -12,6 +12,8 @@
 #include <pksav/error.h>
 #include <pksav/version.h>
 
+#include <pksav/common/condition.h>
+#include <pksav/common/constants.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/nature.h>

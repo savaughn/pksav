@@ -7,92 +7,38 @@
 #ifndef PKSAV_GEN2_POKEMON_H
 #define PKSAV_GEN2_POKEMON_H
 
-#include <pksav/config.h>
-#include <pksav/error.h>
+#include <pksav/gen2/common.h>
+
+#include <pksav/common/constants.h>
 
 #include <stdint.h>
-#include <time.h>
-
-#define PKSAV_GEN2_POKEMON_EGG_INDEX (0xFD)
 
 #define PKSAV_GEN2_BOX_NUM_POKEMON   (20)
-#define PKSAV_GEN2_PARTY_NUM_POKEMON (6)
+#define PKSAV_GEN2_PARTY_NUM_POKEMON PKSAV_STANDARD_POKEMON_PARTY_SIZE
+#define PKSAV_GEN2_POKEMON_NUM_MOVES PKSAV_STANDARD_POKEMON_NUM_MOVES
 
-#define PKSAV_GEN2_POKEMON_NICKNAME_LENGTH (10)
-
-#define PKSAV_GEN2_POKEMON_OTNAME_LENGTH         (7)
+#define PKSAV_GEN2_POKEMON_NICKNAME_LENGTH       PKSAV_STANDARD_NICKNAME_LENGTH
+#define PKSAV_GEN2_POKEMON_OTNAME_LENGTH         PKSAV_GEN2_TRAINER_NAME_LENGTH
 #define PKSAV_GEN2_POKEMON_OTNAME_STORAGE_LENGTH (10)
 
-#define PKSAV_GEN2_NUM_POKEMON_BOXES       (14)
-#define PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH (8)
+#define PKSAV_GEN2_POKEMON_MOVE_PP_MASK   ((uint8_t)0x3F)
+#define PKSAV_GEN1_POKEMON_MOVE_PP(field) ((field) & PKSAV_GEN1_POKEMON_MOVE_PP_MASK)
 
-#define PKSAV_GEN2_POKEMON_NUM_MOVES (4)
-
-#define PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
-
-/*!
- * @brief The mask for a move's PP in the PP field.
- *
- * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps to
- * get the PP of that move.
- */
-#define PKSAV_GEN2_POKEMON_MOVE_PP_MASK ((uint8_t)0x3F)
-
-/*!
- * @brief The mask for the number of PP Ups used on a move (0-3).
- *
- * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps
- * and shift it right by ::PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK to get the number of PP
- * Ups used.
- */
-#define PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK ((uint8_t)0xC0)
-
-/*!
- * @brief The offset of the number of PP UPs used on a move.
- *
- * Mask the value of one of the indices of struct pksav_gen2_pc_pokemon.move_pps
- * with ::PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET and shift it right by this to get the
- * number of PP Ups used.
- */
 #define PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET (6)
+#define PKSAV_GEN2_POKEMON_MOVE_PP_UP(field) ((field) >> PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET)
 
-#define PKSAV_GEN2_POKEMON_MOVE_PP_UP(field) \
-    (((field) & PKSAV_GEN2_POKEMON_MOVE_PP_UP_MASK) >> PKSAV_GEN2_POKEMON_MOVE_PP_UP_OFFSET)
-
-/*!
- * @brief The mask for the level at which a Pokémon was caught.
- *
- * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask and shift it
- * right by ::PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET to get the value.
- */
 #define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK   ((uint16_t)0x3F00)
-
-/*!
- * @brief The offset for the level at which a Pokémon was caught.
- *
- * Mask struct pksav_gen2_pc_pokemon.caught_data with ::PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK
- * and shift it right by this offset to get the value.
- */
 #define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET (8)
 
 #define PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(field) \
     (((field) & PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET)
 
-/*!
- * @brief The mask for setting a Pokémon's original trainer's gender.
- *
- * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to set the trainer's
- * gender to female. Unmask it to set the trainer's gender to male.
- */
-#define PKSAV_GEN2_POKEMON_OT_GENDER_MASK ((uint16_t)0x0080)
-
-/*!
- * @brief The mask for the index of the location at which the Pokémon was caught.
- *
- * Mask struct pksav_gen2_pc_pokemon.caught_data with this mask to get or set the
- * location index.
- */
+#define PKSAV_GEN2_POKEMON_OTGENDER_MASK ((uint16_t)0x0080)
 #define PKSAV_GEN2_POKEMON_LOCATION_MASK ((uint16_t)0x007F)
+
+#define PKSAV_GEN2_POKEMON_EGG_INDEX (0xFD)
+#define PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
+#define PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH (8)
 
 #pragma pack(push,1)
 

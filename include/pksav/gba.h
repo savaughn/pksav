@@ -11,6 +11,7 @@
 #include <pksav/error.h>
 
 #include <pksav/gba/box_wallpaper.h>
+#include <pksav/gba/common.h>
 #include <pksav/gba/items.h>
 #include <pksav/gba/language.h>
 #include <pksav/gba/options.h>
@@ -18,7 +19,6 @@
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/ribbons.h>
 #include <pksav/gba/save.h>
-#include <pksav/gba/save_type.h>
 #include <pksav/gba/text.h>
 #include <pksav/gba/time.h>
 

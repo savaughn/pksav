@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define PKSAV_POKEDEX_BUFFER_SIZE_BYTES(num_pokemon) ((num_pokemon / 8) + 1)
+
 #ifdef __cplusplus
 extern "C" {
 #endif

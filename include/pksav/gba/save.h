@@ -12,13 +12,13 @@
 
 #include <pksav/common/trainer_id.h>
 
+#include <pksav/gba/common.h>
 #include <pksav/gba/daycare.h>
 #include <pksav/gba/items.h>
 #include <pksav/gba/map.h>
 #include <pksav/gba/pokedex.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/roamer.h>
-#include <pksav/gba/save_type.h>
 #include <pksav/gba/time.h>
 
 #include <stdbool.h>
@@ -27,10 +27,9 @@
 
 #define PKSAV_GBA_SAVE_SIZE (0x10000)
 
-#define PKSAV_GBA_TRAINER_NAME_LENGTH (7)
-#define PKSAV_GBA_RIVAL_NAME_LENGTH (7)
+#define PKSAV_GBA_RIVAL_NAME_LENGTH PKSAV_GBA_TRAINER_NAME_LENGTH
 
-#define PKSAV_GBA_SAVE_MONEY_MAX_VALUE (999999)
+#define PKSAV_GBA_SAVE_MONEY_MAX_VALUE        (999999)
 #define PKSAV_GBA_SAVE_CASINO_COINS_MAX_VALUE (9999)
 
 struct pksav_gba_options

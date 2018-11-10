@@ -7,6 +7,7 @@
 
 SET(pksav_common_headers
     condition.h
+    constants.h
     contest_stats.h
     datetime.h
     gen4_encounter_type.h
