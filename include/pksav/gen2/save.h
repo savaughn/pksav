@@ -34,6 +34,22 @@
 
 #define PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK ((uint8_t)(1 << 7))
 
+#define PKSAV_GEN2_REGISTERED_ITEM_INFO_POCKET_MASK   (0xC0)
+#define PKSAV_GEN2_REGISTERED_ITEM_INFO_POCKET_OFFSET (6)
+
+#define PKSAV_GEN2_REGISTERED_ITEM_INFO_POCKET(byte) \
+    ((byte & PKSAV_GEN2_REGISTERED_ITEM_INFO_POCKET_MASK) >> PKSAV_GEN2_REGISTERED_ITEM_INFO_POCKET_OFFSET)
+
+#define PKSAV_GEN2_REGISTERED_ITEM_INFO_AMOUNT_MASK (0x3F)
+
+enum pksav_gen2_registered_item_pocket
+{
+    PKSAV_GEN2_REGISTERED_ITEM_POCKET_REGISTERED_ITEM,
+    PKSAV_GEN2_REGISTERED_ITEM_POCKET_BALL,
+    PKSAV_GEN2_REGISTERED_ITEM_POCKET_KEY_REGISTERED_ITEM,
+    PKSAV_GEN2_REGISTERED_ITEM_POCKET_TMHM
+};
+
 struct pksav_gen2_save_time
 {
     //! A pointer to the amount of time this save file has been played.
@@ -113,6 +129,9 @@ struct pksav_gen2_item_storage
 
     //! A pointer to the trainer's item PC.
     struct pksav_gen2_item_pc* p_item_pc;
+
+    uint8_t* p_registered_item_index;
+    uint8_t* p_registered_item_info;
 };
 
 struct pksav_gen2_trainer_info

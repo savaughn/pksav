@@ -49,6 +49,8 @@ enum pksav_gen2_field
     PKSAV_GEN2_KANTO_BADGES,
     PKSAV_GEN2_ITEM_BAG,
     PKSAV_GEN2_ITEM_PC,
+    PKSAV_GEN2_REGISTERED_ITEM_INFO,
+    PKSAV_GEN2_REGISTERED_ITEM,
     PKSAV_GEN2_CURRENT_BOX_NUM,
     PKSAV_GEN2_PC_BOX_NAMES,
     PKSAV_GEN2_POKEMON_PARTY,
@@ -83,6 +85,8 @@ static const size_t GS_OFFSETS[] =
     0x23E5, // Kanto badges
     0x23E6, // Item bag
     0x247E, // Item PC
+    0x24E8, // Registered item info
+    0x24E7, // Registered item index
     0x2724, // Current Pokemon box number
     0x2727, // PC box names
     0x288A, // Pokemon party
@@ -117,6 +121,8 @@ static const size_t CRYSTAL_OFFSETS[] =
     0x23E6, // Kanto badges
     0x23E7, // Item bag
     0x247F, // Item PC
+    0x24E9, // Registered item info
+    0x24E8, // Registered item index
     0x2700, // Current Pokemon box number
     0x2703, // PC box names
     0x2865, // Pokemon party

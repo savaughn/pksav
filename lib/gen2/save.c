@@ -262,6 +262,8 @@ static void _pksav_gen2_set_save_pointers(
     p_item_storage->p_item_pc = (struct pksav_gen2_item_pc*)(
                                     &p_buffer[p_offsets[PKSAV_GEN2_ITEM_PC]]
                                 );
+    p_item_storage->p_registered_item_index = &p_buffer[p_offsets[PKSAV_GEN2_REGISTERED_ITEM]];
+    p_item_storage->p_registered_item_info = &p_buffer[p_offsets[PKSAV_GEN2_REGISTERED_ITEM_INFO]];
 
     // Pokémon storage
     struct pksav_gen2_pokemon_storage* p_pokemon_storage = &p_gen2_save->pokemon_storage;
