@@ -194,6 +194,11 @@ typedef struct {
     uint8_t* badges;
 
     /*!
+     * @brief A pointer to the player's current map index.
+     */
+    uint8_t* map_index;
+
+    /*!
      * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
      *
      * In Pokémon Red/Blue, this field is unused and is set to 0.

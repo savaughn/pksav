@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017,2021 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -24,6 +24,7 @@ typedef enum {
     PKSAV_GEN1_OPTIONS                 = 0x2601,
     PKSAV_GEN1_BADGES                  = 0x2602,
     PKSAV_GEN1_PLAYER_ID               = 0x2605,
+    PKSAV_GEN1_CURRENT_MAP             = 0x260B,
     PKSAV_GEN1_PIKACHU_FRIENDSHIP      = 0x271C,
     PKSAV_GEN1_ITEM_PC                 = 0x27E6,
     PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM = 0x284C,
