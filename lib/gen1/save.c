@@ -189,6 +189,7 @@ pksav_error_t pksav_gen1_save_load(
     gen1_save->trainer_name = &gen1_save->raw[PKSAV_GEN1_PLAYER_NAME];
     gen1_save->rival_name = &gen1_save->raw[PKSAV_GEN1_RIVAL_NAME];
     gen1_save->badges = &gen1_save->raw[PKSAV_GEN1_BADGES];
+    gen1_save->current_map = &gen1_save->raw[PKSAV_GEN1_CURRENT_MAP];
     gen1_save->pikachu_friendship = &gen1_save->raw[PKSAV_GEN1_PIKACHU_FRIENDSHIP];
 
     return PKSAV_ERROR_NONE;

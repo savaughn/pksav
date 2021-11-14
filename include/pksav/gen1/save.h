@@ -196,7 +196,7 @@ typedef struct {
     /*!
      * @brief A pointer to the player's current map index.
      */
-    uint8_t* map_index;
+    uint8_t* current_map;
 
     /*!
      * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
