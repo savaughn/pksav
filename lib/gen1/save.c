@@ -24,7 +24,7 @@ typedef enum {
     PKSAV_GEN1_OPTIONS                 = 0x2601,
     PKSAV_GEN1_BADGES                  = 0x2602,
     PKSAV_GEN1_PLAYER_ID               = 0x2605,
-    PKSAV_GEN1_CURRENT_MAP             = 0x260B,
+    PKSAV_GEN1_CURRENT_MAP_DATA        = 0x2607,
     PKSAV_GEN1_PIKACHU_FRIENDSHIP      = 0x271C,
     PKSAV_GEN1_ITEM_PC                 = 0x27E6,
     PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM = 0x284C,
@@ -189,7 +189,7 @@ pksav_error_t pksav_gen1_save_load(
     gen1_save->trainer_name = &gen1_save->raw[PKSAV_GEN1_PLAYER_NAME];
     gen1_save->rival_name = &gen1_save->raw[PKSAV_GEN1_RIVAL_NAME];
     gen1_save->badges = &gen1_save->raw[PKSAV_GEN1_BADGES];
-    gen1_save->current_map = &gen1_save->raw[PKSAV_GEN1_CURRENT_MAP];
+    gen1_save->current_map_data = (pksav_gen1_current_map_data_t*)&gen1_save->raw[PKSAV_GEN1_CURRENT_MAP_DATA];
     gen1_save->pikachu_friendship = &gen1_save->raw[PKSAV_GEN1_PIKACHU_FRIENDSHIP];
 
     return PKSAV_ERROR_NONE;

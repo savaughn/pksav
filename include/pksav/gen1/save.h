@@ -15,6 +15,7 @@
 #include <pksav/error.h>
 
 #include <pksav/gen1/items.h>
+#include <pksav/gen1/map_data.h>
 #include <pksav/gen1/pokemon.h>
 
 #include <stdbool.h>
@@ -194,9 +195,9 @@ typedef struct {
     uint8_t* badges;
 
     /*!
-     * @brief A pointer to the player's current map index.
+     * @brief A pointer to the player's current map data.
      */
-    uint8_t* current_map;
+    pksav_gen1_current_map_data_t* current_map_data;
 
     /*!
      * @brief A pointer to Pikachu's friendship level in Pokémon Yellow.
