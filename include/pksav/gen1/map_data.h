@@ -66,11 +66,11 @@ typedef struct {
 
 typedef struct {
     uint8_t connections;
-    pksav_gen1_map_connection_t north_map_connection;
-    pksav_gen1_map_connection_t south_map_connection;
-    pksav_gen1_map_connection_t west_map_connection;
-    pksav_gen1_map_connection_t east_map_connection;
-} pksav_gen1_connection_data_t;
+    pksav_gen1_map_connection_t north;
+    pksav_gen1_map_connection_t south;
+    pksav_gen1_map_connection_t west;
+    pksav_gen1_map_connection_t east;
+} pksav_gen1_map_connection_data_t;
 
 typedef struct {
     pksav_gen1_map_coords_t coords;
@@ -104,7 +104,7 @@ typedef struct {
     uint8_t unused0;
 
     pksav_gen1_map_header_t map_header;
-    pksav_gen1_connection_data_t connection_data;
+    pksav_gen1_map_connection_data_t connection_data;
 
     pksav_gen1_sprite_set_t sprite_set;
     uint16_t object_data_temp_ptr;
