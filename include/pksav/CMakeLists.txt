@@ -27,9 +27,9 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         error.h
         ${CMAKE_CURRENT_BINARY_DIR}/config.h
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
-	gen1.h
-	gen2.h
-	gba.h
+        gen1.h
+        gen2.h
+        gba.h
     )
 
     ADD_SUBDIRECTORY(common)

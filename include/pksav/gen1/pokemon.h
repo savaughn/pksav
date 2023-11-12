@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen1/pokemon.h
- * @ingroup PKSav
- * @brief   Native formats for Pokémon in Generation I games.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,61 +7,28 @@
 #ifndef PKSAV_GEN1_POKEMON_H
 #define PKSAV_GEN1_POKEMON_H
 
+#include <pksav/gen1/common.h>
+
+#include <pksav/common/constants.h>
+
 #include <stdint.h>
 
-/*!
- * @brief The mask for a move's PP in the PP field.
- *
- * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
- * get the PP of that move.
- */
-#define PKSAV_GEN1_MOVE_PP_MASK ((uint8_t)0x3F)
+#define PKSAV_GEN1_BOX_NUM_POKEMON   (20)
+#define PKSAV_GEN1_PARTY_NUM_POKEMON PKSAV_STANDARD_POKEMON_PARTY_SIZE
+#define PKSAV_GEN1_POKEMON_NUM_MOVES PKSAV_STANDARD_POKEMON_NUM_MOVES
 
-/*!
- * @brief The mask for the number of PP Ups used on a move (0-3).
- *
- * Mask the value of one of the indices of pksav_gen1_pc_pokemon_t.move_pps to
- * get the number of PP Ups used. If a PP Max has been used, this value will be 3.
- */
-#define PKSAV_GEN1_MOVE_PP_UP_MASK ((uint8_t)0xC0)
+#define PKSAV_GEN1_POKEMON_NICKNAME_LENGTH       PKSAV_STANDARD_NICKNAME_LENGTH
+#define PKSAV_GEN1_POKEMON_OTNAME_LENGTH         PKSAV_GEN1_TRAINER_NAME_LENGTH
+#define PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH (10)
 
-/*!
- * @brief Valid values for a Pokémon's types.
- *
- * This enum applies to the indices of the pksav_gen1_pc_pokemon_t.types field.
- */
-typedef enum {
-    //! Normal.
-    PKSAV_GEN1_TYPE_NORMAL   = 0x00,
-    //! Fighting.
-    PKSAV_GEN1_TYPE_FIGHTING = 0x01,
-    //! Flying.
-    PKSAV_GEN1_TYPE_FLYING   = 0x02,
-    //! Poison.
-    PKSAV_GEN1_TYPE_POISON   = 0x03,
-    //! Ground.
-    PKSAV_GEN1_TYPE_GROUND   = 0x04,
-    //! Rock.
-    PKSAV_GEN1_TYPE_ROCK     = 0x05,
-    //! Bug.
-    PKSAV_GEN1_TYPE_BUG      = 0x07,
-    //! Ghost.
-    PKSAV_GEN1_TYPE_GHOST    = 0x08,
-    //! Fire.
-    PKSAV_GEN1_TYPE_FIRE     = 0x14,
-    //! Water.
-    PKSAV_GEN1_TYPE_WATER    = 0x15,
-    //! Grass.
-    PKSAV_GEN1_TYPE_GRASS    = 0x16,
-    //! Electric.
-    PKSAV_GEN1_TYPE_ELECTRIC = 0x17,
-    //! Psychic.
-    PKSAV_GEN1_TYPE_PSYCHIC  = 0x18,
-    //! Ice.
-    PKSAV_GEN1_TYPE_ICE      = 0x19,
-    //! Dragon.
-    PKSAV_GEN1_TYPE_DRAGON   = 0x1A
-} pksav_gen1_type_t;
+#define PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE (3)
+#define PKSAV_GEN1_POKEMON_NUM_TYPES              (2)
+
+#define PKSAV_GEN1_POKEMON_MOVE_PP_MASK   ((uint8_t)0x3F)
+#define PKSAV_GEN1_POKEMON_MOVE_PP(field) ((field) & PKSAV_GEN1_POKEMON_MOVE_PP_MASK)
+
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET (6)
+#define PKSAV_GEN1_POKEMON_MOVE_PP_UP(field) ((field) >> PKSAV_GEN1_POKEMON_MOVE_PP_UP_OFFSET)
 
 #pragma pack(push,1)
 
@@ -75,7 +38,8 @@ typedef enum {
  * This data is available both when the Pokémon is in the trainer's party or in the
  * PC.
  */
-typedef struct {
+struct pksav_gen1_pc_pokemon
+{
     //! Species index.
     uint8_t species;
     /*!
@@ -107,7 +71,7 @@ typedef struct {
      *
      * The enum ::pksav_gen1_type_t contains all valid values for this field.
      */
-    uint8_t types[2];
+    uint8_t types[PKSAV_GEN1_POKEMON_NUM_TYPES];
     /*!
      * @brief The Pokémon's catch rate.
      *
@@ -118,7 +82,7 @@ typedef struct {
     /*!
      * @brief Indices for each of this Pokémon's moves.
      */
-    uint8_t moves[4];
+    uint8_t moves[PKSAV_GEN1_POKEMON_NUM_MOVES];
     /*!
      * @brief The Pokémon's original trainer's ID (stored in big-endian).
      *
@@ -128,10 +92,10 @@ typedef struct {
     /*!
      * @brief The Pokémon's current total experience points (stored in Base-256).
      *
-     * This value should be accessed with ::pksav_from_base256 (with a num_bytes
-     * value of 3) and set with ::pksav_to_base256.
+     * This value should be accessed with ::pksav_import_base256 (with a num_bytes
+     * value of 3) and set with ::pksav_export_base256.
      */
-    uint8_t exp[3];
+    uint8_t exp[PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE];
     /*!
      * @brief The Pokémon's HP EV stat (stored in big-endian).
      *
@@ -177,8 +141,8 @@ typedef struct {
      * Mask an index with ::PKSAV_GEN1_MOVE_PP_UP_MASK to get the number of
      * PP Ups applied to the move.
      */
-    uint8_t move_pps[4];
-} pksav_gen1_pc_pokemon_t;
+    uint8_t move_pps[PKSAV_GEN1_POKEMON_NUM_MOVES];
+};
 
 /*!
  * @brief Data generated when a Pokémon is added to a trainer's party in Generation I.
@@ -186,7 +150,8 @@ typedef struct {
  * All of this information is generated from values stored in
  * pksav_gen1_pc_pokemon_t.
  */
-typedef struct {
+struct pksav_gen1_pokemon_party_data
+{
     /*!
      * @brief The Pokémon's level.
      *
@@ -238,16 +203,17 @@ typedef struct {
      * This value should be accessed and set with ::pksav_bigendian16.
      */
     uint16_t spcl;
-} pksav_gen1_pokemon_party_data_t;
+};
 
 //! Native format for a Pokémon in the trainer's party in Generation I.
-typedef struct {
+struct pksav_gen1_party_pokemon
+{
     /*!
      * @brief PC data.
      *
      * This data is accessible whether the Pokémon is in the PC or party.
      */
-    pksav_gen1_pc_pokemon_t pc;
+    struct pksav_gen1_pc_pokemon pc_data;
 
     /*!
      * @brief Party data.
@@ -256,11 +222,12 @@ typedef struct {
      * all of it can be generated from the PC data, it is not stored until
      * it needs to be used.
      */
-    pksav_gen1_pokemon_party_data_t party_data;
-} pksav_gen1_party_pokemon_t;
+    struct pksav_gen1_pokemon_party_data party_data;
+};
 
 //! Native format for a trainer's Pokémon party in Generation I.
-typedef struct {
+struct pksav_gen1_pokemon_party
+{
     //! The actual number of Pokémon in the party (0-6).
     uint8_t count;
     /*!
@@ -271,27 +238,28 @@ typedef struct {
      *
      * The final index of this field should always be set to 0xFF.
      */
-    uint8_t species[7];
+    uint8_t species[PKSAV_GEN1_PARTY_NUM_POKEMON + 1];
     //! The actual Pokémon in the party.
-    pksav_gen1_party_pokemon_t party[6];
+    struct pksav_gen1_party_pokemon party[PKSAV_GEN1_PARTY_NUM_POKEMON];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[6][11];
+    uint8_t otnames[PKSAV_GEN1_PARTY_NUM_POKEMON][PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the party.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t nicknames[6][11];
-} pksav_gen1_pokemon_party_t;
+    uint8_t nicknames[PKSAV_GEN1_PARTY_NUM_POKEMON][PKSAV_GEN1_POKEMON_NICKNAME_LENGTH + 1];
+};
 
 //! Native format for a Pokémon PC box in Generation I.
-typedef struct {
+struct pksav_gen1_pokemon_box
+{
     //! The actual number of Pokémon in the box (0-20).
     uint8_t count;
     /*!
@@ -300,26 +268,27 @@ typedef struct {
      * When the box is viewed in-game, it is this value that determines
      * what Pokémon is shown, not the pksav_gen1_pc_pokemon_t.species value.
      *
-     * The final index of this field should always be set to 0xFF.
+     * The first index after the last Pokémon in the box should always be
+     * set to 0xFF.
      */
-    uint8_t species[21];
+    uint8_t species[PKSAV_GEN1_BOX_NUM_POKEMON + 1];
     //! The actual Pokémon in the box.
-    pksav_gen1_pc_pokemon_t entries[20];
+    struct pksav_gen1_pc_pokemon entries[PKSAV_GEN1_BOX_NUM_POKEMON];
     /*!
      * @brief The names of each Pokémon's original trainer.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10.
      */
-    uint8_t otnames[20][11];
+    uint8_t otnames[PKSAV_GEN1_BOX_NUM_POKEMON][PKSAV_GEN1_POKEMON_OTNAME_STORAGE_LENGTH + 1];
     /*!
      * @brief The nicknames of each Pokémon in the box.
      *
      * To access this value, you should use the function ::pksav_text_from_gen1
      * with a num_chars value of 10).
      */
-    uint8_t nicknames[20][11];
-} pksav_gen1_pokemon_box_t;
+    uint8_t nicknames[PKSAV_GEN1_BOX_NUM_POKEMON][PKSAV_GEN1_POKEMON_NICKNAME_LENGTH + 1];
+};
 
 #pragma pack(pop)
 

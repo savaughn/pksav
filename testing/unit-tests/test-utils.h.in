@@ -14,6 +14,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#cmakedefine TEST_WITH_VALGRIND 1
+
+#ifdef TEST_WITH_VALGRIND
+// Fewer iterations due to Valgrind slowing things down
+#define FUZZING_TEST_NUM_ITERATIONS 100
+#else
+#define FUZZING_TEST_NUM_ITERATIONS 1000
+#endif
+
 #ifdef PKSAV_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
 #else
@@ -21,17 +30,6 @@
 #endif
 
 int randomize_buffer(
-    uint8_t* buffer,
-    size_t buffer_len
-);
-
-int get_filesize(
-    const char* filename,
-    size_t* result_out
-);
-
-int read_file_into_buffer(
-    const char* filename,
     uint8_t* buffer,
     size_t buffer_len
 );

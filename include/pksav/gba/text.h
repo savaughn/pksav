@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gba/text.h
- * @ingroup PKSav
- * @brief   Conversions between C strings and the string format used in Game Boy Advance games.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,15 +25,15 @@ extern "C" {
  * Both buffers passed into the function must be at least the length passed
  * in the num_chars parameter, or it will result in undefined behavior.
  *
- * \param input_buffer Game Boy Advance string
- * \param output_text output buffer in which to place converted text
+ * \param p_input_buffer Game Boy Advance string
+ * \param p_output_text output buffer in which to place converted text
  * \param num_chars the number of characters to convert
  * \returns PKSAV_ERROR_NONE upon success
- * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
+ * \returns PKSAV_ERROR_NULL_POINTER if p_input_buffer or p_output_text is NULL
  */
-PKSAV_API pksav_error_t pksav_text_from_gba(
-    const uint8_t* input_buffer,
-    char* output_text,
+PKSAV_API enum pksav_error pksav_gba_import_text(
+    const uint8_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 );
 
@@ -49,15 +45,15 @@ PKSAV_API pksav_error_t pksav_text_from_gba(
  * Both buffers passed into the function must be at least the length passed
  * in the num_chars parameter, or it will result in undefined behavior.
  *
- * \param input_text C string to convert
- * \param output_buffer output buffer in which to place Game Boy Advance string
+ * \param p_input_text C string to convert
+ * \param p_output_buffer output buffer in which to place Game Boy Advance string
  * \param num_chars the number of characters to convert
  * \returns PKSAV_ERROR_NONE upon success
- * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
+ * \returns PKSAV_ERROR_NULL_POINTER if p_input_text or p_output_buffer is NULL
  */
-PKSAV_API pksav_error_t pksav_text_to_gba(
-    const char* input_text,
-    uint8_t* output_buffer,
+PKSAV_API enum pksav_error pksav_gba_export_text(
+    const char* p_input_text,
+    uint8_t* p_output_buffer,
     size_t num_chars
 );
 

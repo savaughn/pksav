@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/item.h
- * @ingroup PKSav
- * @brief   Native format for storing an item in Generation III-VI games.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,8 +11,18 @@
 
 #pragma pack(push,1)
 
+//! Native representation of an item slot in Generation I.
+struct pksav_gb_item
+{
+    //! Item index.
+    uint8_t index;
+    //! Item count (0-99).
+    uint8_t count;
+};
+
 //! Native format for storing an item in Generation III-IV games.
-typedef struct {
+struct pksav_item
+{
     /*!
      * @brief Which item is stored in this slot.
      *
@@ -31,7 +37,7 @@ typedef struct {
      * should be used to access and modify it.
      */
     uint16_t count;
-} pksav_item_t;
+};
 
 #pragma pack(pop)
 

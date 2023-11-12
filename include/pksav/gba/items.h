@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,53 +13,57 @@
 
 #pragma pack(push,1)
 
+#define PKSAV_GBA_ITEM_PC_NUM_ITEMS (50)
+
+struct pksav_gba_item_pc
+{
+    struct pksav_item items[PKSAV_GBA_ITEM_PC_NUM_ITEMS];
+};
+
 //! Internal represention of item storage in Pokémon Ruby/Sapphire.
-typedef struct {
-    //! Items stored in the PC.
-    pksav_item_t pc_items[50];
+struct pksav_gba_rs_item_bag
+{
     //! Items stored in the Items pocket.
-    pksav_item_t items[20];
+    struct pksav_item items[20];
     //! Items stored in the Key Items pocket.
-    pksav_item_t key_items[20];
+    struct pksav_item key_items[20];
     //! Items stored in the Poké Balls pocket.
-    pksav_item_t balls[16];
+    struct pksav_item balls[16];
     //! Items stored in the TMs & HMs pocket.
-    pksav_item_t tms_hms[64];
+    struct pksav_item tms_hms[64];
     //! Items stored in the Berries pocket.
-    pksav_item_t berries[46];
-} pksav_rs_item_storage_t;
+    struct pksav_item berries[46];
+};
 
 //! Internal represention of item storage in Pokémon Emerald.
-typedef struct {
-    //! Items stored in the PC.
-    pksav_item_t pc_items[50];
+struct pksav_gba_emerald_item_bag
+{
     //! Items stored in the Items pocket.
-    pksav_item_t items[30];
+    struct pksav_item items[30];
     //! Items stored in the Key Items pocket.
-    pksav_item_t key_items[30];
+    struct pksav_item key_items[30];
     //! Items stored in the Poké Balls pocket.
-    pksav_item_t balls[16];
+    struct pksav_item balls[16];
     //! Items stored in the TMs & HMs pocket.
-    pksav_item_t tms_hms[64];
+    struct pksav_item tms_hms[64];
     //! Items stored in the Berries pocket.
-    pksav_item_t berries[46];
-} pksav_emerald_item_storage_t;
+    struct pksav_item berries[46];
+};
 
 //! Internal representation of item storage in Pokémon FireRed/LeafGreen.
-typedef struct {
-    //! Items stored in the PC.
-    pksav_item_t pc_items[50];
+struct pksav_gba_frlg_item_bag
+{
     //! Items stored in the Items pocket.
-    pksav_item_t items[42];
+    struct pksav_item items[42];
     //! Items stored in the Key Items pocket.
-    pksav_item_t key_items[30];
+    struct pksav_item key_items[30];
     //! Items stored in the Poké Balls pocket.
-    pksav_item_t balls[13];
+    struct pksav_item balls[13];
     //! Items stored in the TM Case.
-    pksav_item_t tms_hms[58];
+    struct pksav_item tms_hms[58];
     //! Items stored in the Berry Pouch.
-    pksav_item_t berries[43];
-} pksav_frlg_item_storage_t;
+    struct pksav_item berries[43];
+};
 
 /*!
  * @brief A union of all three Game Boy Advance item storage structs.
@@ -68,14 +72,15 @@ typedef struct {
  * nothing is stored in the same section after the item storage struct,
  * this union is safe, despite the different sizes of each struct.
  */
-typedef union {
+union pksav_gba_item_bag
+{
     //! Access to item storage in Pokémon Ruby/Sapphire.
-    pksav_rs_item_storage_t rs;
+    struct pksav_gba_rs_item_bag rs;
     //! Access to item storage in Pokémon Emerald.
-    pksav_emerald_item_storage_t emerald;
+    struct pksav_gba_emerald_item_bag emerald;
     //! Access to item storage in Pokémon FireRed/LeafGreen.
-    pksav_frlg_item_storage_t frlg;
-} pksav_gba_item_storage_t;
+    struct pksav_gba_frlg_item_bag frlg;
+};
 
 #pragma pack(pop)
 

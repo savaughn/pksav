@@ -48,4 +48,11 @@ Component Status
  * Generation VI: in progress
  * Generation VII: in progress
 
-README last updated: 2018/03/25
+Acknowledgments
+-------------------------------------
+
+* PRET ([@pret](https://github.com/pret)), whose Pokémon disassemblies greatly contributed to this library's functionality.
+* Vicky "Endrift" Flau ([@endrift](https://github.com/endrift)), whose mGBA emulator allowed for further reverse-engineering.
+* Michael Bond ([@codemonkey85](https://github.com/codemonkey85)), for consulting on game mechanics.
+
+README last updated: 2018/09/16

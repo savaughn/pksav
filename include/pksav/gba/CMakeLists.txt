@@ -1,16 +1,25 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 SET(pksav_gba_headers
+    box_wallpaper.h
+    common.h
+    daycare.h
     items.h
+    language.h
+    mail.h
+    map.h
+    options.h
+    pokedex.h
     pokemon.h
+    roamer.h
     save.h
-    save_structs.h
     text.h
+    time.h
 )
 
 INSTALL(

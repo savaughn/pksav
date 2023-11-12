@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,14 +16,14 @@
 #include <stdint.h>
 
 void pksav_gba_crypt_pokemon(
-    pksav_gba_pc_pokemon_t* gba_pokemon,
-    bool encrypt
+    struct pksav_gba_pc_pokemon* p_gba_pokemon,
+    bool should_encrypt
 );
 
 void pksav_gba_save_crypt_items(
-    pksav_gba_item_storage_t* gba_item_storage,
+    union pksav_gba_item_bag* p_gba_item_bag,
     uint32_t security_key,
-    pksav_gba_game_t gba_game
+    enum pksav_gba_save_type save_type
 );
 
 #endif /* PKSAV_GBA_CRYPT_H */

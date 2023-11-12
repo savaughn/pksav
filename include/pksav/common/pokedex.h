@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,8 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+#define PKSAV_POKEDEX_BUFFER_SIZE_BYTES(num_pokemon) ((num_pokemon / 8) + 1)
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,10 +31,10 @@ extern "C" {
  * \param result_out where result is returned
  * \returns if Pokémon with the given Pokédex number has been seen/caught
  */
-PKSAV_API pksav_error_t pksav_get_pokedex_bit(
-    const uint8_t* raw,
+PKSAV_API enum pksav_error pksav_get_pokedex_bit(
+    const uint8_t* p_buffer,
     uint16_t pokedex_num,
-    bool* result_out
+    bool* p_result_out
 );
 
 /*!
@@ -46,8 +48,8 @@ PKSAV_API pksav_error_t pksav_get_pokedex_bit(
  * \param pokedex_num Which Pokémon to set or unset
  * \param set Set whether or not Pokémon has been seen/caught
  */
-PKSAV_API pksav_error_t pksav_set_pokedex_bit(
-    uint8_t* raw,
+PKSAV_API enum pksav_error pksav_set_pokedex_bit(
+    uint8_t* p_buffer,
     uint16_t pokedex_num,
     bool set
 );

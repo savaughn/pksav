@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen1/text.h
- * @ingroup PKSav
- * @brief   Conversions between C strings and the string format used in Generation I games.
- *
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,6 +12,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+
+#define PKSAV_GEN1_TEXT_TERMINATOR (0x50)
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,9 +33,9 @@ extern "C" {
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_buffer or output_text is NULL
  */
-PKSAV_API pksav_error_t pksav_text_from_gen1(
-    const uint8_t* input_buffer,
-    char* output_text,
+PKSAV_API enum pksav_error pksav_gen1_import_text(
+    const uint8_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
 );
 
@@ -55,9 +53,9 @@ PKSAV_API pksav_error_t pksav_text_from_gen1(
  * \returns PKSAV_ERROR_NONE upon success
  * \returns PKSAV_ERROR_NULL_POINTER if input_text or output_buffer is NULL
  */
-PKSAV_API pksav_error_t pksav_text_to_gen1(
-    const char* input_text,
-    uint8_t* output_buffer,
+PKSAV_API enum pksav_error pksav_gen1_export_text(
+    const char* p_input_text,
+    uint8_t* p_output_buffer,
     size_t num_chars
 );
 

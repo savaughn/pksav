@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/condition.h
- * @ingroup PKSav
- * @brief   Possible values for a Pokémon's status conditions.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +10,8 @@
 /*!
  * @brief Valid values for a Pokémon's current condition in Generations I-II.
  */
-typedef enum {
+enum pksav_gb_condition
+{
     //! No status ailment.
     PKSAV_GB_CONDITION_NONE    = 0x00,
     //! Sleep.
@@ -32,10 +29,11 @@ typedef enum {
     PKSAV_GB_CONDITION_FROZEN  = 0x20,
     //! Paralysis.
     PKSAV_GB_CONDITION_PARALYZ = 0x40
-} pksav_gb_condition_t;
+};
 
 //! Valid values (with one mask) for a Pokémon's possible conditions in Generations III+.
-typedef enum {
+enum pksav_condition_mask
+{
     //! No status ailment.
     PKSAV_CONDITION_NONE       = 0,
     /*!
@@ -56,6 +54,6 @@ typedef enum {
     PKSAV_CONDITION_PARALYZ    = (1 << 6),
     //! Bad poison (from Toxic, etc).
     PKSAV_CONDITION_BAD_POISON = (1 << 7)
-} pksav_condition_mask_t;
+};
 
 #endif /* PKSAV_COMMON_CONDITION_H */

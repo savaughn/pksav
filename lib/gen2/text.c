@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../common/text_common.h"
+#include "util/text_common.h"
 
 #include <pksav/gen2/text.h>
 
+#include <assert.h>
 #include <string.h>
 
-#define PKSAV_GEN2_TERMINATOR 0x50
-#define PKSAV_GEN2_SPACE      0x7F
+#define PKSAV_GEN2_TEXT_SPACE (0x7F)
+#define ASCII_SPACE           (0x20)
 
 /*
  * Character map for Generation II
@@ -23,7 +24,8 @@
  * "<" and ">" characters, as they are not used in-game. Any application displaying this text
  * will need to graphically substitute in these characters.
  */
-static const wchar_t pksav_gen2_char_map[] = {
+static const wchar_t PKSAV_GEN2_CHAR_MAP[] =
+{
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -41,49 +43,66 @@ static const wchar_t pksav_gen2_char_map[] = {
     0x27,0x3C,0x3E,0x2D,0x00,0x00,0x3F,0x21,0x2E,0x00,0xE9,0x00,0x00,0x00,0x00,0x2642,
     0x00,0xD7,0x00,0x2F,0x2C,0x2640,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
 };
+static const size_t PKSAV_GEN2_CHAR_MAP_SIZE =
+    sizeof(PKSAV_GEN2_CHAR_MAP)/sizeof(PKSAV_GEN2_CHAR_MAP[0]);
 
-static pksav_error_t _pksav_widetext_from_gen2(
-    const uint8_t* input_buffer,
-    wchar_t* output_text,
+static enum pksav_error _pksav_gen2_import_widetext(
+    const uint8_t* p_input_buffer,
+    wchar_t* p_output_widetext,
     size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
+)
+{
+    assert(p_input_buffer != NULL);
+    assert(p_output_widetext != NULL);
 
-    memset(output_text, 0, sizeof(wchar_t)*num_chars);
+    memset(p_output_widetext, 0, sizeof(wchar_t)*num_chars);
 
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_buffer[i] == PKSAV_GEN2_TERMINATOR) {
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        if(p_input_buffer[char_index] == PKSAV_GEN2_TEXT_TERMINATOR)
+        {
             break;
-        } else {
-            output_text[i] = pksav_gen2_char_map[input_buffer[i]];
+        }
+        else
+        {
+            p_output_widetext[char_index] = PKSAV_GEN2_CHAR_MAP[p_input_buffer[char_index]];
         }
     }
 
     return PKSAV_ERROR_NONE;
 }
 
-static pksav_error_t _pksav_widetext_to_gen2(
-    const wchar_t* input_text,
-    uint8_t* output_buffer,
+static enum pksav_error _pksav_gen2_export_widetext(
+    const wchar_t* p_input_widetext,
+    uint8_t* p_output_buffer,
     size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
-        return PKSAV_ERROR_NULL_POINTER;
-    }
+)
+{
+    assert(p_input_widetext != NULL);
+    assert(p_output_buffer != NULL);
 
-    memset(output_buffer, PKSAV_GEN2_TERMINATOR, num_chars);
+    memset(p_output_buffer, PKSAV_GEN2_TEXT_TERMINATOR, num_chars);
 
-    for(size_t i = 0; i < num_chars; ++i) {
-        if(input_text[i] == 0x20) {
-            output_buffer[i] = PKSAV_GEN2_SPACE;
-        } else {
-            ssize_t index = wchar_map_index(pksav_gen2_char_map, 256, input_text[i]);
-            if(index == -1) {
+    for(size_t char_index = 0; char_index < num_chars; ++char_index)
+    {
+        if(p_input_widetext[char_index] == ASCII_SPACE)
+        {
+            p_output_buffer[char_index] = PKSAV_GEN2_TEXT_SPACE;
+        }
+        else
+        {
+            ssize_t map_index = wchar_map_index(
+                                    PKSAV_GEN2_CHAR_MAP,
+                                    PKSAV_GEN2_CHAR_MAP_SIZE,
+                                    p_input_widetext[char_index]
+                                );
+            if(map_index != -1)
+            {
+                p_output_buffer[char_index] = (uint8_t)map_index;
+            }
+            else
+            {
                 break;
-            } else {
-                output_buffer[i] = (uint8_t)index;
             }
         }
     }
@@ -91,44 +110,48 @@ static pksav_error_t _pksav_widetext_to_gen2(
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_from_gen2(
-    const uint8_t* input_buffer,
-    char* output_text,
+enum pksav_error pksav_gen2_import_text(
+    const uint8_t* p_input_buffer,
+    char* p_output_text,
     size_t num_chars
-) {
-    if(!input_buffer || !output_text) {
+)
+{
+    if(!p_input_buffer || !p_output_text)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    _pksav_widetext_from_gen2(
-        input_buffer, widetext, num_chars
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
+    _pksav_gen2_import_widetext(
+        p_input_buffer, p_widetext, num_chars
     );
 
-    memset(output_text, 0, num_chars);
-    pksav_wcstombs(output_text, widetext, num_chars);
-    free(widetext);
+    memset(p_output_text, 0, num_chars);
+    pksav_wcstombs(p_output_text, p_widetext, num_chars);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }
 
-pksav_error_t pksav_text_to_gen2(
-    const char* input_text,
-    uint8_t* output_buffer,
+enum pksav_error pksav_gen2_export_text(
+    const char* p_input_text,
+    uint8_t* p_output_buffer,
     size_t num_chars
-) {
-    if(!input_text || !output_buffer) {
+)
+{
+    if(!p_input_text || !p_output_buffer)
+    {
         return PKSAV_ERROR_NULL_POINTER;
     }
 
-    wchar_t* widetext = calloc(num_chars, sizeof(wchar_t));
-    pksav_mbstowcs(widetext, input_text, num_chars);
+    wchar_t* p_widetext = calloc(num_chars, sizeof(wchar_t));
+    pksav_mbstowcs(p_widetext, p_input_text, num_chars);
 
-    _pksav_widetext_to_gen2(
-        widetext, output_buffer, num_chars
+    _pksav_gen2_export_widetext(
+        p_widetext, p_output_buffer, num_chars
     );
 
-    free(widetext);
+    free(p_widetext);
 
     return PKSAV_ERROR_NONE;
 }

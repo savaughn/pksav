@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,12 +7,25 @@
 #ifndef PKSAV_GBA_POKEMON_H
 #define PKSAV_GBA_POKEMON_H
 
-#include <pksav/config.h>
-
+#include <pksav/common/constants.h>
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/trainer_id.h>
 
+#include <pksav/gba/common.h>
+#include <pksav/gba/ribbons.h>
+
 #include <stdint.h>
+
+#define PKSAV_GBA_BOX_NUM_POKEMON   (30)
+#define PKSAV_GBA_PARTY_NUM_POKEMON PKSAV_STANDARD_POKEMON_PARTY_SIZE
+
+#define PKSAV_GBA_POKEMON_NICKNAME_LENGTH PKSAV_STANDARD_NICKNAME_LENGTH
+#define PKSAV_GBA_POKEMON_OTNAME_LENGTH   PKSAV_GBA_TRAINER_NAME_LENGTH
+
+#define PKSAV_GBA_POKEMON_NUM_MOVES PKSAV_STANDARD_POKEMON_NUM_MOVES
+
+#define PKSAV_GBA_NUM_POKEMON_BOXES       (14)
+#define PKSAV_GBA_POKEMON_BOX_NAME_LENGTH (8)
 
 /*!
  * @brief The mask for determining if a Pokémon is an egg.
@@ -20,7 +33,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.iv_egg_ability
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_EGG_MASK (uint32_t)(1 << 30)
+#define PKSAV_GBA_POKEMON_EGG_MASK ((uint32_t)(1 << 30))
 
 /*!
  * @brief The mask for determining which ability a Pokémon has.
@@ -28,7 +41,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.iv_egg_ability
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_ABILITY_MASK (uint32_t)(1 << 31)
+#define PKSAV_GBA_POKEMON_ABILITY_MASK ((uint32_t)(1 << 31))
 
 /*!
  * @brief The mask for determining at which level a Pokémon was met.
@@ -36,28 +49,28 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this value.
  */
-#define PKSAV_GBA_LEVEL_MET_MASK (uint16_t)(0x7F)
+#define PKSAV_GBA_POKEMON_LEVEL_MET_MASK (((uint16_t)(0x7F)))
 
 /*!
  * @brief The mask for determining a Pokémon's origin game.
  *
  * To access the value, apply the mask to the
  * pksav_gba_pokemon_misc_t.origin_info field and shift the result
- * right by ::PKSAV_GBA_ORIGIN_GAME_OFFSET.
+ * right by ::PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET.
  *
  * To modify the value, apply the inverse of the mask to the
  * pksav_gba_pokemon_misc_t.origin_info field. Then shift the new
- * value left by ::PKSAV_GBA_ORIGIN_GAME_OFFSET and perform a logical-or
+ * value left by ::PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_ORIGIN_GAME_MASK (uint16_t)(0x780)
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK (((uint16_t)(0x780)))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's origin game in its bitfield.
  *
  * See ::PKSAV_GBA_ORIGIN_GAME_MASK for it usage.
  */
-#define PKSAV_GBA_ORIGIN_GAME_OFFSET 7
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET (7)
 
 /*!
  * @brief The mask for determining which Poké Ball was used to catch a Pokémon.
@@ -71,14 +84,14 @@
  * value left by ::PKSAV_GBA_BALL_OFFSET and perform a logical-or
  * with this value and the field.
  */
-#define PKSAV_GBA_BALL_MASK (uint16_t)(0x7800)
+#define PKSAV_GBA_POKEMON_BALL_MASK (((uint16_t)(0x7800)))
 
 /*!
  * @brief The offset of the bits corresponding to a Pokémon's ball in its bitfield.
  *
  * See ::PKSAV_GBA_BALL_MASK for its usage.
  */
-#define PKSAV_GBA_BALL_OFFSET 11
+#define PKSAV_GBA_POKEMON_BALL_OFFSET (11)
 
 /*!
  * @brief The mask for determining the gender of a Pokémon's original trainer.
@@ -86,129 +99,7 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.origin_info
  * field to access or modify this bit.
  */
-#define PKSAV_GBA_OTGENDER_MASK (uint16_t)(1 << 15)
-
-/*!
- * @brief The mask for determining which Coolness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Coolness contests, as follows:
- *  * Bit 3 (MSB): Cool Hyper/Ultra
- *  * Bit 2: Cool Super/Great
- *  * Bit 1 (LSB): Cool
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, then logical-or the
- * result with the new value.
- */
-#define PKSAV_GBA_COOL_MASK (uint32_t)(7)
-
-/*!
- * @brief The mask for determining which Beauty contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Beauty contests, as follows:
- *  * Bit 3 (MSB): Beauty Hyper/Ultra
- *  * Bit 2: Beauty Super/Great
- *  * Bit 1 (LSB): Beauty
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_BEAUTY_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_BEAUTY_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_BEAUTY_MASK (uint32_t)(7 << PKSAV_GBA_BEAUTY_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Beauty contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_BEAUTY_MASK for its usage.
- */
-#define PKSAV_GBA_BEAUTY_OFFSET 3
-
-/*!
- * @brief The mask for determining which Cuteness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Cute contests, as follows:
- *  * Bit 3 (MSB): Cute Hyper/Ultra
- *  * Bit 2: Cute Super/Great
- *  * Bit 1 (LSB): Cute
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_CUTE_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_CUTE_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_CUTE_MASK (uint32_t)(7 << PKSAV_GBA_CUTE_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Cuteness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_CUTE_MASK for its usage.
- */
-#define PKSAV_GBA_CUTE_OFFSET 6
-
-/*!
- * @brief The mask for determining which Smartness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Smart contests, as follows:
- *  * Bit 3 (MSB): Smart Hyper/Ultra
- *  * Bit 2: Smart Super/Great
- *  * Bit 1 (LSB): Smart
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_SMART_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_SMART_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_SMART_MASK (uint32_t)(7 << PKSAV_GBA_SMART_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Smartness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_SMART_MASK for its usage.
- */
-#define PKSAV_GBA_SMART_OFFSET 9
-
-/*!
- * @brief The mask for determining which Toughness contests a Pokémon has won.
- *
- * The result is 3 bits that correspond to whether or not the Pokémon has won
- * various levels of the Tough contests, as follows:
- *  * Bit 3 (MSB): Tough Hyper/Ultra
- *  * Bit 2: Tough Super/Great
- *  * Bit 1 (LSB): Tough
- *
- * To access this value, apply this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, and shift the result right
- * by ::PKSAV_GBA_TOUGH_OFFSET.
- *
- * To modify this value, apply the inverse of this mask to the
- * pksav_gba_pokemon_misc_t.ribbons_obedience field, shift the new value left
- * by ::PKSAV_GBA_TOUGH_OFFSET, then logical-or the result with the field.
- */
-#define PKSAV_GBA_TOUGH_MASK (uint32_t)(7 << PKSAV_GBA_TOUGH_OFFSET)
-
-/*!
- * @brief The offset of the bits corresponding to which Toughness contests a Pokémon has won.
- *
- * See ::PKSAV_GBA_TOUGH_MASK for its usage.
- */
-#define PKSAV_GBA_TOUGH_OFFSET 12
+#define PKSAV_GBA_POKEMON_OTGENDER_MASK ((uint16_t)(1 << 15))
 
 /*!
  * @brief The mask for determining whether a Mew or Deoxys will be obedient.
@@ -220,7 +111,10 @@
  * Apply this mask to the pksav_gba_pokemon_misc_t.ribbons_obedience field
  * to modify this bit.
  */
-#define PKSAV_GBA_OBEDIENCE_MASK (uint32_t)(1 << 31)
+#define PKSAV_GBA_POKEMON_OBEDIENCE_MASK ((uint32_t)(1 << 31))
+
+#define PKSAV_GBA_POKEMON_PP_UP(field,move_num) \
+    (((field) >> (move_num * 2)) & 3)
 
 #pragma pack(push,1)
 
@@ -228,7 +122,8 @@
  * @brief Internal representation of Pokémon statistics that increase
  *        with growth in a Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_growth_block
+{
     /*!
      * @brief The Pokémon's species index.
      *
@@ -270,13 +165,14 @@ typedef struct {
     uint8_t friendship;
     //! Unknown.
     uint16_t unknown_0xA;
-} pksav_gba_pokemon_growth_t;
+};
 
 /*!
  * @brief Internal representation of a Pokémon's moves and current PP in a
  *        Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_attacks_block
+{
     /*!
      * @brief Indices of the Pokémon's moves.
      *
@@ -285,20 +181,21 @@ typedef struct {
      * These values are stored in little-endian, so access and modify them
      * with the function ::pksav_littleendian16.
      */
-    uint16_t moves[4];
+    uint16_t moves[PKSAV_GBA_POKEMON_NUM_MOVES];
     /*!
      * @brief The PP for each of the Pokémon's moves.
      *
      * The maximum value for each slot is dependent on the move.
      */
-    uint8_t move_pps[4];
-} pksav_gba_pokemon_attacks_t;
+    uint8_t move_pps[PKSAV_GBA_POKEMON_NUM_MOVES];
+};
 
 /*!
  * @brief Internal representation of a Pokémon's EVs and contest stats
  *        in a Game Boy Advance game.
  */
-typedef struct {
+struct pksav_gba_pokemon_effort_block
+{
     //! A Pokémon's HP EV.
     uint8_t ev_hp;
     //! A Pokémon's Attack EV.
@@ -312,14 +209,21 @@ typedef struct {
     //! A Pokémon's Special Defense EV.
     uint8_t ev_spdef;
     //! A Pokémon's contest stats.
-    pksav_contest_stats_t contest_stats;
-} pksav_gba_pokemon_effort_t;
+    struct pksav_contest_stats contest_stats;
+};
+
+#define PKSAV_GBA_POKEMON_ORIGIN_GAME(field) \
+    (((field) & PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK) >> PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET)
+
+#define PKSAV_GBA_POKEMON_BALL(field) \
+    (((field) & PKSAV_GBA_POKEMON_BALL_MASK) >> PKSAV_GBA_POKEMON_BALL_OFFSET)
 
 /*!
  * @brief Internal representation of Pokémon information that doesn't fit in
  *        other structs.
  */
-typedef struct {
+struct pksav_gba_pokemon_misc_block
+{
     /*!
      * @brief The Pokémon's Pokérus strain and duration.
      *
@@ -379,46 +283,29 @@ typedef struct {
      *  * 31: needs to be set to 1 for a Mew or Deoxys to be obedient
      */
     uint32_t ribbons_obedience;
-} pksav_gba_pokemon_misc_t;
+};
 
 /*!
  * @brief The grouping of all Game Boy Advance Pokémon blocks.
- *
- * This union allows the data to be parsed in multiple ways, which is useful for
- * unshuffling and decryption.
  */
-typedef union {
-    //! Parse the blocks byte-by-byte.
-    uint8_t blocks8[48];
-    //! Parse the blocks in two-byte chunks.
-    uint16_t blocks16[24];
-    //! Parse the blocks in four-byte chunks.
-    uint32_t blocks32[12];
-    //! Parse individual blocks byte-by-byte.
-    uint8_t blocks[4][12];
-    /*!
-     * @brief Parse the blocks in a consistent order once unshuffled.
-     *
-     * This order is completely arbitrary and is only laid out this way for
-     * a convenient interface.
-     */
-    struct {
-        //! Growth-related information.
-        pksav_gba_pokemon_growth_t growth;
-        //! Attacks and PP.
-        pksav_gba_pokemon_attacks_t attacks;
-        //! EVs.
-        pksav_gba_pokemon_effort_t effort;
-        //! Misc information.
-        pksav_gba_pokemon_misc_t misc;
-    };
-} pksav_gba_pokemon_blocks_t;
+struct pksav_gba_pokemon_blocks
+{
+    //! Growth-related information.
+    struct pksav_gba_pokemon_growth_block growth;
+    //! Attacks and PP.
+    struct pksav_gba_pokemon_attacks_block attacks;
+    //! EVs.
+    struct pksav_gba_pokemon_effort_block effort;
+    //! Misc information.
+    struct pksav_gba_pokemon_misc_block misc;
+};
 
 /*!
  * @brief The internal representation of Pokémon information that's shown in both
  *        the party and PC.
  */
-typedef struct {
+struct pksav_gba_pc_pokemon
+{
     /*!
      * @brief The Pokémon's personality value, used to determine other values.
      *
@@ -427,7 +314,7 @@ typedef struct {
      */
     uint32_t personality;
     //! This Pokémon's original trainer's ID.
-    pksav_trainer_id_t ot_id;
+    union pksav_trainer_id ot_id;
     /*!
      * @brief This Pokémon's nickname.
      *
@@ -436,7 +323,7 @@ typedef struct {
      *
      * In all cases, the num_chars parameter should be 10.
      */
-    uint8_t nickname[10];
+    uint8_t nickname[PKSAV_GBA_POKEMON_NICKNAME_LENGTH];
     /*!
      * @brief The language of this Pokémon's original game.
      *
@@ -452,7 +339,7 @@ typedef struct {
      *
      * In all cases, the num_chars parameter should be 7.
      */
-    uint8_t otname[7];
+    uint8_t otname[PKSAV_GBA_POKEMON_OTNAME_LENGTH];
     /*!
      * @brief This Pokémon's trainer-set markings.
      *
@@ -464,16 +351,17 @@ typedef struct {
      * @brief The checksum of the Pokémon blocks.
      *
      * Users should never need to access or modify this value, as ::pksav_gba_save_save
-     * automatically sets all checksum.
+     * automatically sets all checksums.
      */
     uint16_t checksum;
     //! Unknown.
     uint16_t unknown_0x1E;
     //! Pokémon blocks.
-    pksav_gba_pokemon_blocks_t blocks;
-} pksav_gba_pc_pokemon_t;
+    struct pksav_gba_pokemon_blocks blocks;
+};
 
-typedef struct {
+struct pksav_gba_pokemon_party_data
+{
     uint32_t condition;
     uint8_t level;
     uint8_t pokerus_time;
@@ -484,28 +372,32 @@ typedef struct {
     uint16_t spd;
     uint16_t spatk;
     uint16_t spdef;
-} pksav_gba_pokemon_party_data_t;
+};
 
-typedef struct {
-    pksav_gba_pc_pokemon_t pc;
-    pksav_gba_pokemon_party_data_t party_data;
-} pksav_gba_party_pokemon_t;
+struct pksav_gba_party_pokemon
+{
+    struct pksav_gba_pc_pokemon pc_data;
+    struct pksav_gba_pokemon_party_data party_data;
+};
 
-typedef struct {
+struct pksav_gba_pokemon_party
+{
     uint32_t count;
-    pksav_gba_party_pokemon_t party[6];
-} pksav_gba_pokemon_party_t;
+    struct pksav_gba_party_pokemon party[PKSAV_GBA_PARTY_NUM_POKEMON];
+};
 
-typedef struct {
-    pksav_gba_pc_pokemon_t entries[30];
-} pksav_gba_pokemon_box_t;
+struct pksav_gba_pokemon_box
+{
+    struct pksav_gba_pc_pokemon entries[PKSAV_GBA_BOX_NUM_POKEMON];
+};
 
-typedef struct {
+struct pksav_gba_pokemon_pc
+{
     uint32_t current_box;
-    pksav_gba_pokemon_box_t boxes[14];
-    uint8_t box_names[14][9];
-    uint8_t wallpapers[14];
-} pksav_gba_pokemon_pc_t;
+    struct pksav_gba_pokemon_box boxes[PKSAV_GBA_NUM_POKEMON_BOXES];
+    uint8_t box_names[PKSAV_GBA_NUM_POKEMON_BOXES][PKSAV_GBA_POKEMON_BOX_NAME_LENGTH + 1];
+    uint8_t wallpapers[PKSAV_GBA_NUM_POKEMON_BOXES];
+};
 
 #pragma pack(pop)
 

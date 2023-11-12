@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,11 +8,21 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${PKSAV_SOURCE_DIR}/include
     ${PKSAV_BINARY_DIR}/include
+    ${PKSAV_SOURCE_DIR}/lib
 )
 
-ADD_LIBRARY(pksav-test-utils STATIC test-utils.c)
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-utils.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test-utils.h
+@ONLY)
+
+ADD_LIBRARY(pksav-test-utils STATIC
+    ${PKSAV_SOURCE_DIR}/lib/util/fs.c
+    test-utils.c
+)
 IF(UNIX)
     SET_TARGET_PROPERTIES(pksav-test-utils
         PROPERTIES COMPILE_FLAGS "${PKSAV_C_FLAGS} -fPIC"
@@ -79,15 +89,27 @@ ENDMACRO(PKSAV_ADD_UNIT_TEST)
 
 SET(unit_tests
     byteswap_test
+    error_test
     gen1_save_test
     gen2_save_test
     gba_save_test
     math_test
     null_pointer_test
     pokerus_test
+    stats_test
     text_conversion_test
 )
 
 FOREACH(test ${unit_tests})
     PKSAV_ADD_UNIT_TEST(${test})
 ENDFOREACH(test ${unit_tests})
+
+# Build null_pointer_test.c as a C++ executable since it conveniently
+# calls every function. This will fail to link if an 'extern "C"' declaration
+# is missing from any header.
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/null_pointer_test.c
+    ${CMAKE_CURRENT_BINARY_DIR}/cpp_exe.cpp
+)
+ADD_EXECUTABLE(cpp_exe ${CMAKE_CURRENT_BINARY_DIR}/cpp_exe.cpp)
+TARGET_LINK_LIBRARIES(cpp_exe pksav unity pksav-test-utils)

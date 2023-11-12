@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "text_common.h"
+#include "util/text_common.h"
 
 #include <locale.h>
 #include <stdio.h>
@@ -16,31 +16,33 @@
 #include <windows.h>
 
 void pksav_mbstowcs(
-    wchar_t* output,
-    const char* input,
+    wchar_t* p_output,
+    const char* p_input,
     size_t num_chars
-) {
+)
+{
     MultiByteToWideChar(
         CP_UTF8,
         0,
-        input,
+        p_input,
         -1,
-        output,
+        p_output,
         (int)num_chars
     );
 }
 
 void pksav_wcstombs(
-    char* output,
-    const wchar_t* input,
+    char* p_output,
+    const wchar_t* p_input,
     size_t num_chars
-) {
+)
+{
     WideCharToMultiByte(
         CP_UTF8,
         0,
-        input,
+        p_input,
         -1,
-        output,
+        p_output,
         (int)num_chars,
         NULL,
         NULL
@@ -50,28 +52,32 @@ void pksav_wcstombs(
 #else
 
 void pksav_mbstowcs(
-    wchar_t* output,
-    const char* input,
+    wchar_t* p_output,
+    const char* p_input,
     size_t num_chars
-) {
-    char* old_locale = setlocale(LC_CTYPE, NULL);
+)
+{
+    char* p_old_locale = setlocale(LC_CTYPE, NULL);
     setlocale(LC_CTYPE, "en_US.utf8");
-    mbstowcs(output, input, num_chars);
-    if(old_locale) {
-        (void)setlocale(LC_CTYPE, old_locale);
+    mbstowcs(p_output, p_input, num_chars);
+    if(p_old_locale)
+    {
+        (void)setlocale(LC_CTYPE, p_old_locale);
     }
 }
 
 void pksav_wcstombs(
-    char* output,
-    const wchar_t* input,
+    char* p_output,
+    const wchar_t* p_input,
     size_t num_chars
-) {
-    char* old_locale = setlocale(LC_CTYPE, NULL);
+)
+{
+    char* p_old_locale = setlocale(LC_CTYPE, NULL);
     setlocale(LC_CTYPE, "en_US.utf8");
-    wcstombs(output, input, num_chars);
-    if(old_locale) {
-        (void)setlocale(LC_CTYPE, old_locale);
+    wcstombs(p_output, p_input, num_chars);
+    if(p_old_locale)
+    {
+        (void)setlocale(LC_CTYPE, p_old_locale);
     }
 }
 
@@ -79,13 +85,18 @@ void pksav_wcstombs(
 
 // C equivalent of std::distance
 ssize_t wchar_map_index(
-    const wchar_t* char_map,
+    const wchar_t* p_char_map,
     size_t char_map_size,
     wchar_t to_find
-) {
-    for(ssize_t i = 0; i < (ssize_t)char_map_size; ++i) {
-        if(char_map[i] == to_find) {
-            return i;
+)
+{
+    for(size_t char_index = 0;
+        char_index < char_map_size;
+        ++char_index)
+    {
+        if(p_char_map[char_index] == to_find)
+        {
+            return char_index;
         }
     }
     return -1;

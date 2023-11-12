@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen2.h
- * @ingroup PKSav
- * @brief   Global Generation II include file.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +10,13 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen2/badges.h>
+#include <pksav/gen2/common.h>
+#include <pksav/gen2/daycare_data.h>
 #include <pksav/gen2/items.h>
+#include <pksav/gen2/mom_money_policy.h>
+#include <pksav/gen2/options.h>
+#include <pksav/gen2/palette.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/save.h>
 #include <pksav/gen2/text.h>

@@ -1,6 +1,7 @@
 /* ==========================================
     Unity Project - A Test Framework for C
     Copyright (c) 2007-14 Mike Karlesky, Mark VanderVoord, Greg Williams
+                     2018 Nicholas Corgan
     [Released under MIT License. Please refer to license.txt for details]
 ========================================== */
 
@@ -286,6 +287,12 @@ void tearDown(void);
 #define TEST_ASSERT_DOUBLE_IS_NOT_NEG_INF_MESSAGE(actual, message)                                 UNITY_TEST_ASSERT_DOUBLE_IS_NOT_NEG_INF((actual), __LINE__, (message))
 #define TEST_ASSERT_DOUBLE_IS_NOT_NAN_MESSAGE(actual, message)                                     UNITY_TEST_ASSERT_DOUBLE_IS_NOT_NAN((actual), __LINE__, (message))
 #define TEST_ASSERT_DOUBLE_IS_NOT_DETERMINATE_MESSAGE(actual, message)                             UNITY_TEST_ASSERT_DOUBLE_IS_NOT_DETERMINATE((actual), __LINE__, (message))
+
+/*-------------------------------------------------------
+ * PKSav-specific asserts
+ *-------------------------------------------------------*/
+
+#define PKSAV_TEST_ASSERT_SUCCESS(error) TEST_ASSERT_EQUAL_MESSAGE(PKSAV_ERROR_NONE, error, pksav_strerror(error))
 
 /* end of UNITY_FRAMEWORK_H */
 #ifdef __cplusplus

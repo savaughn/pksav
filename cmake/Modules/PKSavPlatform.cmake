@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -23,7 +23,10 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKSAV_GCC OR PKSAV_CLANG)
-    SET(PKSAV_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
+    SET(PKSAV_C_FLAGS "-std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
+    IF(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        SET(PKSAV_C_FLAGS "-O3 ${PKSAV_C_FLAGS}")
+    ENDIF()
 ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling

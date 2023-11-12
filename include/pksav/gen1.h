@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/gen1.h
- * @ingroup PKSav
- * @brief   Global Generation I include file.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,10 +10,16 @@
 #include <pksav/config.h>
 #include <pksav/error.h>
 
+#include <pksav/gen1/badges.h>
+#include <pksav/gen1/common.h>
+#include <pksav/gen1/daycare_data.h>
 #include <pksav/gen1/items.h>
+#include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 #include <pksav/gen1/text.h>
+#include <pksav/gen1/time.h>
+#include <pksav/gen1/type.h>
 
 #include <pksav/common/condition.h>
 #include <pksav/common/pokedex.h>

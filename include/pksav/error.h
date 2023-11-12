@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/error.h
- * @ingroup PKSav
- * @brief   Error codes returned from PKSav functions.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,7 +9,8 @@
 
 #include <pksav/config.h>
 
-typedef enum {
+enum pksav_error
+{
     //! Function completed with no error
     PKSAV_ERROR_NONE = 0,
     //! A problem occurred reading/writing a save file
@@ -31,15 +28,15 @@ typedef enum {
     PKSAV_ERROR_INVALID_SAVE,
     //! A null pointer was passed as a parameter.
     PKSAV_ERROR_NULL_POINTER
-} pksav_error_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//! Returns a string corresponding to the given error code
+//! Returns a string corresponding to the given error code.
 PKSAV_API const char* pksav_strerror(
-    pksav_error_t error_code
+    enum pksav_error error_code
 );
 
 #ifdef __cplusplus

@@ -1,9 +1,5 @@
-/*!
- * @file    pksav/common/nature.h
- * @ingroup PKSav
- * @brief   Nature indices.
- *
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+/*
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +8,8 @@
 #define PKSAV_COMMON_NATURE_H
 
 //! Nature indices.
-typedef enum {
+enum pksav_nature
+{
     //! Hardy.
     PKSAV_NATURE_HARDY = 0,
     //! Lonely.
@@ -63,6 +60,6 @@ typedef enum {
     PKSAV_NATURE_CAREFUL,
     //! Quirky.
     PKSAV_NATURE_QUIRKY
-} pksav_nature_t;
+};
 
 #endif /* PKSAV_COMMON_NATURE_H */
