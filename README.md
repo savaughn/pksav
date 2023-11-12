@@ -1,9 +1,7 @@
 PKSav
 ===============================================
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt)
-[![Travis-CI Build](https://travis-ci.org/ncorgan/pksav.svg)](https://travis-ci.org/ncorgan/pksav)
-[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/pksav)](https://ci.appveyor.com/project/ncorgan/pksav)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/savaughn/pksav)](https://github.com/savaughn/pksav/releases) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/savaughn/pksav/build-macos.yml?branch=master)](https://github.com/savaughn/pksav/actions) [![GitHub issues](https://img.shields.io/github/issues/savaughn/pksav)](https://github.com/savaughn/pksav/issues) [![GitHub](https://img.shields.io/github/license/savaughn/pksav)](https://github.com/savaughn/pksav/blob/main/LICENSE) [![GitHub all releases](https://img.shields.io/github/downloads/savaughn/pksav/total)](https://github.com/savaughn/pksav/releases)
 
 The goal of PKSav is to be a small, fast, and portable library for interacting with
 and manipulating Pokémon save files. It is written in pure C with no external dependencies,
@@ -18,41 +16,17 @@ functions in languages such as C# or Java.
 Currently, only American save files are supported, as save files from different regions are often laid
 out differently, usually to accomodate strings having different lengths between regions.
 
-Testing
--------------------------------------
-
-Using [Travis](https://travis-ci.org/ncorgan/pksav) and
-[AppVeyor](https://ci.appveyor.com/project/ncorgan/pksav), every push to this
-repository is automatically tested under the following configurations:
-
- * Compile, unit test:
-   * Ubuntu 14.04 (x64)
-     * GCC: 4.8.4, 5.4.1, 6.2.0, 7.2.0
-     * Clang: 3.9.0, 4.0.1, 5.0.0
-   * Windows Server 2012 R2 (x86, x64)
-     * MSVC 2015 (x86, x64)
-   * Windows Server 2016 (x86, x64)
-     * MSVC 2017 (x86, x64)
-
-All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
-
-Unit tests use the [Unity](https://github.com/ThrowTheSwitch/Unity) framework.
 
 Component Status
 -------------------------------------
  * Generation I: complete
  * Generation II: complete
  * Game Boy Advance: complete
- * Generation IV: in progress
- * Generation V: in progress
- * Generation VI: in progress
- * Generation VII: in progress
+ * All other generations: not implemented
 
 Acknowledgments
 -------------------------------------
-
+* PKSAV ([@ncorgan](https://github.com/ncorgan/pksav)), the original library this was forked from.
 * PRET ([@pret](https://github.com/pret)), whose Pokémon disassemblies greatly contributed to this library's functionality.
 * Vicky "Endrift" Flau ([@endrift](https://github.com/endrift)), whose mGBA emulator allowed for further reverse-engineering.
 * Michael Bond ([@codemonkey85](https://github.com/codemonkey85)), for consulting on game mechanics.
-
-README last updated: 2018/09/16
