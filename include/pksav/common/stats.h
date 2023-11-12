@@ -13,6 +13,27 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+enum pksav_gen1_stat
+{
+    PKSAV_GEN1_STAT_ATTACK,
+    PKSAV_GEN1_STAT_DEFENSE,
+    PKSAV_GEN1_STAT_SPEED,
+    PKSAV_GEN1_STAT_SPECIAL,
+    PKSAV_GEN1_STAT_HP,
+    PKSAV_GEN1_STAT_COUNT
+};
+
+enum pksav_gen2_stat
+{
+    PKSAV_GEN2_STAT_ATTACK,
+    PKSAV_GEN2_STAT_DEFENSE,
+    PKSAV_GEN2_STAT_SPEED,
+    PKSAV_GEN2_STAT_SPATK,
+    PKSAV_GEN2_STAT_SPDEF,
+    PKSAV_GEN2_STAT_HP,
+    PKSAV_GEN2_STAT_COUNT
+};
+
 // Effort values (EVs)
 
 #define PKSAV_MIN_GB_EV (0)
