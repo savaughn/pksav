@@ -236,6 +236,8 @@ static void _pksav_gen2_set_save_pointers(
     p_internal->p_checksum2 = (uint16_t*)&p_buffer[
                                   p_offsets[PKSAV_GEN2_CHECKSUM2]
                               ];
+    // Mailbox
+    p_gen2_save->p_mailbox = (struct pksav_gen2_mailbox *)(&p_buffer[p_offsets[PKSAV_GEN2_MAILBOX_DATA]]);
 
     // Options
     struct pksav_gen2_options* p_options = &p_gen2_save->options;

@@ -203,6 +203,33 @@ struct pksav_gen2_misc_fields
     uint8_t* p_casino_coins;
 };
 
+#define MAIL_STRUCT_LENGTH  0x2f
+#define MAILBOX_CAPACITY    10
+#define MAIL_MSG_LENGTH     0x20
+
+#pragma pack(push, 1)
+struct pksav_gen2_mail_msg
+{
+    char message[MAIL_MSG_LENGTH + 1];  // 0xA0C
+    char author_name[8];           // 0xA2D
+    char author_nationality[2];    // Unused 0xA35
+    uint16_t author_id;            // read/set with pksav_bigendian16 0xA37
+    uint8_t portrait_pokemon_id;    // 0xA39
+    uint8_t item_id;                // 0xA3A
+};
+
+struct pksav_gen2_mailbox
+{
+    uint8_t message_count;      // 0xA0B
+    struct pksav_gen2_mail_msg mail[MAILBOX_CAPACITY];  // 0xA0C
+};
+#pragma pack(pop)
+
+struct pksav_gen2_party_mail
+{
+    struct pksav_gen2_mail_msg *p_party_mail_msg;
+};
+
 /*!
  * @brief The primary PKSav struct for interacting with Generation II save files.
  *
@@ -236,6 +263,8 @@ struct pksav_gen2_save
     struct pksav_gen2_daycare_data* p_daycare_data;
 
     struct pksav_gen2_misc_fields misc_fields;
+
+    struct pksav_gen2_mailbox *p_mailbox;
 
     void* p_internal;
 };
