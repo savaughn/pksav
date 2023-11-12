@@ -23,7 +23,7 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKSAV_GCC OR PKSAV_CLANG)
-    SET(PKSAV_C_FLAGS "-std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
+    SET(PKSAV_C_FLAGS "-std=gnu99 -Wall -Wextra -Wno-error -fvisibility=hidden")
     IF(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         SET(PKSAV_C_FLAGS "-O3 ${PKSAV_C_FLAGS}")
     ENDIF()
