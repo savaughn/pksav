@@ -9,12 +9,9 @@ SET(pksav_common_headers
     condition.h
     constants.h
     contest_stats.h
-    datetime.h
-    gen4_encounter_type.h
     item.h
     markings.h
     nature.h
-    nds_pokemon.h
     pokedex.h
     pokerus.h
     stats.h

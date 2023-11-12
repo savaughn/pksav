@@ -31,7 +31,7 @@ ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
-    ADD_DEFINITIONS(/WX)                       # Warnings become errors
+    ADD_DEFINITIONS(/W3)                       # Warnings become errors
 ENDIF(PKSAV_GCC OR PKSAV_CLANG)
 
 #

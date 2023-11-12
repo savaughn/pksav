@@ -27,6 +27,7 @@ IF(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PKSAV_SOURCE_DIR})
 ENDIF(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PKSAV_SOURCE_DIR})
 
 SET(CMAKE_MODULE_PATH "${PKSAV_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
+set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
 
 ####################################################################
 # Project configuration

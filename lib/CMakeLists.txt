@@ -17,8 +17,6 @@ INCLUDE_DIRECTORIES(
 ADD_SUBDIRECTORY(gen1)
 ADD_SUBDIRECTORY(gen2)
 ADD_SUBDIRECTORY(gba)
-ADD_SUBDIRECTORY(gen4)
-ADD_SUBDIRECTORY(gen5)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(crypto)
@@ -33,9 +31,6 @@ SET(pksav_c_sources
     ${pksav_gen1_sources}
     ${pksav_gen2_sources}
     ${pksav_gba_sources}
-    ${pksav_gcn_sources}
-    ${pksav_gen4_sources}
-    ${pksav_gen5_sources}
     ${pksav_util_sources}
 )
 
