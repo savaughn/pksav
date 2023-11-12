@@ -48,7 +48,7 @@ jobs:
         path: build/release
 
   build_arm64:
-    if: false  # This workflow is disabled
+    # if: false  # This workflow is disabled
     runs-on: macos-latest
     strategy:
       matrix:
