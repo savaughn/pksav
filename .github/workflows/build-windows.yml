@@ -1,0 +1,50 @@
+name: Build and Bundle Windows
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_windows:
+    # if: false  # This workflow is disabled
+    runs-on: windows-latest
+
+    steps:
+    - run: git config --global core.autocrlf input
+    - uses: actions/checkout@v3
+      
+    - name: Setup msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+
+    - name: Build static pksav
+      run: |
+        mkdir build_static
+        cd build_static
+        cmake .. -DPKSAV_STATIC=ON -G "Unix Makefiles" -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make 
+
+    - name: Build dynamic pksav
+      run: |
+        mkdir build_dynamic
+        cd build_dynamic
+        cmake .. -DPKSAV_STATIC=OFF -G "Unix Makefiles" -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make
+
+    - name: Bundle library
+      run: |
+        mkdir -p build/release/include
+        cp -r build_static/lib/libpksav.a build/release
+        cp -r build_dynamic/lib/libpksav.dll build/release
+        cp -r build_static/include/* build/release/include
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: pksav-windows-x86_64
+        path: build/release

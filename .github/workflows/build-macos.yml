@@ -1,0 +1,86 @@
+name: Build and Bundle MacOS (x86_64 and arm64)
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_x64:
+    # if: false  # This workflow is disabled
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [x64]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build static pksav
+      run: |
+        mkdir build_static
+        cd build_static
+        cmake .. -DPKSAV_STATIC=ON -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make 
+
+    - name: Build dynamic pksav
+      run: |
+        mkdir build_dynamic
+        cd build_dynamic
+        cmake .. -DPKSAV_STATIC=OFF -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make
+
+    - name: Bundle library
+      run: |
+        mkdir -p build/release/include
+        cp -r build_static/lib/libpksav.a build/release
+        cp -r build_dynamic/lib/libpksav.dylib build/release
+        cp -r build_static/include/* build/release/include
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: pksav-macos-x86_64
+        path: build/release
+
+  build_arm64:
+    # if: false  # This workflow is disabled
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [arm64]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build static pksav
+      run: |
+        mkdir build_static
+        cd build_static
+        cmake .. -DPKSAV_STATIC=ON -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make 
+
+    - name: Build dynamic pksav
+      run: |
+        mkdir build_dynamic
+        cd build_dynamic
+        cmake .. -DPKSAV_STATIC=OFF -DPKSAV_ENABLE_TESTS=OFF -DPKSAV_ENABLE_DOCS=OFF
+        make
+
+    - name: Bundle library
+      run: |
+        mkdir -p build/release/include
+        cp -r build_static/lib/libpksav.a build/release
+        cp -r build_dynamic/lib/libpksav.dylib build/release
+        cp -r build_static/include/* build/release/include
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: pksav-macos-arm64
+        path: build/release
