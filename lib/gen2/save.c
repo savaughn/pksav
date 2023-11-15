@@ -303,11 +303,8 @@ static void _pksav_gen2_set_save_pointers(
                                            &p_buffer[p_offsets[PKSAV_GEN2_CURRENT_BOX]]
                                        );
 
-    // Party mail loop initialization
-    for (size_t party_index = 0; party_index < PKSAV_STANDARD_POKEMON_PARTY_SIZE; party_index++)
-    {
-        p_pokemon_storage->p_party_mail[party_index] = (struct pksav_gen2_mail_msg *)(&p_buffer[p_offsets[PKSAV_GEN2_PARTY_MAIL_DATA] + (party_index * MAIL_STRUCT_LENGTH)]);
-    }
+    // Party mail
+    p_pokemon_storage->p_party_mail = (struct pksav_gen2_party_mail*)(&p_buffer[p_offsets[PKSAV_GEN2_PARTY_MAIL_DATA]]);
 
     // Pokédex lists
     struct pksav_gen2_pokedex_lists* p_pokedex_lists = &p_gen2_save->pokedex_lists;
