@@ -28,5 +28,5 @@ Acknowledgments
 -------------------------------------
 * PKSAV ([@ncorgan](https://github.com/ncorgan/pksav)), the original library this was forked from.
 * PRET ([@pret](https://github.com/pret)), whose Pokémon disassemblies greatly contributed to this library's functionality.
-* Vicky "Endrift" Flau ([@endrift](https://github.com/endrift)), whose mGBA emulator allowed for further reverse-engineering.
+* Vicky "Endrift" Flau ([@endrift](https://github.com/endrift)), whose mgen3 emulator allowed for further reverse-engineering.
 * Michael Bond ([@codemonkey85](https://github.com/codemonkey85)), for consulting on game mechanics.

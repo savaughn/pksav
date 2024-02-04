@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "/opt/homebrew/Cellar/emscripten/3.1.50/libexec/system/include/emscripten.h"
+
 #include "gen1/save_internal.h"
 #include "util/fs.h"
 
@@ -65,6 +67,7 @@ enum pksav_error pksav_gen1_get_buffer_save_type(
     return error;
 }
 
+EMSCRIPTEN_KEEPALIVE
 enum pksav_error pksav_gen1_get_file_save_type(
     const char* p_filepath,
     enum pksav_gen1_save_type* p_save_type_out

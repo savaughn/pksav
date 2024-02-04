@@ -92,7 +92,7 @@ SET(unit_tests
     error_test
     gen1_save_test
     gen2_save_test
-    gba_save_test
+    gen3_save_test
     math_test
     null_pointer_test
     pokerus_test

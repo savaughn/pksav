@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.asm": "gbz80",
+        "emscripten.h": "c",
+        "save.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "/Users/spencer/Projects/emsdk/upstream/emscripten/emcc"
+}
