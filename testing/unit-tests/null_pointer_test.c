@@ -193,16 +193,16 @@ static void pksav_gen2_time_h_test() {
 }
 
 /*
- * pksav/gba/save.h
+ * pksav/gen3/save.h
  */
-static void pksav_gba_save_h_test()
+static void pksav_gen3_save_h_test()
 {
 }
 
 /*
- * pksav/gba/text.h
+ * pksav/gen3/text.h
  */
-static void pksav_gba_text_h_test()
+static void pksav_gen3_text_h_test()
 {
 }
 
@@ -216,6 +216,6 @@ PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen2_save_h_test)
     PKSAV_TEST(pksav_gen2_text_h_test)
     PKSAV_TEST(pksav_gen2_time_h_test)
-    PKSAV_TEST(pksav_gba_save_h_test)
-    PKSAV_TEST(pksav_gba_text_h_test)
+    PKSAV_TEST(pksav_gen3_save_h_test)
+    PKSAV_TEST(pksav_gen3_text_h_test)
 )

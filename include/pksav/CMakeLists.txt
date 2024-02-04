@@ -29,14 +29,14 @@ IF(NOT PKSAV_DONT_INSTALL_HEADERS)
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
         gen1.h
         gen2.h
-        gba.h
+        gen3.h
     )
 
     ADD_SUBDIRECTORY(common)
     ADD_SUBDIRECTORY(math)
     ADD_SUBDIRECTORY(gen1)
     ADD_SUBDIRECTORY(gen2)
-    ADD_SUBDIRECTORY(gba)
+    ADD_SUBDIRECTORY(gen3)
     ADD_SUBDIRECTORY(gen4)
     ADD_SUBDIRECTORY(gen5)
 

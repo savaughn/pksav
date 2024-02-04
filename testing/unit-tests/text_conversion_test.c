@@ -111,23 +111,23 @@ static void pksav_gen2_text_test()
     }
 }
 
-static void pksav_gba_text_test()
+static void pksav_gen3_text_test()
 {
     enum pksav_error error = PKSAV_ERROR_NONE;
-    uint8_t gba_buffer[BUFFER_LEN] = {0};
+    uint8_t gen3_buffer[BUFFER_LEN] = {0};
     char strbuffer[BUFFER_LEN] = {0};
 
     for(size_t string_index = 0; strings[string_index] != NULL; ++string_index)
     {
-        error = pksav_gba_export_text(
+        error = pksav_gen3_export_text(
                     strings[string_index],
-                    gba_buffer,
+                    gen3_buffer,
                     BUFFER_LEN
                 );
         PKSAV_TEST_ASSERT_SUCCESS(error);
 
-        error = pksav_gba_import_text(
-                    gba_buffer,
+        error = pksav_gen3_import_text(
+                    gen3_buffer,
                     strbuffer,
                     BUFFER_LEN
                 );
@@ -139,17 +139,17 @@ static void pksav_gba_text_test()
     // Make sure processing invalid buffers doesn't crash.
     for(size_t run_index = 0; run_index < FUZZING_TEST_NUM_ITERATIONS; ++run_index)
     {
-        randomize_buffer(gba_buffer, sizeof(gba_buffer));
-        pksav_gba_import_text(
-            gba_buffer,
+        randomize_buffer(gen3_buffer, sizeof(gen3_buffer));
+        pksav_gen3_import_text(
+            gen3_buffer,
             strbuffer,
             BUFFER_LEN
         );
 
         randomize_buffer((uint8_t*)strbuffer, sizeof(strbuffer));
-        pksav_gba_export_text(
+        pksav_gen3_export_text(
             strbuffer,
-            gba_buffer,
+            gen3_buffer,
             BUFFER_LEN
         );
     }
@@ -246,7 +246,7 @@ static void pksav_gen5_text_test()
 PKSAV_TEST_MAIN(
     PKSAV_TEST(pksav_gen1_text_test)
     PKSAV_TEST(pksav_gen2_text_test)
-    PKSAV_TEST(pksav_gba_text_test)
+    PKSAV_TEST(pksav_gen3_text_test)
     PKSAV_TEST(pksav_gen4_text_test)
     PKSAV_TEST(pksav_gen5_text_test)
 )
