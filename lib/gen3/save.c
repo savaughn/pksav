@@ -173,6 +173,10 @@ enum pksav_error pksav_gen3_get_buffer_save_type(
                 }
             }
         }
+    } 
+    else
+    {
+        error = PKSAV_ERROR_INVALID_SAVE;
     }
 
     return error;

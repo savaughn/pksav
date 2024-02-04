@@ -152,6 +152,10 @@ enum pksav_error pksav_gen2_get_buffer_save_type(
             {
                 *p_save_type_out = save_type;
             }
+            else
+            {
+                error = PKSAV_ERROR_INVALID_SAVE;
+            }
         }
     }
 

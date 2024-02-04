@@ -97,9 +97,13 @@ enum pksav_error pksav_gen1_get_file_save_type(
         free(p_file_buffer);
 
         // Only return a result upon success.
-        if(!error)
+        if(!error && (save_type != PKSAV_GEN1_SAVE_TYPE_NONE))
         {
             *p_save_type_out = save_type;
+        }
+        else
+        {
+            error = PKSAV_ERROR_INVALID_SAVE;
         }
     }
 
