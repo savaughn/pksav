@@ -34,6 +34,14 @@ ELSEIF(MSVC)
     ADD_DEFINITIONS(/W3)                       # Warnings become errors
 ENDIF(PKSAV_GCC OR PKSAV_CLANG)
 
+# Add Emscripten-specific settings
+IF(EMSCRIPTEN)
+    SET(PKSAV_C_FLAGS "--bind -s WASM=1")
+    SET(CMAKE_EXECUTABLE_SUFFIX ".wasm")
+    SET(CMAKE_C_COMPILER "emcc")
+    SET(CMAKE_CXX_COMPILER "em++")
+ENDIF(EMSCRIPTEN)
+
 #
 # Currently, there is no Boostless way to check endianness when
 # cross-compiling. CMake has a function, but it doesn't work with

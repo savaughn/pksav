@@ -1,5 +1,6 @@
 *swp
 *~
 build
+build-wasm
 install
 test-env
