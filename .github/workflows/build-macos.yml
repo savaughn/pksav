@@ -39,7 +39,9 @@ jobs:
         mkdir -p build/release/include
         cp -r build_static/lib/libpksav.a build/release
         cp -r build_dynamic/lib/libpksav.dylib build/release
-        cp -r build_static/include/* build/release/include
+        cp -r build_static/include/config.h build/release/include
+        cp -r build_static/include/version.h build/release/include
+        cp -r include/* build/release/include
 
     - name: Publish Build Artifacts
       uses: actions/upload-artifact@v3
@@ -77,7 +79,9 @@ jobs:
         mkdir -p build/release/include
         cp -r build_static/lib/libpksav.a build/release
         cp -r build_dynamic/lib/libpksav.dylib build/release
-        cp -r build_static/include/* build/release/include
+        cp -r build_static/include/config.h build/release/include
+        cp -r build_static/include/version.h build/release/include
+        cp -r include/* build/release/include
 
     - name: Publish Build Artifacts
       uses: actions/upload-artifact@v3
