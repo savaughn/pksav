@@ -38,11 +38,13 @@ jobs:
     
     - name: Bundle library
       run: |
-        mkdir -p build/release/include
+        mkdir -p build/release/include/pksav
         cp -r build_static/lib/libpksav.a build/release
         cp -r build_dynamic/lib/libpksav.so build/release
-        cp -r build_static/include/config.h build/release/include
-        cp -r build_static/include/version.h build/release/include
+        cp -r build_static/include/pksav/config.h build/release/include/pksav/
+        cp -r build_static/include/pksav/version.h build/release/include/pksav/
+        rm -rf build/release/include/pksav/config.h.in
+        rm -rf build/release/include/pksav/version.h.in
         cp -r include/* build/release/include
 
 
