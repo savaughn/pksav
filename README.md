@@ -1,7 +1,7 @@
 PKSav
 ===============================================
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/savaughn/pksav)](https://github.com/savaughn/pksav/releases) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/savaughn/pksav/build-macos.yml?branch=master)](https://github.com/savaughn/pksav/actions) [![GitHub issues](https://img.shields.io/github/issues/savaughn/pksav)](https://github.com/savaughn/pksav/issues) [![GitHub](https://img.shields.io/github/license/savaughn/pksav)](https://github.com/savaughn/pksav/blob/main/LICENSE) [![GitHub all releases](https://img.shields.io/github/downloads/savaughn/pksav/total)](https://github.com/savaughn/pksav/releases)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/pksav/blob/master/LICENSE.txt) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/savaughn/pksav)](https://github.com/savaughn/pksav/releases) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/savaughn/pksav/build-macos.yml?branch=master)](https://github.com/savaughn/pksav/actions) [![GitHub issues](https://img.shields.io/github/issues/savaughn/pksav)](https://github.com/savaughn/pksav/issues)[![GitHub all releases](https://img.shields.io/github/downloads/savaughn/pksav/total)](https://github.com/savaughn/pksav/releases)
 
 The goal of PKSav is to be a small, fast, and portable library for interacting with
 and manipulating Pokémon save files. It is written in pure C with no external dependencies,
