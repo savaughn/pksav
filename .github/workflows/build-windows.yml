@@ -43,8 +43,8 @@ jobs:
         cp -r build_dynamic/lib/libpksav.dll build/release
         cp -r build_static/include/pksav/config.h build/release/include/pksav/
         cp -r build_static/include/pksav/version.h build/release/include/pksav/
-        rm -rf build/release/include/pksav/config.h.in
-        rm -rf build/release/include/pksav/version.h.in
+        rm build/release/include/pksav/config.h.in
+        rm build/release/include/pksav/version.h.in
         cp -r include/* build/release/include
 
     - name: Publish Build Artifacts
