@@ -37,8 +37,11 @@ jobs:
         make
 
     - name: Bundle library
+      shell: bash
       run: |
-        mkdir -p build/release/include/pksav
+        if [[ ! -d build/release/include/pksav ]]; then
+          mkdir -p build/release/include/pksav
+        fi
         cp -r build_static/lib/libpksav.a build/release
         cp -r build_dynamic/lib/libpksav.dll build/release
         cp -r include/* build/release/include
